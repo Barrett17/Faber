@@ -441,7 +441,8 @@ void CommonPool::UpdateMenu()
 bool CommonPool::IsChanged(int32 mode)
 {
 	if (changed){
-		int32 k = (new BAlert(NULL,B_TRANSLATE("This project has changed. Do you want to save it now?"),B_TRANSLATE("Save"),B_TRANSLATE("Discard"),B_TRANSLATE("Cancel")))->Go();
+		int32 k = (new BAlert(NULL,B_TRANSLATE("This project has changed. Do you want to save it now?"),
+			B_TRANSLATE("Save"),B_TRANSLATE("Discard"),B_TRANSLATE("Cancel")))->Go();
 		switch(k){
 		case 0:
 			save_selection = false;
@@ -455,7 +456,7 @@ bool CommonPool::IsChanged(int32 mode)
 		default:
 			return true;
 		}
-	}else{
+	} else {
 		return false;
 	}
 }

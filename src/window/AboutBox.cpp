@@ -102,13 +102,14 @@ AboutView::Draw(BRect rect)
 	GetFont(&font);
 	SetLowColor(255, 255, 255);
 	SetHighColor(0,0,0);
-	DrawString(version, BPoint(rect.right - font.StringWidth(version)-5, rect.bottom-5)); 
+	DrawString(version, BPoint(rect.right - font.StringWidth(version)-5,
+		rect.bottom-5)); 
 	DrawString(FABER_HOMEPAGE, BPoint(rect.left+5, rect.bottom-5)); 
-	
+
 	SetLowColor(224,238,252);
 	SetHighColor(r,g,b);
-	DrawString(p, BPoint(rect.Width()/2 - font.StringWidth(p)/2, 208+font.Size()/2)); 
-
+	DrawString(p, BPoint(rect.Width()/2 - font.StringWidth(p)/2,
+		208+font.Size()/2)); 
 }
 
 void

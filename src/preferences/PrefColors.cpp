@@ -185,10 +185,8 @@ PrefColors::PrefColors()
 	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	sv->MakeFocus(false);
 
-	for (int i = 0; gColorsNames[i].colorString != NULL; i++) {
-		list->AddItem(
-			new StringItem(gColorsNames[i].colorString));
-	}
+	for (int i = 0; gColorsNames[i].colorString != NULL; i++)
+		list->AddItem(new StringItem(gColorsNames[i].colorString));
 
 	control = new BColorControl(BPoint(8, 16), B_CELLS_32x8, 1, "colorControl",
 		new BMessage(COLOR_CHANGE));
@@ -204,6 +202,7 @@ PrefColors::PrefColors()
 		.End()
 		.Add(sv)
 		.Add(control)
+		.AddGlue()
 	.End()
 	.SetInsets(spacing, spacing, spacing, spacing));
 }

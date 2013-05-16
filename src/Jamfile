@@ -44,7 +44,6 @@ Application Faber :
 
 	# Common
 	MyClipBoard.cpp
-	CommonClass.cpp
 	OpenPanel.cpp
 	VMSystem.cpp
 	CommonPool.cpp

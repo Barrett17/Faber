@@ -1,6 +1,6 @@
 /*
  * Copyright 2011 Davide Gessa. All rights reserved.
- * Distributed under the terms of the MIT License for non commercial use.
+ * Distributed under the terms of the MIT License.
  *
  * Authors:
  *		Davide Gessa, dak.linux@gmail.com
@@ -47,7 +47,6 @@
 #include <Catalog.h>
 
 #include "CommonPool.h"
-#include "CommonClass.h"
 #include "Preferences.h"
 #include "History.h"
 #include "MouseIcons.h"

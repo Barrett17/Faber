@@ -607,12 +607,22 @@ FaberWindow::AddMenu()
 
 	menu = new BMenu(B_TRANSLATE("Help"));
 	mainMenuBar->AddItem(menu);
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Help"), new BMessage(HELP), KeyBind.GetKey("HELP"), KeyBind.GetMod("HELP")));
-//	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("History"), new BMessage(HISTORY), KeyBind.GetKey("HISTORY"), KeyBind.GetMod("HISTORY")));
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Homepage"), new BMessage(HOMEPAGE), KeyBind.GetKey("HOMEPAGE"), KeyBind.GetMod("HOMEPAGE")));
+
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Help"),
+		new BMessage(HELP), KeyBind.GetKey("HELP"), KeyBind.GetMod("HELP")));
+
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("About"), new BMessage(ABOUT), KeyBind.GetKey("ABOUT"), KeyBind.GetMod("ABOUT")));
+
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("History"),
+		new BMessage(HISTORY), KeyBind.GetKey("HISTORY"), KeyBind.GetMod("HISTORY")));
+
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Homepage"),
+		new BMessage(HOMEPAGE), KeyBind.GetKey("HOMEPAGE"), KeyBind.GetMod("HOMEPAGE")));
+
+	menu->AddSeparatorItem();
+
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("About"),
+		new BMessage(ABOUT), KeyBind.GetKey("ABOUT"), KeyBind.GetMod("ABOUT")));
 
 	SetKeyMenuBar(NULL);
 }
@@ -655,12 +665,12 @@ FaberWindow::UpdateRecent()
 bool
 FaberWindow::QuitRequested()
 {
-	if (!Pool.IsChanged(2)){
+	if (!Pool.IsChanged(1)){
 		Prefs.frame = Frame();
 		Pool.StopPlaying();
 		be_app->PostMessage(B_QUIT_REQUESTED);
 		return true;
-	}else{
+	} else {
 		return false;
 	}
 }

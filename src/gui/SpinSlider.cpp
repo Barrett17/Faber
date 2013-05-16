@@ -44,6 +44,9 @@ void SpinSlider::MessageReceived(BMessage* msg)
 	msg->PrintToStream();
 	switch(msg->what)
 	{
+		// This is a custom message sent from seekslider
+		// to make the spincontrol updated. Feel free to replace it
+		// with something better.
 		case CUSTOM_INVOKED:
 			SetValue(fSlider->Value());
 		break;
@@ -69,11 +72,12 @@ SpinSlider::_Init(int32 minValue, int32 maxValue)
 		NULL, new BMessage(MSG_SPIN_CHANGED),
 		minValue, maxValue, fSlider->Value(), 1);
 
-	const float spacing = be_control_look->DefaultItemSpacing();
-
+	fSpinControl->ResizeToPreferred();
 	SetLayout(new BGroupLayout(B_HORIZONTAL));
-	AddChild(BGroupLayoutBuilder(B_HORIZONTAL, spacing)
-		.Add(fSlider)
+	AddChild(BGroupLayoutBuilder(B_HORIZONTAL)
+		.AddGroup(B_HORIZONTAL)
+			.Add(fSlider)
+		.End()
 		.Add(fSpinControl)
 	);
 }
@@ -87,7 +91,7 @@ void SpinSlider::AttachedToWindow(void)
 	fSpinControl->SetTarget(this);
 	fSlider->SetTarget(this);
 
-	Invalidate();
+	//Invalidate();
 }
 
 
@@ -117,15 +121,12 @@ SpinSlider::SetValue(float value)
 void
 SpinSlider::MouseDown(BPoint pt)
 {
-	printf("down\n");
 	if (fSlider->IsEnabled()) {
-	printf("enabled\n");
 		SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY); 
-	
+
 		BRect frame = fSlider->BarFrame();
-		
-		if (pt.x >= frame.left && pt.x <= frame.right)
-		{
+
+		if (pt.x >= frame.left && pt.x <= frame.right) {
 			SetValue(fSlider->ValueForPoint(pt));
 			fSlider->Invoke();
 		}

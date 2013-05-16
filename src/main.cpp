@@ -72,10 +72,8 @@ FaberApp::FaberApp():BApplication(FABER_MIMETYPE)
 bool
 FaberApp::QuitRequested()
 {
-	if (fFaberWindow) 
-	{
-		if (fFaberWindow->Lock() && fFaberWindow->QuitRequested()) 
-		{
+	if (fFaberWindow) {
+		if (fFaberWindow->Lock() && fFaberWindow->QuitRequested()) {
 			fFaberWindow->Quit();
 
 			if (fOpenPanel)
@@ -84,7 +82,6 @@ FaberApp::QuitRequested()
 			if (fSavePanel)
 				delete fSavePanel;
 
-			fFaberWindow->Unlock();
 			return true;
 		}
 	}

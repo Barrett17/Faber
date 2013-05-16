@@ -35,29 +35,6 @@ enum {
 	kSpinButtonThreshold = 5
 };
 
-/*
-static const unsigned char kVerticalResizeCursor[] = {
-	16, 1, 7, 7,
-	
-	0x00, 0x00,	0x00, 0x00,
-	0x00, 0x00,	0x01, 0x00,
-	0x03, 0x80,	0x07, 0xc0,
-	0x00, 0x00,	0x3f, 0xf8,
-	0x00, 0x00,	0x07, 0xc0,
-	0x03, 0x80,	0x01, 0x00,
-	0x00, 0x00,	0x00, 0x00,
-	0x00, 0x00,	0x00, 0x00,
-	
-	0x00, 0x00,	0x00, 0x00,
-	0x01, 0x00,	0x03, 0x80,
-	0x07, 0xc0,	0x0f, 0xe0,
-	0x7f, 0xfc,	0x7f, 0xfc,
-	0x7f, 0xfc,	0x0f, 0xe0,
-	0x07, 0xc0,	0x03, 0x80,
-	0x01, 0x00,	0x00, 0x00,
-	0x00, 0x00,	0x00, 0x00
-};
-*/
 
 SpinButton::SpinButton(const char *name, BMessage *message,
 	int32 minValue, int32 maxValue, int32 defaultValue, int32 stepValue,
@@ -100,11 +77,13 @@ void SpinButton::SetValue(int32 value)
 	BControl::SetValue(value);
 }
 
+
 void SpinButton::GetPreferredSize(float *width, float *height)
 {
-	*width = 14;
-	*height = 17;
+	*width = 12;
+	*height = 7;
 }
+
 
 void SpinButton::Draw(BRect updateRect)
 {
@@ -113,8 +92,7 @@ void SpinButton::Draw(BRect updateRect)
 	if (IsFocus()) {
 		SetHighColor(ui_color(B_KEYBOARD_NAVIGATION_COLOR));
 		StrokeRect(rect);
-	}
-	else {
+	} else {
 		DrawButton(rect, kSpinButtonNone);
 	}
 
@@ -267,11 +245,6 @@ void SpinButton::MouseUp(BPoint point)
 			UpdateValue(Value());
 			fButton = kSpinButtonNone;
 		}
-#if B_BEOS_VERSION >= 0x0500
-//		be_app->SetCursor(B_CURSOR_SYSTEM_DEFAULT);
-#else
-//		be_app->SetCursor(B_HAND_CURSOR);
-#endif
 	}
 	BControl::MouseUp(point);
 }
@@ -284,7 +257,6 @@ void SpinButton::MouseMoved(BPoint point, uint32 transit, const BMessage *messag
 			UpdateValue(Value() + (delta < 0 ? fStepValue : -fStepValue));
 			fPoint = point;
 			fButton = kSpinButtonWheel;
-//			be_app->SetCursor(kVerticalResizeCursor);
 		}
 	}
 	BControl::MouseMoved(point, transit, message);
@@ -292,15 +264,10 @@ void SpinButton::MouseMoved(BPoint point, uint32 transit, const BMessage *messag
 
 void SpinButton::MessageReceived(BMessage *message)
 {
-#if B_BEOS_VERSION >= 0x0500
 	if (message->what == B_MOUSE_WHEEL_CHANGED) {
 		float delta = message->FindFloat("be:wheel_delta_y");
 		UpdateValue(Value() + (delta < 0 ? fStepValue : -fStepValue));
-	}
-	else {
+	} else {
 		BControl::MessageReceived(message);
 	}
-#else
-	BControl::MessageReceived(message);
-#endif
 }

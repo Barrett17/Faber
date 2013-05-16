@@ -53,7 +53,7 @@
 *******************************************************/
 PrefGeneral::PrefGeneral()
 	:
-	BView("Prefs general", B_FOLLOW_ALL, 0)
+	BView("Prefs general", B_FOLLOW_ALL | B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE | B_NAVIGABLE)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
@@ -113,14 +113,11 @@ PrefGeneral::PrefGeneral()
 
 	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Time Display")) +10);
 
-	temp_file = new BTextControl("temp_file", B_TRANSLATE("Temporary directory"),Prefs.temp_dir.String(), new BMessage(SET_TEMP));
-	
+	temp_file = new BTextControl("temp_file", B_TRANSLATE("Temporary directory"),
+		Prefs.temp_dir.String(), new BMessage(SET_TEMP));
 
 	s_free = new SpinControl("s_free", B_TRANSLATE("Minimum diskspace to keep free (Mb)"),
 		new BMessage(SPIN_CHANGED), 10, 10000, Prefs.keep_free, 10);
-//	s_free->SetDivider(Width()*.74);
-	s_free->SetDivider(70);
-//	s_free->SetExplicitAlignment(B_ALIGN_RIGHT);
 
 	const float spacing = be_control_look->DefaultItemSpacing();
 
@@ -170,13 +167,10 @@ PrefGeneral::AttachedToWindow()
 	temp_file->SetTarget(this);
 	time->SetTargetForItems(this);
 
-	if (Prefs.display_time == DISPLAY_SAMPLES)
-	{
+	if (Prefs.display_time == DISPLAY_SAMPLES) {
 		menu_sample->SetMarked(true);
 		menu_time->SetMarked(false);
-	}
-	else
-	{
+	} else {
 		menu_time->SetMarked(true);
 		menu_sample->SetMarked(false);
 	}
@@ -225,7 +219,8 @@ PrefGeneral::MessageReceived(BMessage* msg)
 	
 	case SET_TEMP:
 		Prefs.temp_dir.SetTo(temp_file->Text());
-		(new BAlert(NULL,B_TRANSLATE("TEMP_CHANGED"),B_TRANSLATE("OK")))->Go();
+		(new BAlert(NULL,B_TRANSLATE("TEMP_CHANGED"),
+			B_TRANSLATE("OK")))->Go();
 		break;
 
 	default:

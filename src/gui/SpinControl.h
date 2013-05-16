@@ -68,7 +68,7 @@ class SpinControl : public BControl {
 		virtual void SetValue(int32 value);
 		virtual void SetEnabled(bool enabled);
 		
-		virtual void FrameResized(float width, float height);
+		/*virtual void FrameResized(float width, float height);*/
 		virtual void GetPreferredSize(float *width, float *height);
 		
 		virtual void MessageReceived(BMessage *message);
