@@ -657,7 +657,6 @@ PrefKeys::Pulse()
 
 	m_index = -1;
 	list->Invalidate();
-	be_app->PostMessage(CHANGE_LANGUAGE);
 }
 
 

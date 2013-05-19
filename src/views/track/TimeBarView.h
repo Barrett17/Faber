@@ -33,7 +33,7 @@
 
 class TimeBarView: public BView{
  public:
-	TimeBarView(BRect r);
+	TimeBarView();
 	virtual ~TimeBarView();
 	virtual void AttachedToWindow();
 	virtual void Draw(BRect);

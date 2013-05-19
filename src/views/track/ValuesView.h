@@ -26,39 +26,23 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _Index_VIEW
-#define _Index_VIEW
+#ifndef _Values_VIEW
+#define _Values_VIEW
 #include <View.h>
 #include <Bitmap.h>
 
-class IndexView: public BView{
+class ValuesView: public BView{
  public:
-	IndexView(BRect r);
-	virtual ~IndexView();
+	ValuesView();
+	virtual ~ValuesView();
 	virtual void AttachedToWindow();
 	virtual void Draw(BRect);
-	virtual void MouseDown(BPoint);
-	virtual void MouseUp(BPoint);
-	virtual void MouseMoved(BPoint, uint32, const BMessage *);
-	virtual void MessageReceived(BMessage *msg);
-	virtual void FrameResized(float width, float height);
 
  private:
-	bool CalculateCache(BRect);
- 	BBitmap *OffScreen;
-
-	float		*index_memory_left;				// zoom-view memory
-	float		*index_memory_right;			// zoom-view memory
-
-	bool drag, select, m_resized;
-	BRect cache;
-	BPoint old;
-	int64 t, t2;
-	float old_x;
-
-	sem_id indexSem;
+	
 };
 
 #endif
+
 
 

@@ -28,58 +28,85 @@
 
 #include <TranslationKit.h>
 #include <Bitmap.h>
+#include <stdio.h>
 
-#include "VUView.h"
+#include "TimeBarView.h"
 #include "Globals.h"
 
-extern cookie_record play_cookie;
-
-VUView::VUView(BRect r) : 
-	BView(r, "VU view", B_FOLLOW_BOTTOM, B_WILL_DRAW | B_PULSE_NEEDED)
+TimeBarView::TimeBarView()
+	: 
+	BView("TimeBar view", B_FOLLOW_BOTTOM | B_FOLLOW_LEFT
+		| B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
-	LedsActive = BTranslationUtils::GetBitmapFile("./Bitmaps/LedsActive.png");
-	LedsInactive = BTranslationUtils::GetBitmapFile("./Bitmaps/LedsInactive.png");
 }
 
 //*****************************************************
-VUView::~VUView()
+TimeBarView::~TimeBarView()
 {
-	delete LedsActive;
-	delete LedsInactive;
 }
 
 //*****************************************************
-void VUView::AttachedToWindow()
+void TimeBarView::AttachedToWindow()
 {
-	SetViewBitmap(BTranslationUtils::GetBitmapFile("./Bitmaps/VU.png"), B_FOLLOW_ALL);
 }
 
 //*****************************************************
-void VUView::Pulse()
+void TimeBarView::Draw(BRect rect)
 {
-	left_max -= 0.04;	if (left_max<0.0)	left_max = 0.0;
-	right_max -= 0.04;	if (right_max<0.0)	right_max = 0.0;
+	BRect r = Bounds();
+	char s[255];
 
-	if (!Pool.IsPlaying()){
-		play_cookie.left = play_cookie.right = 0.0;
-	}else{
-		left_max = MAX(left_max, play_cookie.left);
-		right_max = MAX(right_max, play_cookie.right);
+	SetLowColor(Prefs.time_back_color);
+	FillRect(r, B_SOLID_LOW);
+	
+	if (Pool.size == 0)	return;
+	
+	SetHighColor(64,64,64);
+	StrokeLine(BPoint(r.left, r.top), BPoint(r.right, r.top));
+
+	if (Pool.sample_type == NONE)	return;
+
+	int32 w = r.IntegerWidth();
+	int32 x = (int32)r.left;
+	float b;
+
+	BFont font;
+	GetFont(&font);
+	font_height fh;
+	font.GetHeight(&fh);
+	
+	float fw = font.StringWidth(" 00:00.000 ");
+//	float t = floor( Pool.l_pointer/Pool.frequency);
+	float t = ( Pool.l_pointer/Pool.frequency);
+	float t_add = (Pool.r_pointer - Pool.l_pointer)/(Pool.frequency*w);
+	float t_marge = t_add * fw;
+	float t_small_marge = t_marge/5.0f;
+	float t_small_bound = t + t_small_marge;
+	float t_bound = t + t_marge;
+
+	while (w>0){
+		t += t_add;
+
+		if (t >= t_bound){
+			int time = (int)((t-(int)t)*1000);
+			int sec = (int)fmod(t,60);
+			int min = ((int)t)/60;
+			sprintf(s, "%d:%.2d.%.3d", min, sec, time);
+			t_bound += t_marge;
+			b = r.top + 5;
+			SetHighColor(Prefs.time_text_color);
+			DrawString(s, BPoint(x - font.StringWidth(s)/2.0f, r.bottom));
+			SetHighColor(Prefs.time_marks_color);
+			StrokeLine( BPoint( x, r.top+1 ), BPoint( x, b) );
+		}else if (t >= t_small_bound){
+			t_small_bound += t_small_marge;
+			SetHighColor(Prefs.time_small_marks_color);
+			b = r.top + 1;
+			StrokeLine( BPoint( x, r.top+1 ), BPoint( x, b) );
+		}
+		x ++;
+		w --;
 	}
-	Invalidate(BRect(9,8,23,56));
-}
 
-//*****************************************************
-void VUView::Draw(BRect rect)
-{
-	float left = 56.0f - play_cookie.left * 48.0f;
-	float right = 56.0f - play_cookie.right * 48.0f;
-	DrawBitmapAsync(LedsActive, BRect(0, left-8, 6, 48), BRect(9, left, 15, 56));
-	DrawBitmapAsync(LedsActive, BRect(0, right-8, 6, 48), BRect(17, right, 23, 56));
-
-	left = 56.0f - left_max * 48.0f;
-	right = 56.0f - right_max * 48.0f;
-	DrawBitmapAsync(LedsActive, BRect(0, left-8, 6, left-8), BRect(9, left, 15, left));
-	DrawBitmapAsync(LedsActive, BRect(0, right-8, 6, right-8), BRect(17, right, 23, right));
 }

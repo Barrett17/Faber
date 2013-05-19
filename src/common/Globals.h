@@ -1,9 +1,11 @@
 /*
  * Copyright 2011 Davide Gessa. All rights reserved.
+ * Copyright 2013 Dario Casalinuovo. All rights reserved.
  * Distributed under the terms of the MIT License.
  *
  * Authors:
  *		Davide Gessa, dak.linux@gmail.com
+ *		Dario Casalinuovo, b.vitruvio@gmail.com
  */
  /*
    	Copyright (c) 2003, Xentronix
@@ -34,9 +36,6 @@
 */
 #ifndef GLOBALS_H
 #define GLOBALS_H
-
-// TODO investigate about it and remove #ifdefs as well
-#define __SAMPLE_STUDIO_LE	1	// this enables the compilation of the LE version
 
 // TODO investigate about it and check if we should remove it
 // or enable it.
@@ -85,8 +84,6 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 #define TOOL_TIP_WINDOW	"Help System"
 #define COPY_RIGHT 		"Copyright 2002 Xentronix\n Copyright 2013 Versut"
 
-// This is our offical Ver description Build data/time is built into about box
-//#define VERSION       "Final"
 // The directory off of /boot/home/settings that we look for Inferno settings
 #define SETTINGS_DIR    "Faber"
 #define FABER_CONF_NAME	"Faber"
@@ -148,11 +145,16 @@ enum {
 #define UNDO				'undo'
 #define UNDO_ENABLE			'undE'
 #define REDO				'redo'
-#define PASTE_MIXED			'pmix'
+
 #define PASTE_NEW			'pnew'
 #define DROP_PASTE			'drpP'
+
+/* Unimplemented feel free to remove.
 #define TO_STACK			'2stk'
+
 #define SET_LOOP			'stlp'
+*/
+#define PASTE_MIXED			'pmix'
 #define PREFERENCES			'pref'
 #define OPEN_MIX			'opnM'
 #define HELP				'help'
@@ -219,7 +221,6 @@ enum {
 #define SPECTRUM			'spct'
 #define SAMPLE_SCOPE		'spls'
 
-#define CHANGE_LANGUAGE		'chgL'
 #define SET_TIME			'setT'
 
 #define UPDATE_MENU			'_udm'

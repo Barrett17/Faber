@@ -126,7 +126,6 @@ FaberApp::MessageReceived(BMessage *message)
 
 	case DROP_PASTE:
 	case B_PASTE:
-	case CHANGE_LANGUAGE:
 		fFaberWindow->PostMessage(message);
 		break;
 
