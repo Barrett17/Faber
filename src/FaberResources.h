@@ -6,14 +6,12 @@
 #define FABER_RESOURCES_H
 
 enum {
-	kNoIcon						= 0,
-	kPlayIcon					= 1,
+	kPlayIcon					= 0,
 	kNewDocumentIcon			= 2,
 	kOpenDocumentIcon			= 3,
 	kDocumentSaveIcon			= 4,
 
 	kCutIcon					= 10,
-
 };
 
 #endif

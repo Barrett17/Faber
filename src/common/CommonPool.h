@@ -32,10 +32,11 @@
 #include <Entry.h>
 #include <SoundPlayer.h>
 
+#include "FaberWindow.h"
 #include "ProgressWindow.h"
-#include "TransportView.h"
 #include "SettingsWindow.h"
 
+class FaberWindow;
 class SettingsWindow;
 
 #define PLAY_HOOKS	64		// number of realtime effects possible
@@ -83,17 +84,6 @@ class CommonPool{
 	void DoAbout();
    
 	float system_frequency;
-/*	status_t AddFilter(BEntry);
-	filter_entry* FindFilter(entry_ref ref);
-	void StartFilter(entry_ref ref);
-	status_t RunFilter(Filter *filter);
-	void BuildFilterMenu(BMenu*);
-   
-	status_t AddConverter(BEntry);
-	void StartImporter(entry_ref importer,entry_ref file_ref);
-	void BuildImportMenu(BMenu*);
-	void BuildExportMenu(BMenu*);
-*/   
 
 	status_t InstallMimeType(bool force = false);
 
@@ -159,15 +149,15 @@ class CommonPool{
 	ProgressWindow *progress;
 	BView	*m_SampleView;			// pointer to the sample-view to update the pointer
 	BView	*m_VU_View;			// pointer to the sample-view to update the VY meter
-	BWindow	*mainWindow;
+
+	FaberWindow* mainWindow;
 
 	BMenu		*menu_edit, *menu_transform, *menu_zero, *menu_analyze, *menu_generate;
 	BMenuItem	*mn_save, *mn_save_as, *mn_save_sel, *mn_undo_enable, *mn_undo, *mn_cut, *mn_copy;
 	BMenuItem	*mn_paste, *mn_select_all, *mn_trim, *mn_set_freq, *mn_resample;
 	BMenuItem	*mn_clear, *mn_unselect, *mn_copy_silence, *mn_paste_new;
-#ifdef __SAMPLE_STUDIO_LE
+
 	BMenuItem	*mn_paste_mix, *mn_copy_to_stack, *mn_redo;
-#endif
 
 	bool	sample_view_dirty, update_draw_cache;	// these are uses to recalc the sampleview cache and as dirty bit
 	bool	update_index;
@@ -181,9 +171,6 @@ private:
 	void LoadFilters();
 
 	bool m_playing;			// is there any playback ?
-
-	BList Filters;
-	BMenu *importmenu; // hack	
 };
 
 extern CommonPool Pool; // Included so you don't have too 

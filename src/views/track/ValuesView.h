@@ -33,7 +33,7 @@
 
 class ValuesView: public BView{
  public:
-	ValuesView(BRect r);
+	ValuesView();
 	virtual ~ValuesView();
 	virtual void AttachedToWindow();
 	virtual void Draw(BRect);

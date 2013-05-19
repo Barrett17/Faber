@@ -33,8 +33,9 @@
 #include "ValuesView.h"
 #include "Globals.h"
 
-ValuesView::ValuesView(BRect r) : 
-	BView(r, "Values view", B_FOLLOW_TOP_BOTTOM, B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
+ValuesView::ValuesView() : 
+	BView("Values view", B_FOLLOW_TOP_BOTTOM
+		| B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
 }
@@ -42,8 +43,8 @@ ValuesView::ValuesView(BRect r) :
 //*****************************************************
 ValuesView::~ValuesView()
 {
+	//SetViewColor(rgb_color(0, 0, 0));
 }
-
 //*****************************************************
 void ValuesView::AttachedToWindow()
 {

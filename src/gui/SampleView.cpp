@@ -26,6 +26,7 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include <Bitmap.h>
+#include <LayoutBuilder.h>
 #include <MenuItem.h>
 #include <PopUpMenu.h>
 #include <TranslationKit.h>
@@ -38,6 +39,7 @@
 #include "Shortcut.h"
 #include "MyClipBoard.h"
 #include "VMSystem.h"
+#include "ValuesView.h"
 
 #include <stdio.h>
 
@@ -46,8 +48,10 @@ extern cookie_record play_cookie;
 /*****************************************************
 *	Init View
 *****************************************************/
-SampleView::SampleView(BRect r) : 
-	BView(r, "Sample view", B_FOLLOW_ALL, B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE | B_PULSE_NEEDED)
+SampleView::SampleView()
+	: 
+	BView("Sample view", B_FOLLOW_ALL | B_WILL_DRAW | B_FRAME_EVENTS
+		| B_FULL_UPDATE_ON_RESIZE | B_PULSE_NEEDED)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
 	drag = false;
@@ -157,9 +161,9 @@ void SampleView::Pulse()
 				Pool.l_pointer = ptr;
 				Pool.r_pointer = Pool.l_pointer + xx;
 
-				Window()->FindView("Pointers view")->Pulse();//Invalidate();
+				//Window()->FindView("Pointers view")->Pulse();//Invalidate();
 				Pool.update_index = true;	// @TODO: need to be pulse for fast update
-				Window()->FindView("Big view")->Pulse();//Draw()Invalidate();
+				Window()->FindView("InfoToolBar")->Pulse();//Draw()Invalidate();
 				Window()->FindView("Sample view")->Invalidate();
 				Window()->FindView("TimeBar view")->Invalidate();
 			}
@@ -355,8 +359,8 @@ void SampleView::MouseDown(BPoint p)
 
 				menu->AddItem(new BMenuItem(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE_MAN), KeyBind.GetKey("TRANSPORT_PAUSE"), KeyBind.GetMod("TRANSPORT_PAUSE")));
-				if (((FaberWindow*)Pool.mainWindow)->transport_view->pause->Value() == B_CONTROL_ON)
-					menuItem->SetMarked(true);
+				//if (((FaberWindow*)Pool.mainWindow)->transport_view->pause->Value() == B_CONTROL_ON)
+				//	menuItem->SetMarked(true);
 				menu->AddItem(new BMenuItem(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), KeyBind.GetKey("TRANSPORT_STOP"), KeyBind.GetMod("TRANSPORT_STOP")));
 				menu->AddSeparatorItem();
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
@@ -369,12 +373,12 @@ void SampleView::MouseDown(BPoint p)
 				menuItem->SetEnabled(ClipBoard.HasClip());
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste as New"), new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
 				menuItem->SetEnabled(ClipBoard.HasClip());
-				#ifdef __SAMPLE_STUDIO_LE
-					menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste & mix..."), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
-					menuItem->SetEnabled(ClipBoard.HasClip());
-					menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy to stack"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
-					menuItem->SetEnabled(Pool.selection != NONE);
-				#endif
+				
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste & mix..."), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
+				menuItem->SetEnabled(ClipBoard.HasClip());
+				//menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy to stack"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
+				//menuItem->SetEnabled(Pool.selection != NONE);
+				
 				menu->AddSeparatorItem();
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Select All"), new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Unselect All"), new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"), KeyBind.GetMod("UNSELECT_ALL")));
@@ -483,7 +487,7 @@ void SampleView::MouseDown(BPoint p)
 						Invalidate();
 						Pool.update_index = true;
 						Window()->FindView("Index view")->Invalidate();
-						Window()->FindView("Pointers view")->Invalidate();
+						//Window()->FindView("Pointers view")->Invalidate();
 						Window()->FindView("TimeBar view")->Invalidate();
 						old_y = p.y;
 						old_x = p.x;
@@ -526,7 +530,8 @@ void SampleView::MouseDown(BPoint p)
 			while(button){										// Keep playing as long as the mouse is pressed
 				GetMouse(&p, &button);
 				Pulse();
-				Window()->FindView("Big view")->Pulse();
+
+				Window()->FindView("InfoToolBar")->Pulse();
 				snooze(10000);
 			}
 			Pool.StopPlaying();
@@ -557,7 +562,8 @@ void SampleView::MouseDown(BPoint p)
 				Pool.frequency = Pool.system_frequency * (p.x-x)/50.0;
 
 				Pulse();
-				Window()->FindView("Big view")->Pulse();
+
+				Window()->FindView("InfoToolBar")->Pulse();
 				snooze(10000);
 			}
 			Pool.SetLoop(bLoop);
@@ -573,10 +579,10 @@ void SampleView::MouseDown(BPoint p)
 	}
 
 	Invalidate();
-	Window()->FindView("Pointers view")->Invalidate();
+	//Window()->FindView("Pointers view")->Invalidate();
 	Pool.update_index = true;
 	Window()->FindView("Index view")->Invalidate();
-	Window()->FindView("Big view")->Invalidate();
+	Window()->FindView("InfoToolBar")->Invalidate();
 	Pool.UpdateMenu();
 }
 
@@ -697,7 +703,7 @@ void SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 			Pool.r_sel_pointer = Pool.size;
 		
 		Pool.update_index = true;
-		Window()->FindView("Pointers view")->Draw(Window()->FindView("Pointers view")->Bounds());
+		//Window()->FindView("Pointers view")->Draw(Window()->FindView("Pointers view")->Bounds());
 		Window()->FindView("Index view")->Invalidate();
 		int32 step = (int32)((Pool.r_pointer-Pool.l_pointer)/Bounds().Width());
 		int32 zoom_x = 4;		// normal case just extend the width of the selection triangles
@@ -740,10 +746,10 @@ void SampleView::MouseUp(BPoint p)
 		Pool.pointer = (int32)(Pool.l_pointer + p.x * (Pool.r_pointer - Pool.l_pointer)/Bounds().Width());
 		
 		Invalidate();
-		Window()->FindView("Pointers view")->Invalidate();
+		//Window()->FindView("Pointers view")->Invalidate();
 		Pool.update_index = true;
 		Window()->FindView("Index view")->Invalidate();
-		Window()->FindView("Big view")->Invalidate();
+		//Window()->FindView("Big view")->Invalidate();
 	}
 
 	drag = false;

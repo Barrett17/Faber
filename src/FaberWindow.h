@@ -30,8 +30,13 @@
 
 #include <Window.h>
 
-#include "TransportView.h"
-#include "ToolBarView.h"
+//#include "TransportView.h"
+#include "ToolBar.h"
+
+
+class BMenu;
+class BMenuBar;
+class ToolBar;
 
 class FaberWindow : public BWindow
 {
@@ -42,14 +47,19 @@ public:
 	virtual void 			MessageReceived(BMessage *message);
 	
 			void 			UpdateRecent();
-			void 			AddMenu();
+			void			RedrawWindow();
 
-			ToolBarView*	toolBar;
+			// TODO make it private
+			ToolBar*		toolBar;
 private:
-			BMenuBar*		mainMenuBar;
+			BMenuBar*		_BuildMenu();
+
 			BMenu*			recent_menu;
-			BView*			VU_view, *index_view, *sample_view, *pointer_view;
-			TransportView* 	transport_view;
+			BView*			index_view, *sample_view, *pointer_view;
+
+			BMenuBar*		fMainMenuBar;
+
+			BView*			fPeakView;
 
 	friend class SampleView;
 };

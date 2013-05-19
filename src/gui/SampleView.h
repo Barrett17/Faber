@@ -38,7 +38,7 @@ enum {DRAW_PEAK, DRAW_PLAIN, DRAW_POINTS };
 
 class SampleView: public BView{
  public:
-	SampleView(BRect r);
+	SampleView();
 	virtual ~SampleView();
 	virtual void AttachedToWindow();
 	virtual void Draw(BRect);

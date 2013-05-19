@@ -33,7 +33,7 @@
 
 class IndexView: public BView{
  public:
-	IndexView(BRect r);
+	IndexView();
 	virtual ~IndexView();
 	virtual void AttachedToWindow();
 	virtual void Draw(BRect);

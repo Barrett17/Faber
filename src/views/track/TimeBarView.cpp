@@ -33,8 +33,10 @@
 #include "TimeBarView.h"
 #include "Globals.h"
 
-TimeBarView::TimeBarView(BRect r) : 
-	BView(r, "TimeBar view", B_FOLLOW_BOTTOM | B_FOLLOW_LEFT_RIGHT, B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
+TimeBarView::TimeBarView()
+	: 
+	BView("TimeBar view", B_FOLLOW_BOTTOM | B_FOLLOW_LEFT
+		| B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
 }

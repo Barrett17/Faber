@@ -6,6 +6,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio filter ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src window ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
@@ -15,21 +16,38 @@ Application Faber :
 	# this is the core code
 	main.cpp
 	FaberWindow.cpp
-	FaberView.cpp
+	ToolBar.cpp
+	InfoToolBar.cpp
+
+	TrackAudio.cpp
 
 	# GUI Code mixed views and windows
+	# to be reworked a bit
 	IndexView.cpp
-	ToolBarView.cpp
-	TransportView.cpp
 	TimeBarView.cpp
 	ValuesView.cpp
-	VUView.cpp
 
+	# Various windows
 	AnalyzeWindow.cpp
 	SpectrumWindow.cpp
 	SampleScopeWindow.cpp
 	ProgressWindow.cpp
 	AboutBox.cpp
+	SavePanel.cpp
+	OpenPanel.cpp
+
+	# app and libstilnovo implementation base classes
+	SeekSlider.cpp
+	SpinControl.cpp
+	SpinSlider.cpp
+	PeakView.cpp
+	SampleView.cpp
+	SpinButton.cpp
+	VolumeSlider.cpp
+	FStringItem.cpp
+	IconButton.cpp
+
+	BitmapDrawer.cpp # TODO remove it
 
 	# Settings
 	SettingsWindow.cpp
@@ -43,27 +61,13 @@ Application Faber :
 	SwatchView.cpp
 
 	# Common
-	MyClipBoard.cpp
-	OpenPanel.cpp
+	MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
 	VMSystem.cpp
-	CommonPool.cpp
+	CommonPool.cpp # TODO Remove it
 	PeakFile.cpp
 	ProjectManager.cpp
 	Debug.cpp
-	SavePanel.cpp
 	History.cpp
-
-	# app and libstilnovo implementation base classes
-	PointersView.cpp
-	SeekSlider.cpp
-	SpinControl.cpp
-	SpinSlider.cpp
-	PeakView.cpp
-	SampleView.cpp
-	SpinButton.cpp
-	VolumeSlider.cpp
-	FStringItem.cpp
-	BitmapDrawer.cpp
 
 	# filters
 	AmplifierFilter.cpp
@@ -81,7 +85,7 @@ Application Faber :
 	FreqWindow.cpp
 	ResampleWindow.cpp
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
-	: Faber.rdef
+	: Faber.rdef ToolBarIcons.rdef
 ;
 
 InstallBin $(FABER_DIRECTORY) : Faber ;

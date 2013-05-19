@@ -314,22 +314,22 @@ void Shortcut::InstallDefaults(){
 	// edit menu
 	Install(0,"EDIT_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
 	Install(1,"UNDO",				'Z', B_COMMAND_KEY,					  0, 0,							UNDO			);
-#ifdef __SAMPLE_STUDIO_LE
+
 	Install(1,"REDO",				'Z', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							REDO			);
-#endif
+
 	Install(1,"UNDO_ENABLE",		'Z', B_COMMAND_KEY | B_CONTROL_KEY,	  0, 0,							UNDO_ENABLE		);
 	Install(1,"COPY",				'C', B_COMMAND_KEY,					  0, 0,							B_COPY			);
 	Install(1,"COPY_SILENCE",		'X', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							COPY_SILENCE	);
 	Install(1,"CUT",				'X', B_COMMAND_KEY,					  0, 0,							B_CUT			);
 	Install(1,"PASTE",			  	'V', B_COMMAND_KEY,					  0, 0,							B_PASTE			);
 	Install(1,"PASTE_NEW",			'V', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							PASTE_NEW		);
-#ifdef __SAMPLE_STUDIO_LE
+
 	Install(1,"EDIT_PASTE_MIX",		'V', B_COMMAND_KEY | B_CONTROL_KEY,	  0, 0,							PASTE_MIXED		);
-#endif
+
 	Install(1,"CLEAR",				'B', B_COMMAND_KEY,			   B_DELETE, 0,							CLEAR			);
-#ifdef __SAMPLE_STUDIO_LE
-	Install(1,"COPY_TO_STACK",		'C', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							TO_STACK		);
-#endif
+
+//	Install(1,"COPY_TO_STACK",		'C', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							TO_STACK		);
+
 	Install(1,"SELECT_ALL",			'A', B_COMMAND_KEY,					  0, 0,							B_SELECT_ALL	);
 	Install(1,"UNSELECT_ALL",		'U', B_COMMAND_KEY,					  0, 0,							UNSELECT_ALL	);
 	Install(1,"ZERO_IN",			  0, 0,								  0, 0,							ZERO_IN			);

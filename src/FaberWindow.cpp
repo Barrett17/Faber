@@ -28,23 +28,23 @@
 #include "FaberWindow.h"
 
 #include <Application.h>
-#include <InterfaceKit.h>
-#include <StorageKit.h>
-#include <MediaKit.h>
 #include <Cursor.h>
+#include <InterfaceKit.h>
+#include <LayoutBuilder.h>
+#include <MediaKit.h>
+#include <StorageKit.h>
 
 #include "main.h"
-#include "FaberView.h"
 #include "Globals.h"
-#include "VUView.h"
-#include "TransportView.h"
-#include "PointersView.h"
-#include "ToolBarView.h"
-#include "SampleView.h"
-#include "ValuesView.h"
-#include "IndexView.h"
-#include "TimeBarView.h"
+#include "PeakView.h"
+#include "TrackAudio.h"
 #include "Filters.h"
+#include "InfoToolBar.h"
+
+//#include "FaberView.h"
+//#include "PointersView.h"
+#include "TimeBarView.h"
+
 #include "FreqWindow.h"
 #include "MyClipBoard.h"
 #include "Shortcut.h"
@@ -62,14 +62,14 @@ cookie_record play_cookie;
 
 class MyMenuBar : public BMenuBar {
 public:
-  					MyMenuBar(BRect frame, const char *name);
+  					MyMenuBar(const char *name);
 	virtual void	MakeFocus(bool b);
 };
 
 
-MyMenuBar::MyMenuBar(BRect r, const char *name)
+MyMenuBar::MyMenuBar(const char *name)
 	:
-	BMenuBar(r, name)
+	BMenuBar(name)
 {
 }
 
@@ -374,20 +374,20 @@ void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_au
 
 FaberWindow::FaberWindow(BRect frame)
 	:
-	BWindow(frame, NULL ,B_TITLED_WINDOW,B_ASYNCHRONOUS_CONTROLS)
+	BWindow(frame, "Faber" ,B_TITLED_WINDOW,B_ASYNCHRONOUS_CONTROLS),
+	fMainMenuBar(NULL)
 {
-	Looper()->SetName("Faber");
-
 	// create global access
 	Pool.mainWindow = this;			// handle to this window
 
 	// set MIME types
-	Pool.InstallMimeType();
+	//Pool.InstallMimeType();
 
 	// init prefs
 	Prefs.Init();
 	ClipBoard.Init();				// clipboard init
 	Hist.Init();					// Undo init
+
 #ifdef __VM_SYSTEM
 	VM.Init();
 #endif
@@ -403,9 +403,6 @@ FaberWindow::FaberWindow(BRect frame)
 	ResizeTo( Prefs.frame.Width(), Prefs.frame.Height() );
 	MoveTo( Prefs.frame.left, Prefs.frame.top );
 
-	// Set Language
-	//Language.SetName(Prefs.lang_name.String());
-	
 	// Now init the keyBindings
 	KeyBind.Init();
 	
@@ -426,87 +423,49 @@ FaberWindow::FaberWindow(BRect frame)
 	sprintf(s, "Faber - %s", B_TRANSLATE("Untitled"));
 	SetTitle(s);
 
-// GUI
-	mainMenuBar = NULL;
-	AddMenu();
+	// GUI
 
-	BRect r(0,0,31,62);				// VU meters
-	r.OffsetTo(229,Bounds().bottom - 62);
-	AddChild(VU_view = new VUView(r));
-	Pool.m_VU_View = VU_view;		// add a pointer for the player
+	toolBar = new ToolBar();
 
-	r.Set(0,0,228,62);				// Transport buttons
-	r.OffsetTo(0,Bounds().bottom - 62);
-	AddChild(transport_view = new TransportView(r));
+	fPeakView = new PeakView("OutputPeakView", true, false);
+	fPeakView->SetExplicitMaxSize(BSize(200, 20));
+	Pool.m_VU_View = fPeakView;		// add a pointer for the player
 
-	r.Set(0,0,259,62);				// Numers at right
-	r.OffsetTo(Bounds().right - 259,Bounds().bottom - 62);
-	AddChild(pointer_view = new PointersView(r));
+	//pointer_view = new PointersView();
 
-	r = Bounds();					// Toolbar
-	r.top += 20;
-	r.bottom = r.top+32;
-	r.right = 3000;
-	AddChild(toolBar = new ToolBarView(r));
-
-	r = Bounds();					// Big LCD
-	r.top = r.bottom -62;
-	r.left = 261;
-	r.right -= 260;
-	AddChild(new FaberView(r));
-
-
-// sample Views
-	BRect sv = Bounds();
-	sv.top += (21+32);
-	sv.bottom -= 63;
-
-	r = sv;							// wave display
-	r.left += VALUEBAR_WIDTH;
-	r.bottom -= TIMEBAR_HEIGHT;
-	r.top += INDEXVIEW_HEIGHT;
-	AddChild(sample_view = new SampleView(r));
+	sample_view = new TrackAudio();
 	Pool.m_SampleView = sample_view;	// for the player
-	((SampleView*)sample_view)->Init();
-	
-	r = sv;							// left sample heights
-//	r.top += INDEXVIEW_HEIGHT;
-	r.right = VALUEBAR_WIDTH-1;
-	AddChild(new ValuesView(r));
-	
-	r = sv;							// bottom timescale
-	r.left = VALUEBAR_WIDTH;
-	r.top = r.bottom - TIMEBAR_HEIGHT+1;
-	AddChild(new TimeBarView(r));
 
-	r = sv;							// scroll_view / overview
-	r.left = VALUEBAR_WIDTH;
-	r.bottom = r.top + INDEXVIEW_HEIGHT-1;
-	AddChild(index_view = new IndexView(r));
-	
-//	r = sv;
-//	r.bottom = r.top + INDEXVIEW_HEIGHT-1;
-//	AddChild(new IndexView(r));
+	BLayoutBuilder::Group<>(this, B_VERTICAL)
+		.Add(_BuildMenu())
+		.AddGroup(B_HORIZONTAL)
+			.Add(toolBar)
+			.Add(new BStringView(NULL, "Output", B_WILL_DRAW))
+			.Add(fPeakView)
+		.End()
+		//.Add(new TimeBarView())
+		.Add(new TrackAudio())
+		.Add(new InfoToolBar())
+		//.Add(pointer_view)
+		//.Add(new FaberView())
+	.End();
 
-
-	Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
+	//Pool.SetLoop((transport_view->loop->Value() == B_CONTROL_ON));
 	SetSizeLimits(MIN_W ,MAX_W, MIN_H , MAX_H);
 	SetPulseRate(50000);
 }
 
-void
-FaberWindow::AddMenu()
+
+BMenuBar*
+FaberWindow::_BuildMenu()
 {
 	BMenu		*menu;
 	BMenuItem	*menuItem;
-	BRect		menuBarRect;
-	
-	menuBarRect.Set(0.0, 0.0, 10000.0, 18.0);
-	mainMenuBar = new MyMenuBar(menuBarRect, "MenuBar");
-	AddChild(mainMenuBar);
+
+	fMainMenuBar = new MyMenuBar("MenuBar");
 	
 	menu = new BMenu(B_TRANSLATE("File"));
-	mainMenuBar->AddItem(menu);
+	fMainMenuBar->AddItem(menu);
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("New"), new BMessage(NEW), KeyBind.GetKey("FILE_NEW"), KeyBind.GetMod("FILE_NEW")));
 
 	recent_menu = new BMenu(B_TRANSLATE("Open..."));
@@ -521,8 +480,10 @@ FaberWindow::AddMenu()
 	menuItem->SetEnabled(false);
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Append..."), new BMessage(APPEND), KeyBind.GetKey("FILE_APPEND"), KeyBind.GetMod("FILE_APPEND")));
 	menuItem->SetEnabled(false);
+
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Mix..."), new BMessage(OPEN_MIX), KeyBind.GetKey("FILE_MIX"), KeyBind.GetMod("FILE_MIX")));
 	menuItem->SetEnabled(false);
+
 	menu->AddSeparatorItem();
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Save"), new BMessage(SAVE), KeyBind.GetKey("FILE_SAVE"), KeyBind.GetMod("FILE_SAVE")));
 	Pool.mn_save = menuItem;
@@ -537,13 +498,13 @@ FaberWindow::AddMenu()
 
 	menu = new BMenu(B_TRANSLATE("Edit"));
 	Pool.menu_edit = menu;
-	mainMenuBar->AddItem(menu);
+	fMainMenuBar->AddItem(menu);
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Undo"), new BMessage(UNDO), KeyBind.GetKey("UNDO"), KeyBind.GetMod("UNDO")));
 	Pool.mn_undo = menuItem;
-#ifdef __SAMPLE_STUDIO_LE
+
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Redo"), new BMessage(REDO), KeyBind.GetKey("REDO"), KeyBind.GetMod("REDO")));
 	Pool.mn_redo = menuItem;
-#endif
+
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Enable Undo"), new BMessage(UNDO_ENABLE), KeyBind.GetKey("UNDO_ENABLE"), KeyBind.GetMod("UNDO_ENABLE")));
 	Pool.mn_undo_enable = menuItem;
 	menuItem->SetMarked(Prefs.save_undo);
@@ -558,13 +519,14 @@ FaberWindow::AddMenu()
 	Pool.mn_paste = menuItem;
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste as new"), new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
 	Pool.mn_paste_new = menuItem;
-#ifdef __SAMPLE_STUDIO_LE
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste & mix"), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
 	menuItem->SetEnabled(false);
+	
 	Pool.mn_paste_mix = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy to stack"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
-	Pool.mn_copy_to_stack = menuItem;
-#endif
+	
+	/*menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy to stack"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
+	Pool.mn_copy_to_stack = menuItem;*/
+
 	menu->AddSeparatorItem();
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Select All"), new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
 	Pool.mn_select_all = menuItem;
@@ -593,20 +555,19 @@ FaberWindow::AddMenu()
 
 	menu = new BMenu(B_TRANSLATE("Transform"));
 	Pool.menu_transform = menu;
-	mainMenuBar->AddItem(menu);
+	fMainMenuBar->AddItem(menu);
 
 	menu = new BMenu(B_TRANSLATE("Analyze"));
 	Pool.menu_analyze = menu;
-	mainMenuBar->AddItem(menu);
+	fMainMenuBar->AddItem(menu);
 
-	#ifdef __SAMPLE_STUDIO_LE
-		menu = new BMenu(B_TRANSLATE("Generate"));
-		Pool.menu_generate = menu;
-		mainMenuBar->AddItem(menu);
-	#endif
+	menu = new BMenu(B_TRANSLATE("Generate"));
+	menu->SetEnabled(false);
+	Pool.menu_generate = menu;
+	fMainMenuBar->AddItem(menu);
 
 	menu = new BMenu(B_TRANSLATE("Help"));
-	mainMenuBar->AddItem(menu);
+	fMainMenuBar->AddItem(menu);
 
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Help"),
 		new BMessage(HELP), KeyBind.GetKey("HELP"), KeyBind.GetMod("HELP")));
@@ -625,6 +586,7 @@ FaberWindow::AddMenu()
 		new BMessage(ABOUT), KeyBind.GetKey("ABOUT"), KeyBind.GetMod("ABOUT")));
 
 	SetKeyMenuBar(NULL);
+	return fMainMenuBar;
 }
 
 
@@ -687,23 +649,15 @@ FaberWindow::MessageReceived(BMessage *message)
 //	message->PrintToStream();
 
 	switch (message->what){
-	case CHANGE_LANGUAGE:
-		if (mainMenuBar){
-			mainMenuBar->RemoveSelf();
-			delete mainMenuBar;
-		}
-		AddMenu();
-		Pool.UpdateMenu();
-		break;
 
 	case TRANSPORT_PAUSE_MAN:
-		if (transport_view->pause->Value() == B_CONTROL_ON)
+		/*if (transport_view->pause->Value() == B_CONTROL_ON)
 			transport_view->pause->SetValue(B_CONTROL_OFF);
 		else
-			transport_view->pause->SetValue(B_CONTROL_ON);
+			transport_view->pause->SetValue(B_CONTROL_ON);*/
 		// no break as TRANSPORT_PAUSE needs to follow
 	case TRANSPORT_PAUSE:
-		play_cookie.pause = (transport_view->pause->Value() == B_CONTROL_ON);
+		//play_cookie.pause = (transport_view->pause->Value() == B_CONTROL_ON);
 		break;
 
 	case TRANSPORT_TOGGLE:
@@ -716,7 +670,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.RedrawWindow();
 		break;
-
+/*
 	case TRANSPORT_PLAY:
 		if (Pool.size == 0)	break;
 		if (Pool.sample_type == NONE){
@@ -766,7 +720,7 @@ FaberWindow::MessageReceived(BMessage *message)
 	case TRANSPORT_LOOP:
 		Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
 		break;
-
+	*/
 	case OPEN:
 		if (!Pool.IsChanged())
 			((FaberApp*)be_app)->fOpenPanel->Show();
@@ -1029,7 +983,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 		
 	case HELP:
-{
+	{
 		BPath path;
 		app_info ai;
 		be_app->GetAppInfo(&ai);
@@ -1041,8 +995,9 @@ FaberWindow::MessageReceived(BMessage *message)
 		sprintf(help, path.Path());
 		be_roster->Launch("text/html",1, &help);
 		delete help;
-}		break;
-		
+	}
+	break;
+	
 	case NEW:
 	{	app_info info;
 		be_app->GetAppInfo(&info);
@@ -1056,7 +1011,7 @@ FaberWindow::MessageReceived(BMessage *message)
 	}	break;
 		
 	case HISTORY:
-{
+	{
 		BPath path;
 		app_info ai;
 		be_app->GetAppInfo(&ai);
@@ -1068,7 +1023,8 @@ FaberWindow::MessageReceived(BMessage *message)
 		sprintf(history, path.Path());
 		be_roster->Launch("text/html",1, &history);
 		delete history;
-}		break;
+	}
+	break;
 		
 	case HOMEPAGE:
 	{
@@ -1090,7 +1046,7 @@ FaberWindow::MessageReceived(BMessage *message)
 
 	case UPDATE:
 		FindView("Sample view")->Pulse();
-		FindView("Big view")->Pulse();
+		FindView("InfoToolBar")->Pulse();
 		FindView("Index view")->Invalidate();
 		break;
 	
@@ -1154,16 +1110,19 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 		
 	case RUN_FILTER: // run a filter with or without GUI
-{		if (Pool.size == 0) break;
+	{
+		if (Pool.size == 0)
+			break;
+
 		const char *tag = NULL;
-		if (message->FindInt32("filter", &mod) == B_OK){
+		if (message->FindInt32("filter", &mod) == B_OK) {
 			RunFilter(mod);
-		}
-		else if (message->FindString("language_key", &tag) == B_OK){
+		} else if (message->FindString("language_key", &tag) == B_OK) {
 			RunFilter(tag);
 		}
-}		break;
-	
+	}
+	break;
+
 	case EXE_FILTER: // apply filter, this is send by the filter or repeat function
 		if (message->FindPointer("filter", (void**)&filter) == B_OK)
 			ExecuteFilter(filter);
@@ -1213,7 +1172,6 @@ FaberWindow::MessageReceived(BMessage *message)
 		message->FindInt32("time", &x);
 		Prefs.display_time = x;
 		Pool.RedrawWindow();
-		Pool.PrefWin->PostMessage(CHANGE_LANGUAGE);
 		break;
 
 	case B_KEY_DOWN:
@@ -1249,4 +1207,22 @@ FaberWindow::MessageReceived(BMessage *message)
 	
 	if (CurrentFocus())
 		CurrentFocus()->MakeFocus(false);
+}
+
+
+void
+FaberWindow::RedrawWindow()
+{
+	Lock();
+//	for (int32 i = 0; i<mainWindow->CountChildren();i++)
+//		mainWindow->ChildAt(i)->Invalidate();
+
+	//FindView("Pointers view")->Invalidate();
+	FindView("Index view")->Invalidate();
+	toolBar->Invalidate();
+	FindView("Sample view")->Invalidate();
+	//FindView("TimeBar view")->Invalidate();
+	//FindView("Values view")->Invalidate();
+
+	Unlock();	
 }

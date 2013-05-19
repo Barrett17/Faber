@@ -40,8 +40,10 @@
 #define UPDATE	'updt'
 #define iHEIGHT	INDEXVIEW_HEIGHT/2
 
-IndexView::IndexView(BRect r) : 
-	BView(r, "Index view", B_FOLLOW_LEFT_RIGHT, B_WILL_DRAW | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
+IndexView::IndexView()
+	: 
+	BView("Index view", B_FOLLOW_LEFT_RIGHT | B_WILL_DRAW
+		| B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
 
@@ -142,7 +144,7 @@ void IndexView::MouseDown(BPoint p)
 				Pool.l_pointer -= s/2;
 				if (Pool.l_pointer<0)	Pool.l_pointer = 0;
 				Pool.r_pointer = Pool.l_pointer + s;
-				Window()->FindView("Pointers view")->Invalidate();
+				//Window()->FindView("Pointers view")->Invalidate();
 				Window()->FindView("Sample view")->Invalidate();
 				cache = Bounds();
 				cache.left = Pool.l_pointer * Bounds().Width() / Pool.size;
@@ -167,7 +169,7 @@ void IndexView::MouseDown(BPoint p)
 				Pool.l_pointer += s/2;
 				if (Pool.l_pointer>(Pool.size-s))	Pool.l_pointer = Pool.size-s;
 				Pool.r_pointer = Pool.l_pointer + s;
-				Window()->FindView("Pointers view")->Invalidate();
+				//Window()->FindView("Pointers view")->Invalidate();
 				Window()->FindView("Sample view")->Invalidate();
 				cache = Bounds();
 				cache.left = Pool.l_pointer * Bounds().Width() / Pool.size;
@@ -213,7 +215,7 @@ void IndexView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		Pool.l_pointer = ((int32)p.x) * (Pool.size)/Bounds().IntegerWidth();
 		Pool.r_pointer = Pool.l_pointer + s;
 
-		Window()->FindView("Pointers view")->Invalidate();
+		//Window()->FindView("Pointers view")->Invalidate();
 		Window()->FindView("TimeBar view")->Invalidate();
 		Window()->FindView("Sample view")->Invalidate();
 		Pool.update_index = true;
@@ -236,7 +238,7 @@ void IndexView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		if (Pool.r_sel_pointer > Pool.size)
 			Pool.r_sel_pointer = Pool.size;
 		
-		Window()->FindView("Pointers view")->Pulse();
+		//Window()->FindView("Pointers view")->Pulse();
 		Window()->FindView("Index view")->Invalidate();
 		Window()->FindView("Sample view")->Invalidate();
 		BRect update;
