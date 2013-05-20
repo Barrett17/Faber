@@ -20,6 +20,7 @@ Application Faber :
 	InfoToolBar.cpp
 
 	TrackAudio.cpp
+	TimeTrack.cpp
 
 	# GUI Code mixed views and windows
 	# to be reworked a bit
@@ -46,8 +47,7 @@ Application Faber :
 	VolumeSlider.cpp
 	FStringItem.cpp
 	IconButton.cpp
-
-	BitmapDrawer.cpp # TODO remove it
+	BitmapDrawer.cpp
 
 	# Settings
 	SettingsWindow.cpp
@@ -62,11 +62,9 @@ Application Faber :
 
 	# Common
 	MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
-	VMSystem.cpp
+	VMSystem.cpp # TODO Set it as default or remove
 	CommonPool.cpp # TODO Remove it
 	PeakFile.cpp
-	ProjectManager.cpp
-	Debug.cpp
 	History.cpp
 
 	# filters
@@ -84,6 +82,7 @@ Application Faber :
 	DelayWindow.cpp
 	FreqWindow.cpp
 	ResampleWindow.cpp
+
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
 	: Faber.rdef ToolBarIcons.rdef
 ;

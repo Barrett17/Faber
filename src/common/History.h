@@ -30,6 +30,7 @@
 #define _HISTORY_H
 
 #include <Entry.h>
+#include <File.h>
 
 enum{ H_REPLACE, H_DELETE, H_FULL, H_PASTE };
 /*******************************************************

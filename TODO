@@ -1,11 +1,9 @@
 Rework of the code :
 
-	* Update all code to use layouts
+	* Update all code to use layouts (90%)
 	* Fix codestyle.
 	* Finish integration with locale_kit.
 	* Settings should be refined a bit.
-	* Replace image buttons with hvif versions and rework toolbar.
-	* Investigate on replace other controls.
 	* Fix hardcoded values like the app name et cetera
 	* Cleanup CommonPool.
 	* Remove code from GUI and put it in the right locations.

@@ -30,13 +30,22 @@
 
 #include <Window.h>
 
-//#include "TransportView.h"
 #include "ToolBar.h"
+#include "PeakView.h"
+#include "TrackAudio.h"
+#include "InfoToolBar.h"
+#include "TimeBarView.h"
 
-
+// TODO remove them
+// for some reason if you
+// remove them there's a compilation error
 class BMenu;
 class BMenuBar;
 class ToolBar;
+class TimeBarView;
+class TrackAudio;
+class InfoToolBar;
+
 
 class FaberWindow : public BWindow
 {
@@ -48,18 +57,21 @@ public:
 	
 			void 			UpdateRecent();
 			void			RedrawWindow();
+			void			UpdateToolBar();
 
-			// TODO make it private
-			ToolBar*		toolBar;
 private:
 			BMenuBar*		_BuildMenu();
 
-			BMenu*			recent_menu;
-			BView*			index_view, *sample_view, *pointer_view;
-
 			BMenuBar*		fMainMenuBar;
+			BMenu*			recent_menu;
 
-			BView*			fPeakView;
+			ToolBar*		fToolBar;
+			TrackAudio*		fTrackView;
+			InfoToolBar*	fInfoToolBar;
+			TimeBarView*	fTimeBar;
+			PeakView*		fPeakView;
+
+
 
 	friend class SampleView;
 };

@@ -31,6 +31,7 @@ TrackAudio::TrackAudio(const char* name, uint32 resizingMode)
 	.End();
 }
 
+
 TrackAudio::~TrackAudio()
 {
 }

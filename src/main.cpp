@@ -167,7 +167,7 @@ FaberApp::RefsReceived(BMessage* message)
 
 			Pool.sample_view_dirty = true;	// update the sample-view
 			Pool.update_index = true;
-			Pool.RedrawWindow();
+			fFaberWindow->RedrawWindow();
 			play_cookie.pause = true;
 
 			// gather the necessary format information
@@ -403,7 +403,7 @@ FaberApp::RefsReceived(BMessage* message)
 	Pool.update_draw_cache = true;	// update the draw cache
 	Pool.update_index = true;		// update the draw cache
 	Pool.update_peak = true;
-	Pool.RedrawWindow();
+	fFaberWindow->RedrawWindow();
 	Pool.InitBufferPlayer( Pool.frequency );
 
 	play_cookie.pause = temp_pause;

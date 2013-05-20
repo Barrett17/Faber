@@ -64,7 +64,7 @@ void History::Init()
 	// check some stuff and get it readu to go
 	BString str;
 	str = Prefs.temp_dir;
-	str << "/BeAEUndo";
+	str << "/Faber_Undo";
 	str << info.thread;						// make the file unique
    
 	BPath path;

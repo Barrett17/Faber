@@ -41,7 +41,7 @@ class SettingsWindow;
 
 #define PLAY_HOOKS	64		// number of realtime effects possible
 
-enum {SELECT_TOOL, DRAW_TOOL, PLAY_TOOL, SCRUB_TOOL};
+#define UPDATE	'updt'
 
 // just a little internal stuff to make life easy
 //typedef Filter*    (*FilterFunc) (BMessage*);
@@ -80,9 +80,7 @@ class CommonPool{
 	CommonPool();
 	~CommonPool();
 	void Init();
-   
-	void DoAbout();
-   
+
 	float system_frequency;
 
 	status_t InstallMimeType(bool force = false);
@@ -90,8 +88,11 @@ class CommonPool{
 	void ResetIndexView();			// Create the IndexZoomView data
 	bool update_peak;
 
+	
 	void SelectAll();
 	void DeSelectAll();
+
+	// TODO Remove, it's not a good place for it.
 	void RedrawWindow();
 	
 	void SaveUndo();			// save Undo data

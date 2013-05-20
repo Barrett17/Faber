@@ -132,6 +132,13 @@ enum {
 	STEREO=2
 };
 
+enum {
+	SELECT_TOOL,
+	DRAW_TOOL,
+	PLAY_TOOL,
+	SCRUB_TOOL
+};
+
 // Messages
 #define SPLITTER			'sltr'	// used to separate key-bind catagories
 #define SAVE_AS   			'ssam'

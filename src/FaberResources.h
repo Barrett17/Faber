@@ -6,12 +6,33 @@
 #define FABER_RESOURCES_H
 
 enum {
-	kPlayIcon					= 0,
-	kNewDocumentIcon			= 2,
-	kOpenDocumentIcon			= 3,
-	kDocumentSaveIcon			= 4,
+	kPlayIcon = 0,
+	kNewDocumentIcon,
+	kOpenDocumentIcon,
+	kDocumentSaveIcon,
+	kSaveSelectionIcon,
+	kInsertAtLocationIcon,
 
-	kCutIcon					= 10,
+	kCutIcon,
+	kCopyIcon,
+	kPasteIcon,
+	kUndoIcon,
+	kRedoIcon,
+
+	kEditLeftChannelIcon,
+
+	kStopIcon,
+	kPauseIcon,
+	kRecordIcon,
+	kLoopIcon,
+	kSeekForwardIcon,
+	kSeekForwardAllIcon,
+	kSeekBackwardIcon,
+	kSeekBackwardAllIcon,
+
+	kZoomInIcon,
+	kZoomOutIcon,
+	kZoomToSelectionIcon,
 };
 
 #endif

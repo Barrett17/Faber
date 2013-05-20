@@ -34,16 +34,11 @@
 #include <MediaKit.h>
 #include <StorageKit.h>
 
+#include "AboutBox.h"
 #include "main.h"
 #include "Globals.h"
-#include "PeakView.h"
-#include "TrackAudio.h"
 #include "Filters.h"
-#include "InfoToolBar.h"
 
-//#include "FaberView.h"
-//#include "PointersView.h"
-#include "TimeBarView.h"
 
 #include "FreqWindow.h"
 #include "MyClipBoard.h"
@@ -56,8 +51,6 @@
 #include <stdlib.h>
 
 cookie_record play_cookie;
-#define UPDATE	'updt'
-
 
 
 class MyMenuBar : public BMenuBar {
@@ -81,296 +74,6 @@ MyMenuBar::MakeFocus(bool b)
 }
 
 
-#ifdef __VM_SYSTEM
-
-void 
-BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)
-{
-	// We're going to be cheap and only work for floating-point audio 
-	if (format.format != media_raw_audio_format::B_AUDIO_FLOAT) { 
-		return; 
-	}
-	
-	bool stop_needed = false;
-	size_t i; 
-	float *buf = (float *) buffer; 
-	size_t float_size = size/4; 
-	cookie_record *cookie = (cookie_record *) theCookie;
-	float left = 0.0, right = 0.0;
-	float fraq = fabs(Pool.frequency/Pool.system_frequency);
-	
-	if ((Pool.selection == NONE) | cookie->end){
-		cookie->end_mem = Pool.size*Pool.sample_type;
-	}else{
-		cookie->end_mem = Pool.r_sel_pointer*Pool.sample_type;
-	}
-	
-	int32 mem_size = float_size * (int32)ceil(fraq);
-	float *mem = cookie->buffer;
-	VM.ReadCache( mem, mem_size );
-//	VM.ReadBlockAt( cookie->mem, mem, mem_size );
-
-	// Now fill the buffer with sound! 
-
-	if (cookie->pause){
-		for (i=0; i<float_size; i++) { 
-			buf[i] = 0.0;
-		}
-	}else{
-		if (Pool.sample_type == MONO){	//cookie->mono){
-			for (i=0; i<float_size; i+=2){
-				if (cookie->mem >= cookie->end_mem){
-					if (cookie->loop){
-						cookie->mem = Pool.pointer*Pool.sample_type;
-						VM.SetPlayPointer( cookie->mem );
-						VM.ReadCache( mem, mem_size );
-					}else{
-						buf[i] = 0.0;
-						buf[i+1] = 0.0;
-						stop_needed = true;
-					}
-				}
-				if (!stop_needed){
-					buf[i] = *mem;
-					buf[i+1] = *mem;
-
-					cookie->add += fraq;
-					if (Pool.frequency>=0){
-						while (cookie->add >= 1.0){
-							cookie->mem++;
-							mem++;
-							--cookie->add;
-						}
-					}else{
-						while (cookie->add >= 1.0){
-							cookie->mem--;
-							mem--;
-							--cookie->add;
-						}
-						if (cookie->mem < 0)
-							cookie->mem += cookie->end_mem;
-					}
-				}
-			}
-		}else{
-			for (i=0; i<float_size; i+=2) { 
-				if (cookie->mem >= cookie->end_mem){
-					if (cookie->loop){
-						cookie->mem = Pool.pointer*Pool.sample_type;
-						VM.SetPlayPointer( cookie->mem );
-						VM.ReadCache( mem, mem_size );
-					}else{
-						buf[i] = 0.0f;
-						buf[i+1] = 0.0f;
-						stop_needed = true;
-					}
-				}
-				if (!stop_needed){
-					switch(Pool.selection){
-					case NONE:
-					case BOTH:
-						buf[i] = mem[0];
-						buf[i+1] = mem[1];
-						break;
-					case LEFT:
-						buf[i] = mem[0];
-						buf[i+1] = mem[0];
-						break;
-					case RIGHT:
-						buf[i] = mem[1];
-						buf[i+1] = mem[1];
-						break;
-					}
-
-					cookie->add += fraq;
-					if (Pool.frequency>=0){
-						while (cookie->add >= 1.0){
-							cookie->mem+= 2;
-							mem+=2;
-							--cookie->add;
-						}
-					}else{
-						while (cookie->add >= 1.0){
-							cookie->mem-= 2;
-							mem-=2;
-							--cookie->add;
-						}
-						if (cookie->mem < 0)
-							cookie->mem += cookie->end_mem;
-					}
-				}
-			}
-		}
-	}
-	
-	Pool.last_pointer = cookie->mem;	// set the last played location
-	if (Pool.sample_type == STEREO)
-		Pool.last_pointer >>= 1;
-
-	if (stop_needed)
-		Pool.mainWindow->PostMessage(TRANSPORT_STOP);
-
-	for (int i=0; i<PLAY_HOOKS; i++){
-		if (Pool.BufferHook[i]){
-			(Pool.BufferHook[i])(buf, float_size, Pool.BufferCookie[i]);
-		}
-	}
-	
-
-	for (i=0; i<float_size; i+=2) { 
-		left = MAX(buf[i], left);
-		right = MAX(buf[i+1],right);
-	}
-	cookie->left = left;
-	cookie->right = right;
-
-	// update the visuals
-	cookie->count -= size;
-	if (cookie->count <0){
-		cookie->count = (int)Pool.system_frequency/3;						// 24 times a second
-			Pool.mainWindow->PostMessage(UPDATE);
-	}
-}
-
-#else
-void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)
-{
-	// We're going to be cheap and only work for floating-point audio 
-	if (format.format != media_raw_audio_format::B_AUDIO_FLOAT) { 
-		return; 
-	}
-	
-// assumes 44.1Khz stereo floats
-
-	bool stop_needed = false;
-	size_t i; 
-	float *buf = (float *) buffer; 
-	size_t float_size = size/4; 
-	cookie_record *cookie = (cookie_record *) theCookie;
-	float left = 0.0, right = 0.0;
-	double fraq = fabs(Pool.frequency/Pool.system_frequency);
-	
-	if ((Pool.selection == NONE) | cookie->end){
-		cookie->end_mem = Pool.sample_memory + Pool.size*Pool.sample_type;
-	}else{
-		cookie->end_mem = Pool.sample_memory + Pool.r_sel_pointer*Pool.sample_type;
-	}
-	
-	// Now fill the buffer with sound! 
-
-	if (cookie->pause){
-		for (i=0; i<float_size; i++) { 
-			buf[i] = 0.0;
-		}
-	}else{
-		if (Pool.sample_type == MONO){	//cookie->mono){
-			for (i=0; i<float_size; i+=2){
-				if (cookie->mem >= cookie->end_mem){
-					if (cookie->loop){
-						cookie->mem = Pool.sample_memory + Pool.pointer*Pool.sample_type;
-					}else{
-						buf[i] = 0.0;
-						buf[i+1] = 0.0;
-						stop_needed = true;
-					}
-				}
-				if (!stop_needed){
-					buf[i] = *cookie->mem;
-					buf[i+1] = *cookie->mem;
-
-					cookie->add += fraq;
-					if (Pool.frequency>=0){
-						while (cookie->add >= 1.0){
-							cookie->mem++;
-							--cookie->add;
-						}
-					}else{
-						while (cookie->add >= 1.0){
-							cookie->mem--;
-							--cookie->add;
-						}
-						if (cookie->mem < Pool.sample_memory)
-							cookie->mem += (cookie->end_mem - Pool.sample_memory);
-					}
-				}
-			}
-		}else{
-			for (i=0; i<float_size; i+=2) { 
-				if (cookie->mem >= cookie->end_mem){
-					if (cookie->loop){
-						cookie->mem = Pool.sample_memory + Pool.pointer*Pool.sample_type;
-					}else{
-						buf[i] = 0.0;
-						buf[i+1] = 0.0;
-						stop_needed = true;
-					}
-				}
-				if (!stop_needed){
-					switch(Pool.selection){
-					case NONE:
-					case BOTH:
-						buf[i] = cookie->mem[0];
-						buf[i+1] = cookie->mem[1];
-						break;
-					case LEFT:
-						buf[i] = cookie->mem[0];
-						buf[i+1] = cookie->mem[0];
-						break;
-					case RIGHT:
-						buf[i] = cookie->mem[1];
-						buf[i+1] = cookie->mem[1];
-						break;
-					}
-
-					cookie->add += fraq;
-					if (Pool.frequency>=0){
-						while (cookie->add >= 1.0){
-							cookie->mem+= 2;
-							--cookie->add;
-						}
-					}else{
-						while (cookie->add >= 1.0){
-							cookie->mem-= 2;
-							--cookie->add;
-						}
-						if (cookie->mem < Pool.sample_memory)
-							cookie->mem += (cookie->end_mem - Pool.sample_memory);
-					}
-					
-				}
-			}
-		}
-	}
-
-	Pool.last_pointer = (cookie->mem - Pool.sample_memory);	// set the last played location
-	if (Pool.sample_type == STEREO)
-		Pool.last_pointer >>= 1;
-
-	if (stop_needed)
-		Pool.mainWindow->PostMessage(TRANSPORT_STOP);
-
-	for (int i=0; i<PLAY_HOOKS; i++){
-		if (Pool.BufferHook[i]){
-			(Pool.BufferHook[i])(buf, float_size, Pool.BufferCookie[i]);
-		}
-	}
-	
-
-	for (i=0; i<float_size; i+=2) { 
-		left = MAX(buf[i], left);
-		right = MAX(buf[i+1],right);
-	}
-	cookie->left = left;
-	cookie->right = right;
-
-	// update the visuals
-	cookie->count -= size;
-	if (cookie->count <0){
-		cookie->count = (int)Pool.system_frequency/3;						// 24 times a second
-			Pool.mainWindow->PostMessage(UPDATE);
-	}
-}
-#endif
 
 FaberWindow::FaberWindow(BRect frame)
 	:
@@ -425,29 +128,33 @@ FaberWindow::FaberWindow(BRect frame)
 
 	// GUI
 
-	toolBar = new ToolBar();
+	fToolBar = new ToolBar();
 
 	fPeakView = new PeakView("OutputPeakView", true, false);
 	fPeakView->SetExplicitMaxSize(BSize(200, 20));
 	Pool.m_VU_View = fPeakView;		// add a pointer for the player
 
-	//pointer_view = new PointersView();
+	fTrackView = new TrackAudio();
+	Pool.m_SampleView = fTrackView;	// for the player
 
-	sample_view = new TrackAudio();
-	Pool.m_SampleView = sample_view;	// for the player
+	fInfoToolBar = new InfoToolBar();
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL)
+	fTimeBar = new TimeBarView();
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 1)
 		.Add(_BuildMenu())
+		.AddSplit(B_VERTICAL, 10.0f)
 		.AddGroup(B_HORIZONTAL)
-			.Add(toolBar)
+			.Add(fToolBar)
 			.Add(new BStringView(NULL, "Output", B_WILL_DRAW))
 			.Add(fPeakView)
+			.AddGlue()
 		.End()
-		//.Add(new TimeBarView())
-		.Add(new TrackAudio())
-		.Add(new InfoToolBar())
-		//.Add(pointer_view)
-		//.Add(new FaberView())
+		.AddGroup(B_VERTICAL)	
+			.Add(fTimeBar)
+			.Add(fTrackView)
+		.End()
+		.Add(fInfoToolBar)
 	.End();
 
 	//Pool.SetLoop((transport_view->loop->Value() == B_CONTROL_ON));
@@ -648,7 +355,8 @@ FaberWindow::MessageReceived(BMessage *message)
 
 //	message->PrintToStream();
 
-	switch (message->what){
+	switch (message->what)
+	{
 
 	case TRANSPORT_PAUSE_MAN:
 		/*if (transport_view->pause->Value() == B_CONTROL_ON)
@@ -661,31 +369,33 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case TRANSPORT_TOGGLE:
-		if (Pool.IsPlaying())	PostMessage(TRANSPORT_STOP);
-		else					PostMessage(TRANSPORT_PLAYS);
+		if (Pool.IsPlaying())
+			PostMessage(TRANSPORT_STOP);
+		else
+			PostMessage(TRANSPORT_PLAYS);
 		break;
 	
 	case TRANSPORT_SET:
 		Pool.pointer = Pool.last_pointer;
 		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
-/*
+
 	case TRANSPORT_PLAY:
 		if (Pool.size == 0)	break;
 		if (Pool.sample_type == NONE){
-			transport_view->play_sel->SetValue(B_CONTROL_OFF);
-			transport_view->play->SetValue(B_CONTROL_OFF);
+			/*transport_view->play_sel->SetValue(B_CONTROL_OFF);
+			transport_view->play->SetValue(B_CONTROL_OFF);*/
 			break;
 		}
-		transport_view->stop->SetValue(B_CONTROL_OFF);
+		/*transport_view->stop->SetValue(B_CONTROL_OFF);
 		transport_view->play->SetValue(B_CONTROL_OFF);
-		transport_view->play_sel->SetValue(B_CONTROL_ON);
+		transport_view->play_sel->SetValue(B_CONTROL_ON);*/
 
 //		Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
 		Pool.StartPlaying(Pool.pointer*Pool.sample_type, true);	// play till end
 		break;
-
+/*
 	case TRANSPORT_PLAYS:
 		if (Pool.size == 0)	break;
 		if (Pool.sample_type == NONE){
@@ -700,17 +410,18 @@ FaberWindow::MessageReceived(BMessage *message)
 //		Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
 		Pool.StartPlaying(Pool.pointer*Pool.sample_type, false);
 		break;
+*/
 
 	case TRANSPORT_STOP:
-		transport_view->play->SetValue(B_CONTROL_OFF);
+		/*transport_view->play->SetValue(B_CONTROL_OFF);
 		transport_view->play_sel->SetValue(B_CONTROL_OFF);
-		transport_view->stop->SetValue(B_CONTROL_ON);
+		transport_view->stop->SetValue(B_CONTROL_ON);*/
 		play_cookie.mem = play_cookie.start_mem;
 		Pool.StopPlaying();
-		FindView("Sample view")->Pulse();
-		FindView("Index view")->Invalidate();
+		/*FindView("Sample view")->Pulse();
+		FindView("Index view")->Invalidate();*/
 		break;
-
+/*
 	case TRANSPORT_LOOP_MAN:
 		if (transport_view->loop->Value() == B_CONTROL_ON)
 			transport_view->loop->SetValue(B_CONTROL_OFF);
@@ -721,6 +432,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
 		break;
 	*/
+
 	case OPEN:
 		if (!Pool.IsChanged())
 			((FaberApp*)be_app)->fOpenPanel->Show();
@@ -775,8 +487,8 @@ FaberWindow::MessageReceived(BMessage *message)
 	{
 		BPoint p;
 		message->FindPoint("_drop_point_", &p);
-		p = sample_view->ConvertFromScreen(p);
-		BRect r = sample_view->Bounds();
+		p = fTrackView->ConvertFromScreen(p);
+		BRect r = fTrackView->Bounds();
 		if (r.Contains(p)){
 			Pool.selection = NONE;
 			Pool.pointer = (int32)(Pool.l_pointer + p.x * (Pool.r_pointer - Pool.l_pointer)/Bounds().Width());
@@ -814,7 +526,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 		Pool.update_index = true;
 		Pool.UpdateMenu();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZOOM_OUT:
 		if (Pool.size == 0)	break;
@@ -833,7 +545,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 		Pool.UpdateMenu();
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZOOM_FULL:
 		if (Pool.size == 0)	break;
@@ -841,7 +553,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.r_pointer = Pool.size;
 		Pool.UpdateMenu();
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZOOM_SELECTION:
 		if (Pool.size == 0)	break;
@@ -851,22 +563,22 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 		Pool.UpdateMenu();
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZOOM_LEFT:
 		if (Pool.size == 0 || Pool.selection==NONE)	break;
-		x = sample_view->Bounds().IntegerWidth()/6;
+		x = fTrackView->Bounds().IntegerWidth()/6;
 		Pool.l_pointer = Pool.pointer -x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
 		Pool.r_pointer = Pool.l_pointer + x;
 
 		Pool.UpdateMenu();
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZOOM_RIGHT:
 		if (Pool.size == 0 || Pool.selection==NONE)	break;
-		x = sample_view->Bounds().IntegerWidth()/6;
+		x = fTrackView->Bounds().IntegerWidth()/6;
 		Pool.l_pointer = Pool.r_sel_pointer - x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
 		Pool.r_pointer = Pool.l_pointer + x;
@@ -877,26 +589,26 @@ FaberWindow::MessageReceived(BMessage *message)
 
 		Pool.UpdateMenu();
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 		
 	case EDIT_L:
 		if (Pool.selection != NONE)
 			Pool.selection = LEFT;
 		Pool.UpdateMenu();
-		sample_view->Draw(sample_view->Bounds());
+		fTrackView->Draw(fTrackView->Bounds());
 		break;	
 	case EDIT_R:
 		if (Pool.selection != NONE)
 			Pool.selection = RIGHT;
 		Pool.UpdateMenu();
-		sample_view->Draw(sample_view->Bounds());
+		fTrackView->Draw(fTrackView->Bounds());
 		break;	
 	case EDIT_B:
 		if (Pool.selection != NONE)
 			Pool.selection = BOTH;
 		Pool.UpdateMenu();
-		sample_view->Draw(sample_view->Bounds());
+		fTrackView->Draw(fTrackView->Bounds());
 		break;	
 
 	case TRANSPORT_REW:
@@ -909,7 +621,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 		Pool.r_pointer = Pool.l_pointer + x;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 
 	case TRANSPORT_REW_ALL:
@@ -918,7 +630,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.l_pointer = 0;
 		Pool.r_pointer = x;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 
 	case TRANSPORT_FWD:
@@ -931,7 +643,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 		Pool.l_pointer = Pool.r_pointer - x;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 
 	case TRANSPORT_FWD_ALL:
@@ -940,19 +652,19 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.r_pointer = Pool.pointer;
 		Pool.l_pointer = Pool.pointer - x;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	
 	case TRANSPORT_HOME:
 		Pool.pointer = Pool.l_pointer;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	
 	case TRANSPORT_END:
 		Pool.pointer = Pool.r_pointer;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	
 	case TRANSPORT_LEFT:
@@ -961,7 +673,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
 		Pool.r_pointer = Pool.l_pointer + x;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 
 	case TRANSPORT_RIGHT:
@@ -970,7 +682,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		if (Pool.l_pointer>(Pool.size-x))	Pool.l_pointer = Pool.size-x;
 		Pool.r_pointer = Pool.l_pointer + x;
 		Pool.update_index = true;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	
 	case UNDO_ENABLE:
@@ -979,8 +691,16 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 	
 	case ABOUT:
-		Pool.DoAbout();
-		break;
+	{
+		BPoint p;
+		BRect r = Frame();
+
+		p.x = (r.left+r.right)/2;
+		p.y = (r.top+r.bottom)/2;
+
+		AboutBox* box = new AboutBox(p);
+	}
+	break;
 		
 	case HELP:
 	{
@@ -1054,7 +774,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_index = true;
 		Pool.ResetIndexView();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	
 	case TOOL_SELECT:
@@ -1106,7 +826,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.UpdateMenu();
 		Pool.HideProgress();
 		Pool.ResetIndexView();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 		
 	case RUN_FILTER: // run a filter with or without GUI
@@ -1144,34 +864,34 @@ FaberWindow::MessageReceived(BMessage *message)
 	case ZERO_IN:
 		ZeroLR();
 		ZeroRL();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZERO_OUT:
 		ZeroLL();
 		ZeroRR();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZERO_LL:
 		ZeroLL();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZERO_LR:
 		ZeroLR();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZERO_RL:
 		ZeroRL();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	case ZERO_RR:
 		ZeroRR();
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 	
 	case SET_TIME:
 		message->FindInt32("time", &x);
 		Prefs.display_time = x;
-		Pool.RedrawWindow();
+		RedrawWindow();
 		break;
 
 	case B_KEY_DOWN:
@@ -1214,15 +934,19 @@ void
 FaberWindow::RedrawWindow()
 {
 	Lock();
-//	for (int32 i = 0; i<mainWindow->CountChildren();i++)
-//		mainWindow->ChildAt(i)->Invalidate();
+	//for (int32 i = 0; i < CountChildren(); i++)
+	//	ChildAt(i)->Invalidate();
 
-	//FindView("Pointers view")->Invalidate();
-	FindView("Index view")->Invalidate();
-	toolBar->Invalidate();
-	FindView("Sample view")->Invalidate();
-	//FindView("TimeBar view")->Invalidate();
-	//FindView("Values view")->Invalidate();
+ 	fToolBar->Invalidate();
+	fTrackView->Invalidate();
+	fTimeBar->Invalidate();
 
 	Unlock();	
+}
+
+
+void
+FaberWindow::UpdateToolBar()
+{
+
 }
