@@ -390,7 +390,7 @@ FaberApp::RefsReceived(BMessage* message)
 			Hist.Reset();				// reset undo class
 
 			if (IsLaunching() && Prefs.play_when_loaded)
-				Pool.mainWindow->PostMessage(TRANSPORT_PLAYS);
+				Pool.mainWindow->PostMessage(TRANSPORT_PLAY);
 			
 		}
 		else

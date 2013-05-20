@@ -167,9 +167,6 @@ enum {
 #define HELP				'help'
 #define ABOUT				'bout'
 #define HOMEPAGE			'hmep'
-#define HISTORY				'hsty'
-#define TUTORIALS			'tuts'
-
 #define ZERO_IN				'zrIn'
 #define ZERO_OUT			'zrOt'
 #define ZERO_LL				'zrLL'
@@ -196,10 +193,8 @@ enum {
 #define TRANSPORT_STOP		'Tstp'
 #define TRANSPORT_REC		'Trec'
 #define TRANSPORT_PAUSE		'Tpse'
-#define TRANSPORT_PAUSE_MAN	'TpsM'	// needed for keybindings
-#define TRANSPORT_PLAYS		'Tpls'
+//#define TRANSPORT_PLAYS		'Tpls'
 #define TRANSPORT_LOOP		'Tlop'
-#define TRANSPORT_LOOP_MAN	'TlpM'
 #define TRANSPORT_HOME		'Tlhm'
 #define TRANSPORT_END		'Tled'
 #define TRANSPORT_LEFT		'Tllf'

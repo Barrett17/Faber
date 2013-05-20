@@ -19,7 +19,9 @@ enum {
 	kUndoIcon,
 	kRedoIcon,
 
-	kEditLeftChannelIcon,
+	kDrawingToolIcon,
+	kSelectionToolIcon,
+	kPlayingToolIcon,
 
 	kStopIcon,
 	kPauseIcon,
@@ -33,6 +35,7 @@ enum {
 	kZoomInIcon,
 	kZoomOutIcon,
 	kZoomToSelectionIcon,
+	kZoomFullWaveIcon,
 };
 
 #endif

@@ -129,16 +129,9 @@ FaberWindow::FaberWindow(BRect frame)
 	// GUI
 
 	fToolBar = new ToolBar();
-
-	fPeakView = new PeakView("OutputPeakView", true, false);
-	fPeakView->SetExplicitMaxSize(BSize(200, 20));
-	Pool.m_VU_View = fPeakView;		// add a pointer for the player
-
 	fTrackView = new TrackAudio();
 	Pool.m_SampleView = fTrackView;	// for the player
-
 	fInfoToolBar = new InfoToolBar();
-
 	fTimeBar = new TimeBarView();
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 1)
@@ -146,9 +139,7 @@ FaberWindow::FaberWindow(BRect frame)
 		.AddSplit(B_VERTICAL, 10.0f)
 		.AddGroup(B_HORIZONTAL)
 			.Add(fToolBar)
-			.Add(new BStringView(NULL, "Output", B_WILL_DRAW))
-			.Add(fPeakView)
-			.AddGlue()
+			//.AddGlue()
 		.End()
 		.AddGroup(B_VERTICAL)	
 			.Add(fTimeBar)
@@ -281,9 +272,6 @@ FaberWindow::_BuildMenu()
 
 	menu->AddSeparatorItem();
 
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("History"),
-		new BMessage(HISTORY), KeyBind.GetKey("HISTORY"), KeyBind.GetMod("HISTORY")));
-
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Homepage"),
 		new BMessage(HOMEPAGE), KeyBind.GetKey("HOMEPAGE"), KeyBind.GetMod("HOMEPAGE")));
 
@@ -358,21 +346,16 @@ FaberWindow::MessageReceived(BMessage *message)
 	switch (message->what)
 	{
 
-	case TRANSPORT_PAUSE_MAN:
-		/*if (transport_view->pause->Value() == B_CONTROL_ON)
-			transport_view->pause->SetValue(B_CONTROL_OFF);
-		else
-			transport_view->pause->SetValue(B_CONTROL_ON);*/
-		// no break as TRANSPORT_PAUSE needs to follow
 	case TRANSPORT_PAUSE:
-		//play_cookie.pause = (transport_view->pause->Value() == B_CONTROL_ON);
+		play_cookie.pause = !fToolBar->IsPause();
+		fToolBar->SetPause(!fToolBar->IsPause());
 		break;
 
 	case TRANSPORT_TOGGLE:
 		if (Pool.IsPlaying())
 			PostMessage(TRANSPORT_STOP);
 		else
-			PostMessage(TRANSPORT_PLAYS);
+			PostMessage(TRANSPORT_PLAY);
 		break;
 	
 	case TRANSPORT_SET:
@@ -382,18 +365,20 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case TRANSPORT_PLAY:
-		if (Pool.size == 0)	break;
-		if (Pool.sample_type == NONE){
-			/*transport_view->play_sel->SetValue(B_CONTROL_OFF);
-			transport_view->play->SetValue(B_CONTROL_OFF);*/
+		if (Pool.size == 0)
+			break;
+
+		if (Pool.sample_type == NONE) {
+			fToolBar->SetPlay(false);
 			break;
 		}
-		/*transport_view->stop->SetValue(B_CONTROL_OFF);
-		transport_view->play->SetValue(B_CONTROL_OFF);
-		transport_view->play_sel->SetValue(B_CONTROL_ON);*/
 
-//		Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
-		Pool.StartPlaying(Pool.pointer*Pool.sample_type, true);	// play till end
+		play_cookie.pause = false;
+
+		Pool.SetLoop(fToolBar->IsLoop());
+		// play until the end
+		Pool.StartPlaying(Pool.pointer*Pool.sample_type, true);
+		fToolBar->SetPlay(true);
 		break;
 /*
 	case TRANSPORT_PLAYS:
@@ -413,25 +398,16 @@ FaberWindow::MessageReceived(BMessage *message)
 */
 
 	case TRANSPORT_STOP:
-		/*transport_view->play->SetValue(B_CONTROL_OFF);
-		transport_view->play_sel->SetValue(B_CONTROL_OFF);
-		transport_view->stop->SetValue(B_CONTROL_ON);*/
 		play_cookie.mem = play_cookie.start_mem;
 		Pool.StopPlaying();
-		/*FindView("Sample view")->Pulse();
-		FindView("Index view")->Invalidate();*/
+		FindView("Sample view")->Pulse();
+		fToolBar->SetStop(true);
 		break;
-/*
-	case TRANSPORT_LOOP_MAN:
-		if (transport_view->loop->Value() == B_CONTROL_ON)
-			transport_view->loop->SetValue(B_CONTROL_OFF);
-		else
-			transport_view->loop->SetValue(B_CONTROL_ON);
-		// no break as TRANSPORT_LOOP needs to follow
+
 	case TRANSPORT_LOOP:
-		Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
+		fToolBar->SetLoop(!fToolBar->IsLoop());
+		Pool.SetLoop(fToolBar->IsLoop());
 		break;
-	*/
 
 	case OPEN:
 		if (!Pool.IsChanged())
@@ -730,22 +706,6 @@ FaberWindow::MessageReceived(BMessage *message)
 		be_roster->Launch(info.signature, new BMessage(B_PASTE));
 	}	break;
 		
-	case HISTORY:
-	{
-		BPath path;
-		app_info ai;
-		be_app->GetAppInfo(&ai);
-		BEntry entry(&ai.ref);
-		entry.GetPath(&path);
-		path.GetParent(&path);
-		path.Append("Help/history.html");
-		char *history = new char[strlen(path.Path())+1];
-		sprintf(history, path.Path());
-		be_roster->Launch("text/html",1, &history);
-		delete history;
-	}
-	break;
-		
 	case HOMEPAGE:
 	{
 		const char* homepage = FABER_HOMEPAGE;
@@ -767,13 +727,14 @@ FaberWindow::MessageReceived(BMessage *message)
 	case UPDATE:
 		FindView("Sample view")->Pulse();
 		FindView("InfoToolBar")->Pulse();
-		FindView("Index view")->Invalidate();
 		break;
 	
 	case REDRAW:
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_index = true;
-		Pool.ResetIndexView();
+		// NOTE: Enabling it cause the TrackView
+		// selection to have drawing problems.
+		//Pool.ResetIndexView();
 		RedrawWindow();
 		break;
 	

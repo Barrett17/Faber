@@ -149,7 +149,6 @@ class CommonPool{
 
 	ProgressWindow *progress;
 	BView	*m_SampleView;			// pointer to the sample-view to update the pointer
-	BView	*m_VU_View;			// pointer to the sample-view to update the VY meter
 
 	FaberWindow* mainWindow;
 

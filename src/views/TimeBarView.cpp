@@ -35,10 +35,11 @@
 
 TimeBarView::TimeBarView()
 	: 
-	BView("TimeBar view", B_FOLLOW_BOTTOM | B_FOLLOW_LEFT
+	BView("TimeBar view", B_FOLLOW_NONE
 		| B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
+	SetExplicitMaxSize(BSize(1500, 20));
 }
 
 //*****************************************************

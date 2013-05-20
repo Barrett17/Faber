@@ -11,10 +11,7 @@
 #include <View.h>
 #include "Globals.h"
 
-
-#include "ValuesView.h"
 #include "SampleView.h"
-#include "IndexView.h"
 
 
 class TrackAudio : public BView
@@ -26,9 +23,7 @@ public:
 	virtual 				~TrackAudio();
 			void			Invalidate();
 private:
-			IndexView*		fIndexView;
 			SampleView*		fSampleView;
-			ValuesView*		fValuesView;
 };
 
 #endif

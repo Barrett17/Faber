@@ -8,6 +8,7 @@
 #include <LayoutBuilder.h>
 #include <TextView.h>
 
+
 InfoToolBar::InfoToolBar()
 	:
 	BView("InfoToolBar", B_FOLLOW_ALL_SIDES | B_FOLLOW_BOTTOM
