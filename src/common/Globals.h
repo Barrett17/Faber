@@ -1,12 +1,3 @@
-/*
- * Copyright 2011 Davide Gessa. All rights reserved.
- * Copyright 2013 Dario Casalinuovo. All rights reserved.
- * Distributed under the terms of the MIT License.
- *
- * Authors:
- *		Davide Gessa, dak.linux@gmail.com
- *		Dario Casalinuovo, b.vitruvio@gmail.com
- */
  /*
    	Copyright (c) 2003, Xentronix
 	Author: Frans van Nispen (frans@xentronix.com)
@@ -34,6 +25,17 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+/*
+ * Copyright 2011 Davide Gessa. All rights reserved.
+ * Copyright 2013 Dario Casalinuovo. All rights reserved.
+ * Distributed under the terms of the MIT License.
+ *
+ * Authors:
+ *		Davide Gessa, dak.linux@gmail.com
+ *		Dario Casalinuovo, b.vitruvio@gmail.com
+ */
+ 
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
@@ -196,9 +198,11 @@ enum {
 #define CANCEL_FILTER		'FXcl'
 #define RUN_LAST_FILTER		'FXlt'
 
-#define TOOL_SELECT			'Tsel'
-#define TOOL_DRAW			'Tdrw'
-#define TOOL_PLAY			'TLpl'
+enum {
+	TOOL_SELECT	= 0,
+	TOOL_DRAW	= 1,
+	TOOL_PLAY	= 2
+};
 
 #define SPECTRUM			'spct'
 #define SAMPLE_SCOPE		'spls'

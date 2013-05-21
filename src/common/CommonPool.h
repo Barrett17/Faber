@@ -79,8 +79,6 @@ class CommonPool{
 
 	float system_frequency;
 
-	status_t InstallMimeType(bool force = false);
-
 	void ResetIndexView();			// Create the IndexZoomView data
 	bool update_peak;
 
@@ -157,12 +155,6 @@ class CommonPool{
 	bool	update_index;
 
 private:
-
-	static int32 _LoadFilters_(void *data){
-		((CommonPool*)(data))->LoadFilters();
-		return B_OK;
-	}
-	void LoadFilters();
 
 	bool m_playing;			// is there any playback ?
 };

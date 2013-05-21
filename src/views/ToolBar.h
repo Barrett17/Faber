@@ -40,7 +40,7 @@ public:
 			void			SetLoop(bool loop);
 			bool			IsLoop() const;
 
-			void			SetTool(int32 index);
+			void			SetTool(const uint32 index);
 
 private:
 			IconButton*		_BuildButton(const char* tip, BMessage* message,
@@ -53,6 +53,8 @@ private:
 			IconButton*		fPauseButton;
 			IconButton*		fStopButton;
 			IconButton*		fLoopButton;
+
+			IconButton*		fToolButtons[3];
 };
 
 #endif

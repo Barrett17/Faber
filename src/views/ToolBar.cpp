@@ -27,6 +27,10 @@ ToolBar::ToolBar()
 	fStopButton = _BuildButton(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), kStopIcon);
 	fLoopButton = _BuildButton(B_TRANSLATE("Loop"), new BMessage(TRANSPORT_LOOP), kLoopIcon);
 
+	fToolButtons[0] = _BuildButton(B_TRANSLATE("Selection Tool"), new BMessage(TOOL_SELECT), kSelectionToolIcon);
+	fToolButtons[1] = _BuildButton(B_TRANSLATE("Drawing Tool"), new BMessage(TOOL_DRAW), kDrawingToolIcon);
+	fToolButtons[2] = _BuildButton(B_TRANSLATE("Playing Tool"), new BMessage(TOOL_PLAY), kPlayingToolIcon);
+
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.AddGroup(B_HORIZONTAL, 0)
 			.AddStrut(10.0f)
@@ -62,9 +66,9 @@ ToolBar::ToolBar()
 			.AddGlue()
 			.AddStrut(5.0f)
 			// TODO those should be B_TWO_STATE_BUTTON
-			.Add(_BuildButton(B_TRANSLATE("Selection Tool"), new BMessage(TOOL_SELECT), kSelectionToolIcon))
-			.Add(_BuildButton(B_TRANSLATE("Drawing Tool"), new BMessage(TOOL_DRAW), kDrawingToolIcon))
-			.Add(_BuildButton(B_TRANSLATE("Playing Tool"), new BMessage(TOOL_PLAY), kPlayingToolIcon))
+			.Add(fToolButtons[0])
+			.Add(fToolButtons[1])
+			.Add(fToolButtons[2])
 			.AddStrut(5.0f)
 		.End()
 		.AddGroup(B_HORIZONTAL, 0)
@@ -173,9 +177,18 @@ ToolBar::IsLoop() const
 }
 
 
-void SetTool(int32 index)
+void
+ToolBar::SetTool(const uint32 tool)
 {
-
+	for (int i = 0; i < 3; i++) {
+		if (i == tool) {
+			fToolButtons[i]->SetPressed(true);			
+			fToolButtons[i]->SetEnabled(false);
+			continue;
+		}
+		fToolButtons[i]->SetPressed(false);			
+		fToolButtons[i]->SetEnabled(true);
+	}
 }
 
 

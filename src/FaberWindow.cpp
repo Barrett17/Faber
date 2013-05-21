@@ -124,6 +124,9 @@ FaberWindow::FaberWindow(BRect frame)
 	// GUI
 
 	fToolBar = new ToolBar();
+	// I think this should be done in relation of settings
+	fToolBar->SetTool(SELECT_TOOL);
+
 	fTrackView = new TrackAudio();
 	Pool.m_SampleView = fTrackView;	// for the player
 	fInfoToolBar = new InfoToolBar();
@@ -734,16 +737,19 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 	
 	case TOOL_SELECT:
+		fToolBar->SetTool(SELECT_TOOL);
 		Pool.tool_mode = SELECT_TOOL;
 		Pool.UpdateMenu();
 		break;
 
 	case TOOL_DRAW:
+		fToolBar->SetTool(DRAW_TOOL);
 		Pool.tool_mode = DRAW_TOOL;
 		Pool.UpdateMenu();
 		break;
 
 	case TOOL_PLAY:
+		fToolBar->SetTool(PLAY_TOOL);
 		Pool.tool_mode = PLAY_TOOL;
 		Pool.UpdateMenu();
 		break;
