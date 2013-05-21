@@ -38,10 +38,6 @@
 #include "BitmapDrawer.h"
 #include "Shortcut.h"
 #include "MyClipBoard.h"
-<<<<<<< HEAD
-=======
-#include "VMSystem.h"
->>>>>>> origin/master
 
 #include <stdio.h>
 
