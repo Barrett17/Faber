@@ -66,7 +66,6 @@ ToolBar::ToolBar()
 			.Add(_BuildButton(B_TRANSLATE("Playing Tool"), new BMessage(TOOL_PLAY), kPlayingToolIcon))
 			.AddStrut(5.0f)
 			//.Add(_BuildButton(B_TRANSLATE("Jogg Wheel Tool"), new BMessage(TOOL_JOGG), kPlayIcon))
-
 		.End()
 		.AddGroup(B_HORIZONTAL, 0)
 			.AddStrut(10.0f)
