@@ -40,6 +40,7 @@
 #include "CommonPool.h"
 #include "History.h"
 #include "MyClipBoard.h"
+#include "WindowsManager.h"
 
 History Hist;
 
@@ -142,17 +143,17 @@ bool History::Save(uint32 action, uint32 start, uint32 end){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Write((void*)(Pool.sample_memory), size);
 		}else{
-			Pool.StartProgress(B_TRANSLATE("Saving Undo data..."), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Saving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Write((void*)p, BLOCK_SIZE);
 				p+=BLOCK_SIZE;
 				size-=BLOCK_SIZE;
-				Pool.ProgressUpdate( BLOCK_SIZE );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE );
 			}
 			if (size)
 				HistoryFile->Write((void*)p, size);
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 		break;
 	case H_REPLACE:			// just 1:1, like undo for a filter
@@ -168,17 +169,17 @@ bool History::Save(uint32 action, uint32 start, uint32 end){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Write((void*)(Pool.sample_memory+start*Pool.sample_type), size);
 		}else{
-			Pool.StartProgress(B_TRANSLATE("Saving Undo data..."), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Saving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory+start*Pool.sample_type);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Write((void*)p, BLOCK_SIZE);
 				p+=BLOCK_SIZE;
 				size-=BLOCK_SIZE;
-				Pool.ProgressUpdate( BLOCK_SIZE );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE );
 			}
 			if (size)
 				HistoryFile->Write((void*)p, size);
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 		break;
 	}
@@ -261,18 +262,18 @@ bool History::Restore(){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Read((void*)(Pool.sample_memory+start*Pool.sample_type), size);
 		}else{
-			Pool.StartProgress(B_TRANSLATE("Retrieving Undo data..."), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Retrieving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory+start*Pool.sample_type);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Read((void*)p, BLOCK_SIZE);
 				p+=BLOCK_SIZE;
 				size-=BLOCK_SIZE;
-				Pool.ProgressUpdate( BLOCK_SIZE );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE );
 			}
 			if (size)
 				HistoryFile->Read((void*)p, size);
 
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 		break;
 	case H_FULL:
@@ -296,18 +297,18 @@ bool History::Restore(){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Read((void*)(Pool.sample_memory), size);
 		}else{
-			Pool.StartProgress(B_TRANSLATE("Retrieving Undo data..."), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Retrieving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Read((void*)p, BLOCK_SIZE);
 				p+=BLOCK_SIZE;
 				size-=BLOCK_SIZE;
-				Pool.ProgressUpdate( BLOCK_SIZE );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE );
 			}
 			if (size)
 				HistoryFile->Read((void*)p, size);
 			
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 		break;
 	}

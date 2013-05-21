@@ -36,6 +36,7 @@
 #include <Cursor.h>
 
 //#include "Globals.h"
+#include "WindowsManager.h"
 #include "CommonPool.h"
 #include "ProgressWindow.h"
 #include "Settings.h"
@@ -66,9 +67,7 @@ extern const char *APP_SIGNATURE;
 *******************************************************/
 CommonPool::CommonPool(){
 	// To be save set them to nil 
-	progress = NULL;
 	player = NULL;
-	PrefWin = NULL;
 	
 	m_playing = false;
 	play_pointer = 0;
@@ -116,10 +115,6 @@ void CommonPool::Init(){
 *   
 *******************************************************/
 CommonPool::~CommonPool(){
-	if (progress && progress->Lock())  {
-		progress->Quit();
-		progress->Unlock();
-	}
 	if (IsPlaying())
 		StopPlaying();
 
@@ -129,10 +124,7 @@ CommonPool::~CommonPool(){
 	if (sample_memory)
 		free(sample_memory);
 
-	if (PrefWin && PrefWin->Lock()) {
-		PrefWin->Quit();
-		PrefWin->Unlock();
-	}
+
 //	if (tt)	delete tt;
 }
 
@@ -141,13 +133,13 @@ void CommonPool::ResetIndexView()
 {
 	if (sample_type == NONE) return;
 
-	StartProgress(B_TRANSLATE("Indexing..."), size);
+	WindowsManager::Get()->StartProgress(B_TRANSLATE("Indexing..."), size);
 
 	Peak.Init(size+1, (Pool.sample_type == MONO) );
 	Peak.CreatePeaks(0, size+1, size+1);
 	Pool.update_index = true;		// update the draw cache
 
-	HideProgress();
+	WindowsManager::Get()->HideProgress();
 }
 
 /*******************************************************
@@ -299,16 +291,21 @@ void CommonPool::DeSelectAll()
 void CommonPool::RedrawWindow()
 {
 	sample_view_dirty = true;	// update the sample-view
-	mainWindow->RedrawWindow();
+	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
+
+// TODO move it away from here
+// and rework a bit.
 /*******************************************************
 *   Update the menus
 *******************************************************/
 void CommonPool::UpdateMenu()
 {
 	BMenuItem *menuItem = NULL;
-	mainWindow->Lock();
+
+	FaberWindow* mainWin = 	WindowsManager::Get()->MainWindow();
+	mainWin->Lock();
 
 	while (menu_transform->ItemAt(0)){
 		menuItem = menu_transform->ItemAt(0);
@@ -380,8 +377,8 @@ void CommonPool::UpdateMenu()
 	mn_redo->SetEnabled(Hist.HasRedo());				// need history class for this
 	//mn_copy_to_stack->SetEnabled(selection != NONE);	// copy to stack
 
-	((FaberWindow*)mainWindow)->UpdateToolBar();
-	mainWindow->Unlock();
+	mainWin->UpdateToolBar();
+	mainWin->Unlock();
 }
 
 /*******************************************************
@@ -429,41 +426,7 @@ void CommonPool::Undo()
 	RedrawWindow();
 }
 
-/*******************************************************
-*   Progress Window
-*******************************************************/
-void CommonPool::StartProgress(const char *label, int32 max)
-{
-	if(progress->Lock()){
-		progress->StartProgress(label, max);
-		progress->Unlock();
-	}
-}
 
-void CommonPool::ProgressUpdate(int32 delta)
-{
-	if(progress->Lock()){
-		progress->SetProgress(delta);
-		progress->Unlock();
-	}
-}
-
-void CommonPool::SetProgressName(const char *name)
-{
-	if(progress->Lock()){
-		progress->SetTitle(name);
-		progress->Unlock();
-	}
-}
-
-void CommonPool::HideProgress()
-{
-	if(progress->Lock()){
-		if (!progress->IsHidden())
-			progress->Hide();
-		progress->Unlock();
-	}
-}
 
 
 void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)

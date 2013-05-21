@@ -29,11 +29,12 @@
 #ifndef FABER_APP
 #define FABER_APP
 
+#include <Application.h>
+
+#include "FaberWindow.h"
 #include "Globals.h"
 #include "OpenPanel.h"
 #include "SavePanel.h"
-
-class FaberWindow;
 
 
 class FaberApp : public BApplication

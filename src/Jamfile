@@ -2,13 +2,23 @@ SubDir TOP src ;
 
 SubDirSysHdrs [ FDirName $(TOP) ] ;
 
+# This is the list of locations where
+# we have sources. If you add a location
+# you have to add it here.
 SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio filter ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src audio node ] ;
+
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
+
 SEARCH_SOURCE += [ FDirName $(TOP) src window ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src window mixer ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src window tools ] ;
+
 SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
+
 SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
 
 
@@ -19,9 +29,13 @@ Application Faber :
 	ToolBar.cpp
 	InfoToolBar.cpp
 
+	# tracks
 	TrackAudio.cpp
 	TimeBarView.cpp # TODO rework or rewrite it
 	SampleView.cpp
+
+	# managers
+	WindowsManager.cpp
 
 	# Various windows
 	# TODO those should be reworked with layouts

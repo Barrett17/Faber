@@ -30,6 +30,7 @@
 #include <Alert.h>
 
 #include "Globals.h"
+#include "WindowsManager.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -122,7 +123,9 @@ void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 			buffer_left[ii] = (int16)(min * 32767);
 			buffer_left[ii+1] = (int16)(max * 32767);
 
-			if (progress && count--<0){	count = p_count;	Pool.ProgressUpdate( p_add ); }
+			if (progress && count--<0){	count = p_count;
+			WindowsManager::Get()->ProgressUpdate( p_add );
+		}
 		}
 	}
 	else	// Stereo
@@ -146,7 +149,9 @@ void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 			buffer_right[ii] = (int16)(min_r * 32767);
 			buffer_right[ii+1] = (int16)(max_r * 32767);
 
-			if (progress && count--<0){	count = p_count;	Pool.ProgressUpdate( p_add ); }
+			if (progress && count--<0){	count = p_count;
+				WindowsManager::Get()->ProgressUpdate(p_add);
+			}
 		}
 	}
 	Pool.update_peak = true;

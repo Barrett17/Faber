@@ -62,7 +62,7 @@ private:
 			BMenuBar*		_BuildMenu();
 
 			BMenuBar*		fMainMenuBar;
-			BMenu*			recent_menu;
+			BMenu*			fRecentMenu;
 
 			ToolBar*		fToolBar;
 			TrackAudio*		fTrackView;

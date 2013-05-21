@@ -34,6 +34,7 @@
 #include <Roster.h>
 #include <Volume.h>
 
+#include "WindowsManager.h"
 #include "MyClipBoard.h"
 #include "CommonPool.h"
 
@@ -152,7 +153,7 @@ bool MyClipBoard::Copy(){
 				p+=2;
 			}
 		}else{
-			Pool.StartProgress(B_TRANSLATE("Saving to ClipBoard..."), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Saving to ClipBoard..."), size);
 			
 			float *buffer = new float[BLOCK_SIZE2 / 4];
 			
@@ -165,7 +166,7 @@ bool MyClipBoard::Copy(){
 				}
 				MyClipBoardFile->Write(buffer, BLOCK_SIZE2);
 				size-=BLOCK_SIZE2;
-				Pool.ProgressUpdate( BLOCK_SIZE2 );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE2 );
 			}
 			if (size){
 				for (int32 i=0; i<size; i+=4){
@@ -175,24 +176,24 @@ bool MyClipBoard::Copy(){
 			}
 
 			delete buffer;
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 	}else{							//============================ Mono + Both
 		if (size < BLOCK_SIZE*4){					// files smaller than 2Mb without progressBar
 			MyClipBoardFile->Write((void*)(Pool.sample_memory+Pool.pointer*Pool.sample_type), size);
 		}else{
-			Pool.StartProgress(B_TRANSLATE("Saving to ClipBoard..."), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Saving to ClipBoard..."), size);
 			char *p = (char*)(Pool.sample_memory+Pool.pointer*Pool.sample_type);
 			while(size>=BLOCK_SIZE){
 				MyClipBoardFile->Write((void*)p, BLOCK_SIZE);
 				p+=BLOCK_SIZE;
 				size-=BLOCK_SIZE;
-				Pool.ProgressUpdate( BLOCK_SIZE );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE );
 			}
 			if (size)
 				MyClipBoardFile->Write((void*)p, size);
 
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 	}
 
@@ -233,12 +234,12 @@ void MyClipBoard::DoSilence()
 	float *end = Pool.sample_memory + Pool.r_sel_pointer*Pool.sample_type;
 
 	int count = 10000;
-	Pool.StartProgress(B_TRANSLATE("Working..."), end-p);
+	WindowsManager::Get()->StartProgress(B_TRANSLATE("Working..."), end-p);
 
 	if (Pool.sample_type == MONO || Pool.selection == BOTH){
 		while (p<=end){
 			*p++ = 0.0;
-			if (count-- <0){count = 10000;	Pool.ProgressUpdate( 10000 );	}
+			if (count-- <0){count = 10000;	WindowsManager::Get()->ProgressUpdate( 10000 );	}
 		}
 	}else{		// stereo
 		switch(Pool.selection){
@@ -246,19 +247,19 @@ void MyClipBoard::DoSilence()
 			while (p<=end){
 				p[0] = 0.0;
 				p+=2;
-				if (count-- <0){count = 10000;	Pool.ProgressUpdate( 10000 );	}
+				if (count-- <0){count = 10000;	WindowsManager::Get()->ProgressUpdate( 10000 );	}
 			}
 			break;
 		case RIGHT:
 			while (p<=end){
 				p[1] = 0.0;
 				p+=2;
-				if (count-- <0){count = 10000;	Pool.ProgressUpdate( 10000 );	}
+				if (count-- <0){count = 10000;	WindowsManager::Get()->ProgressUpdate( 10000 );	}
 			}
 			break;
 		}
 	}
-	Pool.HideProgress();
+	WindowsManager::Get()->HideProgress();
 
 	release_sem(clipSem);
 }
@@ -408,21 +409,21 @@ void MyClipBoard::Paste(){
 			if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 				MyClipBoardFile->Read((void*)(Pool.sample_memory+start*Pool.sample_type), size);
 			}else{
-				Pool.StartProgress(B_TRANSLATE("Pasting file..."), size);
+				WindowsManager::Get()->StartProgress(B_TRANSLATE("Pasting file..."), size);
 				char *p = (char*)(Pool.sample_memory+start*Pool.sample_type);
 				while(size>=BLOCK_SIZE){
 					MyClipBoardFile->Read((void*)p, BLOCK_SIZE);
 					p+=BLOCK_SIZE;
 					size-=BLOCK_SIZE;
-					Pool.ProgressUpdate( BLOCK_SIZE );
+					WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE );
 				}
 				if (size)
 					MyClipBoardFile->Read((void*)p, size);
 
-				Pool.HideProgress();
+				WindowsManager::Get()->HideProgress();
 			}
 		}else if (sample_type == STEREO && Pool.sample_type == MONO){
-			Pool.StartProgress(B_TRANSLATE("Paste "), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Paste "), size);
 			float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type;	// start of clip
 			float left, right;
 			
@@ -435,7 +436,7 @@ void MyClipBoard::Paste(){
 					*p++ = (right+left)/2;
 				}
 				size-=BLOCK_SIZE2;
-				Pool.ProgressUpdate( BLOCK_SIZE2 );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE2 );
 			}
 			if (size){
 				for (int32 i=0; i<size; i+=8){
@@ -445,9 +446,9 @@ void MyClipBoard::Paste(){
 				}
 			}
 			delete buffer;
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}else if (Pool.sample_type == STEREO && sample_type == MONO){
-			Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
+			WindowsManager::Get()->StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
 			float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type;	// start of clip
 			float left;
 			float *buffer = new float[BLOCK_SIZE2/4];
@@ -458,7 +459,7 @@ void MyClipBoard::Paste(){
 					*p++ = buffer[i/4];
 				}
 				size-=BLOCK_SIZE2;
-				Pool.ProgressUpdate( BLOCK_SIZE2 );
+				WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE2 );
 			}
 			if (size){
 				for (int32 i=0; i<size; i+=4){
@@ -468,7 +469,7 @@ void MyClipBoard::Paste(){
 				}
 			}
 			delete buffer;
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 		Pool.pointer = start;
 		if (Prefs.select_after_paste){
@@ -528,7 +529,7 @@ void MyClipBoard::Paste(){
 			}
 
 			if (sample_type == MONO){
-				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Mono..."), size);
+				WindowsManager::Get()->StartProgress(B_TRANSLATE("Pasting & Converting to Mono..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left;
 				float *buffer = new float[BLOCK_SIZE2/4];
@@ -539,7 +540,7 @@ void MyClipBoard::Paste(){
 						p += 2;
 					}
 					size-=BLOCK_SIZE2;
-					Pool.ProgressUpdate( BLOCK_SIZE2 );
+					WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE2 );
 				}
 				if (size){
 					for (int32 i=0; i<size; i+=4){
@@ -549,9 +550,9 @@ void MyClipBoard::Paste(){
 					}
 				}
 				delete buffer;
-				Pool.HideProgress();
+				WindowsManager::Get()->HideProgress();
 			}else if (sample_type == STEREO){
-				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
+				WindowsManager::Get()->StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left, right;
 				float *buffer = new float[BLOCK_SIZE2/4];
@@ -564,7 +565,7 @@ void MyClipBoard::Paste(){
 						p += 2;
 					}
 					size-=BLOCK_SIZE2;
-					Pool.ProgressUpdate( BLOCK_SIZE2 );
+					WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE2 );
 				}
 				if (size){
 					for (int32 i=0; i<size; i+=8){
@@ -575,7 +576,7 @@ void MyClipBoard::Paste(){
 					}
 				}
 				delete buffer;
-				Pool.HideProgress();
+				WindowsManager::Get()->HideProgress();
 			}
 		}
 		else		// deleted part is bigger than pasted
@@ -592,7 +593,7 @@ void MyClipBoard::Paste(){
 			}
 
 			if (sample_type == MONO){
-				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Mono..."), size);
+				WindowsManager::Get()->StartProgress(B_TRANSLATE("Pasting & Converting to Mono..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left;
 				while(size>=BLOCK_SIZE2){
@@ -602,7 +603,7 @@ void MyClipBoard::Paste(){
 						p += 2;
 					}
 					size-=BLOCK_SIZE2;
-					Pool.ProgressUpdate( BLOCK_SIZE2 );
+					WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE2 );
 				}
 				if (size){
 					for (int32 i=0; i<size; i+=4){
@@ -611,9 +612,9 @@ void MyClipBoard::Paste(){
 						p += 2;
 					}
 				}
-				Pool.HideProgress();
+				WindowsManager::Get()->HideProgress();
 			}else if (sample_type == STEREO){
-				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
+				WindowsManager::Get()->StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left, right;
 				while(size>=BLOCK_SIZE2){
@@ -624,7 +625,7 @@ void MyClipBoard::Paste(){
 						p += 2;
 					}
 					size-=BLOCK_SIZE2;
-					Pool.ProgressUpdate( BLOCK_SIZE2 );
+					WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE2 );
 				}
 				if (size){
 					for (int32 i=0; i<size; i+=8){
@@ -634,7 +635,7 @@ void MyClipBoard::Paste(){
 						p += 2;
 					}
 				}
-				Pool.HideProgress();
+				WindowsManager::Get()->HideProgress();
 			}
 		}
 		Pool.pointer = start;
@@ -652,8 +653,11 @@ einde:
 /*******************************************************
 *   
 *******************************************************/
-void MyClipBoard::PasteMix(){
-	if (!m_clip)	return;
+void MyClipBoard::PasteMix()
+{
+	if (!m_clip)
+		return;
+
 	Pool.mainWindow->PostMessage(TRANSPORT_STOP);		// can not use playing here
 
 	Pool.changed = true;

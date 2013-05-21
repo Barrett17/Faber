@@ -38,7 +38,7 @@
 #include "main.h"
 #include "Globals.h"
 #include "Filters.h"
-
+#include "WindowsManager.h"
 
 #include "FreqWindow.h"
 #include "MyClipBoard.h"
@@ -79,11 +79,10 @@ FaberWindow::FaberWindow(BRect frame)
 	BWindow(frame, "Faber" ,B_TITLED_WINDOW,B_ASYNCHRONOUS_CONTROLS),
 	fMainMenuBar(NULL)
 {
-	// create global access
-	Pool.mainWindow = this;			// handle to this window
-
 	// set MIME types
 	//Pool.InstallMimeType();
+
+	Pool.mainWindow = this;
 
 	// init prefs
 	Prefs.Init();
@@ -103,9 +102,8 @@ FaberWindow::FaberWindow(BRect frame)
 
 	// Now init the keyBindings
 	KeyBind.Init();
-	
-	Pool.progress = new ProgressWindow(BRect(0,0,300,30));
-	Pool.PrefWin = new SettingsWindow();
+
+	//Pool.PrefWin = 
 	
 	// create the player and recorder nodes
 	Pool.InitBufferPlayer( 44100 );	
@@ -155,8 +153,8 @@ FaberWindow::FaberWindow(BRect frame)
 BMenuBar*
 FaberWindow::_BuildMenu()
 {
-	BMenu		*menu;
-	BMenuItem	*menuItem;
+	BMenu* menu;
+	BMenuItem* menuItem;
 
 	fMainMenuBar = new MyMenuBar("MenuBar");
 	
@@ -164,9 +162,9 @@ FaberWindow::_BuildMenu()
 	fMainMenuBar->AddItem(menu);
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("New"), new BMessage(NEW), KeyBind.GetKey("FILE_NEW"), KeyBind.GetMod("FILE_NEW")));
 
-	recent_menu = new BMenu(B_TRANSLATE("Open..."));
+	fRecentMenu = new BMenu(B_TRANSLATE("Open..."));
 	UpdateRecent();
-	menu->AddItem(recent_menu);
+	menu->AddItem(fRecentMenu);
 	BMenuItem *openitem = menu->FindItem(B_TRANSLATE("Open..."));
 	openitem->SetShortcut(KeyBind.GetKey("FILE_OPEN"),KeyBind.GetMod("FILE_OPEN"));
 	openitem->SetMessage(new BMessage(OPEN));
@@ -299,8 +297,8 @@ FaberWindow::UpdateRecent()
 	int32 i = 0;
 	char name[B_FILE_NAME_LENGTH];
 	
-	while(recent_menu->ItemAt(0))
-		recent_menu->RemoveItem(recent_menu->ItemAt(0));
+	while(fRecentMenu->ItemAt(0))
+		fRecentMenu->RemoveItem(fRecentMenu->ItemAt(0));
 
 	be_roster->GetRecentDocuments(&msg,10,"audio");
 	while(msg.FindRef("refs",i,&eref) == B_OK){
@@ -309,7 +307,7 @@ FaberWindow::UpdateRecent()
 			e.GetName(name);
 			msgout = new BMessage(B_REFS_RECEIVED);//DO_OPEN);
 			msgout->AddRef("refs",&eref);
-			recent_menu->AddItem(menuItem = new BMenuItem(name,msgout));
+			fRecentMenu->AddItem(menuItem = new BMenuItem(name,msgout));
 			menuItem->SetTarget(be_app);
 		}
 		i++;
@@ -712,14 +710,7 @@ FaberWindow::MessageReceived(BMessage *message)
 	}
 		
 	case PREFERENCES:
-		if (Pool.PrefWin != NULL && Pool.PrefWin->LockLooper()) {
-			if (Pool.PrefWin->IsHidden())
-				Pool.PrefWin->Show();
-			Pool.PrefWin->Activate();
-			Pool.PrefWin->UnlockLooper();
-		} else {
-			//Create a new Prefs windos?!
-		}
+		WindowsManager::Get()->ShowSettings();
 		break;
 
 	case UPDATE:
@@ -781,7 +772,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		ClipBoard.DoSilence();
 		Pool.changed = true;
 		Pool.UpdateMenu();
-		Pool.HideProgress();
+		WindowsManager::Get()->HideProgress();
 		Pool.ResetIndexView();
 		RedrawWindow();
 		break;

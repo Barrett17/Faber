@@ -33,6 +33,7 @@
 #include "Globals.h"
 #include "FilterDialogs.h"
 #include "PeakFile.h"
+#include "WindowsManager.h"
 
 // the filters with GUI
 #include "RoomFilter.h"
@@ -230,7 +231,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 		float *filter_buffer = new float[FILTER_BLOCK];
 		
 		int32 size = (Pool.r_sel_pointer - Pool.pointer +1)*Pool.sample_type;
-		Pool.StartProgress(B_TRANSLATE("Working..."), size * pFilter->Passes());
+		WindowsManager::Get()->StartProgress(B_TRANSLATE("Working..."), size * pFilter->Passes());
 
 		for (int32 filter_pass = 0; filter_pass < pFilter->Passes(); filter_pass++)
 		{
@@ -244,7 +245,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 				WriteBack( filter_buffer, p, FILTER_BLOCK);
 				p+=FILTER_BLOCK;
 				size-=FILTER_BLOCK;
-				Pool.ProgressUpdate( FILTER_BLOCK );
+				WindowsManager::Get()->ProgressUpdate( FILTER_BLOCK );
 			}
 			if (size)
 			{
@@ -254,7 +255,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 			}
 		}
 
-		Pool.HideProgress();
+		WindowsManager::Get()->HideProgress();
 		Pool.changed = true;
 		
 		delete filter_buffer;
@@ -447,7 +448,7 @@ void DoResample()
 
 	int32 buffer_pointer = 0;
 
-	Pool.StartProgress(B_TRANSLATE("Resampling..."), Pool.size);
+	WindowsManager::Get()->StartProgress(B_TRANSLATE("Resampling..."), Pool.size);
 	if (Pool.sample_type == MONO && Prefs.filter_resample_mono){		// mono to mono
 		while(mem<= end){
 			left = *mem;
@@ -465,7 +466,7 @@ void DoResample()
 				++mem;
 				--add;
 			}
-			if (count-- <0){count = 1000;	Pool.ProgressUpdate( 500 );	}
+			if (count-- <0){count = 1000;	WindowsManager::Get()->ProgressUpdate( 500 );	}
 		}
 		if (buffer_pointer){
 			file->Write((void*)buffer, buffer_pointer*4);
@@ -493,7 +494,7 @@ void DoResample()
 				++mem;
 				--add;
 			}
-			if (count-- <0){count = 1000;	Pool.ProgressUpdate( 500 );	}
+			if (count-- <0){count = 1000;	WindowsManager::Get()->ProgressUpdate( 500 );	}
 		}
 		if (buffer_pointer){
 			file->Write((void*)buffer, buffer_pointer*4);
@@ -516,7 +517,7 @@ void DoResample()
 				mem+=2;
 				--add;
 			}
-			if (count-- <0){count = 1000;	Pool.ProgressUpdate( 500 );	}
+			if (count-- <0){count = 1000;	WindowsManager::Get()->ProgressUpdate( 500 );	}
 		}
 		if (buffer_pointer){
 			file->Write((void*)buffer, buffer_pointer*4);
@@ -539,7 +540,7 @@ void DoResample()
 				mem+=2;
 				--add;
 			}
-			if (count-- <0){count = 1000;	Pool.ProgressUpdate( 500 );	}
+			if (count-- <0){count = 1000;	WindowsManager::Get()->ProgressUpdate( 500 );	}
 		}
 		if (buffer_pointer){
 			file->Write((void*)buffer, buffer_pointer*4);
@@ -582,12 +583,12 @@ void DoResample()
 		file->Read((void*)p, BLOCK_SIZE);
 		p+=BLOCK_SIZE;
 		size-=BLOCK_SIZE;
-		Pool.ProgressUpdate( BLOCK_SIZE/(4*Pool.sample_type) );
+		WindowsManager::Get()->ProgressUpdate( BLOCK_SIZE/(4*Pool.sample_type) );
 	}
 	if (size)
 		file->Read((void*)p, size);
 
-	Pool.HideProgress();
+	WindowsManager::Get()->HideProgress();
 
 	if(file)	delete file;
 	e.Remove();				// remove file

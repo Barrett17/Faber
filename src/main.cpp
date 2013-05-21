@@ -33,6 +33,7 @@
 #include <StorageKit.h>
 #include <View.h>
 
+#include "WindowsManager.h"
 #include "Globals.h"
 #include "FaberWindow.h"
 #include "OpenPanel.h"
@@ -60,9 +61,13 @@ int main()
 FaberApp::FaberApp():BApplication(FABER_MIMETYPE)
 {
 	BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
+
 	fFaberWindow = new FaberWindow(rect);
+	WindowsManager::Get()->SetMainWindow(fFaberWindow);
+
 	fOpenPanel = new OpenPanel(this);
 	fSavePanel = new SavePanel(this);
+
 	Pool.UpdateMenu();
 	fFaberWindow->Show();
 }
@@ -192,7 +197,8 @@ FaberApp::RefsReceived(BMessage* message)
 					Pool.size = audTrack->CountFrames()-1;
 					channels = format.u.raw_audio.channel_count;
 
-					Pool.StartProgress(B_TRANSLATE("Loading file..."), (int32) Pool.size);
+					WindowsManager::Get()->StartProgress(
+						B_TRANSLATE("Loading file..."), (int32) Pool.size);
 					
 					//frame_size = (format.u.raw_audio.format & 0xf) * channels;
 
@@ -313,7 +319,7 @@ FaberApp::RefsReceived(BMessage* message)
 					}	break;
 					}
 
-					Pool.ProgressUpdate( (int32) framesRead );
+					WindowsManager::Get()->ProgressUpdate((int32) framesRead);
 
 					completePercent = ((float)i) / ((float)frameCount) * ((float) 100);
 					currPercent = (int16)floor(completePercent);
@@ -356,14 +362,15 @@ FaberApp::RefsReceived(BMessage* message)
 			play_cookie.add = 0;
 
 			Pool.changed = false;
-			Pool.HideProgress();
+
+			WindowsManager::Get()->HideProgress();
 
 			// create the PeakFile
 			Pool.ResetIndexView();
 			Hist.Reset();				// reset undo class
 
 			if (IsLaunching() && Prefs.play_when_loaded)
-				Pool.mainWindow->PostMessage(TRANSPORT_PLAY);
+				fFaberWindow->PostMessage(TRANSPORT_PLAY);
 			
 		}
 		else
@@ -462,7 +469,8 @@ FaberApp::Save(BMessage *message){
 
 				float *mem = Pool.sample_memory + save_start*Pool.sample_type;	// src memory
 
-				Pool.StartProgress(B_TRANSLATE("Saving file..."), (int32) (save_end-save_start));
+				WindowsManager::Get()->StartProgress(
+					B_TRANSLATE("Saving file..."), (int32) (save_end-save_start));
 				
 				for (int64 i=save_start; i<save_end; i+=buffer_step)
 				{
@@ -517,7 +525,7 @@ FaberApp::Save(BMessage *message){
 					}	break;
 					}
 
-					Pool.ProgressUpdate( block );
+					WindowsManager::Get()->ProgressUpdate(block);
 					outTrack->WriteFrames(buffer, block);
 				}
 
@@ -542,7 +550,7 @@ FaberApp::Save(BMessage *message){
 			file.CloseFile();
 			
 			free(buffer);
-			Pool.HideProgress();
+			WindowsManager::Get()->HideProgress();
 		}
 	}
 	else

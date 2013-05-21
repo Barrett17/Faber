@@ -33,11 +33,9 @@
 #include <SoundPlayer.h>
 
 #include "FaberWindow.h"
-#include "ProgressWindow.h"
-#include "SettingsWindow.h"
 
 class FaberWindow;
-class SettingsWindow;
+class BMenu;
 
 #define PLAY_HOOKS	64		// number of realtime effects possible
 
@@ -93,7 +91,6 @@ class CommonPool{
 	void Undo();				// undo
 
 	BSoundPlayer	*player;
-	SettingsWindow	*PrefWin;		// preferences window
 	
 	BCursor *mouseArrow, *mousePencil, *mouseLeftRight, *mouseMove, *mouseArrowMove, *mouseArrowLeft, *mouseArrowRight;
 	
@@ -117,11 +114,6 @@ class CommonPool{
 	float	frequency;
 	int32	play_mode;		// to determine the play mode (or record)
 	
-	void	ProgressUpdate(int32 delta);
-	void	StartProgress(const char *label, int32 max = 100);
-	void	HideProgress();
-	void	SetProgressName(const char *name);
-	
 	void	InitBufferPlayer(float freq);
 	void	StartPlaying(int64 p, bool end);	// play back the sound, convert data and
 	void	StopPlaying();				// sync VU meters
@@ -137,9 +129,8 @@ class CommonPool{
 	void	UpdateMenu();			// activate/deactivate menu items
 	bool	changed;
 	int32	save_mode;				// 1-do load after save, 2-do quit after save
-	bool	IsChanged(int32 mode=1);			// checks to see if a file is changed after load
+	bool	IsChanged(int32 mode=1); // checks to see if a file is changed after load
 
-	ProgressWindow *progress;
 	BView	*m_SampleView;			// pointer to the sample-view to update the pointer
 
 	FaberWindow* mainWindow;
