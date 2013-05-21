@@ -748,11 +748,6 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.UpdateMenu();
 		break;
 
-	case TOOL_JOGG:
-		Pool.tool_mode = SCRUB_TOOL;
-		Pool.UpdateMenu();
-		break;
-
 	case SPECTRUM:
 		(new SpectrumWindow());
 		break;

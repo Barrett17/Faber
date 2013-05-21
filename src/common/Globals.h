@@ -133,7 +133,6 @@ enum {
 	SELECT_TOOL,
 	DRAW_TOOL,
 	PLAY_TOOL,
-	SCRUB_TOOL
 };
 
 // Messages
@@ -190,7 +189,6 @@ enum {
 #define TRANSPORT_STOP		'Tstp'
 #define TRANSPORT_REC		'Trec'
 #define TRANSPORT_PAUSE		'Tpse'
-//#define TRANSPORT_PLAYS		'Tpls'
 #define TRANSPORT_LOOP		'Tlop'
 #define TRANSPORT_HOME		'Tlhm'
 #define TRANSPORT_END		'Tled'
@@ -215,7 +213,6 @@ enum {
 #define TOOL_SELECT			'Tsel'
 #define TOOL_DRAW			'Tdrw'
 #define TOOL_PLAY			'TLpl'
-#define TOOL_JOGG			'Tsrb'
 
 #define SPECTRUM			'spct'
 #define SAMPLE_SCOPE		'spls'

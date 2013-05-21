@@ -536,39 +536,6 @@ void SampleView::MouseDown(BPoint p)
 		}
 		break;
 	}
-	case SCRUB_TOOL:											/* Scrubbing Tool */
-	{
-		stop_following = true;
-		Pool.selection = NONE;									// Set the play-pointer
-		Pool.r_sel_pointer = 0;
-		Pool.pointer = (int32)(Pool.l_pointer + p.x * (Pool.r_pointer - Pool.l_pointer)/Bounds().Width());
-		
-		bool bLoop = Pool.SetLoop(true);
-		
-		if (button){
-			Pool.StartPlaying(Pool.pointer*Pool.sample_type, true);	// play till end
-			Draw(Bounds());
-			snooze(10000);
-			Pool.last_pointer = Pool.pointer;
-			while(button){										// Keep playing as long as the mouse is pressed
-				GetMouse(&p, &button);
-
-				float x = (Pool.last_pointer-Pool.l_pointer) * Bounds().Width() /(Pool.r_pointer - Pool.l_pointer);
-				Pool.frequency = Pool.system_frequency * (p.x-x)/50.0;
-
-				Pulse();
-
-				Window()->FindView("InfoToolBar")->Pulse();
-				snooze(10000);
-			}
-			Pool.SetLoop(bLoop);
-			Pool.StopPlaying();
-			Pool.pointer = Pool.last_pointer;
-			Pool.frequency = Pool.system_frequency;
-			stop_following = false;
-		}
-		break;
-	}
 	default:
 		break;
 	}
