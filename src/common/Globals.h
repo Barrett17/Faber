@@ -66,31 +66,18 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 #define MAX_W 	2048
 #define MAX_H	1536
 
-#define TIMEBAR_HEIGHT		16
-#define VALUEBAR_WIDTH		32
-#define INDEXVIEW_HEIGHT	20	//POINTER_BAR_HEIGHT +24	//+32
-#define POINTER_BAR_HEIGHT	12
-
-
 // TODO replace them where needed in the code
 #define VERSUT_HOMEPAGE "http://www.versut.com/"
 #define FABER_MIMETYPE 	"application/x-vnd.Faber"
 
 #define FABER_HOMEPAGE	"http://www.versut.com/Faber"
 
-#define TOOL_TIP_WINDOW	"Help System"
 #define COPY_RIGHT 		"Copyright 2002 Xentronix\n Copyright 2013 Versut"
 
-// The directory off of /boot/home/settings that we look for Inferno settings
 #define SETTINGS_DIR    "Faber"
 #define FABER_CONF_NAME	"Faber"
 #define KEYBINDINGS_CONF_NAME "KeyBindings"
 #define LANGUAGE_CONF	"Languages"
-
-// Current directory that Inferno pulls plugins from
-#define FILTERS_DIR		"Plug-Ins/Filters"
-// Mime type for IDF files
-#define DOCUMENT_MIME	"image/x-Faber"
 
 // Math
 #define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
@@ -136,7 +123,6 @@ enum {
 };
 
 // Messages
-#define SPLITTER			'sltr'	// used to separate key-bind catagories
 #define SAVE_AS   			'ssam'
 #define NEW					'Bnew'
 #define OPEN				'Bopn'

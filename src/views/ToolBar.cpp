@@ -51,13 +51,14 @@ ToolBar::ToolBar()
 			.Add(_BuildButton(B_TRANSLATE("Copy to wave-stack"), new BMessage(TO_STACK), 0))
 			.Add(_BuildButton(B_TRANSLATE("SET_LOOP"), new BMessage(SET_LOOP), NULL));
 			*/
-			.AddStrut(10.0f)
+			.AddStrut(20.0f)
 			.Add(_BuildButton(B_TRANSLATE("Zoom in"), new BMessage(ZOOM_IN), kZoomInIcon))
 			.Add(_BuildButton(B_TRANSLATE("Zoom out"), new BMessage(ZOOM_OUT), kZoomOutIcon))
 			.Add(_BuildButton(B_TRANSLATE("Zoom to selection"), new BMessage(ZOOM_SELECTION), kZoomToSelectionIcon))
 			.Add(_BuildButton(B_TRANSLATE("Zoom full wave"), new BMessage(ZOOM_FULL), kZoomFullWaveIcon))
 			.Add(_BuildButton(B_TRANSLATE("Zoom to left pointer"), new BMessage(ZOOM_LEFT), kZoomInIcon))
 			.Add(_BuildButton(B_TRANSLATE("Zoom to right pointer"), new BMessage(ZOOM_RIGHT), kZoomInIcon))
+
 			.AddGlue()
 			.AddStrut(5.0f)
 			// TODO those should be B_TWO_STATE_BUTTON
@@ -65,7 +66,6 @@ ToolBar::ToolBar()
 			.Add(_BuildButton(B_TRANSLATE("Drawing Tool"), new BMessage(TOOL_DRAW), kDrawingToolIcon))
 			.Add(_BuildButton(B_TRANSLATE("Playing Tool"), new BMessage(TOOL_PLAY), kPlayingToolIcon))
 			.AddStrut(5.0f)
-			//.Add(_BuildButton(B_TRANSLATE("Jogg Wheel Tool"), new BMessage(TOOL_JOGG), kPlayIcon))
 		.End()
 		.AddGroup(B_HORIZONTAL, 0)
 			.AddStrut(10.0f)

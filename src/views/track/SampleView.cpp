@@ -41,6 +41,8 @@
 
 #include <stdio.h>
 
+#define POINTER_BAR_HEIGHT	12
+
 extern cookie_record play_cookie;
 
 /*****************************************************

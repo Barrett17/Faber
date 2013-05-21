@@ -33,6 +33,8 @@
 #include <map>
 #include <string.h>
 
+#define SPLITTER			'sltr'	// used to separate key-bind catagories
+
 struct key_bind{
 	const char *ID;		// lookup ID (TAG that can be converted by Language.get()
 	char key;			// the key
