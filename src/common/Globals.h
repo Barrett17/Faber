@@ -93,7 +93,7 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 #define DOCUMENT_MIME	"image/x-Faber"
 
 // Math
-/*#define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
+#define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
 #define INT_MUL3(a,b,c,t)			((t) = (a) * (b) * (c)+ 0x7F5B, ((((t) >> 7) + (t)) >> 16))
 #define INT_BLEND(a,b,alpha,tmp)	(INT_MUL((a)-(b), alpha, tmp) + (b))
 #define WITHIN(a, b, c)				((((a) <= (b)) && ((b) <= (c))) ? 1 : 0)
@@ -102,7 +102,7 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 
 #ifndef PI
 	#define PI 3.14159265358979323846
-#endif*/
+#endif
 
 // Enums
 enum {
