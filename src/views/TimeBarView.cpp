@@ -35,10 +35,11 @@
 
 TimeBarView::TimeBarView()
 	: 
-	BView("TimeBar view", B_FOLLOW_BOTTOM | B_FOLLOW_LEFT
+	BView("TimeBar view", B_FOLLOW_NONE
 		| B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
+	SetExplicitMaxSize(BSize(1500, 20));
 }
 
 //*****************************************************
@@ -60,12 +61,14 @@ void TimeBarView::Draw(BRect rect)
 	SetLowColor(Prefs.time_back_color);
 	FillRect(r, B_SOLID_LOW);
 	
-	if (Pool.size == 0)	return;
-	
-	SetHighColor(64,64,64);
-	StrokeLine(BPoint(r.left, r.top), BPoint(r.right, r.top));
+	if (Pool.size == 0)
+		return;
 
-	if (Pool.sample_type == NONE)	return;
+	SetHighColor(64,64,64);
+	StrokeLine(BPoint(r.left, r.bottom - 8), BPoint(r.right, r.bottom - 8));
+
+	if (Pool.sample_type == NONE)
+		return;
 
 	int32 w = r.IntegerWidth();
 	int32 x = (int32)r.left;
@@ -94,16 +97,16 @@ void TimeBarView::Draw(BRect rect)
 			int min = ((int)t)/60;
 			sprintf(s, "%d:%.2d.%.3d", min, sec, time);
 			t_bound += t_marge;
-			b = r.top + 5;
+			b = r.bottom + 5;
 			SetHighColor(Prefs.time_text_color);
-			DrawString(s, BPoint(x - font.StringWidth(s)/2.0f, r.bottom));
+			DrawString(s, BPoint(x - font.StringWidth(s)/2.0f, r.top + 10));
 			SetHighColor(Prefs.time_marks_color);
-			StrokeLine( BPoint( x, r.top+1 ), BPoint( x, b) );
+			StrokeLine( BPoint( x, r.bottom+1 ), BPoint( x, r.top + 12) );
 		}else if (t >= t_small_bound){
 			t_small_bound += t_small_marge;
 			SetHighColor(Prefs.time_small_marks_color);
-			b = r.top + 1;
-			StrokeLine( BPoint( x, r.top+1 ), BPoint( x, b) );
+			b = r.bottom + 1;
+			StrokeLine( BPoint( x, r.bottom+1 ), BPoint( x, r.top + 12) );
 		}
 		x ++;
 		w --;

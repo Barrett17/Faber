@@ -38,7 +38,6 @@
 #include "OpenPanel.h"
 #include "SavePanel.h"
 #include "PeakFile.h"
-#include "VMSystem.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -197,12 +196,12 @@ FaberApp::RefsReceived(BMessage* message)
 					
 					//frame_size = (format.u.raw_audio.format & 0xf) * channels;
 
-#ifndef __VM_SYSTEM	//RAM
+
 					if (Pool.sample_memory)						// create buffer for sample memory, add an extra frame to be able to do
 						free(Pool.sample_memory);				//  32bit to 16 bit conversions
 					
 					Pool.sample_memory = (float*) malloc((size_t) (Pool.size * channels * 4 + 1024));
-#endif					
+		
 				}
 				else
 				{
@@ -217,28 +216,16 @@ FaberApp::RefsReceived(BMessage* message)
 			float completePercent;
 			BString status;
 			char *buffer = (char*)malloc(format.u.raw_audio.buffer_size);		// temp memory
-#ifndef __VM_SYSTEM	//RAM
+
 			float *mem = Pool.sample_memory;									// dest memory
 			// read audio from source and write to destination, if necessary
 			if (mem) 
 			{
-#else
-			VM.Reset();
-
-			float *convert_buffer = (float*)malloc(format.u.raw_audio.buffer_size*4);		// make sure there can be floats in it
-			// read audio from source and write to destination, if necessary
-			if (convert_buffer) 
-			{
-				float *mem = NULL;
-#endif			
 				frameCount = audTrack->CountFrames();
 				int64 count =0;
 				lastPercent = -1;
 				for (int64 i = 0; i < frameCount; i += framesRead) 
 				{
-					#ifdef __VM_SYSTEM	//RAM
-					mem = convert_buffer;
-					#endif
 					
 					// clear buffer first
 					memset( buffer, 0, format.u.raw_audio.buffer_size);
@@ -325,10 +312,6 @@ FaberApp::RefsReceived(BMessage* message)
 						}
 					}	break;
 					}
-					
-					#ifdef __VM_SYSTEM	//RAM
-					VM.WriteBlock( convert_buffer, framesRead*channels );
-					#endif
 
 					Pool.ProgressUpdate( (int32) framesRead );
 
@@ -338,9 +321,6 @@ FaberApp::RefsReceived(BMessage* message)
 						lastPercent = currPercent;
 				}
 				inFile.ReleaseAllTracks();
-				#ifdef __VM_SYSTEM	//RAM
-				free(convert_buffer);
-				#endif
 			}
 			else
 			{
@@ -369,19 +349,12 @@ FaberApp::RefsReceived(BMessage* message)
 			Pool.r_sel_pointer = Pool.pointer;
 			Pool.l_pointer = 0;
 
-#ifndef __VM_SYSTEM	//RAM
 			play_cookie.mem = Pool.sample_memory;
 			play_cookie.start_mem = Pool.sample_memory;
 			play_cookie.end_mem = Pool.sample_memory + Pool.size*Pool.sample_type;
 			play_cookie.frequency = Pool.frequency;
 			play_cookie.add = 0;
-#else			
-			play_cookie.mem = 0;
-			play_cookie.start_mem = 0;
-//			play_cookie.end_mem = Pool.size*Pool.sample_type;
-			play_cookie.frequency = Pool.frequency;
-			play_cookie.add = 0;
-#endif
+
 			Pool.changed = false;
 			Pool.HideProgress();
 
@@ -390,7 +363,7 @@ FaberApp::RefsReceived(BMessage* message)
 			Hist.Reset();				// reset undo class
 
 			if (IsLaunching() && Prefs.play_when_loaded)
-				Pool.mainWindow->PostMessage(TRANSPORT_PLAYS);
+				Pool.mainWindow->PostMessage(TRANSPORT_PLAY);
 			
 		}
 		else
@@ -486,15 +459,8 @@ FaberApp::Save(BMessage *message){
 				frame_size = (raf->format & 0xf) * raf->channel_count;
 				
 				int32 buffer_step = raf->buffer_size / frame_size;
-#ifndef __VM_SYSTEM	//RAM
+
 				float *mem = Pool.sample_memory + save_start*Pool.sample_type;	// src memory
-#else
-				float *convert_buffer = (float*)malloc(buffer_step*channels*4);		// make sure there can be floats in it
-				// read audio from source and write to destination, if necessary
-				if (convert_buffer) {
-					VM.ReadBlockAt(save_start, convert_buffer, buffer_step*channels );
-					float *mem = convert_buffer;
-#endif			
 
 				Pool.StartProgress(B_TRANSLATE("Saving file..."), (int32) (save_end-save_start));
 				
@@ -553,17 +519,8 @@ FaberApp::Save(BMessage *message){
 
 					Pool.ProgressUpdate( block );
 					outTrack->WriteFrames(buffer, block);
-					#ifdef __VM_SYSTEM	//RAM
-					VM.ReadBlock(convert_buffer, block*channels );
-					mem = convert_buffer;
-					#endif
 				}
 
-				#ifdef __VM_SYSTEM	//RAM
-				free(convert_buffer);
-				}
-				#endif
-				
 				Pool.changed = false;
 
 				outTrack->Flush();

@@ -20,15 +20,11 @@ Application Faber :
 	InfoToolBar.cpp
 
 	TrackAudio.cpp
-	TimeTrack.cpp
-
-	# GUI Code mixed views and windows
-	# to be reworked a bit
-	IndexView.cpp
-	TimeBarView.cpp
-	ValuesView.cpp
+	TimeBarView.cpp # TODO rework or rewrite it
+	SampleView.cpp
 
 	# Various windows
+	# TODO those should be reworked with layouts
 	AnalyzeWindow.cpp
 	SpectrumWindow.cpp
 	SampleScopeWindow.cpp
@@ -42,7 +38,6 @@ Application Faber :
 	SpinControl.cpp
 	SpinSlider.cpp
 	PeakView.cpp
-	SampleView.cpp
 	SpinButton.cpp
 	VolumeSlider.cpp
 	FStringItem.cpp
@@ -62,10 +57,9 @@ Application Faber :
 
 	# Common
 	MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
-	VMSystem.cpp # TODO Set it as default or remove
 	CommonPool.cpp # TODO Remove it
 	PeakFile.cpp
-	History.cpp
+	History.cpp # TODO fix codestyle
 
 	# filters
 	AmplifierFilter.cpp

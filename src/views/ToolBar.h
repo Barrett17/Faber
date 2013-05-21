@@ -8,6 +8,7 @@
 #include <View.h>
 
 #include "Globals.h"
+#include "PeakView.h"
 
 class IconButton;
 
@@ -26,23 +27,32 @@ public:
 			void			SetPlay(bool play);
 			bool			IsPlay() const;
 
+			void			SetStop(bool stop);
+			bool			IsStop() const;
+
 			void			SetPause(bool pause);
 			bool			IsPause() const;
 
-			void			SetRec(bool rec);
-			bool			IsRec() const;
+			// Unimplemented right now
+			//void			SetRec(bool rec);
+			//bool			IsRec() const;
 
 			void			SetLoop(bool loop);
 			bool			IsLoop() const;
 
-			void			SetSelectionTool(bool selTool);
-			void			SetDrawingTool(bool selTool);
-			void			SetPlayingTool(bool selTool);
-			void			SetJoggWheelTool(bool selTool);
+			void			SetTool(int32 index);
 
 private:
 			IconButton*		_BuildButton(const char* tip, BMessage* message,
 								int32 resourceID);
+
+			PeakView*		fOutputPeakView;
+			PeakView*		fInputPeakView;
+
+			IconButton*		fPlayButton;
+			IconButton*		fPauseButton;
+			IconButton*		fStopButton;
+			IconButton*		fLoopButton;
 };
 
 #endif

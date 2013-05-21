@@ -43,7 +43,6 @@
 #include "FaberWindow.h"
 #include "Shortcut.h"
 #include "PeakFile.h"
-#include "VMSystem.h"
 #include "Filters.h"
 
 #include <stdio.h>
@@ -127,10 +126,8 @@ CommonPool::~CommonPool(){
 	if (play_cookie.buffer)
 		delete [] play_cookie.buffer;
 
-#ifndef __VM_SYSTEM				// RAM
 	if (sample_memory)
 		free(sample_memory);
-#endif
 
 	if (PrefWin && PrefWin->Lock()) {
 		PrefWin->Quit();
@@ -178,8 +175,8 @@ void CommonPool::InitBufferPlayer(float f)
 	system_frequency = format.frame_rate;
 }
 
-#ifndef __VM_SYSTEM				// RAM
-	void CommonPool::StartPlaying(int64 p, bool end)
+
+void CommonPool::StartPlaying(int64 p, bool end)
 	{
 		m_playing = true;
 		if (p){
@@ -202,44 +199,12 @@ void CommonPool::InitBufferPlayer(float f)
 
 		player->Start();
 		player->SetHasData(true);
-	}
-#else	// VM
-	void CommonPool::StartPlaying(int64 p, bool end)
-	{
-		m_playing = true;
-		if (p){
-			play_cookie.mem = p;
-		}else{
-			play_cookie.mem = 0;
-		}
-		play_cookie.mono = (sample_type == MONO);
-		play_cookie.start_mem = play_cookie.mem;
+}
 
-		if (end | (selection == NONE))
-			play_cookie.end_mem = size*sample_type;
-		else
-			play_cookie.end_mem = r_sel_pointer*sample_type;
-
-		play_cookie.end = end;
-		play_cookie.frequency = frequency;
-		play_cookie.add = 0;
-		last_pointer = 0;
-
-		// set play cache
-		VM.SetPlayPointer(play_cookie.mem);
-
-		player->Start();
-		player->SetHasData(true);
-	}
-#endif
 
 void CommonPool::StopPlaying()
 {
 	m_playing = false;
-
-	#ifdef __VM_SYSTEM
-	VM.StopCache();
-	#endif
 
 	player->Stop();
 }
@@ -623,158 +588,7 @@ status_t CommonPool::InstallMimeType(bool force){
 	return B_OK;
 }
 
-#ifdef __VM_SYSTEM
 
-void 
-BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)
-{
-	// We're going to be cheap and only work for floating-point audio 
-	if (format.format != media_raw_audio_format::B_AUDIO_FLOAT) { 
-		return; 
-	}
-	
-	bool stop_needed = false;
-	size_t i; 
-	float *buf = (float *) buffer; 
-	size_t float_size = size/4; 
-	cookie_record *cookie = (cookie_record *) theCookie;
-	float left = 0.0, right = 0.0;
-	float fraq = fabs(Pool.frequency/Pool.system_frequency);
-	
-	if ((Pool.selection == NONE) | cookie->end){
-		cookie->end_mem = Pool.size*Pool.sample_type;
-	}else{
-		cookie->end_mem = Pool.r_sel_pointer*Pool.sample_type;
-	}
-	
-	int32 mem_size = float_size * (int32)ceil(fraq);
-	float *mem = cookie->buffer;
-	VM.ReadCache( mem, mem_size );
-//	VM.ReadBlockAt( cookie->mem, mem, mem_size );
-
-	// Now fill the buffer with sound! 
-
-	if (cookie->pause){
-		for (i=0; i<float_size; i++) { 
-			buf[i] = 0.0;
-		}
-	}else{
-		if (Pool.sample_type == MONO){	//cookie->mono){
-			for (i=0; i<float_size; i+=2){
-				if (cookie->mem >= cookie->end_mem){
-					if (cookie->loop){
-						cookie->mem = Pool.pointer*Pool.sample_type;
-						VM.SetPlayPointer( cookie->mem );
-						VM.ReadCache( mem, mem_size );
-					}else{
-						buf[i] = 0.0;
-						buf[i+1] = 0.0;
-						stop_needed = true;
-					}
-				}
-				if (!stop_needed){
-					buf[i] = *mem;
-					buf[i+1] = *mem;
-
-					cookie->add += fraq;
-					if (Pool.frequency>=0){
-						while (cookie->add >= 1.0){
-							cookie->mem++;
-							mem++;
-							--cookie->add;
-						}
-					}else{
-						while (cookie->add >= 1.0){
-							cookie->mem--;
-							mem--;
-							--cookie->add;
-						}
-						if (cookie->mem < 0)
-							cookie->mem += cookie->end_mem;
-					}
-				}
-			}
-		}else{
-			for (i=0; i<float_size; i+=2) { 
-				if (cookie->mem >= cookie->end_mem){
-					if (cookie->loop){
-						cookie->mem = Pool.pointer*Pool.sample_type;
-						VM.SetPlayPointer( cookie->mem );
-						VM.ReadCache( mem, mem_size );
-					}else{
-						buf[i] = 0.0f;
-						buf[i+1] = 0.0f;
-						stop_needed = true;
-					}
-				}
-				if (!stop_needed){
-					switch(Pool.selection){
-					case NONE:
-					case BOTH:
-						buf[i] = mem[0];
-						buf[i+1] = mem[1];
-						break;
-					case LEFT:
-						buf[i] = mem[0];
-						buf[i+1] = mem[0];
-						break;
-					case RIGHT:
-						buf[i] = mem[1];
-						buf[i+1] = mem[1];
-						break;
-					}
-
-					cookie->add += fraq;
-					if (Pool.frequency>=0){
-						while (cookie->add >= 1.0){
-							cookie->mem+= 2;
-							mem+=2;
-							--cookie->add;
-						}
-					}else{
-						while (cookie->add >= 1.0){
-							cookie->mem-= 2;
-							mem-=2;
-							--cookie->add;
-						}
-						if (cookie->mem < 0)
-							cookie->mem += cookie->end_mem;
-					}
-				}
-			}
-		}
-	}
-	
-	Pool.last_pointer = cookie->mem;	// set the last played location
-	if (Pool.sample_type == STEREO)
-		Pool.last_pointer >>= 1;
-
-	if (stop_needed)
-		Pool.mainWindow->PostMessage(TRANSPORT_STOP);
-
-	for (int i=0; i<PLAY_HOOKS; i++){
-		if (Pool.BufferHook[i]){
-			(Pool.BufferHook[i])(buf, float_size, Pool.BufferCookie[i]);
-		}
-	}
-	
-
-	for (i=0; i<float_size; i+=2) { 
-		left = MAX(buf[i], left);
-		right = MAX(buf[i+1],right);
-	}
-	cookie->left = left;
-	cookie->right = right;
-
-	// update the visuals
-	cookie->count -= size;
-	if (cookie->count <0){
-		cookie->count = (int)Pool.system_frequency/3;						// 24 times a second
-			Pool.mainWindow->PostMessage(UPDATE);
-	}
-}
-
-#else
 void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)
 {
 	// We're going to be cheap and only work for floating-point audio 
@@ -912,4 +726,3 @@ void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_au
 			Pool.mainWindow->PostMessage(UPDATE);
 	}
 }
-#endif

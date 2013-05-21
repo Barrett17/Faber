@@ -14,20 +14,11 @@ TrackAudio::TrackAudio(const char* name, uint32 resizingMode)
 		:
 		BView(name, resizingMode)
 {
-	fIndexView = new IndexView();
-	fIndexView->SetExplicitMaxSize(BSize(1500, 20));
-
 	fSampleView = new SampleView();
 	fSampleView->Init();
 
-	fValuesView = new ValuesView();
-
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
-		.AddGroup(B_VERTICAL, 0)
-			.Add(fIndexView)
-			.Add(fSampleView)
-		.End()
-		//.Add(fValuesView)
+		.Add(fSampleView)
 	.End();
 }
 
@@ -40,9 +31,7 @@ TrackAudio::~TrackAudio()
 void
 TrackAudio::Invalidate()
 {
-	fIndexView->Invalidate();
 	fSampleView->Invalidate();
-	fValuesView->Invalidate();
 
 	BView::Invalidate();
 }

@@ -37,9 +37,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-// TODO investigate about it and check if we should remove it
-// or enable it.
-//#define __VM_SYSTEM	1		// this enables Virtual Memory
 
 #include <SupportDefs.h>
 #include <Locale.h>
@@ -167,9 +164,6 @@ enum {
 #define HELP				'help'
 #define ABOUT				'bout'
 #define HOMEPAGE			'hmep'
-#define HISTORY				'hsty'
-#define TUTORIALS			'tuts'
-
 #define ZERO_IN				'zrIn'
 #define ZERO_OUT			'zrOt'
 #define ZERO_LL				'zrLL'
@@ -196,10 +190,8 @@ enum {
 #define TRANSPORT_STOP		'Tstp'
 #define TRANSPORT_REC		'Trec'
 #define TRANSPORT_PAUSE		'Tpse'
-#define TRANSPORT_PAUSE_MAN	'TpsM'	// needed for keybindings
-#define TRANSPORT_PLAYS		'Tpls'
+//#define TRANSPORT_PLAYS		'Tpls'
 #define TRANSPORT_LOOP		'Tlop'
-#define TRANSPORT_LOOP_MAN	'TlpM'
 #define TRANSPORT_HOME		'Tlhm'
 #define TRANSPORT_END		'Tled'
 #define TRANSPORT_LEFT		'Tllf'

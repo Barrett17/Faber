@@ -31,7 +31,6 @@
 #include <Window.h>
 
 #include "ToolBar.h"
-#include "PeakView.h"
 #include "TrackAudio.h"
 #include "InfoToolBar.h"
 #include "TimeBarView.h"
@@ -69,9 +68,6 @@ private:
 			TrackAudio*		fTrackView;
 			InfoToolBar*	fInfoToolBar;
 			TimeBarView*	fTimeBar;
-			PeakView*		fPeakView;
-
-
 
 	friend class SampleView;
 };

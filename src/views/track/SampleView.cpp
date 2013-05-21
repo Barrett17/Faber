@@ -38,8 +38,6 @@
 #include "BitmapDrawer.h"
 #include "Shortcut.h"
 #include "MyClipBoard.h"
-#include "VMSystem.h"
-#include "ValuesView.h"
 
 #include <stdio.h>
 
@@ -161,7 +159,6 @@ void SampleView::Pulse()
 				Pool.l_pointer = ptr;
 				Pool.r_pointer = Pool.l_pointer + xx;
 
-				//Window()->FindView("Pointers view")->Pulse();//Invalidate();
 				Pool.update_index = true;	// @TODO: need to be pulse for fast update
 				Window()->FindView("InfoToolBar")->Pulse();//Draw()Invalidate();
 				Window()->FindView("Sample view")->Invalidate();
@@ -357,12 +354,12 @@ void SampleView::MouseDown(BPoint p)
 				BMenuItem *menuItem;
 				BPopUpMenu *menu = new BPopUpMenu("");
 
-				menu->AddItem(new BMenuItem(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
+				/*menu->AddItem(new BMenuItem(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE_MAN), KeyBind.GetKey("TRANSPORT_PAUSE"), KeyBind.GetMod("TRANSPORT_PAUSE")));
 				//if (((FaberWindow*)Pool.mainWindow)->transport_view->pause->Value() == B_CONTROL_ON)
 				//	menuItem->SetMarked(true);
 				menu->AddItem(new BMenuItem(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), KeyBind.GetKey("TRANSPORT_STOP"), KeyBind.GetMod("TRANSPORT_STOP")));
-				menu->AddSeparatorItem();
+				menu->AddSeparatorItem();*/
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
 				menuItem->SetEnabled(Pool.selection != NONE);
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy & Silence"), new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
@@ -486,8 +483,6 @@ void SampleView::MouseDown(BPoint p)
 
 						Invalidate();
 						Pool.update_index = true;
-						Window()->FindView("Index view")->Invalidate();
-						//Window()->FindView("Pointers view")->Invalidate();
 						Window()->FindView("TimeBar view")->Invalidate();
 						old_y = p.y;
 						old_x = p.x;
@@ -581,7 +576,7 @@ void SampleView::MouseDown(BPoint p)
 	Invalidate();
 	//Window()->FindView("Pointers view")->Invalidate();
 	Pool.update_index = true;
-	Window()->FindView("Index view")->Invalidate();
+
 	Window()->FindView("InfoToolBar")->Invalidate();
 	Pool.UpdateMenu();
 }
@@ -703,8 +698,7 @@ void SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 			Pool.r_sel_pointer = Pool.size;
 		
 		Pool.update_index = true;
-		//Window()->FindView("Pointers view")->Draw(Window()->FindView("Pointers view")->Bounds());
-		Window()->FindView("Index view")->Invalidate();
+
 		int32 step = (int32)((Pool.r_pointer-Pool.l_pointer)/Bounds().Width());
 		int32 zoom_x = 4;		// normal case just extend the width of the selection triangles
 		if (step==0)
@@ -746,10 +740,7 @@ void SampleView::MouseUp(BPoint p)
 		Pool.pointer = (int32)(Pool.l_pointer + p.x * (Pool.r_pointer - Pool.l_pointer)/Bounds().Width());
 		
 		Invalidate();
-		//Window()->FindView("Pointers view")->Invalidate();
 		Pool.update_index = true;
-		Window()->FindView("Index view")->Invalidate();
-		//Window()->FindView("Big view")->Invalidate();
 	}
 
 	drag = false;
@@ -830,7 +821,7 @@ void SampleView::EditPoint(BPoint p)
 	// Do some screen updating
 	Pool.update_peak = true;
 	Pool.update_index = true;
-	Window()->FindView("Index view")->Invalidate();
+
 	int32 zoom_x =  (int32)MAX(ceil(Bounds().Width()/(Pool.r_pointer - Pool.l_pointer)),POINTER_BAR_HEIGHT) ;
 	if (p.x>old.x){
 		Invalidate(BRect(BPoint(old.x-zoom_x*2, 0), BPoint(p.x+zoom_x, Bounds().bottom)));
@@ -850,33 +841,21 @@ void SampleView::DoDraw(int64 ptr, int32 add, float v)
 	if (step<=1){
 		if (ptr > Pool.size*add) ptr = Pool.size*add;
 		if (ptr < 0 ) ptr = 0;
-#ifndef __VM_SYSTEM //RAM
 		Pool.sample_memory[ptr] = v;
-#else
-		VM.WriteAt( ptr, v );
-#endif
 	}else{
 
 		int32 start = ptr - step*add;	// left part
 		if (start < 0) start = 0;
 		
 		for (int32 i=start; i<=ptr; i+=add){
-#ifndef __VM_SYSTEM //RAM
 			Pool.sample_memory[i] = v;
-#else
-			VM.WriteAt( i, v );
-#endif
 		}
 
 		int32 end = ptr + step*add;	// left part
 		if (end > Pool.size*add) end = Pool.size*add;
 		
 		for (int32 i=ptr; i<=end; i+=add){
-#ifndef __VM_SYSTEM //RAM
 			Pool.sample_memory[i] = v;
-#else
-			VM.WriteAt( i, v );
-#endif
 		}
 	}
 }

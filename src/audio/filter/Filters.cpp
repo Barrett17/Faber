@@ -25,16 +25,14 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
+#include "Filters.h"
 
 #include <Path.h>
 #include <File.h>
 
 #include "Globals.h"
-#include "Filters.h"
 #include "FilterDialogs.h"
 #include "PeakFile.h"
-#include "VMSystem.h"
 
 // the filters with GUI
 #include "RoomFilter.h"
@@ -234,7 +232,6 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 		int32 size = (Pool.r_sel_pointer - Pool.pointer +1)*Pool.sample_type;
 		Pool.StartProgress(B_TRANSLATE("Working..."), size * pFilter->Passes());
 
-#ifndef __VM_SYSTEM	// RAM
 		for (int32 filter_pass = 0; filter_pass < pFilter->Passes(); filter_pass++)
 		{
 			int32 size = (Pool.r_sel_pointer - Pool.pointer +1)*Pool.sample_type;
@@ -256,9 +253,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 				WriteBack( filter_buffer, p, size);
 			}
 		}
-#else	// VM
-	// TODO:
-#endif
+
 		Pool.HideProgress();
 		Pool.changed = true;
 		

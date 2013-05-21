@@ -25,11 +25,11 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include "PeakFile.h"
+
 #include <Alert.h>
 
 #include "Globals.h"
-#include "PeakFile.h"
-#include "VMSystem.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -108,31 +108,15 @@ void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 
 	if (m_mono)		// mono
 	{
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			int32 index = 0;
-			VM.ReadBlockAt(start, p, BUFFER_SIZE);
-		#endif
+		float *p = Pool.sample_memory;
 
 		for (int32 i=start; i<=end; i+=128){
 			min = max = 0.0;
 			to = i+127;
 			if (to>Pool.size)	to = Pool.size;
 			for (int32 x=i; x<=to; x++){
-				#ifndef __VM_SYSTEM	// RAM
 					if (p[x]>max)	max = p[x];
 					if (p[x]<min)	min = p[x];
-				#else
-					if (p[index]>max)	max = p[index];
-					if (p[index]<min)	min = p[index];
-					index++;
-					if (index == BUFFER_SIZE){
-						index = 0;
-						VM.ReadBlock(p, BUFFER_SIZE);
-					}
-				#endif
 			}
 			ii = i>>6;
 			buffer_left[ii] = (int16)(min * 32767);
@@ -143,13 +127,7 @@ void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 	}
 	else	// Stereo
 	{
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			int32 index = 0;
-			VM.ReadBlockAt(start, p, BUFFER_SIZE);
-		#endif
+		float *p = Pool.sample_memory;
 
 		for (int32 i=start*2; i<=end*2; i+=256){
 			min = max = 0.0;
@@ -157,22 +135,10 @@ void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 			to = i+255;
 			if (to>Pool.size)	to = Pool.size;
 			for (int32 x=i; x<=to; x+=2){
-				#ifndef __VM_SYSTEM	// RAM
-					if (p[x]>max)		max = p[x];
-					if (p[x]<min)		min = p[x];
-					if (p[x+1]>max_r)	max_r = p[x+1];
-					if (p[x+1]<min_r)	min_r = p[x+1];
-				#else
-					if (p[index]>max)		max = p[index];
-					if (p[index]<min)		min = p[index];
-					if (p[index+1]>max_r)	max_r = p[index+1];
-					if (p[index+1]<min_r)	min_r = p[index+1];
-					index+=2;
-					if (index >= BUFFER_SIZE){
-						index = 0;
-						VM.ReadBlock(p, BUFFER_SIZE);
-					}
-				#endif
+				if (p[x]>max)		max = p[x];
+				if (p[x]<min)		min = p[x];
+				if (p[x+1]>max_r)	max_r = p[x+1];
+				if (p[x+1]<min_r)	min_r = p[x+1];
 			}
 			ii = i>>6;
 			buffer_left[ii] = (int16)(min * 32767);
@@ -194,26 +160,14 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 	float step = (end - start)/w;
 	int32 iStep = (int32)step;
 	int32 index, to;
-	
-	#ifdef __VM_SYSTEM	// VM
-	int32 nBufferSize = MIN( BUFFER_SIZE, end-start);
-	#endif
-	
+
 	if ( step <= 1 )
 	{
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			VM.ReadBlockAt(start, p, nBufferSize);
-		#endif
+
+		float *p = Pool.sample_memory;
 
 		for (int32 x = 0; x<w; x++){
-			#ifndef __VM_SYSTEM	// RAM
-				index = start + (int32)(x * step);
-			#else
-				index = (int32)(x * step);
-			#endif
+			index = start + (int32)(x * step);
 			float fTemp = p[index];
 
 			if (fTemp>1.0f)	fTemp = 1.0f;
@@ -224,13 +178,7 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 	}else
 	if ( step < 64 )
 	{	float min, max;
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			int32 idx = 0;
-			VM.ReadBlockAt(start, p, nBufferSize);
-		#endif
+		float *p = Pool.sample_memory;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -238,18 +186,8 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 
 			min = max = 0;
 			for (int32 i=index; i<=to; i++){
-				#ifndef __VM_SYSTEM	// RAM
-					if (p[i]>max)	max = p[i];
-					if (p[i]<min)	min = p[i];
-				#else
-					if (p[idx]>max)	max = p[idx];
-					if (p[idx]<min)	min = p[idx];
-					idx++;
-					if (idx == nBufferSize){
-						idx = 0;
-						VM.ReadBlock(p, nBufferSize);
-					}
-				#endif
+				if (p[i]>max)	max = p[i];
+				if (p[i]<min)	min = p[i];
 
 			}
 			if (max > -min)	*out++ = MIN(max, 1);
@@ -259,13 +197,8 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 	}else
 	if ( step < 128 )
 	{	float min, max;
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			int32 idx = 0;
-			VM.ReadBlockAt(start, p, nBufferSize);
-		#endif
+
+		float *p = Pool.sample_memory;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -273,18 +206,8 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 
 			min = max = 0;
 			for (int32 i=index; i<=to; i++){
-				#ifndef __VM_SYSTEM	// RAM
 					if (p[i]>max)	max = p[i];
 					if (p[i]<min)	min = p[i];
-				#else
-					if (p[idx]>max)	max = p[idx];
-					if (p[idx]<min)	min = p[idx];
-					idx++;
-					if (idx == nBufferSize){
-						idx = 0;
-						VM.ReadBlock(p, nBufferSize);
-					}
-				#endif
 			}
 
 			*out++ = min;
@@ -320,26 +243,13 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 	float step = (end - start)/w;
 	int32 iStep = (int32)step;
 	int32 index, to;
-	
-	#ifdef __VM_SYSTEM	// VM
-	int32 nBufferSize = MIN( BUFFER_SIZE, (end-start)*2);
-	#endif
-	
+
 	if ( step <= 1 )
 	{
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			VM.ReadBlockAt(start, p, nBufferSize);
-		#endif
+		float *p = Pool.sample_memory;
 
 		for (int32 x = 0; x<w; x++){
-			#ifndef __VM_SYSTEM	// RAM
-				index = start + (int32)(x * step);
-			#else
-				index = (int32)(x * step);
-			#endif
+			index = start + (int32)(x * step);
 			float fTemp = p[index*2];
 			float fTempR = p[index*2+1];
 
@@ -355,13 +265,8 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 	}else
 	if ( step < 64 )
 	{	float min, max, min_r, max_r;
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			int32 idx = 0;
-			VM.ReadBlockAt(start, p, nBufferSize);
-		#endif
+
+		float *p = Pool.sample_memory;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -372,24 +277,10 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 
 			min = max = min_r = max_r = 0;
 			for (int32 i=index; i<=to; i+=2){
-				#ifndef __VM_SYSTEM	// RAM
-					if (p[i]>max)		max = p[i];
-					if (p[i]<min)		min = p[i];
-					if (p[i+1]>max_r)	max_r = p[i+1];
-					if (p[i+1]<min_r)	min_r = p[i+1];
-				#else
-					if (p[idx]>max)	max = p[idx];
-					if (p[idx]<min)	min = p[idx];
-					idx++;
-					if (p[idx]>max_r)	max_r = p[idx];
-					if (p[idx]<min_r)	min_r = p[idx];
-					idx++;
-					if (idx >= nBufferSize){
-						idx = 0;
-						VM.ReadBlock(p, nBufferSize);
-					}
-				#endif
-
+				if (p[i]>max)		max = p[i];
+				if (p[i]<min)		min = p[i];
+				if (p[i+1]>max_r)	max_r = p[i+1];
+				if (p[i+1]<min_r)	min_r = p[i+1];
 			}
 			if (max > -min)	*out++ = MIN(max, 1);
 			else			*out++ = MAX(min, -1);
@@ -403,13 +294,7 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 	if (step <128)
 	{	float min, max, min_r, max_r;
 
-		#ifndef __VM_SYSTEM	// RAM
-			float *p = Pool.sample_memory;
-		#else
-			float *p = buffer;
-			int32 idx = 0;
-			VM.ReadBlockAt(start, p, nBufferSize);
-		#endif
+		float *p = Pool.sample_memory;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -420,23 +305,10 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 
 			min = max = min_r = max_r = 0;
 			for (int32 i=index; i<=to; i+=2){
-				#ifndef __VM_SYSTEM	// RAM
-					if (p[i]>max)		max = p[i];
-					if (p[i]<min)		min = p[i];
-					if (p[i+1]>max_r)	max_r = p[i+1];
-					if (p[i+1]<min_r)	min_r = p[i+1];
-				#else
-					if (p[idx]>max)	max = p[idx];
-					if (p[idx]<min)	min = p[idx];
-					idx++;
-					if (p[idx]>max_r)	max_r = p[idx];
-					if (p[idx]<min_r)	min_r = p[idx];
-					idx++;
-					if (idx >= nBufferSize){
-						idx = 0;
-						VM.ReadBlock(p, nBufferSize);
-					}
-				#endif
+				if (p[i]>max)		max = p[i];
+				if (p[i]<min)		min = p[i];
+				if (p[i+1]>max_r)	max_r = p[i+1];
+				if (p[i+1]<min_r)	min_r = p[i+1];
 			}
 			*out++ = min;
 			*out++ = max;

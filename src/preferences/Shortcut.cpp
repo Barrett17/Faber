@@ -349,17 +349,17 @@ void Shortcut::InstallDefaults(){
 
 	// The Transporter
 	Install(0,"TRANSPORT",	  		  0, 0,					  0, 0,							SPLITTER		);
-	Install(0,"TRANSPORT_PLAYS",	' ', B_SHIFT_KEY,		  0, 0,							TRANSPORT_PLAYS		);
+	//Install(0,"TRANSPORT_PLAYS",	' ', B_SHIFT_KEY,		  0, 0,							TRANSPORT_PLAYS		);
 	Install(0,"TRANSPORT_PLAY",		' ', B_CONTROL_KEY,		  0, 0,							TRANSPORT_PLAY		);
 	Install(0,"TRANSPORT_TOGGLE",	' ', 0,					  0, 0,							TRANSPORT_TOGGLE	);
 	Install(0,"TRANSPORT_STOP",		  0, 0,					  0, 0,							TRANSPORT_STOP		);
-	Install(0,"TRANSPORT_PAUSE",	'P', 0,					  0, 0,							TRANSPORT_PAUSE_MAN	);
+	Install(0,"TRANSPORT_PAUSE",	'P', 0,					  0, 0,							TRANSPORT_PAUSE	);
 	Install(0,"TRANSPORT_REW",		  0, 0,					  0, 0,							TRANSPORT_REW		);
 	Install(0,"TRANSPORT_REW_ALL",B_HOME, B_SHIFT_KEY,		  0, 0,							TRANSPORT_REW_ALL	);
 	Install(0,"TRANSPORT_FWD",		  0, 0,					  0, 0,							TRANSPORT_FWD		);
 	Install(0,"TRANSPORT_FWD_ALL",B_END, B_SHIFT_KEY,		  0, 0,							TRANSPORT_FWD_ALL	);
 	Install(0,"TRANSPORT_REC",		  0, 0,					  0, 0,							TRANSPORT_REC		);
-	Install(0,"TRANSPORT_LOOP",		'L', 0,					  0, 0,							TRANSPORT_LOOP_MAN	);
+	Install(0,"TRANSPORT_LOOP",		'L', 0,					  0, 0,							TRANSPORT_LOOP	);
 	Install(0,"TRANSPORT_HOME",  B_HOME, 0,				 	  0, 0,							TRANSPORT_HOME		);
 	Install(0,"TRANSPORT_END",	  B_END, 0,				  	  0, 0,							TRANSPORT_END		);
 	Install(0,"TRANSPORT_LEFT",B_LEFT_ARROW, 0,			 	  0, 0,							TRANSPORT_LEFT		);

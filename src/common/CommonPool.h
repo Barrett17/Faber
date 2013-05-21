@@ -48,11 +48,7 @@ class SettingsWindow;
 
 // player globals
 typedef struct cookie_record{
-	#ifndef __VM_SYSTEM
-		float *mem, *end_mem, *start_mem;
-	#else
-		int64 mem, end_mem, start_mem;
-	#endif
+	float *mem, *end_mem, *start_mem;
 	float *buffer;
 	float left, right;
 	float frequency, add;
@@ -106,9 +102,7 @@ class CommonPool{
 	media_format	m_format;
 	bool	save_selection;		// to decide whether to save selection or full
 
-#ifndef __VM_SYSTEM	// RAM
 	float	*sample_memory;					// memory 8Mb fixed for demo version
-#endif
 
 	int32	tool_mode;		// draw or select
 
@@ -149,7 +143,6 @@ class CommonPool{
 
 	ProgressWindow *progress;
 	BView	*m_SampleView;			// pointer to the sample-view to update the pointer
-	BView	*m_VU_View;			// pointer to the sample-view to update the VY meter
 
 	FaberWindow* mainWindow;
 

@@ -28,6 +28,7 @@
 
 #ifndef _Sample_VIEW
 #define _Sample_VIEW
+
 #include <View.h>
 #include <Bitmap.h>
 
