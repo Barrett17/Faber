@@ -26,6 +26,11 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*
+ * Copyright 2013 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
+
 #ifndef FABER_APP
 #define FABER_APP
 

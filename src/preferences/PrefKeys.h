@@ -26,8 +26,14 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _PREF_3_H
-#define _PREF_3_H
+/*
+ * Copyright 2013 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
+
+
+#ifndef PREF_KEYS_H
+#define PREF_3_H
 
 #include <Application.h>
 #include <AppKit.h>

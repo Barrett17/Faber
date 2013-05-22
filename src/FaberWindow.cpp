@@ -25,6 +25,12 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+/*
+ * Copyright 2013 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
+
 #include "FaberWindow.h"
 
 #include <Cursor.h>
