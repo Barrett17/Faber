@@ -75,9 +75,6 @@ class CommonPool
 	
 	void SelectAll();
 	void DeSelectAll();
-
-	// TODO Remove, it's not a good place for it.
-	void RedrawWindow();
 	
 	void SaveUndo();			// save Undo data
 	void Undo();				// undo
@@ -123,12 +120,8 @@ class CommonPool
 	int32	save_mode;				// 1-do load after save, 2-do quit after save
 	bool	IsChanged(int32 mode=1); // checks to see if a file is changed after load
 
-	BView	*m_SampleView;			// pointer to the sample-view to update the pointer
-
-	FaberWindow* mainWindow;
-
 	BMenu		*menu_edit, *menu_transform, *menu_zero, *menu_analyze, *menu_generate;
-	BMenuItem	*mn_save, *mn_save_as, *mn_save_sel, *mn_undo_enable, *mn_undo, *mn_cut, *mn_copy;
+	BMenuItem	*mn_save, *mn_save_as, *mn_save_sel, *mn_undo, *mn_cut, *mn_copy;
 	BMenuItem	*mn_paste, *mn_select_all, *mn_trim, *mn_set_freq, *mn_resample;
 	BMenuItem	*mn_clear, *mn_unselect, *mn_copy_silence, *mn_paste_new;
 

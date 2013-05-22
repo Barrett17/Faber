@@ -40,11 +40,10 @@
 #include <Window.h>
 #include <View.h>
 
-#include "SettingsView.h"
-
 #include "Globals.h"
 #include "SettingsView.h"
 #include "Shortcut.h"
+#include "WindowsManager.h"
 
 #define COLOR_SELECT		'colS'
 
@@ -92,7 +91,7 @@ void SettingsWindow::MessageReceived(BMessage* message)
 			Pool.sample_view_dirty = true;	// update the sample-view
 			Pool.update_draw_cache = true;	// update the draw cache
 			Pool.update_index = true;		// update the index cache
-			Pool.RedrawWindow();
+			WindowsManager::Get()->MainWindow()->RedrawWindow();
 		}
 		break;
 

@@ -5,6 +5,8 @@
 #ifndef WINDOWS_MANAGER
 #define WINDOWS_MANAGER
 
+#include <Messenger.h>
+
 #include "Analyzers.h"
 #include "OpenPanel.h"
 #include "ProgressWindow.h"
@@ -19,9 +21,31 @@ public:
 
 	static WindowsManager*	Get();
 
+	// It's preferable to use this one instead of
+	// the methods returning a pointer.
+	static BMessenger*		MainWinMessenger();
+
+	// This is used only by the BApplication
+	// to set the main window.
 	FaberWindow*			IstantiateMainWindow(BRect rect);
 	FaberWindow*			MainWindow();
-	// this is used to set the window from FaberApp
+
+	// TODO possible static implementation of BWindow::RedrawWindow()
+	// something calling the BWindow version :
+	// static void			RedrawWindow();
+
+	// Extending, it could be good to have methods like those
+	// static void			UpdateMainMenu();
+	// static void			UpdateToolBar();
+	// static void			UpdateInfoToolBar();
+	// static void			MessageToMainWin(const uint32 msg);
+
+	// Continuing this way, would be cool to clean the code
+	// by using a function to create alerts, this should
+	// avoid duplication of "new BAlert(..)"*, so imagine something like :
+
+	// static void			ShowAlert(const char* msg,
+	//						const char* butt1, const char* butt2);
 
 	void					ShowSettings();
 	SettingsWindow*			GetSettingsWindow();
@@ -47,7 +71,10 @@ public:
 	void					HideProgress();
 	void					SetProgressName(const char *name);
 
-	
+	// Util method which you can use to see if 
+	// a window is already opened / valid or not.
+	static bool				IsWindowValid(BWindow* window);
+
 private:
 	static BPoint			_CalculateWindowPoint();
 

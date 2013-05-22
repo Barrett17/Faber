@@ -318,7 +318,6 @@ void Shortcut::InstallDefaults(){
 
 	Install(1,"REDO",				'Z', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							REDO			);
 
-	Install(1,"UNDO_ENABLE",		'Z', B_COMMAND_KEY | B_CONTROL_KEY,	  0, 0,							UNDO_ENABLE		);
 	Install(1,"COPY",				'C', B_COMMAND_KEY,					  0, 0,							B_COPY			);
 	Install(1,"COPY_SILENCE",		'X', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							COPY_SILENCE	);
 	Install(1,"CUT",				'X', B_COMMAND_KEY,					  0, 0,							B_CUT			);

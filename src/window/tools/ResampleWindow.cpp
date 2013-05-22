@@ -38,14 +38,17 @@
 
 #include "Globals.h"
 #include "FilterDialogs.h"
-#include "SpinControl.h"
 #include "FStringItem.h"
+#include "SpinControl.h"
+#include "WindowsManager.h"
+
 
 #define SET_TEXT		'setT'
 #define SET_BITS		'setB'
 #define SELECT			'slct'
 #define CHANGE_CHANNEL	'chgC'
 #define SELECT_BITS		'selB'
+
 
 /*******************************************************
 *   
@@ -236,7 +239,7 @@ void ResampleWindow::MessageReceived(BMessage* msg)
 		Prefs.filter_resample_freq = m_frequency;
 		Prefs.filter_resample_bits = m_bits;
 
-		Pool.mainWindow->PostMessage(RESAMPLE_DO);
+		WindowsManager::MainWinMessenger()->SendMessage(RESAMPLE_DO);
 		Quit();
 		break;	
 

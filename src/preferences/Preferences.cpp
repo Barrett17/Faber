@@ -97,8 +97,6 @@ void Preferences::Init(){
       show_grid = true;
    if(prefs.FindBool("follow_playing", &follow_playing) != B_OK)
       follow_playing = true;
-   if(prefs.FindBool("save_undo", &save_undo) != B_OK)
-      save_undo = true;
    if(prefs.FindBool("play_on_load", &play_when_loaded) != B_OK)
       play_when_loaded = true;
    if(prefs.FindBool("select_all", &select_all_on_double) != B_OK)
@@ -234,7 +232,6 @@ Preferences::Sync()
 	prefs.SetBool("show_peak", show_peak);
 	prefs.SetBool("drag_drop", drag_drop);
 	prefs.SetBool("show_grid", show_grid);
-	prefs.SetBool("save_undo", save_undo);
 	prefs.SetBool("play_on_load", play_when_loaded);
 	prefs.SetBool("select_all", select_all_on_double);
 	prefs.SetBool("select_paste", select_after_paste);
@@ -351,7 +348,6 @@ void Preferences::FactorySettings(){
 //	display_time = DISPLAY_SAMPLES;
 	
 	follow_playing = true;
-	save_undo = true;
 	show_grid = true;
 	show_peak = true;
 	drag_drop = true;

@@ -175,7 +175,9 @@ void RunFilter(int32 filter)
 			if (view->Bounds().Width()<FILTER_MIN_WIDTH)
 				view->MoveBy( (FILTER_MIN_WIDTH - view->Bounds().Width())/2, 0);
 			pFilter->ChildAt(0)->AddChild(view);
-			pFilter->MoveTo( Pool.mainWindow->Frame().left +__FilterCount * 40 +40, Pool.mainWindow->Frame().top + 80 + __FilterCount * 20);
+
+			BRect frame = WindowsManager::Get()->MainWindow()->Frame();
+			pFilter->MoveTo(frame.left +__FilterCount * 40 +40, frame.top + 80 + __FilterCount * 20);
 			
 			pFilter->Run();			// start looper
 			pFilter->InitFilter(Pool.system_frequency, 2);	// initiase
@@ -268,7 +270,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 
 	Pool.ResetIndexView();
 	Pool.UpdateMenu();
-	Pool.RedrawWindow();
+	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
 void CancelFilter(RealtimeFilter *pFilter)
@@ -371,9 +373,9 @@ bool FadeOutFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 void DoTrim()
 {
 	if (Pool.sample_type == NONE || Pool.selection == NONE)	return;
-	Pool.mainWindow->PostMessage(TRANSPORT_STOP);		// stop playing
+	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);		// stop playing
 
-	if (Prefs.save_undo)	Hist.Save(H_FULL, 0, Pool.size);	// full undo
+	Hist.Save(H_FULL, 0, Pool.size);	// full undo
 
 	if (Pool.pointer != 0){			// copy to begin of memory
 		float *src = Pool.sample_memory + Pool.pointer*Pool.sample_type;
@@ -400,7 +402,7 @@ void DoTrim()
 	Pool.changed = true;
 	Pool.ResetIndexView();
 	Pool.UpdateMenu();
-	Pool.RedrawWindow();
+	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
 #define BUFFER_SIZE		128*1024
@@ -416,9 +418,9 @@ void DoResample()
 	if (!buffer)	return;	// error
 	
 	Pool.player->Stop();
-	Pool.mainWindow->PostMessage(TRANSPORT_STOP);		// stop playing
+	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP); // stop playing
 
-	if (Prefs.save_undo)	Hist.Save(H_FULL, 0, Pool.size);	// full undo
+	Hist.Save(H_FULL, 0, Pool.size);	// full undo
 
 	app_info info;
 	be_app->GetAppInfo(&info);
@@ -600,7 +602,7 @@ void DoResample()
 	Peak.Init( Pool.size+1, (Pool.sample_type == MONO) );	// Init peakfile
 	Pool.ResetIndexView();
 	Pool.UpdateMenu();
-	Pool.RedrawWindow();
+	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
 

@@ -207,9 +207,12 @@ bool MyClipBoard::Copy(){
 *   
 *******************************************************/
 void MyClipBoard::Cut(bool cut){
-	if (Pool.selection == NONE)		return;			// nothing to copy
-	Pool.mainWindow->PostMessage(TRANSPORT_STOP);	// can not use playing here
-	if (Copy())											// copy to clipboard
+	if (Pool.selection == NONE)
+		return;	// nothing to copy
+
+	// can not use playing here
+	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);
+	if (Copy())	// copy to clipboard
 	{
 		if (cut){
 			DoCut();
@@ -221,7 +224,7 @@ void MyClipBoard::Cut(bool cut){
 		Pool.changed = true;
 		Pool.ResetIndexView();
 		Update();
-		Pool.RedrawWindow();
+		WindowsManager::Get()->MainWindow()->RedrawWindow();
 	}
 }
 
@@ -269,7 +272,7 @@ void MyClipBoard::DoCut(){
 
 	// Now remove the selected part
 	if (Pool.sample_type==STEREO && (Pool.selection==LEFT || Pool.selection==RIGHT)){
-		if (Prefs.save_undo)	Hist.Save(H_REPLACE, Pool.pointer, Pool.size);		// save the part to cut
+		Hist.Save(H_REPLACE, Pool.pointer, Pool.size);		// save the part to cut
 		if (Pool.r_sel_pointer != Pool.size){		// need to copy ?
 			// copy channel back
 			float *src = Pool.sample_memory + (Pool.r_sel_pointer+1)*Pool.sample_type;
@@ -291,7 +294,7 @@ void MyClipBoard::DoCut(){
 			*p=0;	p+=2;
 		}
 	}else{
-		if (Prefs.save_undo)	Hist.Save(H_DELETE, Pool.pointer, Pool.r_sel_pointer);		// save the part to cut
+		Hist.Save(H_DELETE, Pool.pointer, Pool.r_sel_pointer);		// save the part to cut
 		if (Pool.r_sel_pointer != Pool.size){		// need to copy ?
 			// copy channel back
 			float *src = Pool.sample_memory + (Pool.r_sel_pointer+1)*Pool.sample_type;
@@ -331,9 +334,11 @@ void MyClipBoard::Paste(){
 	float frequency;
 	
 	MyClipBoardFile->Read(&m_clip,sizeof(&m_clip));
-	if (!m_clip)	return;
-
-	Pool.mainWindow->PostMessage(TRANSPORT_STOP);		// can not use playing here
+	if (!m_clip)
+		return;
+	
+	// can not use playing here
+	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);
 	MyClipBoardFile->Read(&size,sizeof(&size));
 	MyClipBoardFile->Read(&sample_type,sizeof(&sample_type));
 	MyClipBoardFile->Read(&frequency,sizeof(&frequency));
@@ -358,14 +363,11 @@ void MyClipBoard::Paste(){
 	int32 start = Pool.pointer;
 	int32 end = Pool.pointer + size/(4*sample_type) - 1;
 
-	if (Pool.size && Pool.selection == NONE && Prefs.save_undo)
+	if (Pool.size && Pool.selection == NONE)
 		Hist.Save(H_PASTE, start, end);
 
 	if (Pool.selection != NONE){		// first CUT the piece
-		bool old = Prefs.save_undo;
-		Prefs.save_undo = false;
 		DoCut();
-		Prefs.save_undo = old;
 		if (Pool.selection == BOTH)
 			Pool.selection = NONE;
 		
@@ -647,7 +649,7 @@ einde:
 	Pool.changed = true;
 	Pool.ResetIndexView();
 	Update();
-	Pool.RedrawWindow();
+	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
 /*******************************************************
@@ -658,12 +660,13 @@ void MyClipBoard::PasteMix()
 	if (!m_clip)
 		return;
 
-	Pool.mainWindow->PostMessage(TRANSPORT_STOP);		// can not use playing here
+	// can not use playing here
+	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);
 
 	Pool.changed = true;
 	Pool.ResetIndexView();
 	Update();
-	Pool.RedrawWindow();
+	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
 /*******************************************************

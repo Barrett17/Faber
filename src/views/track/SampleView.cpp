@@ -501,10 +501,8 @@ void SampleView::MouseDown(BPoint p)
 	{
 		if (Pool.tool_mode == DRAW_TOOL && clicks == 1){
 			// save undo data
-			if (Prefs.save_undo){
-				Hist.Save(H_REPLACE, Pool.l_pointer, Pool.r_pointer);
-				Pool.UpdateMenu();
-			}
+			Hist.Save(H_REPLACE, Pool.l_pointer, Pool.r_pointer);
+			Pool.UpdateMenu();
 
 			edit_channel = NONE;	// needed to track stereo editing
 			old = p;

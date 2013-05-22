@@ -195,7 +195,7 @@ bool History::Save(uint32 action, uint32 start, uint32 end){
 *******************************************************/
 bool History::Restore(){
 	if (!m_undo)	return false;			// no undo data at all
-	Pool.mainWindow->PostMessage(TRANSPORT_STOP);	// can not use playing here
+	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);	// can not use playing here
 
 /*
  *	@TODO: Add Redo Code
@@ -226,10 +226,7 @@ bool History::Restore(){
 		Pool.pointer = start;
 		Pool.r_sel_pointer = end;
 		Pool.selection = BOTH;
-		bool old = Prefs.save_undo;
-		Prefs.save_undo = false;
 		ClipBoard.DoCut();
-		Prefs.save_undo = old;
 		Pool.selection = NONE;
 }		break;
 	case H_DELETE:			// for cut, need an insert actio to restore
@@ -323,8 +320,10 @@ bool History::Restore(){
 *   ReDo
 *******************************************************/
 bool History::ReDo(){
-	if (!m_undo)	return false;			// no undo data at all
-	Pool.mainWindow->PostMessage(TRANSPORT_STOP);	// can not use playing here
+	if (!m_undo)
+		return false;			// no undo data at all
+
+	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);	// can not use playing here
 
 /*
  *	@TODO: Add Redo Code

@@ -45,6 +45,7 @@
 #include "Globals.h"
 #include "PrefGeneral.h"
 #include "SpinControl.h"
+#include "WindowsManager.h"
 
 #include <stdio.h>
 
@@ -204,14 +205,14 @@ PrefGeneral::MessageReceived(BMessage* msg)
 		Prefs.drag_drop = (c_drag_drop->Value() == B_CONTROL_ON);
 		Pool.update_draw_cache = true;	// update the draw cache
 		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.RedrawWindow();
+		WindowsManager::Get()->MainWindow()->RedrawWindow();
 		break;
 	
 	case PEAK_LEVEL:
 		Prefs.peak = s_peak->Value()/100.0;
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_draw_cache = true;	// update the draw cache
-		Pool.RedrawWindow();
+		WindowsManager::Get()->MainWindow()->RedrawWindow();
 		break;
 
 	case SPIN_CHANGED:
@@ -221,7 +222,7 @@ PrefGeneral::MessageReceived(BMessage* msg)
 	case SET_TIME:
 		msg->FindInt32("time", &i);
 		Prefs.display_time = i;
-		Pool.RedrawWindow();
+		WindowsManager::Get()->MainWindow()->RedrawWindow();
 		break;
 	
 	case SET_TEMP:

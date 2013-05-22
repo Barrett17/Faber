@@ -50,11 +50,6 @@ ToolBar::ToolBar()
 			.Add(_BuildButton(B_TRANSLATE("Copy"), new BMessage(B_COPY), kCopyIcon))
 			.Add(_BuildButton(B_TRANSLATE("Paste"), new BMessage(B_PASTE), kPasteIcon))
 
-			/* Unimplemented, disabled, feel free to remove
-
-			.Add(_BuildButton(B_TRANSLATE("Copy to wave-stack"), new BMessage(TO_STACK), 0))
-			.Add(_BuildButton(B_TRANSLATE("SET_LOOP"), new BMessage(SET_LOOP), NULL));
-			*/
 			.AddStrut(20.0f)
 			.Add(_BuildButton(B_TRANSLATE("Zoom in"), new BMessage(ZOOM_IN), kZoomInIcon))
 			.Add(_BuildButton(B_TRANSLATE("Zoom out"), new BMessage(ZOOM_OUT), kZoomOutIcon))

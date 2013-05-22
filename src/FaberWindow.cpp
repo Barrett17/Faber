@@ -77,14 +77,9 @@ MyMenuBar::MakeFocus(bool b)
 
 FaberWindow::FaberWindow(BRect frame)
 	:
-	BWindow(frame, "Faber" ,B_TITLED_WINDOW,B_ASYNCHRONOUS_CONTROLS),
+	BWindow(frame, "Faber" , B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS),
 	fMainMenuBar(NULL)
 {
-	// set MIME types
-	//Pool.InstallMimeType();
-
-	Pool.mainWindow = this;
-
 	// init prefs
 	Prefs.Init();
 	ClipBoard.Init();				// clipboard init
@@ -103,8 +98,6 @@ FaberWindow::FaberWindow(BRect frame)
 
 	// Now init the keyBindings
 	KeyBind.Init();
-
-	//Pool.PrefWin = 
 	
 	// create the player and recorder nodes
 	Pool.InitBufferPlayer( 44100 );	
@@ -127,7 +120,7 @@ FaberWindow::FaberWindow(BRect frame)
 	fToolBar->SetTool(SELECT_TOOL);
 
 	fTrackView = new TrackAudio();
-	Pool.m_SampleView = fTrackView;	// for the player
+
 	fInfoToolBar = new InfoToolBar();
 	fTimeBar = new TimeBarView();
 
@@ -200,9 +193,6 @@ FaberWindow::_BuildMenu()
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Redo"), new BMessage(REDO), KeyBind.GetKey("REDO"), KeyBind.GetMod("REDO")));
 	Pool.mn_redo = menuItem;
 
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Enable Undo"), new BMessage(UNDO_ENABLE), KeyBind.GetKey("UNDO_ENABLE"), KeyBind.GetMod("UNDO_ENABLE")));
-	Pool.mn_undo_enable = menuItem;
-	menuItem->SetMarked(Prefs.save_undo);
 	menu->AddSeparatorItem();
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
 	Pool.mn_copy = menuItem;
@@ -496,7 +486,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		if (Pool.size == 0)	break;
 		x = Pool.r_pointer - Pool.l_pointer;
 		
-		if (x < Pool.m_SampleView->Bounds().Width()/64)	break;
+		if (x < fTrackView->Bounds().Width()/64)	break;
 		
 		x /= 2;
 		if (x < 1)	x = 1;
@@ -670,12 +660,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.update_index = true;
 		RedrawWindow();
 		break;
-	
-	case UNDO_ENABLE:
-		Prefs.save_undo = !Prefs.save_undo;
-		Pool.UpdateMenu();
-		break;
-	
+
 	case ABOUT:
 		WindowsManager::ShowAbout();
 	break;

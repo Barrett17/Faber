@@ -7,6 +7,8 @@ SubDirSysHdrs [ FDirName $(TOP) ] ;
 # you have to add it here.
 SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
+
+SEARCH_SOURCE += [ FDirName $(TOP) src audio ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio filter ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio node ] ;
 
@@ -19,6 +21,11 @@ SEARCH_SOURCE += [ FDirName $(TOP) src window tools ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
 
+# NOTE this is the location for headers needed to 
+# access the BPrivate namespace data, only put such type of
+# headers there. 
+SEARCH_SOURCE += [ FDirName $(TOP) src common private_headers ] ;
+
 SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
 
 
@@ -29,7 +36,7 @@ Application Faber :
 	ToolBar.cpp
 	InfoToolBar.cpp
 
-	# tracks
+	# tracks implementation
 	TrackAudio.cpp
 	TimeBarView.cpp # TODO rework or rewrite it
 	SampleView.cpp
@@ -46,6 +53,8 @@ Application Faber :
 	AboutBox.cpp
 	SavePanel.cpp
 	OpenPanel.cpp
+	FreqWindow.cpp
+	ResampleWindow.cpp
 
 	# app and libstilnovo implementation base classes
 	SeekSlider.cpp
@@ -75,6 +84,14 @@ Application Faber :
 	PeakFile.cpp
 	History.cpp # TODO fix codestyle
 
+	# Audio internal API
+	SoundPlayer.cpp
+	SoundUtils.cpp
+
+	# Audio nodes
+	SoundPlayNode.cpp
+	SoundConsumer.cpp	
+
 	# filters
 	AmplifierFilter.cpp
 	Filters.cpp
@@ -85,11 +102,8 @@ Application Faber :
 	NormalizeFilter.cpp
 	RoomFilter.cpp
 
-	# filters windows
 	ReverbWindow.cpp
 	DelayWindow.cpp
-	FreqWindow.cpp
-	ResampleWindow.cpp
 
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
 	: Faber.rdef ToolBarIcons.rdef

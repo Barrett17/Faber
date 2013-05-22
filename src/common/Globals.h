@@ -134,17 +134,11 @@ enum {
 #define INSERT				'Bins'
 #define APPEND				'apnd'
 #define UNDO				'undo'
-#define UNDO_ENABLE			'undE'
 #define REDO				'redo'
 
 #define PASTE_NEW			'pnew'
 #define DROP_PASTE			'drpP'
 
-/* Unimplemented feel free to remove.
-#define TO_STACK			'2stk'
-
-#define SET_LOOP			'stlp'
-*/
 #define PASTE_MIXED			'pmix'
 #define PREFERENCES			'pref'
 #define OPEN_MIX			'opnM'

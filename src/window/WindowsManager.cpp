@@ -55,6 +55,15 @@ WindowsManager::Get()
 }
 
 
+
+BMessenger*
+WindowsManager::MainWinMessenger()
+{
+	BMessenger* mess = new BMessenger(Get()->fMainWindow);
+	return mess;
+}
+
+
 FaberWindow*
 WindowsManager::IstantiateMainWindow(BRect rect)
 {
@@ -128,7 +137,7 @@ WindowsManager::GetSavePanel()
 void
 WindowsManager::ShowSpectrumWindow()
 {
-	if (Get()->fSpectrumWindow == NULL)
+	if (!IsWindowValid(Get()->fSpectrumWindow))
 		Get()->fSpectrumWindow = new SpectrumWindow();
 	else
 		Get()->fSpectrumWindow->Show();
@@ -138,7 +147,7 @@ WindowsManager::ShowSpectrumWindow()
 void
 WindowsManager::ShowSampleScopeWindow()
 {
-	if (Get()->fSampleScopeWindow == NULL)
+	if (!IsWindowValid(Get()->fSampleScopeWindow))
 		Get()->fSampleScopeWindow = new SampleScopeWindow();
 	else
 		Get()->fSampleScopeWindow->Show();
@@ -200,6 +209,14 @@ void WindowsManager::HideProgress()
 	}
 }
 // End of progress methods.
+
+
+bool
+WindowsManager::IsWindowValid(BWindow* window)
+{
+	BMessenger mess(window);
+	return mess.IsValid();
+}
 
 
 BPoint

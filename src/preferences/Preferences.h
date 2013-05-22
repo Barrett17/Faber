@@ -62,7 +62,7 @@ class Preferences{
 	rgb_color	time_back_color, time_marks_color, time_small_marks_color, time_text_color;
 
 	bool	select_all_on_double;	// use double click to select all ?
-	bool	save_undo;				// undo enabled ?
+	//bool	save_undo;				// undo enabled ?
 	bool	show_grid;				// show grid ?
 	BRect	frame;					// window frame
 	bool	play_when_loaded;		// play after a file drop ?

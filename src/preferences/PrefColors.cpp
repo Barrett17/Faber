@@ -44,6 +44,7 @@
 #include "PrefColors.h"
 #include "SwatchView.h"
 #include "FStringItem.h"
+#include "WindowsManager.h"
 
 #include <stdio.h>
 
@@ -246,7 +247,7 @@ PrefColors::MessageReceived(BMessage *msg)
 			Pool.sample_view_dirty = true;	// update the sample-view
 			Pool.update_draw_cache = true;	// update the draw cache
 			Pool.update_index = true;		// update the index cache
-			Pool.RedrawWindow();
+			WindowsManager::Get()->MainWindow()->RedrawWindow();
 			break; // nothign selected 
 		}
 		control->SetEnabled(true);
@@ -258,7 +259,7 @@ PrefColors::MessageReceived(BMessage *msg)
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_draw_cache = true;	// update the draw cache
 		Pool.update_index = true;		// update the index cache
-		Pool.RedrawWindow();
+		WindowsManager::Get()->MainWindow()->RedrawWindow();
 		break;
 
 	case SWATCH_DROP:
@@ -281,7 +282,7 @@ PrefColors::MessageReceived(BMessage *msg)
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_draw_cache = true;	// update the draw cache
 		Pool.update_index = true;		// update the index cache
-		Pool.RedrawWindow();
+		WindowsManager::Get()->MainWindow()->RedrawWindow();
 		break;
 		
 	case COLOR_CHANGE:
@@ -304,7 +305,7 @@ PrefColors::MessageReceived(BMessage *msg)
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_draw_cache = true;	// update the draw cache
 		Pool.update_index = true;		// update the index cache
-		Pool.RedrawWindow();
+		WindowsManager::Get()->MainWindow()->RedrawWindow();
 		break;
 
 	case NEW_SCHEME:

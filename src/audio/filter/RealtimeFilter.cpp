@@ -34,6 +34,7 @@
 
 #include "Globals.h"
 #include "RealtimeFilter.h"
+#include "WindowsManager.h"
 
 #define UPDATE		'updt'
 #define QUIT		'quit'
@@ -170,7 +171,7 @@ bool RealtimeFilter::QuitRequested()
 {
 	BMessage message(CANCEL_FILTER);
 	message.AddPointer("filter", (void*)this);
-	Pool.mainWindow->PostMessage(&message);
+	WindowsManager::MainWinMessenger()->SendMessage(&message);
 	
 	return false;
 }
@@ -183,7 +184,7 @@ void RealtimeFilter::MessageReceived(BMessage* msg){
 	case SET:
 {		BMessage message(EXE_FILTER);
 		message.AddPointer("filter", (void*)this);
-		Pool.mainWindow->PostMessage(&message);
+		WindowsManager::MainWinMessenger()->SendMessage(&message);
 }		break;
 
 	case CONTROL_CHANGED:
