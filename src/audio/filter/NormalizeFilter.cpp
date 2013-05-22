@@ -34,7 +34,6 @@
 #include "Globals.h"
 #include "RealtimeFilter.h"
 #include "NormalizeFilter.h"
-#include "main.h"
 
 #include <stdio.h>
 

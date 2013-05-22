@@ -34,7 +34,6 @@
 #include "Globals.h"
 #include "RealtimeFilter.h"
 #include "RoomFilter.h"
-#include "main.h"
 
 #include <stdlib.h>
 #include <stdio.h>

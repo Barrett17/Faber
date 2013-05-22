@@ -34,7 +34,6 @@
 
 #include "Globals.h"
 #include "RealtimeFilter.h"
-#include "main.h"
 
 #define UPDATE		'updt'
 #define QUIT		'quit'

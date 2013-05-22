@@ -25,6 +25,7 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include "AnalyzeWindow.h"
 
 #include <Window.h>
 #include <View.h>
@@ -33,8 +34,6 @@
 #include <stdio.h>
 
 #include "Globals.h"
-#include "AnalyzeWindow.h"
-#include "main.h"
 
 #define UPDATE		'updt'
 #define QUIT		'quit'

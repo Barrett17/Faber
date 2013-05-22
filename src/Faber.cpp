@@ -25,20 +25,13 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include "main.h"
+#include "Faber.h"
 
-#include <AppKit.h>
-#include <InterfaceKit.h>
 #include <MediaKit.h>
-#include <StorageKit.h>
 #include <View.h>
 
 #include "WindowsManager.h"
-#include "Globals.h"
 #include "FaberWindow.h"
-#include "OpenPanel.h"
-#include "SavePanel.h"
-#include "PeakFile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -58,17 +51,16 @@ int main()
 }
 
 
-FaberApp::FaberApp():BApplication(FABER_MIMETYPE)
+FaberApp::FaberApp()
+	:
+	BApplication(FABER_MIMETYPE)
 {
 	BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
 
-	fFaberWindow = new FaberWindow(rect);
-	WindowsManager::Get()->SetMainWindow(fFaberWindow);
-
-	fOpenPanel = new OpenPanel(this);
-	fSavePanel = new SavePanel(this);
+	fFaberWindow = WindowsManager::Get()->IstantiateMainWindow(rect);
 
 	Pool.UpdateMenu();
+
 	fFaberWindow->Show();
 }
 
@@ -79,13 +71,6 @@ FaberApp::QuitRequested()
 	if (fFaberWindow) {
 		if (fFaberWindow->Lock() && fFaberWindow->QuitRequested()) {
 			fFaberWindow->Quit();
-
-			if (fOpenPanel)
-				delete fOpenPanel;
-
-			if (fSavePanel)
-				delete fSavePanel;
-
 			return true;
 		}
 	}
@@ -244,7 +229,9 @@ FaberApp::RefsReceived(BMessage* message)
 					count += framesRead;			// now correct for crashes if bigger than file
 					if (count > frameCount)
 						framesRead -= (count - frameCount);
-		
+
+					// TODO completely bad way of doing things
+					// replace the numbers in case with appropriate values.
 					switch(format.u.raw_audio.format)
 					{
 					case 0x24:	// 0 == mid, -1.0 == bottom, 1.0 == top (the preferred format for non-game audio)
@@ -429,10 +416,10 @@ FaberApp::Save(BMessage *message){
 		char *buffer(NULL);
 		int32 frame_size(1);
 
-		fSavePanel->GetSelectedFormatInfo(&fileFormat, &audioCodec);
+		WindowsManager::GetSavePanel()->GetSelectedFormatInfo(
+			&fileFormat, &audioCodec);
 
-		if (audioCodec != NULL)
-		{
+		if (audioCodec != NULL) {
 			//format = Pool.m_format;
 			memcpy(&format, &Pool.m_format, sizeof(format));
 			raf_in = &(format.u.raw_audio);
@@ -440,21 +427,20 @@ FaberApp::Save(BMessage *message){
 
 			if (raf_in->format == 1)	
 				raf_in->format = 0x11;
-			
+
 			// create media file
 			BMediaFile file(&file_ref, fileFormat, B_MEDIA_FILE_REPLACE_MODE);
-			if (file.InitCheck() != B_OK)
-			{
+			if (file.InitCheck() != B_OK) {
 				(new BAlert(NULL, B_TRANSLATE("Can't overwrite file."), B_TRANSLATE("OK")))->Go();
 				return;
 			}
-			
+
 			BMediaTrack *outTrack = file.CreateTrack(&format, audioCodec);
 
-			if (outTrack){
+			if (outTrack) {
 				file.CommitHeader();
 
-				if (save_start == 0){			// save as
+				if (save_start == 0) {			// save as
 					char s[B_FILE_NAME_LENGTH +20];
 					sprintf(s, "Faber - %s", file_ref.name);
 					fFaberWindow->SetTitle(s);
@@ -472,8 +458,9 @@ FaberApp::Save(BMessage *message){
 				WindowsManager::Get()->StartProgress(
 					B_TRANSLATE("Saving file..."), (int32) (save_end-save_start));
 				
-				for (int64 i=save_start; i<save_end; i+=buffer_step)
-				{
+				// TODO very bad way to do things, make 
+				// those cases more explicative.
+				for (int64 i=save_start; i<save_end; i+=buffer_step) {
 					// fill up the buffer
 
 					int32 block = MIN( (int32) (save_end-i) , buffer_step);

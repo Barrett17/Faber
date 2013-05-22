@@ -30,8 +30,8 @@
 #include <Path.h>
 #include <File.h>
 
-#include "Globals.h"
 #include "FilterDialogs.h"
+#include "Globals.h"
 #include "PeakFile.h"
 #include "WindowsManager.h"
 
@@ -47,9 +47,6 @@
 #include <stdio.h>
 
 #define FILTER_BLOCK	2048
-
-float filmod[11][260]; // stores for 9 band EQ 
-float filstor[11];     // more stores for 9 band EQ
 
 int32 __Last_Filter = 0;
 int32 __Last_FilterTmp = 0;
@@ -74,6 +71,7 @@ filter_info __FilterList[] = {
 	{"Invert", FILTER_BOTH, 1},
 	{"Swap", FILTER_STEREO, 1},
 {NULL,0, 0} };
+
 
 // reinstate the last filter using the tag from the prefs
 void FiltersInit()

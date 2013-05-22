@@ -25,6 +25,7 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include "Analyzers.h"
 
 #include <Window.h>
 #include <View.h>
@@ -33,10 +34,9 @@
 #include <stdio.h>
 
 #include "Globals.h"
-#include "Analyzers.h"
-#include "main.h"
 
 #define NUM_BANDS		32
+
 
 class SpectrumView : public BView{
   public:

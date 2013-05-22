@@ -34,7 +34,6 @@
 #include "Globals.h"
 #include "RealtimeFilter.h"
 #include "ReverbFilter.h"
-#include "main.h"
 #include "math.h"
 
 #include <stdlib.h>

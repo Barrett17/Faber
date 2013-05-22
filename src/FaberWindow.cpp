@@ -27,27 +27,22 @@
 */
 #include "FaberWindow.h"
 
-#include <Application.h>
 #include <Cursor.h>
-#include <InterfaceKit.h>
 #include <LayoutBuilder.h>
-#include <MediaKit.h>
-#include <StorageKit.h>
+#include <Path.h>
 
 #include "AboutBox.h"
-#include "main.h"
+#include "Faber.h"
 #include "Globals.h"
+#include "FilterDialogs.h"
 #include "Filters.h"
-#include "WindowsManager.h"
-
-#include "FreqWindow.h"
 #include "MyClipBoard.h"
 #include "Shortcut.h"
-#include "FilterDialogs.h"
-#include "Analyzers.h"
+#include "WindowsManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
 
 cookie_record play_cookie;
 
@@ -247,7 +242,7 @@ FaberWindow::_BuildMenu()
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Resample"), new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
 	Pool.mn_resample = menuItem;
 
-	menu = new BMenu(B_TRANSLATE("Transform"));
+	menu = new BMenu(B_TRANSLATE("Filters"));
 	Pool.menu_transform = menu;
 	fMainMenuBar->AddItem(menu);
 
@@ -407,24 +402,37 @@ FaberWindow::MessageReceived(BMessage *message)
 
 	case OPEN:
 		if (!Pool.IsChanged())
-			((FaberApp*)be_app)->fOpenPanel->Show();
+			WindowsManager::GetOpenPanel()->Show();
 		break;
 	
 	case SAVE:			// need to add default setting in the save-panel for this
 	case SAVE_AS:
-		if (Pool.sample_type == NONE)	return;
+	{
+		if (Pool.sample_type == NONE)
+			return;
 		Pool.save_selection = false;
-		((FaberApp*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
-		((FaberApp*)be_app)->fSavePanel->Show();
+
+		SavePanel* panel = WindowsManager::GetSavePanel();
+		panel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
+		panel->Show();
+
 		break;
+	}
 	
 	case SAVE_SELECTION:
-		if (Pool.selection == NONE || Pool.sample_type == NONE)	return;
-		((FaberApp*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
+	{
+		if (Pool.selection == NONE || Pool.sample_type == NONE)
+			return;
+
 		Pool.save_selection = true;
-		((FaberApp*)be_app)->fSavePanel->Show();
+
+		SavePanel* panel = WindowsManager::GetSavePanel();
+		panel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
+
+		panel->Show();
 		break;
-	
+	}
+
 	case UNDO:
 		Pool.Undo();
 		break;
@@ -663,15 +671,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 	
 	case ABOUT:
-	{
-		BPoint p;
-		BRect r = Frame();
-
-		p.x = (r.left+r.right)/2;
-		p.y = (r.top+r.bottom)/2;
-
-		AboutBox* box = new AboutBox(p);
-	}
+		WindowsManager::ShowAbout();
 	break;
 		
 	case HELP:
@@ -746,25 +746,23 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case SPECTRUM:
-		(new SpectrumWindow());
+		WindowsManager::ShowSpectrumWindow();
 		break;
 		
 	case SAMPLE_SCOPE:
-		(new SampleScopeWindow());
+		WindowsManager::ShowSampleScopeWindow();
 		break;
 		
 	case SET_FREQUENCY:
-		(new FreqWindow(BPoint((Frame().left+Frame().right)/2,
-			(Frame().top+Frame().bottom)/2)));
+		WindowsManager::ShowFrequencyWindow();
+		break;
+
+	case RESAMPLE:
+		WindowsManager::ShowResampleWindow();
 		break;
 
 	case RESAMPLE_DO:
 		DoResample();
-		break;
-
-	case RESAMPLE:
-		(new ResampleWindow(BPoint( (Frame().left+Frame().right)/2,
-			(Frame().top+Frame().bottom)/2)));
 		break;
 
 	case CLEAR:

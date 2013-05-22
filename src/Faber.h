@@ -33,8 +33,6 @@
 
 #include "FaberWindow.h"
 #include "Globals.h"
-#include "OpenPanel.h"
-#include "SavePanel.h"
 
 
 class FaberApp : public BApplication
@@ -46,11 +44,9 @@ public:
 	virtual bool	QuitRequested();
 
 			void	Save(BMessage*);
-
-	OpenPanel*		fOpenPanel;
-	SavePanel*		fSavePanel;
- 	FaberWindow*	fFaberWindow;
 private:
+ 	FaberWindow*	fFaberWindow;
+
  	int64			save_start, save_end;
 };
 

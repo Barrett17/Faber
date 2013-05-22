@@ -34,7 +34,6 @@
 
 #include "Globals.h"
 #include "Analyzers.h"
-#include "main.h"
 
 #define WIDTH		256
 

@@ -41,11 +41,8 @@ class BMenu;
 
 #define UPDATE	'updt'
 
-// just a little internal stuff to make life easy
-//typedef Filter*    (*FilterFunc) (BMessage*);
-
-// player globals
-typedef struct cookie_record{
+typedef struct cookie_record
+{
 	float *mem, *end_mem, *start_mem;
 	float *buffer;
 	float left, right;
@@ -57,19 +54,9 @@ typedef struct cookie_record{
 	int count;
 } cookie_record; 
 
-// A list of all the filters.. 
-struct filter_entry{
-   entry_ref eref;
-   char *name;
-   char *author;
-   char *email;
-   char *copyright;
-   char *version;
-   char *catagory;
-   char *desc;
-};
 
-class CommonPool{
+class CommonPool
+{
  public:
 	CommonPool();
 	~CommonPool();

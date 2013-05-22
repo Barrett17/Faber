@@ -24,7 +24,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
 
 Application Faber :
 	# this is the core code
-	main.cpp
+	Faber.cpp
 	FaberWindow.cpp
 	ToolBar.cpp
 	InfoToolBar.cpp
