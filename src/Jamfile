@@ -9,16 +9,16 @@ SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src audio ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src audio filter ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src audio filters ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio node ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
 
-SEARCH_SOURCE += [ FDirName $(TOP) src window ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src window mixer ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src window tools ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src window misc ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src windows mixer ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src windows tools ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src windows misc ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
 
