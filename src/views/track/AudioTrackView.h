@@ -5,22 +5,27 @@
  * Authors:
  *		Dario Casalinuovo
  */
-#ifndef TRACK_AUDIO__H
-#define TRACK_AUDIO__H
+#ifndef _AUDIO_TRACK_VIEW__H
+#define _AUDIO_TRACK_VIEW__H
+
+#include "AudioTrackView.h"
 
 #include <View.h>
+
 #include "Globals.h"
-
 #include "SampleView.h"
+#include "TrackView.h"
 
 
-class TrackAudio : public BView
+class AudioTrackView : public TrackView
 {
 public:
-							TrackAudio(const char* name = "TrackAudioMono",
+							AudioTrackView(const char* name = "AudioTrackView",
 								uint32 resizingMode = B_FOLLOW_ALL_SIDES
 								| B_WILL_DRAW);
-	virtual 				~TrackAudio();
+	virtual 				~AudioTrackView();
+
+			void			Pulse();
 			void			Invalidate();
 private:
 			SampleView*		fSampleView;

@@ -36,10 +36,9 @@
 
 #include <Window.h>
 
-#include "ToolBar.h"
-#include "TrackAudio.h"
 #include "InfoToolBar.h"
-#include "TimeBarView.h"
+#include "ToolBar.h"
+#include "TracksContainer.h"
 
 // TODO remove them
 // for some reason if you
@@ -47,37 +46,34 @@
 class BMenu;
 class BMenuBar;
 class ToolBar;
-class TimeBarView;
-class TrackAudio;
 class InfoToolBar;
 
 
 class FaberWindow : public BWindow
 {
 public:
-							FaberWindow(BRect frame);
-	virtual					~FaberWindow();
-	virtual bool 			QuitRequested();
-	virtual void 			MessageReceived(BMessage *message);
+								FaberWindow(BRect frame);
+	virtual						~FaberWindow();
+	virtual bool 				QuitRequested();
+	virtual void 				MessageReceived(BMessage *message);
 	
-			void 			UpdateRecent();
-			void			RedrawWindow();
-			void			UpdateToolBar();
+			void 				UpdateRecent();
+			void				RedrawWindow();
+			void				UpdateToolBar();
 			// activate/deactivate menu items
-			void			UpdateMenu();
+			void				UpdateMenu();
 
 			// checks to see if a file is changed after load
-			bool			IsChanged(int32 mode=1); 
+			bool				IsChanged(int32 mode=1); 
 private:
-			BMenuBar*		_BuildMenu();
+			BMenuBar*			_BuildMenu();
 
-			BMenuBar*		fMainMenuBar;
-			BMenu*			fRecentMenu;
+			BMenuBar*			fMainMenuBar;
+			BMenu*				fRecentMenu;
 
-			ToolBar*		fToolBar;
-			TrackAudio*		fTrackView;
-			InfoToolBar*	fInfoToolBar;
-			TimeBarView*	fTimeBar;
+			TracksContainer*	fTracksContainer;
+			ToolBar*			fToolBar;
+			InfoToolBar*		fInfoToolBar;
 
 	friend class SampleView;
 

@@ -32,7 +32,8 @@
 
 #include "Faber.h"
 
-#include <MediaKit.h>
+#include <MediaFile.h>
+#include <MediaTrack.h>
 #include <View.h>
 
 #include "WindowsManager.h"

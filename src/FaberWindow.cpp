@@ -39,9 +39,9 @@
 
 #include "AboutBox.h"
 #include "Faber.h"
-#include "Globals.h"
 #include "FilterDialogs.h"
 #include "Filters.h"
+#include "Globals.h"
 #include "MyClipBoard.h"
 #include "Shortcut.h"
 #include "WindowsManager.h"
@@ -118,32 +118,24 @@ FaberWindow::FaberWindow(BRect frame)
 	fToolBar = new ToolBar();
 	fToolBar->SetTool(Prefs.tool_mode);
 
-	fTrackView = new TrackAudio();
+	fTracksContainer = new TracksContainer();
 
 	fInfoToolBar = new InfoToolBar();
-	fTimeBar = new TimeBarView();
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(_BuildMenu())
 		.AddSplit(B_VERTICAL, 10.0f)
 		.AddGroup(B_HORIZONTAL)
 			.Add(fToolBar)
-			//.AddGlue()
 		.End()
-		.AddGroup(B_VERTICAL, 0)	
-			.Add(fTimeBar)
-			.Add(fTrackView)
-		.End()
+		.Add(fTracksContainer)
 		.Add(fInfoToolBar)
 	.End();
 
-	//Pool.SetLoop((transport_view->loop->Value() == B_CONTROL_ON));
+	//Pool.SetLoop((fToolBar->IsLoop()));
 	SetSizeLimits(MIN_W ,MAX_W, MIN_H , MAX_H);
 	SetPulseRate(50000);
 }
-
-
-
 
 
 FaberWindow::~FaberWindow()
@@ -309,12 +301,14 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 		
 	case B_SELECT_ALL:
-		if (Pool.size == 0)	break;
+		if (Pool.size == 0)
+			break;
 		Pool.SelectAll();
 		break;
 
 	case UNSELECT_ALL:
-		if (Pool.size == 0)	break;
+		if (Pool.size == 0)
+			break;
 		Pool.DeSelectAll();
 		break;
 
@@ -336,7 +330,7 @@ FaberWindow::MessageReceived(BMessage *message)
 
 	case DROP_PASTE:
 	{
-		BPoint p;
+		/*BPoint p;
 		message->FindPoint("_drop_point_", &p);
 		p = fTrackView->ConvertFromScreen(p);
 		BRect r = fTrackView->Bounds();
@@ -344,7 +338,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			Pool.selection = NONE;
 			Pool.pointer = (int32)(Pool.l_pointer + p.x * (Pool.r_pointer - Pool.l_pointer)/Bounds().Width());
 			ClipBoard.Paste();
-		}
+		}*/
 	}	break;
 	
 	case PASTE_MIXED:
@@ -361,7 +355,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		if (Pool.size == 0)	break;
 		x = Pool.r_pointer - Pool.l_pointer;
 		
-		if (x < fTrackView->Bounds().Width()/64)	break;
+		//if (x < fTrackView->Bounds().Width()/64)	break;
 		
 		x /= 2;
 		if (x < 1)	x = 1;
@@ -417,7 +411,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		RedrawWindow();
 		break;
 	case ZOOM_LEFT:
-		if (Pool.size == 0 || Pool.selection==NONE)	break;
+		/*if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = fTrackView->Bounds().IntegerWidth()/6;
 		Pool.l_pointer = Pool.pointer -x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
@@ -425,10 +419,10 @@ FaberWindow::MessageReceived(BMessage *message)
 
 		UpdateMenu();
 		Pool.update_index = true;
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 	case ZOOM_RIGHT:
-		if (Pool.size == 0 || Pool.selection==NONE)	break;
+		/*if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = fTrackView->Bounds().IntegerWidth()/6;
 		Pool.l_pointer = Pool.r_sel_pointer - x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
@@ -440,10 +434,10 @@ FaberWindow::MessageReceived(BMessage *message)
 
 		UpdateMenu();
 		Pool.update_index = true;
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 		
-	case EDIT_L:
+	/*case EDIT_L:
 		if (Pool.selection != NONE)
 			Pool.selection = LEFT;
 		UpdateMenu();
@@ -460,7 +454,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			Pool.selection = BOTH;
 		UpdateMenu();
 		fTrackView->Draw(fTrackView->Bounds());
-		break;	
+		break;	*/
 
 	case TRANSPORT_REW:
 		x = Pool.r_pointer - Pool.l_pointer;
@@ -580,8 +574,8 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case UPDATE:
-		FindView("Sample view")->Pulse();
-		FindView("InfoToolBar")->Pulse();
+		fTracksContainer->Pulse();
+		fInfoToolBar->Pulse();
 		break;
 	
 	case REDRAW:
@@ -729,11 +723,9 @@ FaberWindow::MessageReceived(BMessage *message)
 	case B_MIME_DATA:			// let the app parse drops
 	case B_SIMPLE_DATA:
 		be_app->PostMessage(message);
-//		message->PrintToStream();
 		break;				
 
 	default:
-//		message->PrintToStream();
 		BWindow::MessageReceived(message);
 	}
 	
@@ -750,8 +742,7 @@ FaberWindow::RedrawWindow()
 	//	ChildAt(i)->Invalidate();
 
  	fToolBar->Invalidate();
-	fTrackView->Invalidate();
-	fTimeBar->Invalidate();
+	fTracksContainer->Invalidate();
 
 	Unlock();	
 }

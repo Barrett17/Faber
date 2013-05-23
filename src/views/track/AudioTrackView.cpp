@@ -5,14 +5,14 @@
  * Authors:
  *		Dario Casalinuovo, b.vitruvio@gmail.com
  */
-#include "TrackAudio.h"
+#include "AudioTrackView.h"
 
 #include <LayoutBuilder.h>
 
 
-TrackAudio::TrackAudio(const char* name, uint32 resizingMode)
-		:
-		BView(name, resizingMode)
+AudioTrackView::AudioTrackView(const char* name, uint32 resizingMode)
+	:
+	TrackView(name, resizingMode)
 {
 	fSampleView = new SampleView();
 	fSampleView->Init();
@@ -23,15 +23,22 @@ TrackAudio::TrackAudio(const char* name, uint32 resizingMode)
 }
 
 
-TrackAudio::~TrackAudio()
+AudioTrackView::~AudioTrackView()
 {
 }
 
 
 void
-TrackAudio::Invalidate()
+AudioTrackView::Invalidate()
 {
 	fSampleView->Invalidate();
 
 	BView::Invalidate();
+}
+
+
+void
+AudioTrackView::Pulse()
+{
+	fSampleView->Pulse();
 }

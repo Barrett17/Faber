@@ -37,10 +37,13 @@ Application Faber :
 	ToolBar.cpp
 	InfoToolBar.cpp
 
-	# tracks implementation
-	TrackAudio.cpp
-	TimeBarView.cpp # TODO rework or rewrite it
+	# trackviews implementation and containers
+	TrackView.cpp
+	AudioTrackView.cpp
 	SampleView.cpp
+
+	TracksContainer.cpp
+	TimeBarView.cpp # TODO rework or rewrite it
 
 	# managers
 	WindowsManager.cpp
