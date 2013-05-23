@@ -63,7 +63,11 @@ public:
 			void 			UpdateRecent();
 			void			RedrawWindow();
 			void			UpdateToolBar();
+			// activate/deactivate menu items
+			void			UpdateMenu();
 
+			// checks to see if a file is changed after load
+			bool			IsChanged(int32 mode=1); 
 private:
 			BMenuBar*		_BuildMenu();
 
@@ -76,6 +80,15 @@ private:
 			TimeBarView*	fTimeBar;
 
 	friend class SampleView;
+
+
+	// TODO polish them
+	BMenu		*fEditMenu, *menu_transform, *menu_zero, *menu_analyze, *menu_generate;
+	BMenuItem	*fSaveMenu, *fSaveAsMenu, *mn_save_sel, *mn_undo, *mn_cut, *mn_copy;
+	BMenuItem	*mn_paste, *mn_select_all, *mn_trim, *mn_set_freq, *mn_resample;
+	BMenuItem	*mn_clear, *mn_unselect, *mn_copy_silence, *mn_paste_new;
+
+	BMenuItem	*mn_paste_mix, *mn_copy_to_stack, *mn_redo;
 };
 
 #endif

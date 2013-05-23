@@ -38,6 +38,7 @@
 #include "BitmapDrawer.h"
 #include "Shortcut.h"
 #include "MyClipBoard.h"
+#include "WindowsManager.h"
 
 #include <stdio.h>
 
@@ -332,7 +333,7 @@ void SampleView::MouseDown(BPoint p)
 	//
 	// The selection tool handles all select modes
 	//
-	switch(Pool.tool_mode){
+	switch(Prefs.tool_mode){
 	case SELECT_TOOL:			/* Select Tool */
 	{	if (clicks == 1){
 			float middle = (Bounds().Height()-POINTER_BAR_HEIGHT)*0.50+POINTER_BAR_HEIGHT;	// middle
@@ -499,10 +500,10 @@ void SampleView::MouseDown(BPoint p)
 	}
 	case DRAW_TOOL:												/* Drawing with the Pencil */
 	{
-		if (Pool.tool_mode == DRAW_TOOL && clicks == 1){
+		if (Prefs.tool_mode == DRAW_TOOL && clicks == 1){
 			// save undo data
 			Hist.Save(H_REPLACE, Pool.l_pointer, Pool.r_pointer);
-			Pool.UpdateMenu();
+			WindowsManager::Get()->MainWindow()->UpdateMenu();
 
 			edit_channel = NONE;	// needed to track stereo editing
 			old = p;
@@ -545,7 +546,7 @@ void SampleView::MouseDown(BPoint p)
 	Pool.update_index = true;
 
 	Window()->FindView("InfoToolBar")->Invalidate();
-	Pool.UpdateMenu();
+	WindowsManager::Get()->MainWindow()->UpdateMenu();
 }
 
 
@@ -573,9 +574,9 @@ void SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 	bool drag_area = (p.x > pointer_x && p.x < sel_pointer_x) && Pool.selection != NONE
 					&& !left_pointer && !right_pointer && (left_select || right_select);
 
-	if (Pool.tool_mode == DRAW_TOOL)			/* pencil mouse cursor */
+	if (Prefs.tool_mode == DRAW_TOOL)			/* pencil mouse cursor */
 		SetViewCursor( Pool.mousePencil );
-	else if (Pool.tool_mode == SELECT_TOOL)		/* mousecursors for selections */
+	else if (Prefs.tool_mode == SELECT_TOOL)		/* mousecursors for selections */
 	{
 		if (drag_selection)	SetViewCursor( Pool.mouseArrow );	// drag&drop cursor goes above all
 		else if (drag_border || (!drag && (left_pointer || right_pointer) && (left_select || right_select)))
@@ -715,7 +716,7 @@ void SampleView::MouseUp(BPoint p)
 	edit = false;
 	drag_border = false;
 	old.Set(-1,-1);
-	Pool.UpdateMenu();
+	WindowsManager::Get()->MainWindow()->UpdateMenu();
 }
 
 //*****************************************************

@@ -104,6 +104,9 @@ class Preferences{
 
 	int32	fColorScheme;
 
+	// NOTE this has been moved here from the CommonPool
+	int32	tool_mode;				// draw or select
+	
  private:
 };
 

@@ -42,17 +42,12 @@ Preferences Prefs;
 #define BUFFER_SIZE		8192*8
 #define CACHE_SIZE		16*256	// size of the VM Cache (4Mb)
 
-/*******************************************************
-*
-*******************************************************/
+
 Preferences::Preferences(){
    FactorySettings();
 }
 
 
-/*******************************************************
-*
-*******************************************************/
 void Preferences::Init(){
    BPath path;
    BDirectory dir;
@@ -205,6 +200,9 @@ void Preferences::Init(){
 	if(prefs.FindFloat("f_compressor_decay", &filter_compressor_decay) != B_OK)	filter_compressor_decay = 0.1;
 	if(prefs.FindFloat("f_compressor_treshold", &filter_compressor_treshold) != B_OK) filter_compressor_treshold = -32;
 	if(prefs.FindFloat("f_compressor_gain", &filter_compressor_gain) != B_OK)	filter_compressor_gain = 4.0;
+
+	if (prefs.FindInt32("tool_mode", &tool_mode) != B_OK)
+		tool_mode = SELECT_TOOL;
 }
 
 /*******************************************************
@@ -315,14 +313,16 @@ Preferences::Sync()
 //	prefs.FindInt32("f_limiter_value", filter_limiter_value);
 //	prefs.FindInt32("f_limiter_mix", filter_limiter_mix);
 
-	prefs.FindInt32("f_amplifier_value", &filter_amplifier_value);
+	prefs.AddInt32("f_amplifier_value", filter_amplifier_value);
 
-	prefs.FindBool("f_compressor_rms", filter_compressor_rms);
-	prefs.FindFloat("f_compressor_ratio", filter_compressor_ratio);
-	prefs.FindFloat("f_compressor_attac", filter_compressor_attac);
-	prefs.FindFloat("f_compressor_decay", filter_compressor_decay);
-	prefs.FindFloat("f_compressor_treshold", filter_compressor_treshold);
-	prefs.FindFloat("f_compressor_gain", filter_compressor_gain);
+	prefs.AddBool("f_compressor_rms", filter_compressor_rms);
+	prefs.AddFloat("f_compressor_ratio", filter_compressor_ratio);
+	prefs.AddFloat("f_compressor_attac", filter_compressor_attac);
+	prefs.AddFloat("f_compressor_decay", filter_compressor_decay);
+	prefs.AddFloat("f_compressor_treshold", filter_compressor_treshold);
+	prefs.AddFloat("f_compressor_gain", filter_compressor_gain);
+
+	prefs.AddInt32("tool_mode", tool_mode);
 }
 
 /*******************************************************

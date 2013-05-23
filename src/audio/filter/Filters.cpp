@@ -53,7 +53,6 @@ int32 __Last_FilterTmp = 0;
 int32 __FilterCount = 0;		// nr of open filters
 
 filter_info __FilterList[] = { 	
-	{"---", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
 	{"Silence", FILTER_BOTH, 1},
 	{"---", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
 	{"Fade In", FILTER_BOTH, 1},
@@ -269,7 +268,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 	pFilter->Quit();
 
 	Pool.ResetIndexView();
-	Pool.UpdateMenu();
+	WindowsManager::Get()->MainWindow()->UpdateMenu();
 	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
@@ -401,7 +400,7 @@ void DoTrim()
 
 	Pool.changed = true;
 	Pool.ResetIndexView();
-	Pool.UpdateMenu();
+	WindowsManager::Get()->MainWindow()->UpdateMenu();
 	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
@@ -601,7 +600,7 @@ void DoResample()
 	Pool.changed = true;
 	Peak.Init( Pool.size+1, (Pool.sample_type == MONO) );	// Init peakfile
 	Pool.ResetIndexView();
-	Pool.UpdateMenu();
+	WindowsManager::Get()->MainWindow()->UpdateMenu();
 	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 

@@ -8,6 +8,7 @@
 #include <Messenger.h>
 
 #include "Analyzers.h"
+#include "FaberWindow.h"
 #include "OpenPanel.h"
 #include "ProgressWindow.h"
 #include "SavePanel.h"
@@ -22,13 +23,14 @@ public:
 	static WindowsManager*	Get();
 
 	// It's preferable to use this one instead of
-	// the methods returning a pointer.
+	// the method returning a pointer.
 	static BMessenger*		MainWinMessenger();
 
-	// This is used only by the BApplication
-	// to set the main window.
-	FaberWindow*			IstantiateMainWindow(BRect rect);
 	FaberWindow*			MainWindow();
+
+	// This is used only by the BApplication
+	// to set the main window. Don't use it.
+	FaberWindow*			IstantiateMainWindow(BRect rect);
 
 	// TODO possible static implementation of BWindow::RedrawWindow()
 	// something calling the BWindow version :

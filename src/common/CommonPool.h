@@ -37,10 +37,12 @@
 #include <Entry.h>
 #include <SoundPlayer.h>
 
-#include "FaberWindow.h"
+#include "Filters.h"
 
-class FaberWindow;
 class BMenu;
+
+// this is the list with filters for the basic version
+extern filter_info __FilterList[];
 
 #define PLAY_HOOKS	64		// number of realtime effects possible
 
@@ -72,7 +74,6 @@ class CommonPool
 	void ResetIndexView();			// Create the IndexZoomView data
 	bool update_peak;
 
-	
 	void SelectAll();
 	void DeSelectAll();
 	
@@ -87,8 +88,6 @@ class CommonPool
 	bool	save_selection;		// to decide whether to save selection or full
 
 	float	*sample_memory;					// memory 8Mb fixed for demo version
-
-	int32	tool_mode;		// draw or select
 
 	int64	pointer;		// the sample pointer
 	int64	last_pointer;
@@ -108,24 +107,17 @@ class CommonPool
 	void	StopPlaying();				// sync VU meters
 	bool	IsPlaying();
 	bool	SetLoop(bool);				// returns old state
+
 	int32	SetPlayHook(void (*hook)(float*, size_t, void *), int32 min=0, void *cookie=NULL);	// set a hook for a filter
 	void	RemovePlayHook(void (*hook)(float*, size_t, void *), int32 min=-1);			// set a hook for a filter
 	void	(*BufferHook[PLAY_HOOKS])(float*, size_t, void *cookie);
 	void	*BufferCookie[PLAY_HOOKS];
 	
 	bool	PrepareFilter();		// to save undo-data, stop playing, check selection
-	
-	void	UpdateMenu();			// activate/deactivate menu items
+
 	bool	changed;
 	int32	save_mode;				// 1-do load after save, 2-do quit after save
-	bool	IsChanged(int32 mode=1); // checks to see if a file is changed after load
 
-	BMenu		*menu_edit, *menu_transform, *menu_zero, *menu_analyze, *menu_generate;
-	BMenuItem	*mn_save, *mn_save_as, *mn_save_sel, *mn_undo, *mn_cut, *mn_copy;
-	BMenuItem	*mn_paste, *mn_select_all, *mn_trim, *mn_set_freq, *mn_resample;
-	BMenuItem	*mn_clear, *mn_unselect, *mn_copy_silence, *mn_paste_new;
-
-	BMenuItem	*mn_paste_mix, *mn_copy_to_stack, *mn_redo;
 
 	bool	sample_view_dirty, update_draw_cache;	// these are uses to recalc the sampleview cache and as dirty bit
 	bool	update_index;

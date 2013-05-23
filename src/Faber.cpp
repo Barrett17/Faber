@@ -64,7 +64,7 @@ FaberApp::FaberApp()
 
 	fFaberWindow = WindowsManager::Get()->IstantiateMainWindow(rect);
 
-	Pool.UpdateMenu();
+	fFaberWindow->UpdateMenu();
 
 	fFaberWindow->Show();
 }
@@ -115,7 +115,7 @@ FaberApp::MessageReceived(BMessage *message)
 		break;
 
 	case UPDATE_MENU:
-		Pool.UpdateMenu();
+		fFaberWindow->UpdateMenu();
 		break;
 
 	case DROP_PASTE:
@@ -379,7 +379,7 @@ FaberApp::RefsReceived(BMessage* message)
 	Pool.InitBufferPlayer( Pool.frequency );
 
 	play_cookie.pause = temp_pause;
-	Pool.UpdateMenu();
+	fFaberWindow->UpdateMenu();
 	fFaberWindow->UpdateRecent();
 //	be_app->Unlock();
 }

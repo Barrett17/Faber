@@ -49,15 +49,12 @@
 #include "FaberWindow.h"
 #include "Shortcut.h"
 #include "PeakFile.h"
-#include "Filters.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h> // header with crypt in it :)
-
-// this is the list with filters for the basic version
-extern filter_info __FilterList[];
 
 extern void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format);
 
@@ -84,8 +81,6 @@ CommonPool::CommonPool(){
 	update_peak = false;
 	update_index = true;
 	play_cookie.buffer = NULL;
-
-	tool_mode = SELECT_TOOL;
 
 	for (int i=0; i<8; i++)
 		BufferHook[i] = NULL;
@@ -273,7 +268,7 @@ void CommonPool::SelectAll()
 		pointer = 0;
 		r_sel_pointer = size;
 		selection = BOTH;
-		UpdateMenu();
+		WindowsManager::Get()->MainWindow()->UpdateMenu();
 		WindowsManager::Get()->MainWindow()->RedrawWindow();
 	}
 }
@@ -286,122 +281,11 @@ void CommonPool::DeSelectAll()
 	if (sample_type != NONE && Pool.selection != NONE){
 		selection = NONE;
 		r_sel_pointer = 0;
-		UpdateMenu();
+		WindowsManager::Get()->MainWindow()->UpdateMenu();
 		WindowsManager::Get()->MainWindow()->RedrawWindow();
 	}
 }
 
-
-// TODO move it away from here
-// and rework a bit.
-/*******************************************************
-*   Update the menus
-*******************************************************/
-void CommonPool::UpdateMenu()
-{
-	BMenuItem *menuItem = NULL;
-
-	FaberWindow* mainWin = 	WindowsManager::Get()->MainWindow();
-	mainWin->Lock();
-
-	while (menu_transform->ItemAt(0)){
-		menuItem = menu_transform->ItemAt(0);
-		menu_transform->RemoveItem(menuItem);
-		delete menuItem;
-	}
-	
-	if (Prefs.repeat_message)
-		menu_transform->AddItem(menuItem = new BMenuItem(B_TRANSLATE(Prefs.repeat_tag.String()), new BMessage(RUN_LAST_FILTER), KeyBind.GetKey("REPEAT_ACTION"), KeyBind.GetMod("REPEAT_ACTION")));
-
-// transform menu
-
-	BMessage *filter_msg;
-	int32 filter = 0;
-	char name[255];
-	while(__FilterList[filter].name != NULL)
-	{
-		if (strcmp(__FilterList[filter].name, "---") == 0)
-		{
-			menu_transform->AddSeparatorItem();
-		}
-		else
-		{
-			// can do some stuff to organise menu here
-		 	filter_msg = new BMessage(RUN_FILTER);
-			filter_msg->AddInt32("filter", filter);
-			sprintf(name, B_TRANSLATE(__FilterList[filter].name));
-			if ( __FilterList[filter].type & FILTER_GUI )
-				strcat(name, "...");
-			menu_transform->AddItem(menuItem = new BMenuItem(name, filter_msg, KeyBind.GetKey(__FilterList[filter].name), KeyBind.GetMod(__FilterList[filter].name)));
-			menuItem->SetEnabled( __FilterList[filter].type & Pool.sample_type );
-		}
-		filter++;
-	}
-
-	while (menu_analyze->ItemAt(0)){
-		menuItem = menu_analyze->ItemAt(0);
-		menu_analyze->RemoveItem(menuItem);
-		delete menuItem;
-	}
-	
-	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Spectrum Analyzer"), new BMessage(SPECTRUM), KeyBind.GetKey("SPECTRUM_ANALYZER"), KeyBind.GetMod("SPECTRUM_ANALYZER")));
-	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Sample Scope"), new BMessage(SAMPLE_SCOPE), KeyBind.GetKey("SAMPLE_SCOPE"), KeyBind.GetMod("SAMPLE_SCOPE")));
-
-	menu_transform->SetEnabled(sample_type != NONE);	// transform menu
-	menu_analyze->SetEnabled(sample_type != NONE);		// analyzers menu
-
-//	menu_generate->SetEnabled(false);					// generation menu
-
-	menu_zero->SetEnabled(sample_type != NONE);			// zero cross menu
-	mn_trim->SetEnabled(selection != NONE);				// trim
-	mn_save_sel->SetEnabled(selection != NONE);			// save selection
-	mn_save->SetEnabled(sample_type != NONE && Pool.changed);			// save
-	mn_save_as->SetEnabled(sample_type != NONE);		// save as
-	mn_set_freq->SetEnabled(sample_type != NONE);		// set frequency
-	mn_resample->SetEnabled(sample_type != NONE);		// resample
-	mn_select_all->SetEnabled(sample_type != NONE);		// select all
-	mn_unselect->SetEnabled(selection != NONE);			// DeSelect all
-	mn_cut->SetEnabled(selection != NONE);				// cut
-	mn_copy->SetEnabled(selection != NONE);				// copy
-	mn_copy_silence->SetEnabled(selection != NONE);		// copy & Silence
-	mn_clear->SetEnabled(selection != NONE);			// clear
-	mn_undo->SetEnabled(Hist.HasUndo());				// need history class for this
-	mn_paste->SetEnabled(ClipBoard.HasClip());
-	mn_paste_new->SetEnabled(ClipBoard.HasClip());
-
-	mn_paste_mix->SetEnabled(ClipBoard.HasClip());
-	mn_redo->SetEnabled(Hist.HasRedo());				// need history class for this
-	//mn_copy_to_stack->SetEnabled(selection != NONE);	// copy to stack
-
-	mainWin->UpdateToolBar();
-	mainWin->Unlock();
-}
-
-/*******************************************************
-*   Check for and handle changed files
-*******************************************************/
-bool CommonPool::IsChanged(int32 mode)
-{
-	if (changed){
-		int32 k = (new BAlert(NULL,B_TRANSLATE("This project has changed. Do you want to save it now?"),
-			B_TRANSLATE("Save"),B_TRANSLATE("Discard"),B_TRANSLATE("Cancel")))->Go();
-		switch(k){
-		case 0:
-			save_selection = false;
-			save_mode = mode;
-			WindowsManager::MainWinMessenger()->SendMessage(SAVE_AS);
-			return true;
-			break;
-		case 1:
-			return false;
-			break;
-		default:
-			return true;
-		}
-	} else {
-		return false;
-	}
-}
 
 /*******************************************************
 *   Handle UNDO
@@ -411,18 +295,16 @@ void CommonPool::SaveUndo()
 	if (selection==NONE)	return;
 
 	Hist.Save(H_REPLACE, pointer, r_sel_pointer);
-	UpdateMenu();
+	WindowsManager::Get()->MainWindow()->UpdateMenu();
 }
 
 void CommonPool::Undo()
 {
 	Hist.Restore();
 	Pool.ResetIndexView();
-	UpdateMenu();
+	WindowsManager::Get()->MainWindow()->UpdateMenu();
 	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
-
-
 
 
 void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)

@@ -79,7 +79,6 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 #define SETTINGS_DIR    "Faber"
 #define FABER_CONF_NAME	"Faber"
 #define KEYBINDINGS_CONF_NAME "KeyBindings"
-#define LANGUAGE_CONF	"Languages"
 
 // Math
 #define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
