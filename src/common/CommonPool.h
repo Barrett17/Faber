@@ -82,8 +82,6 @@ class CommonPool
 
 	BSoundPlayer	*player;
 	
-	BCursor *mouseArrow, *mousePencil, *mouseLeftRight, *mouseMove, *mouseArrowMove, *mouseArrowLeft, *mouseArrowRight;
-	
 	media_format	m_format;
 	bool	save_selection;		// to decide whether to save selection or full
 

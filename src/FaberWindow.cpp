@@ -85,13 +85,7 @@ FaberWindow::FaberWindow(BRect frame)
 	ClipBoard.Init();				// clipboard init
 	Hist.Init();					// Undo init
 
-	Pool.mouseArrow = new BCursor(IMouse_Arrow);
-	Pool.mouseArrowLeft = new BCursor(IMouse_ArrowLeft);
-	Pool.mouseArrowRight = new BCursor(IMouse_ArrowRight);
-	Pool.mousePencil = new BCursor(IMouse_Pencil);
-	Pool.mouseMove = new BCursor(IMouse_Move);
-	Pool.mouseArrowMove = new BCursor(IMouse_MoveArrow);
-	Pool.mouseLeftRight = new BCursor(IMouse_LeftRight);
+
 
 	ResizeTo( Prefs.frame.Width(), Prefs.frame.Height() );
 	MoveTo( Prefs.frame.left, Prefs.frame.top );

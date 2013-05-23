@@ -39,6 +39,7 @@
 #include "Shortcut.h"
 #include "MyClipBoard.h"
 #include "WindowsManager.h"
+#include "MouseIcons.h"
 
 #include <stdio.h>
 
@@ -574,25 +575,25 @@ void SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 	bool drag_area = (p.x > pointer_x && p.x < sel_pointer_x) && Pool.selection != NONE
 					&& !left_pointer && !right_pointer && (left_select || right_select);
 
-	if (Prefs.tool_mode == DRAW_TOOL)			/* pencil mouse cursor */
-		SetViewCursor( Pool.mousePencil );
-	else if (Prefs.tool_mode == SELECT_TOOL)		/* mousecursors for selections */
+	if (Prefs.tool_mode == DRAW_TOOL)			// pencil mouse cursor 
+		SetViewCursor( MouseIcons::MousePencil() );
+	else if (Prefs.tool_mode == SELECT_TOOL)		// mousecursors for selections
 	{
-		if (drag_selection)	SetViewCursor( Pool.mouseArrow );	// drag&drop cursor goes above all
+		if (drag_selection)	SetViewCursor( MouseIcons::MouseArrow() );	// drag&drop cursor goes above all
 		else if (drag_border || (!drag && (left_pointer || right_pointer) && (left_select || right_select)))
-			SetViewCursor( Pool.mouseLeftRight );
+			SetViewCursor( MouseIcons::MouseLeftRight() );
 		else if (Pool.sample_type != STEREO )
-			SetViewCursor( Pool.mouseArrow );
+			SetViewCursor( MouseIcons::MouseArrow() );
 		else
 		{
 			if (drag_area && !drag)
-				SetViewCursor( Pool.mouseMove );
+				SetViewCursor( MouseIcons::MouseMove() );
 			else if (p.y < top && p.y >= POINTER_BAR_HEIGHT)
-				SetViewCursor( Pool.mouseArrowLeft );
+				SetViewCursor( MouseIcons::MouseArrowLeft() );
 			else if (p.y > bottom)
-				SetViewCursor( Pool.mouseArrowRight );
+				SetViewCursor( MouseIcons::MouseArrowRight() );
 			else
-				SetViewCursor( Pool.mouseArrow );
+				SetViewCursor( MouseIcons::MouseArrow() );
 		}
 	}
 	else	SetViewCursor( B_CURSOR_SYSTEM_DEFAULT );
@@ -628,7 +629,7 @@ void SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		if (Pool.sample_type == MONO)
 		{
 			Pool.selection = BOTH;
-			SetViewCursor( Pool.mouseArrow );
+			SetViewCursor( MouseIcons::MouseArrow() );
 		}
 		else	/* Check to see which channels are selected */
 		{

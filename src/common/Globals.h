@@ -47,7 +47,6 @@
 #include "CommonPool.h"
 #include "Preferences.h"
 #include "History.h"
-#include "MouseIcons.h"
 
 #include <stdio.h>
 

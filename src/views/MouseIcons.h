@@ -26,8 +26,11 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MOUSE_ICONS_H
-#define MOUSE_ICONS_H
+#ifndef _MOUSE_ICONS_H
+#define _MOUSE_ICONS_H
+
+#include <Cursor.h>
+
 
 const uint8 IMouse_Arrow[] = { 0x10, 0x01, 0x00, 0x00,
    0x80, 0x00, 0xC0, 0x00, 0xA0, 0x00, 0x90, 0x00,
@@ -107,4 +110,14 @@ const uint8 IMouse_MoveArrow[] = { 0x10, 0x01, 0x00, 0x00,
    0x01, 0x74, 0x00, 0xF8, 0x00, 0x70, 0x00, 0x20
 };
 
+class MouseIcons {
+public:
+static BCursor* MouseArrow() { return new BCursor(IMouse_Arrow); }
+static BCursor* MouseArrowLeft() { return new BCursor(IMouse_ArrowLeft); }
+static BCursor* MouseArrowRight() { return new BCursor(IMouse_ArrowRight); }
+static BCursor* MousePencil() { return new BCursor(IMouse_Pencil); }
+static BCursor* MouseMove() { return new BCursor(IMouse_Move); }
+static BCursor* MouseArrowMove() { return new BCursor(IMouse_MoveArrow); }
+static BCursor* MouseLeftRight() { return new BCursor(IMouse_LeftRight); }
+};
 #endif
