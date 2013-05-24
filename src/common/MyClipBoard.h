@@ -51,6 +51,9 @@ class MyClipBoard{
 	void DoCut();
 	void DoSilence();
 
+	void SaveUndo();		// save Undo data
+	void Undo();			// undo
+
   private:
   	void Update();		// update all running instances
 

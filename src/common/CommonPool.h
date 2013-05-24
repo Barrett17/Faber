@@ -26,11 +26,6 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
- * Copyright 2013 Dario Casalinuovo
- * All rights reserved. Distributed under the terms of the MIT License.
- */
-
 #ifndef _POOL_H
 #define _POOL_H
 
@@ -71,15 +66,8 @@ class CommonPool
 
 	float system_frequency;
 
-	void ResetIndexView();			// Create the IndexZoomView data
 	bool update_peak;
-
-	void SelectAll();
-	void DeSelectAll();
 	
-	void SaveUndo();			// save Undo data
-	void Undo();				// undo
-
 	BSoundPlayer	*player;
 	
 	media_format	m_format;
@@ -98,7 +86,6 @@ class CommonPool
 	int32	sample_type;	// MONO, STEREO
 	int32	sample_bits;	// 8, 16
 	float	frequency;
-	int32	play_mode;		// to determine the play mode (or record)
 	
 	void	InitBufferPlayer(float freq);
 	void	StartPlaying(int64 p, bool end);	// play back the sound, convert data and
@@ -107,18 +94,15 @@ class CommonPool
 	bool	SetLoop(bool);				// returns old state
 
 	int32	SetPlayHook(void (*hook)(float*, size_t, void *), int32 min=0, void *cookie=NULL);	// set a hook for a filter
-	void	RemovePlayHook(void (*hook)(float*, size_t, void *), int32 min=-1);			// set a hook for a filter
+	void	RemovePlayHook(void (*hook)(float*, size_t, void *), int32 min=-1);			// remove a hook for a filter
 	void	(*BufferHook[PLAY_HOOKS])(float*, size_t, void *cookie);
 	void	*BufferCookie[PLAY_HOOKS];
 	
 	bool	PrepareFilter();		// to save undo-data, stop playing, check selection
 
 	bool	changed;
-	int32	save_mode;				// 1-do load after save, 2-do quit after save
-
 
 	bool	sample_view_dirty, update_draw_cache;	// these are uses to recalc the sampleview cache and as dirty bit
-	bool	update_index;
 
 private:
 

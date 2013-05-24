@@ -26,11 +26,6 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
- * Copyright 2013 Dario Casalinuovo
- * All rights reserved. Distributed under the terms of the MIT License.
- */
-
 #include <Application.h>
 #include <Directory.h>
 #include <FindDirectory.h>
@@ -48,7 +43,6 @@
 #include "MyClipBoard.h"
 #include "FaberWindow.h"
 #include "Shortcut.h"
-#include "PeakFile.h"
 
 
 #include <stdio.h>
@@ -74,12 +68,12 @@ CommonPool::CommonPool(){
 	m_playing = false;
 	play_pointer = 0;
 	changed = false;
-	save_mode = 0;
+
 	last_pointer = 0;
 	sample_view_dirty = true;	// update the sample-view
 	update_draw_cache = true;	// update the draw cache
 	update_peak = false;
-	update_index = true;
+	
 	play_cookie.buffer = NULL;
 
 	for (int i=0; i<8; i++)
@@ -96,7 +90,6 @@ void CommonPool::Init(){
 //	}else{
 //		resume_thread(tid);
 //	}
-	play_mode = NONE;
 	pointer = 0;
 	play_pointer = 0;
 	l_pointer = 0;
@@ -128,20 +121,6 @@ CommonPool::~CommonPool(){
 //	if (tt)	delete tt;
 }
 
-// refills the PeakFile Cache
-void CommonPool::ResetIndexView()
-{
-	if (sample_type == NONE)
-		return;
-
-	WindowsManager::Get()->StartProgress(B_TRANSLATE("Indexing..."), size);
-
-	Peak.Init(size+1, (Pool.sample_type == MONO) );
-	Peak.CreatePeaks(0, size+1, size+1);
-	Pool.update_index = true;		// update the draw cache
-
-	WindowsManager::Get()->HideProgress();
-}
 
 /*******************************************************
 *   SoundPlayer
@@ -222,8 +201,9 @@ bool CommonPool::PrepareFilter()
 	player->Stop();
 	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);		// stop playing
 
-	if (selection == NONE)		SelectAll();	// select all if noe is selected
-	SaveUndo();			// save undo data
+	if (selection == NONE)
+		 WindowsManager::MainWindow()->SelectAll();	// select all if noe is selected
+	ClipBoard.SaveUndo();			// save undo data
 
 	return true;
 }
@@ -257,53 +237,6 @@ void CommonPool::RemovePlayHook(void (*in)(float*, size_t, void *), int32 index)
 			return;
 		}
 	}
-}
-
-/*******************************************************
-*   Select All
-*******************************************************/
-void CommonPool::SelectAll()
-{
-	if (sample_type != NONE){
-		pointer = 0;
-		r_sel_pointer = size;
-		selection = BOTH;
-		WindowsManager::Get()->MainWindow()->UpdateMenu();
-		WindowsManager::Get()->MainWindow()->RedrawWindow();
-	}
-}
-
-/*******************************************************
-*   DeSelect All
-*******************************************************/
-void CommonPool::DeSelectAll()
-{
-	if (sample_type != NONE && Pool.selection != NONE){
-		selection = NONE;
-		r_sel_pointer = 0;
-		WindowsManager::Get()->MainWindow()->UpdateMenu();
-		WindowsManager::Get()->MainWindow()->RedrawWindow();
-	}
-}
-
-
-/*******************************************************
-*   Handle UNDO
-*******************************************************/
-void CommonPool::SaveUndo()
-{
-	if (selection==NONE)	return;
-
-	Hist.Save(H_REPLACE, pointer, r_sel_pointer);
-	WindowsManager::Get()->MainWindow()->UpdateMenu();
-}
-
-void CommonPool::Undo()
-{
-	Hist.Restore();
-	Pool.ResetIndexView();
-	WindowsManager::Get()->MainWindow()->UpdateMenu();
-	WindowsManager::Get()->MainWindow()->RedrawWindow();
 }
 
 
@@ -441,6 +374,6 @@ void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_au
 	cookie->count -= size;
 	if (cookie->count <0){
 		cookie->count = (int)Pool.system_frequency/3;						// 24 times a second
-			WindowsManager::MainWinMessenger()->SendMessage(UPDATE);
+		WindowsManager::MainWinMessenger()->SendMessage(UPDATE);
 	}
 }

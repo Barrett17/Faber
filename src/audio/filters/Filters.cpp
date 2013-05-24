@@ -175,7 +175,7 @@ void RunFilter(int32 filter)
 				view->MoveBy( (FILTER_MIN_WIDTH - view->Bounds().Width())/2, 0);
 			pFilter->ChildAt(0)->AddChild(view);
 
-			BRect frame = WindowsManager::Get()->MainWindow()->Frame();
+			BRect frame = WindowsManager::MainWindow()->Frame();
 			pFilter->MoveTo(frame.left +__FilterCount * 40 +40, frame.top + 80 + __FilterCount * 20);
 			
 			pFilter->Run();			// start looper
@@ -267,9 +267,9 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 	pFilter->DeAllocate();
 	pFilter->Quit();
 
-	Pool.ResetIndexView();
-	WindowsManager::Get()->MainWindow()->UpdateMenu();
-	WindowsManager::Get()->MainWindow()->RedrawWindow();
+	WindowsManager::MainWindow()->ResetIndexView();
+	WindowsManager::MainWindow()->UpdateMenu();
+	WindowsManager::MainWindow()->RedrawWindow();
 }
 
 void CancelFilter(RealtimeFilter *pFilter)
@@ -399,9 +399,9 @@ void DoTrim()
 		*p++=0;
 
 	Pool.changed = true;
-	Pool.ResetIndexView();
-	WindowsManager::Get()->MainWindow()->UpdateMenu();
-	WindowsManager::Get()->MainWindow()->RedrawWindow();
+	WindowsManager::MainWindow()->ResetIndexView();
+	WindowsManager::MainWindow()->UpdateMenu();
+	WindowsManager::MainWindow()->RedrawWindow();
 }
 
 #define BUFFER_SIZE		128*1024
@@ -599,9 +599,9 @@ void DoResample()
 
 	Pool.changed = true;
 	Peak.Init( Pool.size+1, (Pool.sample_type == MONO) );	// Init peakfile
-	Pool.ResetIndexView();
-	WindowsManager::Get()->MainWindow()->UpdateMenu();
-	WindowsManager::Get()->MainWindow()->RedrawWindow();
+	WindowsManager::MainWindow()->ResetIndexView();
+	WindowsManager::MainWindow()->UpdateMenu();
+	WindowsManager::MainWindow()->RedrawWindow();
 }
 
 

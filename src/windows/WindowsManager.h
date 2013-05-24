@@ -26,7 +26,7 @@ public:
 	// the method returning a pointer.
 	static BMessenger*		MainWinMessenger();
 
-	FaberWindow*			MainWindow();
+	static FaberWindow*		MainWindow();
 
 	// This is used only by the BApplication
 	// to set the main window. Don't use it.
@@ -41,6 +41,7 @@ public:
 	// static void			UpdateToolBar();
 	// static void			UpdateInfoToolBar();
 	// static void			MessageToMainWin(const uint32 msg);
+	// static void			MessageToMainWin(BMessage* msg);
 
 	// Continuing this way, would be cool to clean the code
 	// by using a function to create alerts, this should

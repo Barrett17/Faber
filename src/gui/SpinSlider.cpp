@@ -23,17 +23,6 @@ SpinSlider::SpinSlider(const char* name, const char* label,
 }
 
 
-SpinSlider::SpinSlider(BRect r, const char* name, const char* label,
-	BMessage* message, int32 minValue, int32 maxValue)
-	:
-	BView(name, B_FOLLOW_ALL)
-{
-	fSlider = new SeekSlider(name, message, minValue, maxValue);
-	SetLabel(label);
-	_Init(minValue, maxValue);
-}
-
-
 SpinSlider::~SpinSlider()
 {
 }
@@ -53,7 +42,7 @@ void SpinSlider::MessageReceived(BMessage* msg)
 		case MSG_SPIN_CHANGED:
 			if (fSpinControl) 
 				SetValue(fSpinControl->Value());
-			fSlider->Invoke(NULL);
+			fSlider->Invoke();
 		break;
 		default:
 			BView::MessageReceived(msg);
@@ -119,15 +108,15 @@ SpinSlider::SetValue(float value)
 
 
 void
-SpinSlider::MouseDown(BPoint pt)
+SpinSlider::MouseDown(BPoint point)
 {
 	if (fSlider->IsEnabled()) {
 		SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY); 
 
 		BRect frame = fSlider->BarFrame();
 
-		if (pt.x >= frame.left && pt.x <= frame.right) {
-			SetValue(fSlider->ValueForPoint(pt));
+		if (point.x >= frame.left && point.x <= frame.right) {
+			SetValue(fSlider->ValueForPoint(point));
 			fSlider->Invoke();
 		}
 	}

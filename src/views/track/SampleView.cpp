@@ -92,13 +92,26 @@ SampleView::SampleView()
 *****************************************************/
 SampleView::~SampleView()
 {
-	if (peak_buffer_l)	delete peak_buffer_l;
-	if (peak_buffer_r)	delete peak_buffer_r;
-	if (leftCache)		delete leftCache;
-	if (rightCache)		delete rightCache;
-	if (leftSelected)	delete leftSelected;
-	if (rightSelected)	delete rightSelected;
-	if (OffScreen)		delete OffScreen;
+	if (peak_buffer_l)
+		delete peak_buffer_l;
+
+	if (peak_buffer_r)
+		delete peak_buffer_r;
+
+	if (leftCache)
+		delete leftCache;
+
+	if (rightCache)
+		delete rightCache;
+
+	if (leftSelected)
+		delete leftSelected;
+
+	if (rightSelected)
+		delete rightSelected;
+
+	if (OffScreen)
+		delete OffScreen;
 }
 
 /*****************************************************
@@ -163,7 +176,7 @@ void SampleView::Pulse()
 				Pool.l_pointer = ptr;
 				Pool.r_pointer = Pool.l_pointer + xx;
 
-				Pool.update_index = true;	// @TODO: need to be pulse for fast update
+					// @TODO: need to be pulse for fast update
 				Window()->FindView("InfoToolBar")->Pulse();//Draw()Invalidate();
 				Window()->FindView("Sample view")->Invalidate();
 				Window()->FindView("TimeBar view")->Invalidate();
@@ -486,7 +499,7 @@ void SampleView::MouseDown(BPoint p)
 						if (Pool.r_pointer > Pool.size)	Pool.r_pointer = Pool.size;
 
 						Invalidate();
-						Pool.update_index = true;
+						
 						Window()->FindView("TimeBar view")->Invalidate();
 						old_y = p.y;
 						old_x = p.x;
@@ -494,8 +507,8 @@ void SampleView::MouseDown(BPoint p)
 					snooze(100000);
 				}
 			}
-		}else if (clicks == 2 && Prefs.select_all_on_double){		/* The double-click selection */
-			Pool.SelectAll();
+		} else if (clicks == 2 && Prefs.select_all_on_double){		/* The double-click selection */
+			 WindowsManager::MainWindow()->SelectAll();
 		}
 		break;
 	}
@@ -504,7 +517,7 @@ void SampleView::MouseDown(BPoint p)
 		if (Prefs.tool_mode == DRAW_TOOL && clicks == 1){
 			// save undo data
 			Hist.Save(H_REPLACE, Pool.l_pointer, Pool.r_pointer);
-			WindowsManager::Get()->MainWindow()->UpdateMenu();
+			 WindowsManager::MainWindow()->UpdateMenu();
 
 			edit_channel = NONE;	// needed to track stereo editing
 			old = p;
@@ -543,11 +556,9 @@ void SampleView::MouseDown(BPoint p)
 	}
 
 	Invalidate();
-	//Window()->FindView("Pointers view")->Invalidate();
-	Pool.update_index = true;
 
-	Window()->FindView("InfoToolBar")->Invalidate();
-	WindowsManager::Get()->MainWindow()->UpdateMenu();
+	WindowsManager::MainWindow()->RedrawWindow();
+	WindowsManager::MainWindow()->UpdateMenu();
 }
 
 
@@ -666,7 +677,7 @@ void SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		if (Pool.r_sel_pointer > Pool.size)
 			Pool.r_sel_pointer = Pool.size;
 		
-		Pool.update_index = true;
+		
 
 		int32 step = (int32)((Pool.r_pointer-Pool.l_pointer)/Bounds().Width());
 		int32 zoom_x = 4;		// normal case just extend the width of the selection triangles
@@ -709,7 +720,7 @@ void SampleView::MouseUp(BPoint p)
 		Pool.pointer = (int32)(Pool.l_pointer + p.x * (Pool.r_pointer - Pool.l_pointer)/Bounds().Width());
 		
 		Invalidate();
-		Pool.update_index = true;
+		
 	}
 
 	drag = false;
@@ -717,7 +728,7 @@ void SampleView::MouseUp(BPoint p)
 	edit = false;
 	drag_border = false;
 	old.Set(-1,-1);
-	WindowsManager::Get()->MainWindow()->UpdateMenu();
+	WindowsManager::MainWindow()->UpdateMenu();
 }
 
 //*****************************************************
@@ -789,7 +800,7 @@ void SampleView::EditPoint(BPoint p)
 
 	// Do some screen updating
 	Pool.update_peak = true;
-	Pool.update_index = true;
+	
 
 	int32 zoom_x =  (int32)MAX(ceil(Bounds().Width()/(Pool.r_pointer - Pool.l_pointer)),POINTER_BAR_HEIGHT) ;
 	if (p.x>old.x){

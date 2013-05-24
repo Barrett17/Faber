@@ -48,13 +48,13 @@ extern cookie_record play_cookie;
 
 int main()
 {
-	FaberApp	*myApp;
-	myApp = new FaberApp;
+	FaberApp* faberApp;
+	faberApp = new FaberApp();
 
-	myApp->Run();
+	faberApp->Run();
 
-	delete (myApp);
-	return (0);
+	delete faberApp;
+	return 0;
 }
 
 
@@ -65,9 +65,7 @@ FaberApp::FaberApp()
 	BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
 
 	fFaberWindow = WindowsManager::Get()->IstantiateMainWindow(rect);
-
 	fFaberWindow->UpdateMenu();
-
 	fFaberWindow->Show();
 }
 
@@ -88,46 +86,91 @@ FaberApp::QuitRequested()
 void
 FaberApp::MessageReceived(BMessage *message)
 {
+	message->PrintToStream();
 	switch (message->what)
 	{
-	case SAVE_AUDIO:
-		if (Pool.save_selection && Pool.selection != NONE)
-		{
-			save_start = Pool.pointer;		// save selection
-			save_end = Pool.r_sel_pointer;
+		case NEW:
+		{	app_info info;
+			be_app->GetAppInfo(&info);
+			be_roster->Launch(info.signature);
+			break;
 		}
-		else
-		{
-			save_start = 0;				// save the whole memory
-			save_end = Pool.size;
+
+		case PASTE_NEW:
+		{	app_info info;
+			be_app->GetAppInfo(&info);
+			be_roster->Launch(info.signature, new BMessage(B_PASTE));
+			break;
 		}
-		Save(message);
-		break;
-		
-	case B_SIMPLE_DATA:
-	case B_MIME_DATA:
-		if (Pool.size == 0) // drop on empty is load
-			RefsReceived(message);
-		else
+
+		case OPEN:
+			if (!fFaberWindow->IsChanged())
+				WindowsManager::GetOpenPanel()->Show();
+			break;
+
+		case SAVE_AUDIO:
+			if (Pool.save_selection && Pool.selection != NONE) {
+				save_start = Pool.pointer;		// save selection
+				save_end = Pool.r_sel_pointer;
+			} else {
+				save_start = 0;				// save the whole memory
+				save_end = Pool.size;
+			}
+			Save(message);
+			break;
+
+		case SAVE:			// need to add default setting in the save-panel for this
+		case SAVE_AS:
 		{
-			app_info info;
-			GetAppInfo(&info);
-			be_roster->Launch(info.signature, message);
+			if (Pool.sample_type == NONE)
+				return;
+			Pool.save_selection = false;
+
+			SavePanel* panel = WindowsManager::GetSavePanel();
+			panel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
+			panel->Show();
+			break;
 		}
+	
+		case SAVE_SELECTION:
+		{
+			if (Pool.selection == NONE || Pool.sample_type == NONE)
+				return;
+
+			Pool.save_selection = true;
+
+			SavePanel* panel = WindowsManager::GetSavePanel();
+			panel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
+
+			panel->Show();
+			break;
+		}
+
+		case B_SIMPLE_DATA:
+		case B_MIME_DATA:
+		{
+			// drop on empty is load
+			if (Pool.size == 0) {
+				RefsReceived(message);
+			} else {
+				app_info info;
+				GetAppInfo(&info);
+				be_roster->Launch(info.signature, message);
+			}
+			break;
+		}
+
+		case UPDATE_MENU:
+			fFaberWindow->UpdateMenu();
 		break;
 
-	case UPDATE_MENU:
-		fFaberWindow->UpdateMenu();
+		case DROP_PASTE:
+		case B_PASTE:
+			fFaberWindow->PostMessage(message);
 		break;
 
-	case DROP_PASTE:
-	case B_PASTE:
-		fFaberWindow->PostMessage(message);
-		break;
-
-	default:
-		BApplication::MessageReceived(message);
-		break;	
+		default:
+			BApplication::MessageReceived(message);	
 	}
 }
 
@@ -162,7 +205,7 @@ FaberApp::RefsReceived(BMessage* message)
 			fFaberWindow->SetTitle(s);
 
 			Pool.sample_view_dirty = true;	// update the sample-view
-			Pool.update_index = true;
+
 			fFaberWindow->RedrawWindow();
 			play_cookie.pause = true;
 
@@ -339,7 +382,6 @@ FaberApp::RefsReceived(BMessage* message)
 			}
 			else
 			{
-				Pool.play_mode = NONE;
 				Pool.pointer = 0;
 				Pool.play_pointer = 0;
 				Pool.l_pointer = 0;
@@ -375,7 +417,7 @@ FaberApp::RefsReceived(BMessage* message)
 			WindowsManager::Get()->HideProgress();
 
 			// create the PeakFile
-			Pool.ResetIndexView();
+			fFaberWindow->ResetIndexView();
 			Hist.Reset();				// reset undo class
 
 			if (IsLaunching() && Prefs.play_when_loaded)
@@ -390,7 +432,7 @@ FaberApp::RefsReceived(BMessage* message)
 	
 	Pool.sample_view_dirty = true;	// update the sample-view
 	Pool.update_draw_cache = true;	// update the draw cache
-	Pool.update_index = true;		// update the draw cache
+			// update the draw cache
 	Pool.update_peak = true;
 	fFaberWindow->RedrawWindow();
 	Pool.InitBufferPlayer( Pool.frequency );
@@ -412,10 +454,13 @@ FaberApp::Save(BMessage *message){
 	BFile newFile;
 	BDirectory dir;
 	float t;
-	
+	bool saveMode;
+
+	if (message->FindBool("SaveMode", &saveMode) == B_OK)
+		fSaveMode = saveMode;
+
 	if ((message->FindRef("directory", &dir_ref) == B_OK)
-		&& (message->FindString("name", &name) == B_OK))
-	{
+		&& (message->FindString("name", &name) == B_OK)) {
 		dir.SetTo(&dir_ref);
 		if (dir.InitCheck() != B_OK)
 			return;
@@ -574,10 +619,10 @@ FaberApp::Save(BMessage *message){
 		(new BAlert(NULL, B_TRANSLATE("This project has changed. Do you want to save it now?"), B_TRANSLATE("OK")))->Go();
 	}
 
-	if (Pool.save_mode == 2)
+	if (fSaveMode == 2)
 		PostMessage(B_QUIT_REQUESTED);
-	if (Pool.save_mode == 1)
+	if (fSaveMode == 1)
 		fFaberWindow->PostMessage(OPEN);
 
-	Pool.save_mode = 0;
+	fSaveMode = 0;
 }

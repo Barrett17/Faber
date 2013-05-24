@@ -90,8 +90,8 @@ void SettingsWindow::MessageReceived(BMessage* message)
 
 			Pool.sample_view_dirty = true;	// update the sample-view
 			Pool.update_draw_cache = true;	// update the draw cache
-			Pool.update_index = true;		// update the index cache
-			WindowsManager::Get()->MainWindow()->RedrawWindow();
+					// update the index cache
+			WindowsManager::MainWindow()->RedrawWindow();
 		}
 		break;
 

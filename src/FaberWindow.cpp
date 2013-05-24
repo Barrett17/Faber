@@ -43,6 +43,7 @@
 #include "Filters.h"
 #include "Globals.h"
 #include "MyClipBoard.h"
+#include "PeakFile.h"
 #include "Shortcut.h"
 #include "WindowsManager.h"
 
@@ -84,8 +85,6 @@ FaberWindow::FaberWindow(BRect frame)
 	Prefs.Init();
 	ClipBoard.Init();				// clipboard init
 	Hist.Init();					// Undo init
-
-
 
 	ResizeTo( Prefs.frame.Width(), Prefs.frame.Height() );
 	MoveTo( Prefs.frame.left, Prefs.frame.top );
@@ -257,53 +256,20 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.SetLoop(fToolBar->IsLoop());
 		break;
 
-	case OPEN:
-		if (!IsChanged())
-			WindowsManager::GetOpenPanel()->Show();
-		break;
-	
-	case SAVE:			// need to add default setting in the save-panel for this
-	case SAVE_AS:
-	{
-		if (Pool.sample_type == NONE)
-			return;
-		Pool.save_selection = false;
-
-		SavePanel* panel = WindowsManager::GetSavePanel();
-		panel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
-		panel->Show();
-
-		break;
-	}
-	
-	case SAVE_SELECTION:
-	{
-		if (Pool.selection == NONE || Pool.sample_type == NONE)
-			return;
-
-		Pool.save_selection = true;
-
-		SavePanel* panel = WindowsManager::GetSavePanel();
-		panel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
-
-		panel->Show();
-		break;
-	}
-
 	case UNDO:
-		Pool.Undo();
+		ClipBoard.Undo();
 		break;
 		
 	case B_SELECT_ALL:
 		if (Pool.size == 0)
 			break;
-		Pool.SelectAll();
+		SelectAll();
 		break;
 
 	case UNSELECT_ALL:
 		if (Pool.size == 0)
 			break;
-		Pool.DeSelectAll();
+		DeSelectAll();
 		break;
 
 	case B_COPY:
@@ -363,7 +329,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			if (Pool.l_pointer<0)
 				Pool.l_pointer = 0;
 		}
-		Pool.update_index = true;
+		
 		UpdateMenu();
 		RedrawWindow();
 		break;
@@ -383,7 +349,7 @@ FaberWindow::MessageReceived(BMessage *message)
 				Pool.l_pointer = 0;
 		}
 		UpdateMenu();
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 	case ZOOM_FULL:
@@ -391,7 +357,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.l_pointer = 0;
 		Pool.r_pointer = Pool.size;
 		UpdateMenu();
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 	case ZOOM_SELECTION:
@@ -401,9 +367,14 @@ FaberWindow::MessageReceived(BMessage *message)
 			Pool.r_pointer = Pool.r_sel_pointer;
 		}
 		UpdateMenu();
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
+
+	// To re enable these we have to
+	// create a way to identify the
+	// track currently selected.
+	// That looks like a good job for TracksContainer.
 	case ZOOM_LEFT:
 		/*if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = fTrackView->Bounds().IntegerWidth()/6;
@@ -412,7 +383,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.r_pointer = Pool.l_pointer + x;
 
 		UpdateMenu();
-		Pool.update_index = true;
+		
 		RedrawWindow();*/
 		break;
 	case ZOOM_RIGHT:
@@ -427,7 +398,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 
 		UpdateMenu();
-		Pool.update_index = true;
+		
 		RedrawWindow();*/
 		break;
 		
@@ -435,21 +406,18 @@ FaberWindow::MessageReceived(BMessage *message)
 		if (Pool.selection != NONE)
 			Pool.selection = LEFT;
 		UpdateMenu();
-		//fTrackView->Draw(fTrackView->Bounds());
 		fTracksContainer->Invalidate();
 		break;	
 	case EDIT_R:
 		if (Pool.selection != NONE)
 			Pool.selection = RIGHT;
 		UpdateMenu();
-		//fTrackView->Draw(fTrackView->Bounds());
 		fTracksContainer->Invalidate();
 		break;	
 	case EDIT_B:
 		if (Pool.selection != NONE)
 			Pool.selection = BOTH;
 		UpdateMenu();
-		//fTrackView->Draw(fTrackView->Bounds());
 		fTracksContainer->Invalidate();
 		break;
 
@@ -462,7 +430,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			if (Pool.l_pointer <0)	Pool.l_pointer = 0;
 		}
 		Pool.r_pointer = Pool.l_pointer + x;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 
@@ -471,7 +439,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.pointer = 0;
 		Pool.l_pointer = 0;
 		Pool.r_pointer = x;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 
@@ -484,7 +452,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			if (Pool.r_pointer >Pool.size)	Pool.r_pointer = Pool.size;
 		}
 		Pool.l_pointer = Pool.r_pointer - x;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 
@@ -493,19 +461,19 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.pointer = Pool.size;;
 		Pool.r_pointer = Pool.pointer;
 		Pool.l_pointer = Pool.pointer - x;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 	
 	case TRANSPORT_HOME:
 		Pool.pointer = Pool.l_pointer;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 	
 	case TRANSPORT_END:
 		Pool.pointer = Pool.r_pointer;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 	
@@ -514,7 +482,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		Pool.l_pointer -= x/2;
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
 			Pool.r_pointer = Pool.l_pointer + x;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 
@@ -524,7 +492,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		if (Pool.l_pointer>(Pool.size-x))
 			Pool.l_pointer = Pool.size-x;
 		Pool.r_pointer = Pool.l_pointer + x;
-		Pool.update_index = true;
+		
 		RedrawWindow();
 		break;
 
@@ -547,19 +515,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		delete help;
 	}
 	break;
-	
-	case NEW:
-	{	app_info info;
-		be_app->GetAppInfo(&info);
-		be_roster->Launch(info.signature);
-	}	break;
-		
-	case PASTE_NEW:
-	{	app_info info;
-		be_app->GetAppInfo(&info);
-		be_roster->Launch(info.signature, new BMessage(B_PASTE));
-	}	break;
-		
+
 	case HOMEPAGE:
 	{
 		const char* homepage = FABER_HOMEPAGE;
@@ -578,7 +534,7 @@ FaberWindow::MessageReceived(BMessage *message)
 	
 	case REDRAW:
 		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.update_index = true;
+		
 		// NOTE: Enabling it cause the TrackView
 		// selection to have drawing problems.
 		//Pool.ResetIndexView();
@@ -624,12 +580,14 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case CLEAR:
-		if (!Pool.PrepareFilter())	break;
+		if (!Pool.PrepareFilter())
+			break;
+
 		ClipBoard.DoSilence();
 		Pool.changed = true;
 		UpdateMenu();
 		WindowsManager::Get()->HideProgress();
-		Pool.ResetIndexView();
+		ResetIndexView();
 		RedrawWindow();
 		break;
 		
@@ -704,9 +662,9 @@ FaberWindow::MessageReceived(BMessage *message)
 		message->FindInt32("raw_char", &key);
 
 		// now do some conversions for combinations
-		if (key == B_FUNCTION_KEY){
+		if (key == B_FUNCTION_KEY)
 			key = 12+raw_key;
-		}else if (key>='a' && key<='z')
+		else if (key>='a' && key<='z')
 			key -= ('a'-'A');
 		
 		msg = KeyBind.GetMessage(key, mod);
@@ -717,10 +675,16 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 		break;
 
+	case NEW:
+	case PASTE_NEW:
+	case OPEN:
+	case SAVE_AUDIO:
+	case SAVE_AS:
+	case SAVE_SELECTION:
 	case B_MIME_DATA:			// let the app parse drops
 	case B_SIMPLE_DATA:
 		be_app->PostMessage(message);
-		break;				
+		break;
 
 	default:
 		BWindow::MessageReceived(message);
@@ -773,34 +737,37 @@ FaberWindow::UpdateMenu()
 	BMessage *filter_msg;
 	int32 filter = 0;
 	char name[255];
-	while(__FilterList[filter].name != NULL)
-	{
-		if (strcmp(__FilterList[filter].name, "---") == 0)
-		{
+	// TODO rework filters to have a decent API.
+	while(__FilterList[filter].name != NULL) {
+		if (strcmp(__FilterList[filter].name, "---") == 0) {
 			menu_transform->AddSeparatorItem();
-		}
-		else
-		{
+		} else {
 			// can do some stuff to organise menu here
 		 	filter_msg = new BMessage(RUN_FILTER);
 			filter_msg->AddInt32("filter", filter);
+
 			sprintf(name, B_TRANSLATE(__FilterList[filter].name));
 			if ( __FilterList[filter].type & FILTER_GUI )
 				strcat(name, "...");
-			menu_transform->AddItem(menuItem = new BMenuItem(name, filter_msg, KeyBind.GetKey(__FilterList[filter].name), KeyBind.GetMod(__FilterList[filter].name)));
+
+			menu_transform->AddItem(menuItem = new BMenuItem(name, filter_msg,
+				KeyBind.GetKey(__FilterList[filter].name), KeyBind.GetMod(__FilterList[filter].name)));
 			menuItem->SetEnabled( __FilterList[filter].type & Pool.sample_type );
 		}
 		filter++;
 	}
 
-	while (menu_analyze->ItemAt(0)){
+	while (menu_analyze->ItemAt(0)) {
 		menuItem = menu_analyze->ItemAt(0);
 		menu_analyze->RemoveItem(menuItem);
 		delete menuItem;
 	}
 	
-	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Spectrum Analyzer"), new BMessage(SPECTRUM), KeyBind.GetKey("SPECTRUM_ANALYZER"), KeyBind.GetMod("SPECTRUM_ANALYZER")));
-	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Sample Scope"), new BMessage(SAMPLE_SCOPE), KeyBind.GetKey("SAMPLE_SCOPE"), KeyBind.GetMod("SAMPLE_SCOPE")));
+	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Spectrum Analyzer"),
+		new BMessage(SPECTRUM), KeyBind.GetKey("SPECTRUM_ANALYZER"), KeyBind.GetMod("SPECTRUM_ANALYZER")));
+
+	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Sample Scope"),
+		new BMessage(SAMPLE_SCOPE), KeyBind.GetKey("SAMPLE_SCOPE"), KeyBind.GetMod("SAMPLE_SCOPE")));
 
 	// TODO remove them, in future the CommonPool will not exist anymore.
 	int32 sample_type = Pool.sample_type;
@@ -840,25 +807,32 @@ FaberWindow::UpdateMenu()
 //Check for and handle changed files
 bool FaberWindow::IsChanged(int32 mode)
 {
-	if (Pool.changed){
+	if (Pool.changed) {
 		int32 k = (new BAlert(NULL,B_TRANSLATE("This project has changed. Do you want to save it now?"),
 			B_TRANSLATE("Save"),B_TRANSLATE("Discard"),B_TRANSLATE("Cancel")))->Go();
-		switch(k){
-		case 0:
-			Pool.save_selection = false;
-			Pool.save_mode = mode;
-			WindowsManager::MainWinMessenger()->SendMessage(SAVE_AS);
-			return true;
+
+		switch(k) {
+
+			case 0:
+			{
+				Pool.save_selection = false;
+				BMessage* msg = new BMessage(SAVE_AS);
+				msg->AddBool("SaveMode", mode);
+				be_app->PostMessage(msg);
+				return true;
+				break;
+			}
+	
+			case 1:
+				return false;
 			break;
-		case 1:
-			return false;
-			break;
-		default:
-			return true;
+
+			default:
+				return true;
 		}
-	} else {
-		return false;
 	}
+
+	return false;
 }
 
 
@@ -873,7 +847,8 @@ FaberWindow::_BuildMenu()
 	menu = new BMenu(B_TRANSLATE("File"));
 	fMainMenuBar->AddItem(menu);
 
-	menu->AddItem(new BMenuItem(B_TRANSLATE("New"), new BMessage(NEW), KeyBind.GetKey("FILE_NEW"), KeyBind.GetMod("FILE_NEW")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("New"), new BMessage(NEW),
+		KeyBind.GetKey("FILE_NEW"), KeyBind.GetMod("FILE_NEW")));
 
 	fRecentMenu = new BMenu(B_TRANSLATE("Open..."));
 	UpdateRecent();
@@ -893,29 +868,42 @@ FaberWindow::_BuildMenu()
 	*/
 	menu->AddSeparatorItem();
 
-	menu->AddItem(fSaveMenu = new BMenuItem(B_TRANSLATE("Save"), new BMessage(SAVE), KeyBind.GetKey("FILE_SAVE"), KeyBind.GetMod("FILE_SAVE")));
+	menu->AddItem(fSaveMenu = new BMenuItem(B_TRANSLATE("Save"),
+		new BMessage(SAVE), KeyBind.GetKey("FILE_SAVE"), KeyBind.GetMod("FILE_SAVE")));
 
-	menu->AddItem(fSaveAsMenu = new BMenuItem(B_TRANSLATE("Save As..."), new BMessage(SAVE_AS), KeyBind.GetKey("FILE_SAVE_AS"), KeyBind.GetMod("FILE_SAVE_AS")));
+	menu->AddItem(fSaveAsMenu = new BMenuItem(B_TRANSLATE("Save As..."),
+		new BMessage(SAVE_AS), KeyBind.GetKey("FILE_SAVE_AS"), KeyBind.GetMod("FILE_SAVE_AS")));
 
-	menu->AddItem(mn_save_sel = new BMenuItem(B_TRANSLATE("Save Selection..."), new BMessage(SAVE_SELECTION), KeyBind.GetKey("FILE_SAVE_SELECTION"), KeyBind.GetMod("FILE_SAVE_SELECTION")));
+	menu->AddItem(mn_save_sel = new BMenuItem(B_TRANSLATE("Save Selection..."),
+		new BMessage(SAVE_SELECTION), KeyBind.GetKey("FILE_SAVE_SELECTION"),
+		KeyBind.GetMod("FILE_SAVE_SELECTION")));
 
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Preferences..."), new BMessage(PREFERENCES), KeyBind.GetKey("PREFERENCES"), KeyBind.GetMod("PREFERENCES")));
+
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Preferences..."),
+		new BMessage(PREFERENCES), KeyBind.GetKey("PREFERENCES"), KeyBind.GetMod("PREFERENCES")));
+
 	menu->AddSeparatorItem();
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), KeyBind.GetKey("FILE_QUIT"), KeyBind.GetMod("FILE_QUIT")));
+
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Quit"),
+		new BMessage(B_QUIT_REQUESTED), KeyBind.GetKey("FILE_QUIT"), KeyBind.GetMod("FILE_QUIT")));
 
 	fEditMenu = new BMenu(B_TRANSLATE("Edit"));
 	fMainMenuBar->AddItem(fEditMenu);
 
-	fEditMenu->AddItem(mn_undo = new BMenuItem(B_TRANSLATE("Undo"), new BMessage(UNDO), KeyBind.GetKey("UNDO"), KeyBind.GetMod("UNDO")));
+	fEditMenu->AddItem(mn_undo = new BMenuItem(B_TRANSLATE("Undo"),
+		new BMessage(UNDO), KeyBind.GetKey("UNDO"), KeyBind.GetMod("UNDO")));
 
-	fEditMenu->AddItem(mn_redo = new BMenuItem(B_TRANSLATE("Redo"), new BMessage(REDO), KeyBind.GetKey("REDO"), KeyBind.GetMod("REDO")));
+	fEditMenu->AddItem(mn_redo = new BMenuItem(B_TRANSLATE("Redo"),
+		new BMessage(REDO), KeyBind.GetKey("REDO"), KeyBind.GetMod("REDO")));
 
 	fEditMenu->AddSeparatorItem();
 
-	fEditMenu->AddItem(mn_copy = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
+	fEditMenu->AddItem(mn_copy = new BMenuItem(B_TRANSLATE("Copy"),
+		new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
 
-	fEditMenu->AddItem(mn_copy_silence = new BMenuItem(B_TRANSLATE("Copy & Silence"), new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
+	fEditMenu->AddItem(mn_copy_silence = new BMenuItem(B_TRANSLATE("Copy & Silence"),
+		new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
 
 	fEditMenu->AddItem(mn_cut = new BMenuItem(B_TRANSLATE("Cut"), new BMessage(B_CUT), KeyBind.GetKey("CUT"), KeyBind.GetMod("CUT")));
 
@@ -980,4 +968,48 @@ FaberWindow::_BuildMenu()
 
 	SetKeyMenuBar(NULL);
 	return fMainMenuBar;
+}
+
+
+// refills the PeakFile Cache
+void
+FaberWindow::ResetIndexView()
+{
+	if (Pool.sample_type == NONE)
+		return;
+
+	WindowsManager::Get()->StartProgress(B_TRANSLATE("Indexing..."), Pool.size);
+
+	Peak.Init(Pool.size+1, (Pool.sample_type == MONO) );
+	Peak.CreatePeaks(0, Pool.size+1, Pool.size+1);
+			// update the draw cache
+
+	WindowsManager::Get()->HideProgress();
+}
+
+
+//   Select All
+void
+FaberWindow::SelectAll()
+{
+	if (Pool.sample_type != NONE) {
+		Pool.pointer = 0;
+		Pool.r_sel_pointer = Pool.size;
+		Pool.selection = BOTH;
+		UpdateMenu();
+		RedrawWindow();
+	}
+}
+
+
+//   DeSelect All
+void
+FaberWindow::DeSelectAll()
+{
+	if (Pool.sample_type != NONE && Pool.selection != NONE) {
+		Pool.selection = NONE;
+		Pool.r_sel_pointer = 0;
+		UpdateMenu();
+		RedrawWindow();
+	}
 }

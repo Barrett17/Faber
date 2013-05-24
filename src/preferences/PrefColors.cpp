@@ -247,8 +247,8 @@ PrefColors::MessageReceived(BMessage *msg)
 			color_view->SetEnabled(false);
 			Pool.sample_view_dirty = true;	// update the sample-view
 			Pool.update_draw_cache = true;	// update the draw cache
-			Pool.update_index = true;		// update the index cache
-			WindowsManager::Get()->MainWindow()->RedrawWindow();
+					// update the index cache
+			 WindowsManager::MainWindow()->RedrawWindow();
 			break; // nothign selected 
 		}
 		control->SetEnabled(true);
@@ -259,8 +259,8 @@ PrefColors::MessageReceived(BMessage *msg)
 		color_view->SetColor(c);
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_draw_cache = true;	// update the draw cache
-		Pool.update_index = true;		// update the index cache
-		WindowsManager::Get()->MainWindow()->RedrawWindow();
+				// update the index cache
+		WindowsManager::MainWindow()->RedrawWindow();
 		break;
 
 	case SWATCH_DROP:
@@ -282,8 +282,8 @@ PrefColors::MessageReceived(BMessage *msg)
 		control->SetValue(c);
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_draw_cache = true;	// update the draw cache
-		Pool.update_index = true;		// update the index cache
-		WindowsManager::Get()->MainWindow()->RedrawWindow();
+				// update the index cache
+		WindowsManager::MainWindow()->RedrawWindow();
 		break;
 		
 	case COLOR_CHANGE:
@@ -305,8 +305,8 @@ PrefColors::MessageReceived(BMessage *msg)
 		color_view->SetColor(c);
 		Pool.sample_view_dirty = true;	// update the sample-view
 		Pool.update_draw_cache = true;	// update the draw cache
-		Pool.update_index = true;		// update the index cache
-		WindowsManager::Get()->MainWindow()->RedrawWindow();
+				// update the index cache
+		WindowsManager::MainWindow()->RedrawWindow();
 		break;
 
 	case NEW_SCHEME:

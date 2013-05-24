@@ -45,6 +45,8 @@ Application Faber :
 	TracksContainer.cpp
 	TimeBarView.cpp # TODO rework or rewrite it
 
+	MouseIcons.cpp
+
 	# managers
 	WindowsManager.cpp
 

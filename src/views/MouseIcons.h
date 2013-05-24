@@ -110,14 +110,24 @@ const uint8 IMouse_MoveArrow[] = { 0x10, 0x01, 0x00, 0x00,
    0x01, 0x74, 0x00, 0xF8, 0x00, 0x70, 0x00, 0x20
 };
 
+
 class MouseIcons {
 public:
-static BCursor* MouseArrow() { return new BCursor(IMouse_Arrow); }
-static BCursor* MouseArrowLeft() { return new BCursor(IMouse_ArrowLeft); }
-static BCursor* MouseArrowRight() { return new BCursor(IMouse_ArrowRight); }
-static BCursor* MousePencil() { return new BCursor(IMouse_Pencil); }
-static BCursor* MouseMove() { return new BCursor(IMouse_Move); }
-static BCursor* MouseArrowMove() { return new BCursor(IMouse_MoveArrow); }
-static BCursor* MouseLeftRight() { return new BCursor(IMouse_LeftRight); }
+	static	BCursor* MouseArrow();
+	static	BCursor* MouseArrowLeft();
+	static	BCursor* MouseArrowRight();
+	static	BCursor* MousePencil();
+	static	BCursor* MouseMove();
+	static	BCursor* MouseArrowMove();
+	static	BCursor* MouseLeftRight();
+
+private:
+	static	BCursor* fArrow;
+	static	BCursor* fArrowLeft;
+	static	BCursor* fArrowRight;
+	static	BCursor* fPencil;
+	static	BCursor* fMove;
+	static	BCursor* fMoveArrow;
+	static	BCursor* fLeftRight;
 };
 #endif

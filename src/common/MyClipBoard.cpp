@@ -222,9 +222,9 @@ void MyClipBoard::Cut(bool cut){
 
 		Pool.selection=NONE;
 		Pool.changed = true;
-		Pool.ResetIndexView();
+		 WindowsManager::MainWindow()->ResetIndexView();
 		Update();
-		WindowsManager::Get()->MainWindow()->RedrawWindow();
+		 WindowsManager::MainWindow()->RedrawWindow();
 	}
 }
 
@@ -232,7 +232,7 @@ void MyClipBoard::DoSilence()
 {
 	acquire_sem(clipSem);
 
-	Pool.SaveUndo();
+	SaveUndo();
 	float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type;
 	float *end = Pool.sample_memory + Pool.r_sel_pointer*Pool.sample_type;
 
@@ -357,7 +357,7 @@ void MyClipBoard::Paste(){
 		Pool.r_pointer = Pool.size;
 
 		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.update_index = true;
+		
 	}
 	
 	int32 start = Pool.pointer;
@@ -647,9 +647,9 @@ void MyClipBoard::Paste(){
 
 einde:
 	Pool.changed = true;
-	Pool.ResetIndexView();
+	 WindowsManager::MainWindow()->ResetIndexView();
 	Update();
-	WindowsManager::Get()->MainWindow()->RedrawWindow();
+	 WindowsManager::MainWindow()->RedrawWindow();
 }
 
 /*******************************************************
@@ -664,9 +664,9 @@ void MyClipBoard::PasteMix()
 	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);
 
 	Pool.changed = true;
-	Pool.ResetIndexView();
+	 WindowsManager::MainWindow()->ResetIndexView();
 	Update();
-	WindowsManager::Get()->MainWindow()->RedrawWindow();
+	 WindowsManager::MainWindow()->RedrawWindow();
 }
 
 /*******************************************************
@@ -705,4 +705,25 @@ void MyClipBoard::Update(){
 	}
 	
 	delete teams;
+}
+
+
+/*******************************************************
+*   Handle UNDO
+*******************************************************/
+void MyClipBoard::SaveUndo()
+{
+	if (Pool.selection==NONE)
+		return;
+
+	Hist.Save(H_REPLACE, Pool.pointer, Pool.r_sel_pointer);
+	WindowsManager::MainWindow()->UpdateMenu();
+}
+
+void MyClipBoard::Undo()
+{
+	Hist.Restore();
+	WindowsManager::MainWindow()->ResetIndexView();
+	WindowsManager::MainWindow()->UpdateMenu();
+	WindowsManager::MainWindow()->RedrawWindow();
 }

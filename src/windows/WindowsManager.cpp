@@ -55,7 +55,7 @@ WindowsManager::Get()
 }
 
 
-
+// TODO this should not return a pointer
 BMessenger*
 WindowsManager::MainWinMessenger()
 {
@@ -76,7 +76,7 @@ WindowsManager::IstantiateMainWindow(BRect rect)
 FaberWindow*
 WindowsManager::MainWindow()
 {
-	return fMainWindow;
+	return Get()->fMainWindow;
 }
 
 

@@ -51,6 +51,8 @@ public:
 			void	Save(BMessage*);
 private:
  	FaberWindow*	fFaberWindow;
+ 	// 1-do load after save, 2-do quit after save
+	bool			fSaveMode;
 
  	int64			save_start, save_end;
 };

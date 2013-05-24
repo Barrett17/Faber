@@ -40,13 +40,8 @@
 #include "ToolBar.h"
 #include "TracksContainer.h"
 
-// TODO remove them
-// for some reason if you
-// remove them there's a compilation error
 class BMenu;
 class BMenuBar;
-class ToolBar;
-class InfoToolBar;
 
 
 class FaberWindow : public BWindow
@@ -60,11 +55,19 @@ public:
 			void 				UpdateRecent();
 			void				RedrawWindow();
 			void				UpdateToolBar();
+
 			// activate/deactivate menu items
 			void				UpdateMenu();
 
 			// checks to see if a file is changed after load
 			bool				IsChanged(int32 mode=1); 
+
+			// Create the IndexZoomView data
+			void 				ResetIndexView();
+			// TODO those methods should be moved to
+			// TracksContainer
+			void				SelectAll();
+			void				DeSelectAll();
 private:
 			BMenuBar*			_BuildMenu();
 

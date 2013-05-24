@@ -15,14 +15,11 @@ public:
 									BMessage* message, int32 minValue,
 									int32 maxValue);
 
-								SpinSlider(BRect r, const char* name,
-									const char* label, BMessage* message,
-									int32 minValue, int32 maxValue);
 	virtual						~SpinSlider();
 
 	virtual void				AttachedToWindow();
 	virtual void 				MessageReceived(BMessage* msg);
-			void				MouseDown(BPoint pt);
+			void				MouseDown(BPoint point);
 
 	// BSlider mimics
 	virtual void				SetLabel(const char* label);
