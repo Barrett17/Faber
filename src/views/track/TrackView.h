@@ -24,6 +24,12 @@ public:
 
 	virtual 				~TrackView();
 
+	/*						CurrentSelection(*start, *end);
+
+			void			SelectAt(start, end);
+			void			SelectAll();
+			void			Unselect();*/
+
 	virtual const BString&	Name() const;
 	virtual void 			SetName(const char* name);
 
@@ -46,6 +52,6 @@ private:
 };
 
 
-//typedef BObjectList<TrackView> TrackViewList;
+typedef BObjectList<TrackView> TrackViewList;
 
 #endif

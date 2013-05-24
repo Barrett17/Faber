@@ -337,7 +337,7 @@ void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_au
 			buf[i] = 0.0;
 		}
 	}else{
-		if (Pool.sample_type == MONO){	//cookie->mono){
+		if (format.channel_count == 1){	//cookie->mono){
 			for (i=0; i<float_size; i+=2){
 				if (cookie->mem >= cookie->end_mem){
 					if (cookie->loop){

@@ -25,6 +25,8 @@ public:
 								| B_WILL_DRAW);
 	virtual 				~AudioTrackView();
 
+			int32			ChannelCount() const;
+
 			void			Pulse();
 			void			Invalidate();
 private:

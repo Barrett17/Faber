@@ -431,24 +431,27 @@ FaberWindow::MessageReceived(BMessage *message)
 		RedrawWindow();*/
 		break;
 		
-	/*case EDIT_L:
+	case EDIT_L:
 		if (Pool.selection != NONE)
 			Pool.selection = LEFT;
 		UpdateMenu();
-		fTrackView->Draw(fTrackView->Bounds());
+		//fTrackView->Draw(fTrackView->Bounds());
+		fTracksContainer->Invalidate();
 		break;	
 	case EDIT_R:
 		if (Pool.selection != NONE)
 			Pool.selection = RIGHT;
 		UpdateMenu();
-		fTrackView->Draw(fTrackView->Bounds());
+		//fTrackView->Draw(fTrackView->Bounds());
+		fTracksContainer->Invalidate();
 		break;	
 	case EDIT_B:
 		if (Pool.selection != NONE)
 			Pool.selection = BOTH;
 		UpdateMenu();
-		fTrackView->Draw(fTrackView->Bounds());
-		break;	*/
+		//fTrackView->Draw(fTrackView->Bounds());
+		fTracksContainer->Invalidate();
+		break;
 
 	case TRANSPORT_REW:
 		x = Pool.r_pointer - Pool.l_pointer;
@@ -510,7 +513,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		x = Pool.r_pointer - Pool.l_pointer;
 		Pool.l_pointer -= x/2;
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
-		Pool.r_pointer = Pool.l_pointer + x;
+			Pool.r_pointer = Pool.l_pointer + x;
 		Pool.update_index = true;
 		RedrawWindow();
 		break;
@@ -518,7 +521,8 @@ FaberWindow::MessageReceived(BMessage *message)
 	case TRANSPORT_RIGHT:
 		x = Pool.r_pointer - Pool.l_pointer;
 		Pool.l_pointer += x/2;
-		if (Pool.l_pointer>(Pool.size-x))	Pool.l_pointer = Pool.size-x;
+		if (Pool.l_pointer>(Pool.size-x))
+			Pool.l_pointer = Pool.size-x;
 		Pool.r_pointer = Pool.l_pointer + x;
 		Pool.update_index = true;
 		RedrawWindow();
@@ -695,7 +699,6 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case B_KEY_DOWN:
-//		message->PrintToStream();
 		message->FindInt32("key", &raw_key);
 		message->FindInt32("modifiers", &mod);
 		message->FindInt32("raw_char", &key);
@@ -732,11 +735,11 @@ void
 FaberWindow::RedrawWindow()
 {
 	Lock();
-	//for (int32 i = 0; i < CountChildren(); i++)
-	//	ChildAt(i)->Invalidate();
 
  	fToolBar->Invalidate();
 	fTracksContainer->Invalidate();
+	// Not needed for now
+	//fInfoToolBar->Invalidate();
 
 	Unlock();	
 }
@@ -947,7 +950,7 @@ FaberWindow::_BuildMenu()
 
 	fEditMenu->AddItem(mn_resample = new BMenuItem(B_TRANSLATE("Resample"), new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
 
-	menu_transform = new BMenu(B_TRANSLATE("Filters"));
+	menu_transform = new BMenu(B_TRANSLATE("Effects"));
 	fMainMenuBar->AddItem(menu_transform);
 
 	menu_analyze = new BMenu(B_TRANSLATE("Analyze"));
@@ -955,7 +958,6 @@ FaberWindow::_BuildMenu()
 	fMainMenuBar->AddItem(menu_analyze);
 
 	menu_generate = new BMenu(B_TRANSLATE("Generate"));
-	menu_generate->SetEnabled(false);
 
 	fMainMenuBar->AddItem(menu_generate);
 

@@ -58,7 +58,7 @@ void TimeBarView::Draw(BRect rect)
 	BRect r = Bounds();
 	char s[255];
 
-	SetLowColor(Prefs.time_back_color);
+	SetLowColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	FillRect(r, B_SOLID_LOW);
 	
 	if (Pool.size == 0)
@@ -98,13 +98,13 @@ void TimeBarView::Draw(BRect rect)
 			sprintf(s, "%d:%.2d.%.3d", min, sec, time);
 			t_bound += t_marge;
 			b = r.bottom + 5;
-			SetHighColor(Prefs.time_text_color);
+			//SetHighColor(rgb_color(0,0,0));
 			DrawString(s, BPoint(x - font.StringWidth(s)/2.0f, r.top + 10));
-			SetHighColor(Prefs.time_marks_color);
+			//SetHighColor(rgb_color(0,0,0));
 			StrokeLine( BPoint( x, r.bottom+1 ), BPoint( x, r.top + 12) );
 		}else if (t >= t_small_bound){
 			t_small_bound += t_small_marge;
-			SetHighColor(Prefs.time_small_marks_color);
+			//SetHighColor(Prefs.time_small_marks_color);
 			b = r.bottom + 1;
 			StrokeLine( BPoint( x, r.bottom+1 ), BPoint( x, r.top + 12) );
 		}

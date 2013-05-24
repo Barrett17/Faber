@@ -5,32 +5,27 @@
 #ifndef _TRACKS_CONTAINER
 #define _TRACKS_CONTAINER
 
-#include <View.h>
+#include <GroupLayout.h>
+#include <GroupView.h>
 
 #include "TimeBarView.h"
 #include "TrackView.h"
 
 
-class TracksContainer : public BView
+class TracksContainer : public BGroupView
 {
 public:
 						TracksContainer();
 	virtual 			~TracksContainer();
 
-						//CurrentSelection(*start, *end);
-
-	/*void				SelectAt(start, end);
-	void				SelectAll();
-	void				Unselect();
 
 	TrackView*			CurrentTrack();
 	int32 				CountTracks() const;
 	TrackView*			TrackAt(int32 index) const;
 	status_t 			AddTrack(TrackView* track, int32 index = 0);
 
-	status_t			RemoveTrack(TrackView* track = NULL,
-							int32 index = 0);
-
+	status_t			RemoveTrack(TrackView* track = NULL);
+/*
 	status_t 			MuteAllTracks(bool mute);
 	//status_t			ReorderTracks(enum reorderType);*/
 
@@ -39,9 +34,10 @@ public:
 	void				Invalidate();
 
 private:
-	//TrackViewList		fTrackViews;
+	BGroupLayout*		fLayout;
+	TrackViewList		fTrackViews;
 
-	TrackView*			fTrackView;
+	//TrackView*		fTrackView;
 	TimeBarView*		fTimeBar;
 };
 

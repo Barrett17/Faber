@@ -157,6 +157,7 @@ PrefColors::PrefColors()
 	colors[29] = (void*)&Prefs.mid_left_selected_color;
 	colors[30] = (void*)&Prefs.mid_right_selected_color;
 	colors[31] = (void*)&Prefs.pointer_color;
+	// TODO remove it
 	colors[32] = (void*)&Prefs.time_back_color;
 	colors[33] = (void*)&Prefs.time_marks_color;
 	colors[34] = (void*)&Prefs.time_small_marks_color;
