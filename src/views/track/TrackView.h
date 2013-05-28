@@ -24,11 +24,18 @@ public:
 
 	virtual 				~TrackView();
 
-	/*						CurrentSelection(*start, *end);
+			void			CurrentSelection(int64* start,int64* end) const;
+			void			SelectAt(int64 start,int64 end);
 
-			void			SelectAt(start, end);
+			int64			SelectionStart() const;
+			int64			SelectionEnd() const;
+
+			int64			TrackStart() const;
+			int64			TrackEnd() const;
+
 			void			SelectAll();
-			void			Unselect();*/
+			void			Unselect();
+
 
 	virtual const BString&	Name() const;
 	virtual void 			SetName(const char* name);
@@ -49,6 +56,12 @@ private:
 			bool			fSolo;
 			BString			fName;
 			float			fVolume;
+
+			int64			fStart;
+			int64			fEnd;
+
+			int64			fStartSelection;
+			int64			fEndSelection;
 };
 
 

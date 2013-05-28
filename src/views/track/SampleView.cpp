@@ -25,14 +25,12 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include "SampleView.h"
+
 #include <Bitmap.h>
-#include <LayoutBuilder.h>
 #include <MenuItem.h>
 #include <PopUpMenu.h>
-#include <TranslationKit.h>
 
-#include "SampleView.h"
-#include "FaberWindow.h"
 #include "Globals.h"
 #include "PeakFile.h"
 #include "BitmapDrawer.h"
@@ -176,10 +174,7 @@ void SampleView::Pulse()
 				Pool.l_pointer = ptr;
 				Pool.r_pointer = Pool.l_pointer + xx;
 
-					// @TODO: need to be pulse for fast update
-				Window()->FindView("InfoToolBar")->Pulse();//Draw()Invalidate();
-				Window()->FindView("Sample view")->Invalidate();
-				Window()->FindView("TimeBar view")->Invalidate();
+				WindowsManager::MainWinMessenger()->SendMessage(UPDATE);
 			}
 		}	
 

@@ -3,7 +3,13 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-class InputAudioGate {
+#ifndef _AUDIO_INPUT_GATE_H
+#define _AUDIO_INPUT_GATE_H
+
+#include "MediaGate.h"
+
+
+class InputAudioGate : public MediaGate {
 public:
 
 	status_t Start();
@@ -11,12 +17,14 @@ public:
 
 	void SetFilterHook(void* hook ...);
 
-	void RegisterWatchHandler(BHandler* handler);
+
 
 	/*
-
+	void RegisterWatchHandler(BHandler* handler);
 
 	*/
 private:
-	FaberSoundPlayer* fSoundPlayer;
+
 };
+
+#endif

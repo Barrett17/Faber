@@ -29,9 +29,9 @@ TracksContainer::~TracksContainer()
 void
 TracksContainer::Invalidate()
 {
-	for (int i = 0; i < fTrackViews.CountItems(); i++) {
+	for (int i = 0; i < CountTracks(); i++)
 		TrackAt(i)->Invalidate();
-	}
+
 	fTimeBar->Invalidate();
 
 	BView::Invalidate();
@@ -41,9 +41,9 @@ TracksContainer::Invalidate()
 void
 TracksContainer::Pulse()
 {
-	for (int i = 0; i < fTrackViews.CountItems(); i++) {
+	for (int i = 0; i < CountTracks(); i++)
 		TrackAt(i)->Pulse();
-	}
+
 	fTimeBar->Pulse();
 }
 

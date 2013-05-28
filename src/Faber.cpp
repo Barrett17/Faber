@@ -109,7 +109,7 @@ FaberApp::MessageReceived(BMessage *message)
 			break;
 
 		case SAVE_AUDIO:
-			if (Pool.save_selection && Pool.selection != NONE) {
+			if (fSaveSelection && Pool.selection != NONE) {
 				save_start = Pool.pointer;		// save selection
 				save_end = Pool.r_sel_pointer;
 			} else {
@@ -124,7 +124,8 @@ FaberApp::MessageReceived(BMessage *message)
 		{
 			if (Pool.sample_type == NONE)
 				return;
-			Pool.save_selection = false;
+			//Pool.save_selection = false;
+			fSaveSelection = false;
 
 			SavePanel* panel = WindowsManager::GetSavePanel();
 			panel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
@@ -137,7 +138,8 @@ FaberApp::MessageReceived(BMessage *message)
 			if (Pool.selection == NONE || Pool.sample_type == NONE)
 				return;
 
-			Pool.save_selection = true;
+			//Pool.save_selection = true;
+			fSaveSelection = true;
 
 			SavePanel* panel = WindowsManager::GetSavePanel();
 			panel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
@@ -355,7 +357,7 @@ FaberApp::RefsReceived(BMessage* message)
 						}
 					}	break;
 
-					case media_raw_audio_format::B_AUDIO_DOUBLE:		// 0 == mid, -127 == bottom, +127 == top (not officially supported format)
+					/*case media_raw_audio_format::B_AUDIO_DOUBLE:
 					{	
 						int8 *tmp = (int8*)buffer;
 						float x;
@@ -368,7 +370,7 @@ FaberApp::RefsReceived(BMessage* message)
 								x = 1.0;
 							*mem++ = x;
 						}
-					}	break;
+					}	break;*/
 					}
 
 					WindowsManager::Get()->ProgressUpdate((int32) framesRead);
@@ -383,7 +385,6 @@ FaberApp::RefsReceived(BMessage* message)
 			else
 			{
 				Pool.pointer = 0;
-				Pool.play_pointer = 0;
 				Pool.l_pointer = 0;
 				Pool.r_pointer = 0;
 				Pool.r_sel_pointer = 0;
@@ -575,7 +576,7 @@ FaberApp::Save(BMessage *message){
 							*tmp++ = (int8) ROUND(t * 127.0);		// xor 128 to invert sign bit
 						}
 					}	break;
-					case media_raw_audio_format::B_AUDIO_DOUBLE:		// 0 == mid, -127 == bottom, +127 == top (not officially supported format)
+					/*case media_raw_audio_format::B_AUDIO_DOUBLE:
 					{	
 						int8 *tmp = (int8*)buffer;
 						for (int32 count = 0; count<block*channels; count++)
@@ -583,7 +584,7 @@ FaberApp::Save(BMessage *message){
 							t = *mem++;
 							*tmp++ = (double) ROUND(t * 127.0);		// xor 128 to invert sign bit
 						}
-					}	break;
+					}	break;*/
 					}
 
 					WindowsManager::Get()->ProgressUpdate(block);

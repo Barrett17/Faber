@@ -53,7 +53,7 @@ private:
  	FaberWindow*	fFaberWindow;
  	// 1-do load after save, 2-do quit after save
 	bool			fSaveMode;
-
+	bool			fSaveSelection;
  	int64			save_start, save_end;
 };
 

@@ -29,8 +29,7 @@
 #ifndef _POOL_H
 #define _POOL_H
 
-#include <Entry.h>
-#include <SoundPlayer.h>
+#include "SoundPlayer.h"
 
 #include "Filters.h"
 
@@ -40,8 +39,6 @@ class BMenu;
 extern filter_info __FilterList[];
 
 #define PLAY_HOOKS	64		// number of realtime effects possible
-
-#define UPDATE	'updt'
 
 typedef struct cookie_record
 {
@@ -67,26 +64,25 @@ class CommonPool
 	float system_frequency;
 
 	bool update_peak;
-	
-	BSoundPlayer	*player;
-	
-	media_format	m_format;
-	bool	save_selection;		// to decide whether to save selection or full
 
-	float	*sample_memory;					// memory 8Mb fixed for demo version
+	BSoundPlayer	*player;
 
 	int64	pointer;		// the sample pointer
 	int64	last_pointer;
-	int64	play_pointer;	// used during playback
+
 	int64	size;			// sample size (in samples)
+
 	int64	l_pointer;		// left start of edit window
 	int64	r_pointer;		// right end of edit window
 	int64	r_sel_pointer;	// right selection pointer
 	int32	selection;		// selection mode: NONE, LEFT, RIGHT, BOTH
+
+	media_format	m_format;
 	int32	sample_type;	// MONO, STEREO
 	int32	sample_bits;	// 8, 16
 	float	frequency;
-	
+	float	*sample_memory;					// memory 8Mb fixed for demo version
+
 	void	InitBufferPlayer(float freq);
 	void	StartPlaying(int64 p, bool end);	// play back the sound, convert data and
 	void	StopPlaying();				// sync VU meters
@@ -97,7 +93,7 @@ class CommonPool
 	void	RemovePlayHook(void (*hook)(float*, size_t, void *), int32 min=-1);			// remove a hook for a filter
 	void	(*BufferHook[PLAY_HOOKS])(float*, size_t, void *cookie);
 	void	*BufferCookie[PLAY_HOOKS];
-	
+
 	bool	PrepareFilter();		// to save undo-data, stop playing, check selection
 
 	bool	changed;

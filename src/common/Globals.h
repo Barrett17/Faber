@@ -204,4 +204,6 @@ enum {
 #define UPDATE_MENU			'_udm'
 #define REDRAW				'rdrw'
 
+#define UPDATE				'updt'
+
 #endif

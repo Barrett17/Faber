@@ -815,7 +815,6 @@ bool FaberWindow::IsChanged(int32 mode)
 
 			case 0:
 			{
-				Pool.save_selection = false;
 				BMessage* msg = new BMessage(SAVE_AS);
 				msg->AddBool("SaveMode", mode);
 				be_app->PostMessage(msg);

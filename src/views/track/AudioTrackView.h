@@ -21,16 +21,24 @@ class AudioTrackView : public TrackView
 {
 public:
 							AudioTrackView(const char* name = "AudioTrackView",
+								//AudioTrack* track,
 								uint32 resizingMode = B_FOLLOW_ALL_SIDES
 								| B_WILL_DRAW);
 	virtual 				~AudioTrackView();
 
-			int32			ChannelCount() const;
+			// Utility methods for fast access to the
+			// Track's values
+			//int32			ChannelCount() const;
+			//int32			FrameRate() const;
 
+			//AudioTrack*		Track() const;
+
+			// Drawing related methods
 			void			Pulse();
 			void			Invalidate();
 private:
 			SampleView*		fSampleView;
+			//AudioTrack*		fTrack;
 };
 
 #endif

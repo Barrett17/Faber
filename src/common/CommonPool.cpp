@@ -25,30 +25,16 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-#include <Application.h>
-#include <Directory.h>
-#include <FindDirectory.h>
-#include <Message.h>
-#include <NodeMonitor.h>
-#include <Path.h>
-#include <Roster.h>
-#include <SoundPlayer.h>
-#include <Cursor.h>
+#include "SoundPlayer.h"
 
 #include "WindowsManager.h"
 #include "CommonPool.h"
-#include "ProgressWindow.h"
-#include "Settings.h"
+
 #include "MyClipBoard.h"
 #include "FaberWindow.h"
-#include "Shortcut.h"
-
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <unistd.h> // header with crypt in it :)
 
 extern void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format);
 
@@ -66,7 +52,6 @@ CommonPool::CommonPool(){
 	player = NULL;
 	
 	m_playing = false;
-	play_pointer = 0;
 	changed = false;
 
 	last_pointer = 0;
@@ -91,7 +76,6 @@ void CommonPool::Init(){
 //		resume_thread(tid);
 //	}
 	pointer = 0;
-	play_pointer = 0;
 	l_pointer = 0;
 	r_pointer = 0;
 	r_sel_pointer = 0;
