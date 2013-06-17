@@ -27,27 +27,24 @@
 */
 #include "AnalyzeWindow.h"
 
-#include <Window.h>
-#include <View.h>
-#include <InterfaceKit.h>
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "Globals.h"
+#include "SpinControl.h"
+#include "SpinSlider.h"
 
 #define UPDATE		'updt'
 #define QUIT		'quit'
 #define SET			'setF'
 
-/*******************************************************
-*   
-*******************************************************/
+
 AnalyzeWindow::AnalyzeWindow(BRect r, const char *name)
-	: BWindow(r,name, B_FLOATING_WINDOW_LOOK,B_FLOATING_APP_WINDOW_FEEL, B_NOT_ZOOMABLE | B_AVOID_FOCUS)
+	:
+	BWindow(r,name, B_FLOATING_WINDOW_LOOK,
+		B_FLOATING_APP_WINDOW_FEEL, B_NOT_ZOOMABLE | B_AVOID_FOCUS)
 {
 	// 25 frames per second by default
 	m_frames = 25;
 	m_count = 0;
+
 	// set the playHook
 	m_index = Pool.SetPlayHook( _PlayBuffer, PLAY_HOOKS/2, (void*)this);
 
@@ -56,17 +53,15 @@ AnalyzeWindow::AnalyzeWindow(BRect r, const char *name)
 	Show();
 }
 
-/*******************************************************
-*   
-*******************************************************/
-void AnalyzeWindow::PlayBuffer(float *buffer, size_t size)
+
+void
+AnalyzeWindow::PlayBuffer(float *buffer, size_t size)
 {
 }
 
-/*******************************************************
-*   
-*******************************************************/
-void AnalyzeWindow::_PlayBuffer(float *buffer, size_t size, void *cookie)
+
+void
+AnalyzeWindow::_PlayBuffer(float *buffer, size_t size, void *cookie)
 {
 	AnalyzeWindow *win = (AnalyzeWindow*)cookie;	// cast to our own clas
 
@@ -75,46 +70,48 @@ void AnalyzeWindow::_PlayBuffer(float *buffer, size_t size, void *cookie)
 
 	// update with frames/second
 	win->m_count -= size;
-	if (win->m_count <0){
+
+	if (win->m_count <0) {
 		win->m_count = (int)Pool.system_frequency*2/win->m_frames;
 		win->PostMessage(UPDATE);
 	}
 }
 
-/*******************************************************
-*   
-*******************************************************/
-int32 AnalyzeWindow::FramesPerSecond()
+
+int32
+AnalyzeWindow::FramesPerSecond()
 {
 	return m_frames;
 }
 
-void AnalyzeWindow::SetFramesPerSecond(int32 frames)
+void 
+AnalyzeWindow::SetFramesPerSecond(int32 frames)
 {
 	m_frames = frames;
 }
 
-/*******************************************************
-*   
-*******************************************************/
-bool AnalyzeWindow::QuitRequested(){
+
+bool
+AnalyzeWindow::QuitRequested()
+{
 	Pool.RemovePlayHook( _PlayBuffer, m_index );
 	return true;
 }
 
-/*******************************************************
-*   
-*******************************************************/
-void AnalyzeWindow::MessageReceived(BMessage* msg){
+
+void
+AnalyzeWindow::MessageReceived(BMessage* msg)
+{
 	BView *view;
 
-	switch(msg->what){
-	case UPDATE:
-		view = ChildAt(0);
-		if (view)	view->Invalidate();
-		break;
+	switch(msg->what) {
 
-	default:
-		BWindow::MessageReceived(msg);
+		case UPDATE:
+			view = ChildAt(0);
+			if (view)	view->Invalidate();
+			break;
+
+		default:
+			BWindow::MessageReceived(msg);
 	}
 }

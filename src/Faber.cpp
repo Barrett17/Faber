@@ -419,7 +419,7 @@ FaberApp::RefsReceived(BMessage* message)
 
 			// create the PeakFile
 			fFaberWindow->ResetIndexView();
-			Hist.Reset();				// reset undo class
+			//Hist.Reset();				// reset undo class
 
 			if (IsLaunching() && Prefs.play_when_loaded)
 				fFaberWindow->PostMessage(TRANSPORT_PLAY);

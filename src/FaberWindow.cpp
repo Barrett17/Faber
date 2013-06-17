@@ -37,12 +37,12 @@
 #include <LayoutBuilder.h>
 #include <Path.h>
 
-#include "AboutBox.h"
+//#include "AboutBox.h"
 #include "Faber.h"
 #include "FilterDialogs.h"
 #include "Filters.h"
 #include "Globals.h"
-#include "MyClipBoard.h"
+//#include "MyClipBoard.h"
 #include "PeakFile.h"
 #include "Shortcut.h"
 #include "WindowsManager.h"
@@ -83,8 +83,8 @@ FaberWindow::FaberWindow(BRect frame)
 {
 	// init prefs
 	Prefs.Init();
-	ClipBoard.Init();				// clipboard init
-	Hist.Init();					// Undo init
+	//ClipBoard.Init();				// clipboard init
+	//Hist.Init();					// Undo init
 
 	ResizeTo( Prefs.frame.Width(), Prefs.frame.Height() );
 	MoveTo( Prefs.frame.left, Prefs.frame.top );
@@ -257,7 +257,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case UNDO:
-		ClipBoard.Undo();
+		//ClipBoard.Undo();
 		break;
 		
 	case B_SELECT_ALL:
@@ -273,19 +273,19 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case B_COPY:
-		ClipBoard.Copy();
+		//ClipBoard.Copy();
 		break;
 	
 	case COPY_SILENCE:
-		ClipBoard.Cut(false);		// silence cut
+		//ClipBoard.Cut(false);		// silence cut
 		break;
 	
 	case B_CUT:
-		ClipBoard.Cut(true);		// delete cut
+		//ClipBoard.Cut(true);		// delete cut
 		break;
 	
 	case B_PASTE:
-		ClipBoard.Paste();
+		//ClipBoard.Paste();
 		break;
 
 	case DROP_PASTE:
@@ -302,7 +302,7 @@ FaberWindow::MessageReceived(BMessage *message)
 	}	break;
 	
 	case PASTE_MIXED:
-		ClipBoard.PasteMix();		// ClipBoard handles redrawing and dialogs
+		//ClipBoard.PasteMix();		// ClipBoard handles redrawing and dialogs
 		break;
 
 	case B_MOUSE_WHEEL_CHANGED:
@@ -534,10 +534,7 @@ FaberWindow::MessageReceived(BMessage *message)
 	
 	case REDRAW:
 		Pool.sample_view_dirty = true;	// update the sample-view
-		
-		// NOTE: Enabling it cause the TrackView
-		// selection to have drawing problems.
-		//Pool.ResetIndexView();
+
 		RedrawWindow();
 		break;
 	
@@ -580,7 +577,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 
 	case CLEAR:
-		if (!Pool.PrepareFilter())
+		/*if (!Pool.PrepareFilter())
 			break;
 
 		ClipBoard.DoSilence();
@@ -588,7 +585,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		UpdateMenu();
 		WindowsManager::Get()->HideProgress();
 		ResetIndexView();
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 		
 	case RUN_FILTER: // run a filter with or without GUI
@@ -792,13 +789,14 @@ FaberWindow::UpdateMenu()
 	mn_copy_silence->SetEnabled(selection != NONE);		// copy & Silence
 	mn_clear->SetEnabled(selection != NONE);			// clear
 
-	mn_undo->SetEnabled(Hist.HasUndo());				// need history class for this
+/*	mn_undo->SetEnabled(Hist.HasUndo());				// need history class for this
+
 	mn_paste->SetEnabled(ClipBoard.HasClip());
 	mn_paste_new->SetEnabled(ClipBoard.HasClip());
 
 	mn_paste_mix->SetEnabled(ClipBoard.HasClip());
 	mn_redo->SetEnabled(Hist.HasRedo());				// need history class for this
-
+*/
 	UpdateToolBar();
 	Unlock();
 }
@@ -981,7 +979,6 @@ FaberWindow::ResetIndexView()
 
 	Peak.Init(Pool.size+1, (Pool.sample_type == MONO) );
 	Peak.CreatePeaks(0, Pool.size+1, Pool.size+1);
-			// update the draw cache
 
 	WindowsManager::Get()->HideProgress();
 }

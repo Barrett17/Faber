@@ -12,6 +12,7 @@
 
 #include <View.h>
 
+#include "AudioTrack.h"
 #include "Globals.h"
 #include "SampleView.h"
 #include "TrackView.h"
@@ -26,6 +27,18 @@ public:
 								| B_WILL_DRAW);
 	virtual 				~AudioTrackView();
 
+	virtual const BString&	Name() const;
+	virtual void 			SetName(const char* name);
+
+	virtual float			Volume() const;
+	virtual void			SetVolume(float volume);
+
+	virtual void	 		MuteTrack(bool mute);
+	virtual bool 			IsMute() const;
+
+	virtual void			SetSolo(bool solo);
+	virtual bool			IsSolo() const;
+
 			// Utility methods for fast access to the
 			// Track's values
 			//int32			ChannelCount() const;
@@ -38,7 +51,7 @@ public:
 			void			Invalidate();
 private:
 			SampleView*		fSampleView;
-			//AudioTrack*		fTrack;
+			AudioTrack*		fTrack;
 };
 
 #endif

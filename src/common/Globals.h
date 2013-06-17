@@ -46,7 +46,7 @@
 
 #include "CommonPool.h"
 #include "Preferences.h"
-#include "History.h"
+//#include "History.h"
 
 #include <stdio.h>
 
@@ -92,6 +92,13 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 #endif
 
 // Enums
+
+enum FaberTrackType {
+	FABER_AUDIO_TRACK,
+	FABER_VIDEO_TRACK,
+	FABER_MIDI_TRACK
+};
+
 enum {
 	NONE=0,
 	LEFT,

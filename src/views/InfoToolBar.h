@@ -7,6 +7,7 @@
 
 #include <View.h>
 
+#include "IconButton.h"
 #include "Globals.h"
 
 class BTextView;
@@ -20,6 +21,9 @@ public:
 
 	void					Pulse();
 private:
+			IconButton*		_BuildButton(const char* tip, BMessage* message,
+								int32 resourceID);
+
 			BTextView*		fPointerTextView;
 			int64			pointer;
 };

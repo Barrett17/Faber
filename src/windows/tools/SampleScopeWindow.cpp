@@ -28,17 +28,15 @@
 
 #include <Window.h>
 #include <View.h>
-#include <InterfaceKit.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 #include "Globals.h"
 #include "Analyzers.h"
 
 #define WIDTH		256
 
-class SampleScopeView : public BView{
-  public:
+class SampleScopeView : public BView
+{
+public:
 	SampleScopeView(BRect);
 	~SampleScopeView();
 	virtual void Draw(BRect);
@@ -47,7 +45,9 @@ class SampleScopeView : public BView{
 };
 
 
-SampleScopeView::SampleScopeView(BRect r) : BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW | B_PULSE_NEEDED)
+SampleScopeView::SampleScopeView(BRect r)
+	:
+	BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW | B_PULSE_NEEDED)
 {
 	SetViewColor(0,0,0);
 	for (int i=0; i<WIDTH; i++){
@@ -61,12 +61,14 @@ SampleScopeView::~SampleScopeView()
 {
 }
 
-void SampleScopeView::Pulse()
+void
+SampleScopeView::Pulse()
 {
 	Invalidate();
 }
 
-void SampleScopeView::Draw(BRect r)
+void
+SampleScopeView::Draw(BRect r)
 {
 	r = Bounds();
 	SetHighColor(0,0,0);
@@ -96,20 +98,18 @@ void SampleScopeView::Draw(BRect r)
 	}
 }
 
-/*******************************************************
-*   
-*******************************************************/
-SampleScopeWindow::SampleScopeWindow() : AnalyzeWindow(BRect(50, 50, 270, 150),B_TRANSLATE("Sample Scope"))
+
+SampleScopeWindow::SampleScopeWindow()
+	:
+	AnalyzeWindow(BRect(50, 50, 270, 150),B_TRANSLATE("Sample Scope"))
 {
 	AddChild(view = new SampleScopeView(Bounds()));
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void SampleScopeWindow::PlayBuffer(float *buffer, size_t size)
 {
-	for (size_t i=0; i<WIDTH; i++){
+	for (size_t i=0; i<WIDTH; i++) {
 		((SampleScopeView*)view)->Data[0][i] = *buffer++;
 		((SampleScopeView*)view)->Data[1][i] = *buffer++;
 	}

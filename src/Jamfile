@@ -44,7 +44,6 @@ Application Faber :
 
 	TracksContainer.cpp
 	TimeBarView.cpp # TODO rework or rewrite it
-
 	MouseIcons.cpp
 
 	# managers
@@ -56,7 +55,6 @@ Application Faber :
 	SpectrumWindow.cpp
 	SampleScopeWindow.cpp
 	ProgressWindow.cpp
-	AboutBox.cpp
 	SavePanel.cpp
 	OpenPanel.cpp
 	FreqWindow.cpp
@@ -85,16 +83,21 @@ Application Faber :
 	SwatchView.cpp
 
 	# Common
-	MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
+	#MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
 	CommonPool.cpp # TODO Remove it
 	PeakFile.cpp
-	History.cpp # TODO fix codestyle
+	#History.cpp # TODO fix codestyle
 
 	# Audio internal API
-	SoundPlayer.cpp
-	SoundUtils.cpp
+	Track.cpp
+	AudioTrack.cpp
+
+	MediaGate.cpp
+	OutputAudioGate.cpp
 
 	# Audio nodes
+	SoundPlayer.cpp
+	SoundUtils.cpp
 	SoundPlayNode.cpp
 	SoundConsumer.cpp	
 

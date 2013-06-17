@@ -26,6 +26,11 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/*
+   	Copyright (c) 2013, Dario Casalinuovo
+	All rights reserved.
+*/
+
 #ifndef _MOUSE_ICONS_H
 #define _MOUSE_ICONS_H
 
@@ -130,4 +135,5 @@ private:
 	static	BCursor* fMoveArrow;
 	static	BCursor* fLeftRight;
 };
+
 #endif

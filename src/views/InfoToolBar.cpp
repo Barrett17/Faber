@@ -3,6 +3,7 @@
  * Distributed under the terms of the MIT License.
  */
 
+#include "FaberResources.h"
 #include "InfoToolBar.h"
 
 #include <LayoutBuilder.h>
@@ -21,6 +22,15 @@ InfoToolBar::InfoToolBar()
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
 	.Add(fPointerTextView)
+
+	.AddGlue()
+	.Add(_BuildButton(B_TRANSLATE("Zoom in"), new BMessage(ZOOM_IN), kZoomInIcon))
+	.Add(_BuildButton(B_TRANSLATE("Zoom out"), new BMessage(ZOOM_OUT), kZoomOutIcon))
+	.Add(_BuildButton(B_TRANSLATE("Zoom to selection"), new BMessage(ZOOM_SELECTION), kZoomToSelectionIcon))
+	.Add(_BuildButton(B_TRANSLATE("Zoom full wave"), new BMessage(ZOOM_FULL), kZoomFullWaveIcon))
+	.Add(_BuildButton(B_TRANSLATE("Zoom to left pointer"), new BMessage(ZOOM_LEFT), kZoomInIcon))
+	.Add(_BuildButton(B_TRANSLATE("Zoom to right pointer"), new BMessage(ZOOM_RIGHT), kZoomInIcon))
+	.AddStrut(5.0f)
 	.End();
 }
 
@@ -45,4 +55,16 @@ InfoToolBar::Pulse()
 		pointer = p;
 		fPointerTextView->SetText(BString() << p);
 	}
+}
+
+
+IconButton*
+InfoToolBar::_BuildButton(const char* tip, BMessage* message, int32 resourceID)
+{
+	IconButton* button = new IconButton(NULL, 0, NULL, message, this);
+	// Well those could go into the constructor, but no reason for now.
+	button->SetToolTip(tip);
+	button->SetIcon(resourceID);
+	button->TrimIcon();
+	return button;
 }

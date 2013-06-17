@@ -29,36 +29,37 @@
 #ifndef ANALYZE_DIALOGS_H
 #define ANALYZE_DIALOGS_H
 
-#include <Application.h>
-#include <AppKit.h>
-#include <InterfaceKit.h>
-#include <String.h>
+#include <Window.h>
+#include <View.h>
 
 #include "AnalyzeWindow.h"
-#include "SpinControl.h"
-#include "SpinSlider.h"
+
 
 #define QUIT			'quit'
 #define SET				'setF'
 
-// ---------------------------------------- SpectrumAnalyzer
-class SpectrumWindow : public AnalyzeWindow {
-  public:
-	SpectrumWindow();
-	virtual void PlayBuffer(float *, size_t);
 
-  private:
-	BView *view;
-};
-
-// ---------------------------------------- SampleScope
-class SampleScopeWindow : public AnalyzeWindow {
+// SpectrumAnalyzer
+class SpectrumWindow : public AnalyzeWindow
+{
 public:
-   SampleScopeWindow();
-	virtual void PlayBuffer(float *, size_t);
+					SpectrumWindow();
+	virtual void	PlayBuffer(float *, size_t);
 
 private:
-	BView *view;
+			BView* view;
+};
+
+
+// SampleScope
+class SampleScopeWindow : public AnalyzeWindow
+{
+public:
+					SampleScopeWindow();
+	virtual void	PlayBuffer(float *, size_t);
+
+private:
+			BView*	view;
 };
 
 #endif

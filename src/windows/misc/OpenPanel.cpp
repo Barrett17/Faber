@@ -119,14 +119,7 @@ void OpenPanel::SelectionChanged(void)
 {
 	status_t err;
 	entry_ref ref;
-	
-	if (mSndFile) {
-		delete mSndFile;
-		mSndFile = NULL;
-		mPlayBtn->SetEnabled(false);
-		line1->SetText("");
-		line2->SetText("");
-	}
+
 	// Rewind() is essential to make sure GetNextSelectedRef()
 	// gets the first in the list of selected refs --
 	// even if there's only one selected!
@@ -201,6 +194,15 @@ void OpenPanel::SelectionChanged(void)
 				line2->SetText("");
 			}
 		}
+	}
+
+	// This is needed to close the BFileGameSound node
+	if (mSndFile) {
+		delete mSndFile;
+		mSndFile = NULL;
+		mPlayBtn->SetEnabled(false);
+		line1->SetText("");
+		line2->SetText("");
 	}
 }
 

@@ -5,11 +5,21 @@
 #ifndef _TRACKS_MANAGER_H
 #define _TRACKS_MANAGER_H
 
-class Track {
+#include "AudioTrack.h"
+
+
+class TracksManager {
 public:
 
-private:
+	// The loneNode argument will allow to create separate outputs
+	// for tracks
+	//void RegisterTrack(AudioTrack* track);
+	//void UnregisterTrack(AudioTrack* track);
 
+	
+
+private:
+	//AudioTrackList fTrackList;
 };
 
 #endif

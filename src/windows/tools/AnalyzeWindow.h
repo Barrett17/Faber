@@ -29,32 +29,31 @@
 #ifndef ANALYZE_WINDOW_H
 #define ANALYZE_WINDOW_H
 
-#include <Application.h>
-#include <AppKit.h>
-#include <InterfaceKit.h>
-#include <String.h>
-#include "SpinControl.h"
-#include "SpinSlider.h"
+#include <Window.h>
+#include <View.h>
 
-class AnalyzeWindow : public BWindow {
+
+class AnalyzeWindow : public BWindow
+{
   public:
-	AnalyzeWindow(BRect rect, const char *name);
-	virtual void MessageReceived(BMessage*);
-	virtual bool QuitRequested();
+					AnalyzeWindow(BRect rect, const char *name);
+	virtual void	MessageReceived(BMessage*);
+	virtual bool	QuitRequested();
 	
 	// The actual data to analyze !
-	virtual void PlayBuffer(float *, size_t);
+	virtual void	PlayBuffer(float *, size_t);
 
-	int32 FramesPerSecond();
+			int32	FramesPerSecond();
 	
 	// The refresh rate of the data to display
 	// default set to 25/second
-	void SetFramesPerSecond(int32 frames);
+			void	SetFramesPerSecond(int32 frames);
 
   private:
-	static void _PlayBuffer(float *, size_t, void *);
-	int32 m_frames, m_count;
-	int32 m_index;
+	static void		_PlayBuffer(float *, size_t, void *);
+
+	int32			m_frames, m_count;
+	int32			m_index;
 };
 
 #endif

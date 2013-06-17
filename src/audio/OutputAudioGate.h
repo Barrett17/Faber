@@ -17,11 +17,13 @@ class FilterHook {
 public:
 	void*	hook(float* size_t, void*);
 	void*	cookie;
-}
+};
 
 class OutputAudioGate : public MediaGate {
 public:
-									OutputAudioGate(TracksManager* fTracksManager);
+									OutputAudioGate(
+										TracksManager* fTracksManager);
+
 			virtual					~OutputAudioGate();
 
 			status_t 				Start();

@@ -5,11 +5,14 @@
 #ifndef _MEDIA_GATE_H
 #define _MEDIA_GATE_H
 
+#include <SupportDefs.h>
+
+
 class MediaGate {
 public:
 
-	virtual status_t Start();
-	virtual status_t Stop();
+	virtual status_t Start() = 0;
+	virtual status_t Stop() = 0;
 
 	bool	IsStarted() const;
 	// used to set a filter before to
@@ -23,7 +26,7 @@ public:
 	/*
 
 	*/
-private:
+protected:
 	bool fStarted;
 };
 

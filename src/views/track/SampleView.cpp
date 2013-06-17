@@ -35,7 +35,7 @@
 #include "PeakFile.h"
 #include "BitmapDrawer.h"
 #include "Shortcut.h"
-#include "MyClipBoard.h"
+//#include "MyClipBoard.h"
 #include "WindowsManager.h"
 #include "MouseIcons.h"
 
@@ -363,15 +363,15 @@ void SampleView::MouseDown(BPoint p)
 			/* Do the selecting */
 			if (button == B_SECONDARY_MOUSE_BUTTON)
 			{																/* show a pop-up menu here */
-				BMenuItem *menuItem;
+				/*BMenuItem *menuItem;
 				BPopUpMenu *menu = new BPopUpMenu("");
 
-				/*menu->AddItem(new BMenuItem(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
-				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE_MAN), KeyBind.GetKey("TRANSPORT_PAUSE"), KeyBind.GetMod("TRANSPORT_PAUSE")));
+				//menu->AddItem(new BMenuItem(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
+				//menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE_MAN), KeyBind.GetKey("TRANSPORT_PAUSE"), KeyBind.GetMod("TRANSPORT_PAUSE")));
 				//if (((FaberWindow*)Pool.mainWindow)->transport_view->pause->Value() == B_CONTROL_ON)
 				//	menuItem->SetMarked(true);
-				menu->AddItem(new BMenuItem(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), KeyBind.GetKey("TRANSPORT_STOP"), KeyBind.GetMod("TRANSPORT_STOP")));
-				menu->AddSeparatorItem();*/
+				//menu->AddItem(new BMenuItem(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), KeyBind.GetKey("TRANSPORT_STOP"), KeyBind.GetMod("TRANSPORT_STOP")));
+				//menu->AddSeparatorItem();
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
 				menuItem->SetEnabled(Pool.selection != NONE);
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy & Silence"), new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
@@ -422,7 +422,7 @@ void SampleView::MouseDown(BPoint p)
 				menu->SetTargetForItems(Window());
 				menuItem = menu->Go(p, true, false, true); 
 //				if ( menuItem && menuItem->Message())
-//					Window()->PostMessage(menuItem->Message());
+//					Window()->PostMessage(menuItem->Message());*/
 
 			}
 			// Check for extending the selection
@@ -511,7 +511,7 @@ void SampleView::MouseDown(BPoint p)
 	{
 		if (Prefs.tool_mode == DRAW_TOOL && clicks == 1){
 			// save undo data
-			Hist.Save(H_REPLACE, Pool.l_pointer, Pool.r_pointer);
+			//Hist.Save(H_REPLACE, Pool.l_pointer, Pool.r_pointer);
 			 WindowsManager::MainWindow()->UpdateMenu();
 
 			edit_channel = NONE;	// needed to track stereo editing
@@ -619,10 +619,10 @@ void SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 			r.left = p.x;
 			r.right = p.x+1;
 				
-			if (modifiers() & B_COMMAND_KEY)
+			/*if (modifiers() & B_COMMAND_KEY)
 				ClipBoard.Cut(true);
 			else
-				ClipBoard.Copy();
+				ClipBoard.Copy();*/
 
 			BMessage msg(DROP_PASTE);
 			DragMessage(&msg, r);

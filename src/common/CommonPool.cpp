@@ -30,7 +30,7 @@
 #include "WindowsManager.h"
 #include "CommonPool.h"
 
-#include "MyClipBoard.h"
+//#include "MyClipBoard.h"
 #include "FaberWindow.h"
 
 #include <stdio.h>
@@ -101,8 +101,8 @@ CommonPool::~CommonPool(){
 	if (sample_memory)
 		free(sample_memory);
 
-
-//	if (tt)	delete tt;
+	if (player)
+		delete player;
 }
 
 
@@ -187,7 +187,7 @@ bool CommonPool::PrepareFilter()
 
 	if (selection == NONE)
 		 WindowsManager::MainWindow()->SelectAll();	// select all if noe is selected
-	ClipBoard.SaveUndo();			// save undo data
+	//ClipBoard.SaveUndo();			// save undo data
 
 	return true;
 }

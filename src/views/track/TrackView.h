@@ -12,8 +12,8 @@
 #include <View.h>
 
 #include "Globals.h"
-
 #include "SampleView.h"
+#include "Track.h"
 
 
 class TrackView : public BView
@@ -37,26 +37,22 @@ public:
 			void			Unselect();
 
 
-	virtual const BString&	Name() const;
-	virtual void 			SetName(const char* name);
+	virtual const BString&	Name() const = 0;
+	virtual void 			SetName(const char* name) = 0;
 
-	virtual float			Volume() const;
-	virtual void			SetVolume(float volume);
+	virtual float			Volume() const = 0;
+	virtual void			SetVolume(float volume) = 0;
 
-	virtual void	 		MuteTrack(bool mute);
-	virtual bool 			IsMute() const;
+	virtual void	 		MuteTrack(bool mute) = 0;
+	virtual bool 			IsMute() const = 0;
 
-	virtual void			SetSolo(bool solo);
-	virtual bool			IsSolo() const;
+	virtual void			SetSolo(bool solo) = 0;
+	virtual bool			IsSolo() const = 0;
 
 	virtual	void			Invalidate() = 0;
 	virtual void			Pulse() = 0;
-private:
-			bool			fMuted;
-			bool			fSolo;
-			BString			fName;
-			float			fVolume;
 
+private:
 			int64			fStart;
 			int64			fEnd;
 

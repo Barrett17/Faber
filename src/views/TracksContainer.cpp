@@ -15,6 +15,7 @@ TracksContainer::TracksContainer()
 {
 	fTimeBar = new TimeBarView();
 	GroupLayout()->AddView(fTimeBar);
+	GroupLayout()->SetInsets(10, 10, 10, 10);
 
 	AddTrack(new AudioTrackView());
 	//AddTrack(new AudioTrackView());

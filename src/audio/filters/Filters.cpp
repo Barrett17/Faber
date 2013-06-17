@@ -374,7 +374,7 @@ void DoTrim()
 	if (Pool.sample_type == NONE || Pool.selection == NONE)	return;
 	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);		// stop playing
 
-	Hist.Save(H_FULL, 0, Pool.size);	// full undo
+	//Hist.Save(H_FULL, 0, Pool.size);	// full undo
 
 	if (Pool.pointer != 0){			// copy to begin of memory
 		float *src = Pool.sample_memory + Pool.pointer*Pool.sample_type;
@@ -419,7 +419,7 @@ void DoResample()
 	Pool.player->Stop();
 	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP); // stop playing
 
-	Hist.Save(H_FULL, 0, Pool.size);	// full undo
+	//Hist.Save(H_FULL, 0, Pool.size);	// full undo
 
 	app_info info;
 	be_app->GetAppInfo(&info);

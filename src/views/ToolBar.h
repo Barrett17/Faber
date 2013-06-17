@@ -47,14 +47,13 @@ private:
 								int32 resourceID);
 
 			PeakView*		fOutputPeakView;
-			PeakView*		fInputPeakView;
 
 			IconButton*		fPlayButton;
-			IconButton*		fPauseButton;
 			IconButton*		fStopButton;
 			IconButton*		fLoopButton;
 
 			IconButton*		fToolButtons[3];
+			bool			fPlaying;
 };
 
 #endif
