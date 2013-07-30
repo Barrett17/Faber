@@ -197,11 +197,9 @@ FaberApp::RefsReceived(BMessage* message)
 	bool temp_pause = play_cookie.pause;;
 
 	ref_num=0;
-	if (message->FindRef("refs",ref_num, &ref) == B_OK)
-	{
+	if (message->FindRef("refs",ref_num, &ref) == B_OK) {
 		BMediaFile		inFile(&ref);
-		if (inFile.InitCheck() == B_OK)
-		{
+		if (inFile.InitCheck() == B_OK) {
 			char s[B_FILE_NAME_LENGTH +20];
 			sprintf(s, "Faber - %s", ref.name);
 			fFaberWindow->SetTitle(s);
@@ -217,8 +215,7 @@ FaberApp::RefsReceived(BMessage* message)
 				BMediaTrack *inTrack = inFile.TrackAt(i);
 				inTrack->EncodedFormat(&format);
 
-				if (format.IsAudio()) 
-				{
+				if (format.IsAudio()) {
 					audTrack = inTrack;
 					inTrack->DecodedFormat(&format);
 
@@ -245,9 +242,7 @@ FaberApp::RefsReceived(BMessage* message)
 					
 					Pool.sample_memory = (float*) malloc((size_t) (Pool.size * channels * 4 + 1024));
 		
-				}
-				else
-				{
+				} else {
 					inFile.ReleaseAllTracks();
 				}
 			}
@@ -262,18 +257,15 @@ FaberApp::RefsReceived(BMessage* message)
 
 			float *mem = Pool.sample_memory;									// dest memory
 			// read audio from source and write to destination, if necessary
-			if (mem) 
-			{
+			if (mem) {
 				frameCount = audTrack->CountFrames();
 				int64 count =0;
 				lastPercent = -1;
-				for (int64 i = 0; i < frameCount; i += framesRead) 
-				{
+				for (int64 i = 0; i < frameCount; i += framesRead) {
 					
 					// clear buffer first
 					memset( buffer, 0, format.u.raw_audio.buffer_size);
-					if ((err = audTrack->ReadFrames(buffer, &framesRead, &mh)) != B_OK) 
-					{
+					if ((err = audTrack->ReadFrames(buffer, &framesRead, &mh)) != B_OK) {
 						printf("Error reading audio frames: %s\n", strerror(err));
 						break;
 					}
@@ -286,91 +278,97 @@ FaberApp::RefsReceived(BMessage* message)
 					// replace the numbers in case with appropriate values.
 					switch(format.u.raw_audio.format)
 					{
-					case media_raw_audio_format::B_AUDIO_FLOAT:	// 0 == mid, -1.0 == bottom, 1.0 == top (the preferred format for non-game audio)
-					{	
-						float *tmp = (float*) buffer;
-						float x;
-						for (int32 count = 0; count<framesRead*channels; count++)
-						{
-							x = *tmp++;
-							if (x<-1.0)
-								x = -1.0;
-							else if (x>1.0)	
-								x = 1.0;
-							*mem++ = x;
-						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_INT:	// 0 == mid, 0x80000001 == bottom, 0x7fffffff == top (all >16-bit formats, left-adjusted)
-					{	
-						int32 *tmp = (int32*)buffer;
-						float x;
-						for (int32 count = 0; count<framesRead*channels; count++)
-						{
-							x = ((float) *tmp++) / ((float) 0x80000000);
-							if (x<-1.0)
-								x = -1.0;
-							else if (x>1.0)	
-								x = 1.0;
-							*mem++ = x;
-						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_SHORT:	// 0 == mid, -32767 == bottom, +32767 == top
-					{	
-						int16 *tmp = (int16*)buffer;
-						float x;
-						for (int32 count = 0; count<framesRead*channels; count++)
-						{
-							x = ((float) *tmp++) / ((float) 32767.0);
-							if (x<-1.0)
-								x = -1.0;
-							else if (x>1.0)	
-								x = 1.0;
-							*mem++ = x;
-						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_UCHAR:	// 128 == mid, 1 == bottom, 255 == top (discouraged but supported format)
-					{	
-						uint8 *tmp = (uint8*)buffer;
-						float x;
-						for (int32 count = 0; count<framesRead*channels; count++)
-						{
-							x = ((float) *tmp++) / ((float) 127.0) - ((float) 1.0);
-							if (x<-1.0)
-								x = -1.0;
-							else if (x>1.0)	
-								x = 1.0;
-							*mem++ = x;
-						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_CHAR:		// 0 == mid, -127 == bottom, +127 == top (not officially supported format)
-					{	
-						int8 *tmp = (int8*)buffer;
-						float x;
-						for (int32 count = 0; count<framesRead*channels; count++)
-						{
-							x = ((float) *tmp++) / ((float) 127.0);		// xor 128 to invert sign bit
-							if (x<-1.0)
-								x = -1.0;
-							else if (x>1.0)	
-								x = 1.0;
-							*mem++ = x;
-						}
-					}	break;
 
-					/*case media_raw_audio_format::B_AUDIO_DOUBLE:
-					{	
-						int8 *tmp = (int8*)buffer;
-						float x;
-						for (int32 count = 0; count<framesRead*channels; count++)
-						{
-							x = ((double) *tmp++) / ((float) 127.0);		// xor 128 to invert sign bit
-							if (x<-1.0)
-								x = -1.0;
-							else if (x>1.0)	
-								x = 1.0;
-							*mem++ = x;
+						case media_raw_audio_format::B_AUDIO_FLOAT:	// 0 == mid, -1.0 == bottom, 1.0 == top (the preferred format for non-game audio)
+						{	
+							float *tmp = (float*) buffer;
+							float x;
+							for (int32 count = 0; count<framesRead*channels; count++) {
+								x = *tmp++;
+								if (x<-1.0)
+									x = -1.0;
+								else if (x>1.0)	
+									x = 1.0;
+								*mem++ = x;
+							}
+							break;
 						}
-					}	break;*/
+	
+						case media_raw_audio_format::B_AUDIO_INT:	// 0 == mid, 0x80000001 == bottom, 0x7fffffff == top (all >16-bit formats, left-adjusted)
+						{	
+							int32 *tmp = (int32*)buffer;
+							float x;
+							for (int32 count = 0; count<framesRead*channels; count++) {
+								x = ((float) *tmp++) / ((float) 0x80000000);
+								if (x<-1.0)
+									x = -1.0;
+								else if (x>1.0)	
+									x = 1.0;
+								*mem++ = x;
+							}
+							break;
+						}
+	
+						case media_raw_audio_format::B_AUDIO_SHORT:	// 0 == mid, -32767 == bottom, +32767 == top
+						{	
+							int16 *tmp = (int16*)buffer;
+							float x;
+							for (int32 count = 0; count<framesRead*channels; count++) {
+								x = ((float) *tmp++) / ((float) 32767.0);
+								if (x<-1.0)
+									x = -1.0;
+								else if (x>1.0)	
+									x = 1.0;
+								*mem++ = x;
+							}
+							break;
+						}
+	
+						case media_raw_audio_format::B_AUDIO_UCHAR:	// 128 == mid, 1 == bottom, 255 == top (discouraged but supported format)
+						{	
+							uint8 *tmp = (uint8*)buffer;
+							float x;
+							for (int32 count = 0; count<framesRead*channels; count++)
+							{
+								x = ((float) *tmp++) / ((float) 127.0) - ((float) 1.0);
+								if (x<-1.0)
+									x = -1.0;
+								else if (x>1.0)	
+									x = 1.0;
+								*mem++ = x;
+							}
+							break;
+						}
+	
+						case media_raw_audio_format::B_AUDIO_CHAR:		// 0 == mid, -127 == bottom, +127 == top (not officially supported format)
+						{	
+							int8 *tmp = (int8*)buffer;
+							float x;
+							for (int32 count = 0; count<framesRead*channels; count++) {
+								x = ((float) *tmp++) / ((float) 127.0);		// xor 128 to invert sign bit
+								if (x<-1.0)
+									x = -1.0;
+								else if (x>1.0)	
+									x = 1.0;
+								*mem++ = x;
+							}
+							break;
+						}
+	
+						/*case media_raw_audio_format::B_AUDIO_DOUBLE:
+						{	
+							int8 *tmp = (int8*)buffer;
+							float x;
+							for (int32 count = 0; count<framesRead*channels; count++) {
+								x = ((double) *tmp++) / ((float) 127.0);		// xor 128 to invert sign bit
+								if (x<-1.0)
+									x = -1.0;
+								else if (x>1.0)	
+									x = 1.0;
+								*mem++ = x;
+							}
+							break;
+						}*/
 					}
 
 					WindowsManager::Get()->ProgressUpdate((int32) framesRead);
@@ -381,9 +379,9 @@ FaberApp::RefsReceived(BMessage* message)
 						lastPercent = currPercent;
 				}
 				inFile.ReleaseAllTracks();
-			}
-			else
-			{
+
+			} else {
+
 				Pool.pointer = 0;
 				Pool.l_pointer = 0;
 				Pool.r_pointer = 0;
@@ -424,9 +422,7 @@ FaberApp::RefsReceived(BMessage* message)
 			if (IsLaunching() && Prefs.play_when_loaded)
 				fFaberWindow->PostMessage(TRANSPORT_PLAY);
 			
-		}
-		else
-		{
+		} else {
 			(new BAlert(NULL,B_TRANSLATE("This file is not supported!"),B_TRANSLATE("OK")))->Go();
 		}
 	}
@@ -447,7 +443,8 @@ FaberApp::RefsReceived(BMessage* message)
 //------------------------------------------------------------------ Save
 
 void
-FaberApp::Save(BMessage *message){
+FaberApp::Save(BMessage *message)
+{
 	// Grab the stuff we know is there .. or should be :P
 
 	entry_ref dir_ref, file_ref;
@@ -530,61 +527,69 @@ FaberApp::Save(BMessage *message){
 					// fill up the buffer
 
 					int32 block = MIN( (int32) (save_end-i) , buffer_step);
-					switch(format.u.raw_audio.format){
-					case media_raw_audio_format::B_AUDIO_FLOAT:	// 0 == mid, -1.0 == bottom, 1.0 == top (the preferred format for non-game audio)
-					{	
-						float *tmp = (float*)buffer;
-						for (int32 count = 0; count<block*channels; count++){
-							*tmp++ = *mem++;
+					switch(format.u.raw_audio.format)
+					{
+
+						case media_raw_audio_format::B_AUDIO_FLOAT:	// 0 == mid, -1.0 == bottom, 1.0 == top (the preferred format for non-game audio)
+						{	
+							float *tmp = (float*)buffer;
+							for (int32 count = 0; count<block*channels; count++) {
+								*tmp++ = *mem++;
+							}
+							break;
+						}	
+	
+						case media_raw_audio_format::B_AUDIO_INT:	// 0 == mid, 0x80000001 == bottom, 0x7fffffff == top (all >16-bit formats, left-adjusted)
+						{	
+							int32 *tmp = (int32*) buffer;
+							for (int32 count = 0; count<block*channels; count++) {
+								t = *mem++;
+								*tmp++ = (int32) ROUND(t * (float) 0x7fffffff);
+							}
+							break;
 						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_INT:	// 0 == mid, 0x80000001 == bottom, 0x7fffffff == top (all >16-bit formats, left-adjusted)
-					{	
-						int32 *tmp = (int32*) buffer;
-						for (int32 count = 0; count<block*channels; count++)
-						{
-							t = *mem++;
-							*tmp++ = (int32) ROUND(t * (float) 0x7fffffff);
+	
+						case media_raw_audio_format::B_AUDIO_SHORT:	// 0 == mid, -32767 == bottom, +32767 == top
+						{	
+							int16 *tmp = (int16*) buffer;
+							for (int32 count = 0; count<block*channels; count++) {
+								t = *mem++;
+								*tmp++ = (int16) ROUND(t * 32767.0);
+							}
+							break;
+						}	
+	
+						case media_raw_audio_format::B_AUDIO_UCHAR:	// 128 == mid, 1 == bottom, 255 == top (discouraged but supported format)
+						{	
+							uint8 *tmp = (uint8*)buffer;
+							for (int32 count = 0; count<block*channels; count++) {
+								t = *mem++;
+								*tmp = (uint8) ROUND(t*127.0);
+								tmp++;
+								*tmp = *tmp ^ 0x80;
+							}
+							break;
 						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_SHORT:	// 0 == mid, -32767 == bottom, +32767 == top
-					{	
-						int16 *tmp = (int16*) buffer;
-						for (int32 count = 0; count<block*channels; count++)
-						{
-							t = *mem++;
-							*tmp++ = (int16) ROUND(t * 32767.0);
+	
+						case media_raw_audio_format::B_AUDIO_CHAR:		// 0 == mid, -127 == bottom, +127 == top (not officially supported format)
+						{	
+							int8 *tmp = (int8*)buffer;
+							for (int32 count = 0; count<block*channels; count++) {
+								t = *mem++;
+								*tmp++ = (int8) ROUND(t * 127.0);		// xor 128 to invert sign bit
+							}
+							break;
 						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_UCHAR:	// 128 == mid, 1 == bottom, 255 == top (discouraged but supported format)
-					{	
-						uint8 *tmp = (uint8*)buffer;
-						for (int32 count = 0; count<block*channels; count++)
-						{
-							t = *mem++;
-							*tmp = (uint8) ROUND(t*127.0);
-							tmp++;
-							*tmp = *tmp ^ 0x80;
-						}
-					}	break;
-					case media_raw_audio_format::B_AUDIO_CHAR:		// 0 == mid, -127 == bottom, +127 == top (not officially supported format)
-					{	
-						int8 *tmp = (int8*)buffer;
-						for (int32 count = 0; count<block*channels; count++)
-						{
-							t = *mem++;
-							*tmp++ = (int8) ROUND(t * 127.0);		// xor 128 to invert sign bit
-						}
-					}	break;
-					/*case media_raw_audio_format::B_AUDIO_DOUBLE:
-					{	
-						int8 *tmp = (int8*)buffer;
-						for (int32 count = 0; count<block*channels; count++)
-						{
-							t = *mem++;
-							*tmp++ = (double) ROUND(t * 127.0);		// xor 128 to invert sign bit
-						}
-					}	break;*/
+	
+						/*case media_raw_audio_format::B_AUDIO_DOUBLE:
+						{	
+							int8 *tmp = (int8*)buffer;
+							for (int32 count = 0; count<block*channels; count++) {
+								t = *mem++;
+								*tmp++ = (double) ROUND(t * 127.0);		// xor 128 to invert sign bit
+							break;
+							}
+						}	*/
 					}
 
 					WindowsManager::Get()->ProgressUpdate(block);
@@ -614,9 +619,8 @@ FaberApp::Save(BMessage *message){
 			free(buffer);
 			WindowsManager::Get()->HideProgress();
 		}
-	}
-	else
-	{
+
+	} else {
 		(new BAlert(NULL, B_TRANSLATE("This project has changed. Do you want to save it now?"), B_TRANSLATE("OK")))->Go();
 	}
 
