@@ -80,7 +80,7 @@ private:
 
 	friend class SampleView;
 
-
+			BMenu*				fTracksMenu;
 	// TODO polish them
 	BMenu		*fEditMenu, *menu_transform, *menu_zero, *menu_analyze, *menu_generate;
 	BMenuItem	*fSaveMenu, *fSaveAsMenu, *mn_save_sel, *mn_undo, *mn_cut, *mn_copy;

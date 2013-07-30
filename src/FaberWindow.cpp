@@ -187,8 +187,6 @@ FaberWindow::MessageReceived(BMessage *message)
 	uint32 msg;
 	float y;
 
-//	message->PrintToStream();
-
 	switch (message->what)
 	{
 
@@ -302,79 +300,112 @@ FaberWindow::MessageReceived(BMessage *message)
 	}	break;
 	
 	case PASTE_MIXED:
-		//ClipBoard.PasteMix();		// ClipBoard handles redrawing and dialogs
+		// ClipBoard handles redrawing and dialogs
+		//ClipBoard.PasteMix();		
 		break;
 
 	case B_MOUSE_WHEEL_CHANGED:
-		message->FindFloat("be:wheel_delta_y", &y);
-		if (y==-1)	PostMessage(ZOOM_IN);
-		if (y==1)	PostMessage(ZOOM_OUT);
+	{
+			message->FindFloat("be:wheel_delta_y", &y);
+			if (y==-1)
+				PostMessage(ZOOM_IN);
+
+			if (y==1)
+				PostMessage(ZOOM_OUT);
 		break;
+	}
 
 	case ZOOM_IN:
-		if (Pool.size == 0)	break;
+	{
+		if (Pool.size == 0)
+			break;
+
 		x = Pool.r_pointer - Pool.l_pointer;
 		
-		//if (x < fTrackView->Bounds().Width()/64)	break;
+		if (x < fTracksContainer->CurrentTrack()->Bounds().Width()/64)
+			break;
 		
 		x /= 2;
-		if (x < 1)	x = 1;
 
-		Pool.l_pointer = Pool.l_pointer +x/2;				// window to selection
-		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
+		if (x < 1)
+			x = 1;
+
+		// window to selection
+		Pool.l_pointer = Pool.l_pointer +x/2;				
+
+		if (Pool.l_pointer<0)
+			Pool.l_pointer = 0;
+
 		Pool.r_pointer = Pool.l_pointer + x;
-		if (Pool.r_pointer > Pool.size){
+
+		if (Pool.r_pointer > Pool.size) {
 			Pool.r_pointer = Pool.size;
 			Pool.l_pointer = Pool.r_pointer - x;
 			if (Pool.l_pointer<0)
 				Pool.l_pointer = 0;
 		}
-		
+
 		UpdateMenu();
 		RedrawWindow();
 		break;
+	}
+
 	case ZOOM_OUT:
-		if (Pool.size == 0)	break;
+	{
+		if (Pool.size == 0)
+			break;
+
 		x = (Pool.r_pointer - Pool.l_pointer)+1;
 		x *= 2;
-		if (x > Pool.size)	x = Pool.size;
 
-		Pool.l_pointer = Pool.l_pointer -x/4;				// window to selection
-		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
+		if (x > Pool.size)
+			x = Pool.size;
+
+		// window to selection
+		Pool.l_pointer = Pool.l_pointer -x/4;				
+		if (Pool.l_pointer<0)
+			Pool.l_pointer = 0;
+
 		Pool.r_pointer = Pool.l_pointer + x;
-		if (Pool.r_pointer > Pool.size){
+
+		if (Pool.r_pointer > Pool.size) {
 			Pool.r_pointer = Pool.size;
 			Pool.l_pointer = Pool.r_pointer - x;
 			if (Pool.l_pointer<0)
 				Pool.l_pointer = 0;
 		}
 		UpdateMenu();
-		
 		RedrawWindow();
 		break;
+	}
+
 	case ZOOM_FULL:
-		if (Pool.size == 0)	break;
+	{
+		if (Pool.size == 0)
+			break;
+
 		Pool.l_pointer = 0;
 		Pool.r_pointer = Pool.size;
 		UpdateMenu();
 		
 		RedrawWindow();
 		break;
+	}
+
 	case ZOOM_SELECTION:
-		if (Pool.size == 0)	break;
+	{
+		if (Pool.size == 0)
+			break;
+
 		if (Pool.selection != NONE){
 			Pool.l_pointer = Pool.pointer;
 			Pool.r_pointer = Pool.r_sel_pointer;
 		}
 		UpdateMenu();
-		
 		RedrawWindow();
 		break;
+	}
 
-	// To re enable these we have to
-	// create a way to identify the
-	// track currently selected.
-	// That looks like a good job for TracksContainer.
 	case ZOOM_LEFT:
 		/*if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = fTrackView->Bounds().IntegerWidth()/6;
@@ -424,13 +455,15 @@ FaberWindow::MessageReceived(BMessage *message)
 	case TRANSPORT_REW:
 		x = Pool.r_pointer - Pool.l_pointer;
 		Pool.pointer -= x/40;
-		if (Pool.pointer <0)	Pool.pointer = 0;
-		if (Pool.pointer < Pool.l_pointer){
+		if (Pool.pointer <0)
+			Pool.pointer = 0;
+
+		if (Pool.pointer < Pool.l_pointer) {
 			Pool.l_pointer -= x/10;
-			if (Pool.l_pointer <0)	Pool.l_pointer = 0;
+			if (Pool.l_pointer <0)
+				Pool.l_pointer = 0;
 		}
 		Pool.r_pointer = Pool.l_pointer + x;
-		
 		RedrawWindow();
 		break;
 
@@ -446,19 +479,21 @@ FaberWindow::MessageReceived(BMessage *message)
 	case TRANSPORT_FWD:
 		x = Pool.r_pointer - Pool.l_pointer;
 		Pool.pointer += x/40;
-		if (Pool.pointer >Pool.size)	Pool.pointer = Pool.size;
-		if (Pool.pointer > Pool.r_pointer){
+		if (Pool.pointer >Pool.size)
+			Pool.pointer = Pool.size;
+
+		if (Pool.pointer > Pool.r_pointer) {
 			Pool.r_pointer += x/10;
-			if (Pool.r_pointer >Pool.size)	Pool.r_pointer = Pool.size;
+			if (Pool.r_pointer >Pool.size)
+				Pool.r_pointer = Pool.size;
 		}
 		Pool.l_pointer = Pool.r_pointer - x;
-		
 		RedrawWindow();
 		break;
 
 	case TRANSPORT_FWD_ALL:
 		x = Pool.r_pointer - Pool.l_pointer;
-		Pool.pointer = Pool.size;;
+		Pool.pointer = Pool.size;
 		Pool.r_pointer = Pool.pointer;
 		Pool.l_pointer = Pool.pointer - x;
 		
@@ -480,8 +515,10 @@ FaberWindow::MessageReceived(BMessage *message)
 	case TRANSPORT_LEFT:
 		x = Pool.r_pointer - Pool.l_pointer;
 		Pool.l_pointer -= x/2;
-		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
-			Pool.r_pointer = Pool.l_pointer + x;
+		if (Pool.l_pointer<0)
+			Pool.l_pointer = 0;
+
+		Pool.r_pointer = Pool.l_pointer + x;
 		
 		RedrawWindow();
 		break;
@@ -489,8 +526,10 @@ FaberWindow::MessageReceived(BMessage *message)
 	case TRANSPORT_RIGHT:
 		x = Pool.r_pointer - Pool.l_pointer;
 		Pool.l_pointer += x/2;
+
 		if (Pool.l_pointer>(Pool.size-x))
 			Pool.l_pointer = Pool.size-x;
+
 		Pool.r_pointer = Pool.l_pointer + x;
 		
 		RedrawWindow();
@@ -727,7 +766,10 @@ FaberWindow::UpdateMenu()
 	}
 	
 	if (Prefs.repeat_message)
-		menu_transform->AddItem(menuItem = new BMenuItem(B_TRANSLATE(Prefs.repeat_tag.String()), new BMessage(RUN_LAST_FILTER), KeyBind.GetKey("REPEAT_ACTION"), KeyBind.GetMod("REPEAT_ACTION")));
+		menu_transform->AddItem(
+			menuItem = new BMenuItem(B_TRANSLATE(Prefs.repeat_tag.String()),
+				new BMessage(RUN_LAST_FILTER), KeyBind.GetKey("REPEAT_ACTION"),
+				KeyBind.GetMod("REPEAT_ACTION")));
 
 // transform menu
 
@@ -934,6 +976,11 @@ FaberWindow::_BuildMenu()
 	fEditMenu->AddItem(mn_set_freq = new BMenuItem(B_TRANSLATE("Change frequency..."), new BMessage(SET_FREQUENCY), KeyBind.GetKey("SET_FREQ"), KeyBind.GetMod("SET_FREQ")));
 
 	fEditMenu->AddItem(mn_resample = new BMenuItem(B_TRANSLATE("Resample"), new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
+
+	fTracksMenu = new BMenu(B_TRANSLATE("Tracks"));
+	fMainMenuBar->AddItem(fTracksMenu);
+	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("Add Empty Track"), new BMessage(), KeyBind.GetKey(""), KeyBind.GetMod("")));
+	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("Import Audio File as Track"), new BMessage(), KeyBind.GetKey(""), KeyBind.GetMod("")));
 
 	menu_transform = new BMenu(B_TRANSLATE("Effects"));
 	fMainMenuBar->AddItem(menu_transform);
