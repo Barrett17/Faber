@@ -70,9 +70,9 @@ private:
 							BRect r, int32 size, int32 size2);
 
  	BBitmap*		OffScreen;
- 	BBitmap*		leftCache,
+ 	BBitmap*		leftCache;
  	BBitmap*		rightCache;
- 	BBitmap*		leftSelected
+ 	BBitmap*		leftSelected;
  	BBitmap*		rightSelected;
  
 	BPoint 			old;
@@ -85,7 +85,7 @@ private:
  	rgb_color*		screenBits;
 	
  	int32			leftWidth;
- 	int32			rightWidth
+ 	int32			rightWidth;
  	int32			screenWidth;
 	int32			edit_channel;
 	

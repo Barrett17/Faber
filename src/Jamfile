@@ -96,10 +96,7 @@ Application Faber :
 	OutputAudioGate.cpp
 
 	# Audio nodes
-	SoundPlayer.cpp
-	SoundUtils.cpp
-	SoundPlayNode.cpp
-	SoundConsumer.cpp	
+	FaberNode.cpp
 
 	# filters
 	AmplifierFilter.cpp
