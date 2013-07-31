@@ -28,35 +28,41 @@
 
 #ifndef _PEAK_FILE_H
 #define _PEAK_FILE_H
+
 #include <stdlib.h>
 #include <stdio.h>
 
 #include "Globals.h"
 
-class CPeakFile {
-  public:
-	CPeakFile();
-	~CPeakFile();
-	void Init(int32 size, bool mono);	// size in samples
+class CPeakFile
+{
+public:
+				CPeakFile();
+				~CPeakFile();
+	void		Init(int32 size, bool mono);	// size in samples
 
-	// create peaks from memeory
-	// start, end are the sample-pointers
-	// when progress: do an update progressbar
-	void CreatePeaks(int32 start, int32 end, int32 progress = 0);
+				// create peaks from memeory
+				// start, end are the sample-pointers
+				// when progress: do an update progressbar
+	void		CreatePeaks(int32 start, int32 end, int32 progress = 0);
 	
-	// Fill a buffer with the peak-values ready to draw
-	// start, end are the sample-pointers
-	// w: width
-	void MonoBuffer(float *out, int32 start, int32 end, float w);
-	void StereoBuffer(float *out_l,float *out_r, int32 start, int32 end, float w);
+				// Fill a buffer with the peak-values ready to draw
+				// start, end are the sample-pointers
+				// w: width
+	void		MonoBuffer(float* out, int32 start, int32 end, float w);
+	void		StereoBuffer(float* out_l,float* out_r, int32 start,
+					int32 end, float w);
 
-  private:
-  	int32 m_size;		// memory size in samples
-	bool m_mono;
-	int16 *buffer_left;
-	int16 *buffer_right;
-	float *buffer;
+private:
+
+	// memory size in samples
+  	int32 		m_size;		
+	bool		m_mono;
+	int16*		buffer_left;
+	int16*		buffer_right;
+	float*		buffer;
 };
 
-extern CPeakFile Peak; // Included so you don't have too 
+extern CPeakFile Peak; // Included so you don't have too
+
 #endif

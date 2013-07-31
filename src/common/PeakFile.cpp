@@ -37,9 +37,10 @@
 
 CPeakFile Peak;
 
-#define BUFFER_SIZE		64*256	// 64Kb
+// 64Kb
+#define BUFFER_SIZE		64*256	
 
-// ============================================================
+
 CPeakFile::CPeakFile()
 {
 	buffer_left = NULL;
@@ -47,15 +48,20 @@ CPeakFile::CPeakFile()
 	buffer = NULL;
 }
 
-// ============================================================
+
 CPeakFile::~CPeakFile()
 {
-	if (buffer)			delete[] buffer;
-	if (buffer_left)	free(buffer_left);
-	if (buffer_right)	free(buffer_right);
+	if (buffer)
+		delete[] buffer;
+
+	if (buffer_left)
+		free(buffer_left);
+
+	if (buffer_right)
+		free(buffer_right);
 }
 
-// ============================================================
+
 void CPeakFile::Init(int32 size, bool mono)
 {
 	if (buffer)
@@ -93,7 +99,7 @@ void CPeakFile::Init(int32 size, bool mono)
 	}
 }
 
-// ============================================================
+
 void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 {
 	float min, max, max_r, min_r;
@@ -157,7 +163,8 @@ void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 	Pool.update_peak = true;
 }
 
-// ============================================================
+
+
 void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 {
 	if (!buffer_left || !m_mono)	return;
@@ -238,6 +245,7 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 		}
 	}
 }
+
 
 // ============================================================
 void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, float w)
@@ -343,4 +351,3 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 		}
 	}
 }
-
