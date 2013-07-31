@@ -1,15 +1,14 @@
 Rework of the code :
 
 	* Update all code to use layouts (90%)
-	* Fix codestyle.
-	* Finish integration with locale_kit.
+	* Fix codestyle (60%).
+	* Finish integration with locale_kit (90%).
 	* Settings should be refined a bit.
-	* Fix hardcoded values like the app name et cetera
+	* Fix hardcoded values like the app name et cetera (80%).
 	* Cleanup CommonPool.
 	* Remove code from GUI and put it in the right locations.
 
 New features
 
-	* Add multitrack support
-	* Work on src/audio/filter/vodoo to add new filters
+	* Add multitrack support (20%)
 	* Work on src/audio/node to have the Nodes needed for recording and implement it.
