@@ -42,10 +42,10 @@
 class FileFormatMenuItem : public BMenuItem
 {
 public:
-				FileFormatMenuItem(media_file_format *format);
-	virtual		~FileFormatMenuItem();
+						FileFormatMenuItem(media_file_format *format);
+	virtual				~FileFormatMenuItem();
 	
-	media_file_format fFileFormat;
+	media_file_format	fFileFormat;
 };
 
 // ------------------- CodecMenuItem -------------------
@@ -53,28 +53,34 @@ public:
 class CodecMenuItem : public BMenuItem
 {
 public:
-				CodecMenuItem(media_codec_info *ci, uint32 msg_type);
-	virtual		~CodecMenuItem();
+						CodecMenuItem(media_codec_info *ci, uint32 msg_type);
+	virtual				~CodecMenuItem();
 	
-	media_codec_info fCodecInfo;
+	media_codec_info 	fCodecInfo;
 };
 
 // ------------------- Save Panel -------------------
 
 class SavePanel : public BFilePanel, public BHandler {
-  public:
-	SavePanel(BHandler *handler);
-	void MessageReceived(BMessage *message);
-	~SavePanel();
-	void GetSelectedFormatInfo(media_file_format **format, media_codec_info **audio);
-	void SetFormatInfo(media_file_format *format, media_codec_info *audio);
+public:
+						SavePanel(BHandler* handler);
 
-  private:
-	void BuildFormatMenu();
-	void BuildAudioMenu();
+						~SavePanel();
 
-	BMenuField	*fFormatMenu;
-	BMenuField	*fAudioMenu;
+	void				MessageReceived(BMessage* message);
+
+	void 				GetSelectedFormatInfo(media_file_format** format,
+							media_codec_info** audio);
+
+	void 				SetFormatInfo(media_file_format* format,
+							media_codec_info* audio);
+
+private:
+	void 				BuildFormatMenu();
+	void				BuildAudioMenu();
+
+	BMenuField*			fFormatMenu;
+	BMenuField*			fAudioMenu;
 };
 
 #endif

@@ -34,13 +34,20 @@
 #include "Globals.h"
 #include "ProgressWindow.h"
 
+
 ProgressWindow::ProgressWindow(BRect frame)
-	:BWindow(frame, "Progress" ,B_FLOATING_WINDOW_LOOK,B_MODAL_APP_WINDOW_FEEL,B_NOT_RESIZABLE | B_NOT_CLOSABLE | B_NOT_ZOOMABLE)
+	:
+	BWindow(frame, "Progress",
+	B_FLOATING_WINDOW_LOOK,
+	B_MODAL_APP_WINDOW_FEEL,B_NOT_RESIZABLE 
+		| B_NOT_CLOSABLE | B_NOT_ZOOMABLE)
 {
 	Lock();
 	Looper()->SetName("Progress Window");
 	
-	BView *view = new BView(frame, NULL, B_FOLLOW_ALL, B_WILL_DRAW | B_NOT_CLOSABLE);
+	BView *view = new BView(frame, NULL,
+		B_FOLLOW_ALL, B_WILL_DRAW | B_NOT_CLOSABLE);
+
 	frame.InsetBy(2,2);
 	frame.top -= 8;
 	view->AddChild(bar = new BStatusBar(frame, NULL, NULL, NULL));
@@ -51,33 +58,40 @@ ProgressWindow::ProgressWindow(BRect frame)
 	Run();
 }
 
+
 ProgressWindow::~ProgressWindow()
 {
 }
 
-void ProgressWindow::MessageReceived(BMessage *message)
+
+void
+ProgressWindow::MessageReceived(BMessage *message)
 {
 	switch (message->what){
-	default:
-		BWindow::MessageReceived(message);
+		default:
+			BWindow::MessageReceived(message);
 	}
 }
 
-void ProgressWindow::StartProgress(const char *label, int32 max)
+
+void
+ProgressWindow::StartProgress(const char *label, int32 max)
 {
 	SetTitle(B_TRANSLATE(label));
 	bar->Reset();
 	bar->SetMaxValue(max);
 
 	ResizeTo(300,30);
-	MoveTo( Prefs.frame.Width()/2 -150 + Prefs.frame.left, 	Prefs.frame.Height()/2 -15 + Prefs.frame.top);
+	MoveTo( Prefs.frame.Width()/2 -150 + Prefs.frame.left,
+		Prefs.frame.Height()/2 -15 + Prefs.frame.top);
+
 	if (IsHidden())
 		Show();
 }
 
 
-void ProgressWindow::SetProgress(int32 p)
+void
+ProgressWindow::SetProgress(int32 p)
 {
 	bar->Update(p);
 }
-

@@ -34,15 +34,15 @@
 
 class ProgressWindow : public BWindow {
  public:
-	ProgressWindow(BRect frame);
-	virtual	~ProgressWindow();
-	virtual void MessageReceived(BMessage *message);
+						ProgressWindow(BRect frame);
+	virtual				~ProgressWindow();
+	virtual void		MessageReceived(BMessage *message);
 	
-	void StartProgress(const char *label, int32 max = 100);
-	void SetProgress(int32 p);
+			void 		StartProgress(const char *label, int32 max = 100);
+			void 		SetProgress(int32 p);
 
  private:
- 	BStatusBar *bar;
+			BStatusBar*	bar;
 };
 
 #endif

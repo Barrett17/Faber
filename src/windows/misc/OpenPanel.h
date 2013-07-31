@@ -39,33 +39,40 @@
 #include <File.h>
 #include <NodeInfo.h>
 
-class OpenPanel : public BFilePanel, public BHandler {
+
+class OpenPanel : public BFilePanel, public BHandler
+{
 public:
-	OpenPanel(BHandler* handler);
-	virtual ~OpenPanel(void);
+								OpenPanel(BHandler* handler);
+	virtual						~OpenPanel(void);
 	
-	virtual void SelectionChanged(void);
-	virtual void WasHidden(void);
+	virtual void				SelectionChanged(void);
+	virtual void 				WasHidden(void);
 	
-	virtual void MessageReceived(BMessage* msg);
+	virtual void				MessageReceived(BMessage* msg);
 
 private:
-	BFileGameSound* mSndFile;
-	BButton* mPlayBtn;
-	BStringView *line1, *line2;
-	// use a BMessageRunner to periodically remind us
-	// to check whether mSndFile has stopped playing so
-	// we can reset mPlayBtn's label to "Play".
-	BMessageRunner* mBtnUpdater;
+			BFileGameSound* 	mSndFile;
+			BButton* 			mPlayBtn;
+			BStringView*		line1;
+			BStringView*		line2;
+
+			// use a BMessageRunner to periodically remind us
+			// to check whether mSndFile has stopped playing so
+			// we can reset mPlayBtn's label to "Play".
+			BMessageRunner*		mBtnUpdater;
 };
 
-class OpenFilter : public BRefFilter {
-public:
-	OpenFilter(void);
-	virtual ~OpenFilter(void);
 
-	virtual bool Filter(const entry_ref* ref,BNode* node,
-		struct stat_beos* st,const char* filetype);
+class OpenFilter : public BRefFilter
+{
+public:
+								OpenFilter(void);
+	virtual 					~OpenFilter(void);
+
+	virtual bool 				Filter(const entry_ref* ref,BNode* node,
+									struct stat_beos* st,
+									const char* filetype);
 };
 
 #endif // #ifndef _SNDFILEPANEL_H_

@@ -36,12 +36,11 @@
 #include "Globals.h"
 #include "SavePanel.h"
 
-/*******************************************************
-*
-*******************************************************/
-// ------------------- CodecMenuItem -------------------
+
+// CodecMenuItem
 CodecMenuItem::CodecMenuItem(media_codec_info *ci, uint32 msg_type)
-	: BMenuItem(ci->pretty_name, new BMessage(msg_type))
+	:
+	BMenuItem(ci->pretty_name, new BMessage(msg_type))
 {
 	memcpy(&fCodecInfo, ci, sizeof(fCodecInfo));
 }
@@ -51,9 +50,10 @@ CodecMenuItem::~CodecMenuItem()
 {
 }
 
-// ------------------- FileFormatMenuItem -------------------
+// FileFormatMenuItem
 FileFormatMenuItem::FileFormatMenuItem(media_file_format *format)
-	: BMenuItem(format->pretty_name, new BMessage(PANEL_FORMAT))
+	:
+	BMenuItem(format->pretty_name, new BMessage(PANEL_FORMAT))
 {
 	memcpy(&fFileFormat, format, sizeof(fFileFormat));
 }
@@ -64,11 +64,11 @@ FileFormatMenuItem::~FileFormatMenuItem()
 }
 
 
-/*******************************************************
-*
-*******************************************************/
 SavePanel::SavePanel(BHandler *handler)
-	: BFilePanel(B_SAVE_PANEL, new BMessenger(handler), NULL, B_FILE_NODE, false, new BMessage(SAVE_AUDIO), NULL, true, true)
+	:
+	BFilePanel(B_SAVE_PANEL, new BMessenger(handler),
+		NULL, B_FILE_NODE, false,new BMessage(SAVE_AUDIO),
+		NULL, true, true)
 {
 	if (Window()->Lock()) {
 		float minw, maxw, minh, maxh;
@@ -86,17 +86,27 @@ SavePanel::SavePanel(BHandler *handler)
 		BButton *insert = (BButton *)background->FindView("default button");
 		if (insert) insert->MoveBy(0, -35);
 		BButton *cancel = (BButton *)background->FindView("cancel button");
-		if (cancel){
+		if (cancel) {
 			cancel->ResizeTo( insert->Frame().Width(), insert->Frame().Height()-5);
 			cancel->MoveTo( insert->Frame().left, insert->Frame().bottom+7);
 		}
-		BScrollBar *hscrollbar = (BScrollBar *)background->FindView("HScrollBar");
-		if (hscrollbar) hscrollbar->MoveBy(0, -40);
-		BScrollBar *vscrollbar = (BScrollBar *)background->FindView("VScrollBar");
-		if (vscrollbar) vscrollbar->ResizeBy(0, -40);
-		BView *countvw = (BView *)background->FindView("CountVw");
-		if (countvw) countvw->MoveBy(0, -40);
-		BView *textview = (BView *)background->FindView("text view");
+
+		BScrollBar* hscrollbar = (BScrollBar*)background->FindView("HScrollBar");
+
+		if (hscrollbar)
+			hscrollbar->MoveBy(0, -40);
+
+		BScrollBar* vscrollbar = (BScrollBar*)background->FindView("VScrollBar");
+
+		if (vscrollbar)
+			vscrollbar->ResizeBy(0, -40);
+
+		BView* countvw = (BView *)background->FindView("CountVw");
+
+		if (countvw)
+			countvw->MoveBy(0, -40);
+
+		BView* textview = (BView *)background->FindView("text view");
 		if (textview){
 			textview->ResizeBy(50, 0);
 			textview->MoveBy(0, -40);
@@ -113,30 +123,29 @@ SavePanel::SavePanel(BHandler *handler)
 		// Position the menu field relative to the other GUI elements, and make it the
 		// same length as the textview
 		BRect rect = textview->Frame();
-//		rect.top = hscrollbar->Frame().bottom + 5;
-//		rect.bottom = rect.top + 10;
-//		rect.right = (rect.right+rect.left)/2;
 		rect.OffsetBy(0,26);
 
-		BPopUpMenu *popmenu = new BPopUpMenu(B_TRANSLATE("Format"));
-		fFormatMenu = new BMenuField(rect, NULL, B_TRANSLATE("Format"), popmenu , B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_WILL_DRAW | B_NAVIGABLE);
+		BPopUpMenu* popmenu = new BPopUpMenu(B_TRANSLATE("Format"));
+
+		fFormatMenu = new BMenuField(rect, NULL, B_TRANSLATE("Format"),
+			popmenu , B_FOLLOW_LEFT | B_FOLLOW_BOTTOM,
+			B_WILL_DRAW | B_NAVIGABLE);
+
 		background->AddChild(fFormatMenu);
 	
 		rect.OffsetBy(0,24);
 
 		popmenu = new BPopUpMenu(B_TRANSLATE("Codec"));
-		fAudioMenu = new BMenuField(rect, NULL, B_TRANSLATE("Codec"), popmenu,B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_WILL_DRAW | B_NAVIGABLE);
+
+		fAudioMenu = new BMenuField(rect, NULL, B_TRANSLATE("Codec"),
+			popmenu,B_FOLLOW_LEFT | B_FOLLOW_BOTTOM,
+			B_WILL_DRAW | B_NAVIGABLE);
+
 		background->AddChild(fAudioMenu);
 
 		fFormatMenu->SetDivider(50);
 		fAudioMenu->SetDivider(50);
-		
-		// Make sure the smallest window won't draw the "Settings" button over anything else
-//		float min_window_width = Window()->Bounds().right - 10 + textview->Frame().right;
-//		Window()->SetSizeLimits(min_window_width, 10000, 250, 10000);
-//		if (Window()->Bounds().IntegerWidth() + 1 < min_window_width)
-//			Window()->ResizeTo(min_window_width, 300);
-	
+
 		BuildFormatMenu();
 		BuildAudioMenu();
 		
@@ -147,31 +156,32 @@ SavePanel::SavePanel(BHandler *handler)
 /*******************************************************
 *   Handle messages from controls we've added
 *******************************************************/
-void SavePanel::MessageReceived(BMessage *message) {
-	switch (message->what){
-	case PANEL_FORMAT:
-		BuildAudioMenu();
-		break;
+void
+SavePanel::MessageReceived(BMessage *message)
+{
+	switch (message->what) {
+		case PANEL_FORMAT:
+			BuildAudioMenu();
+			break;
 
-	case PANEL_CODEC:
-		break;
+		case PANEL_CODEC:
+			break;
 
-	default:
-		BHandler::MessageReceived(message);
-		break;
-	}
+		default:
+			BHandler::MessageReceived(message);
+			break;
+		}
 }
 
-/*******************************************************
-*
-*******************************************************/
-void SavePanel::BuildFormatMenu() {
+
+void
+SavePanel::BuildFormatMenu()
+{
 	BMenu *menu = fFormatMenu->Menu();
 	BMenuItem *item;
 	// clear out old format menu items
-	while ((item = menu->RemoveItem((int32)0)) != NULL) {
+	while ((item = menu->RemoveItem((int32)0)) != NULL)
 		delete item;
-	}
 
 	// add menu items for each file format
 	media_file_format mfi;
@@ -191,17 +201,15 @@ void SavePanel::BuildFormatMenu() {
 	}
 }
 
-/*******************************************************
-*
-*******************************************************/
-void SavePanel::BuildAudioMenu()
+
+void
+SavePanel::BuildAudioMenu()
 {
 	BMenu *menu = fAudioMenu->Menu();
 	BMenuItem *item = NULL;
 	// clear out old audio codec menu items
-	while ((item = menu->RemoveItem((int32)0)) != NULL) {
+	while ((item = menu->RemoveItem((int32)0)) != NULL)
 		delete item;
-	}
 
 	// get selected file format
 	FileFormatMenuItem *ffmi = (FileFormatMenuItem*)fFormatMenu->Menu()->FindMarked();
@@ -240,37 +248,36 @@ void SavePanel::BuildAudioMenu()
 	}
 }
 
-/*******************************************************
-*
-*******************************************************/
-void SavePanel::GetSelectedFormatInfo(media_file_format **format, media_codec_info **audio)
+
+void
+SavePanel::GetSelectedFormatInfo(media_file_format** format,
+	media_codec_info **audio)
 {
 	*format = NULL;
 	FileFormatMenuItem *formatItem =
-		dynamic_cast<FileFormatMenuItem *>(fFormatMenu->Menu()->FindMarked());
+		dynamic_cast<FileFormatMenuItem*>(fFormatMenu->Menu()->FindMarked());
 	if (formatItem != NULL) {
 		*format = &(formatItem->fFileFormat);
 	}
 	
 	*audio = NULL;
 	CodecMenuItem *codecItem =
-		dynamic_cast<CodecMenuItem *>(fAudioMenu->Menu()->FindMarked());
+		dynamic_cast<CodecMenuItem*>(fAudioMenu->Menu()->FindMarked());
 	if (codecItem != NULL) {
 		*audio =  &(codecItem->fCodecInfo);
 	}
 }
-/*******************************************************
-*
-*******************************************************/
-void SavePanel::SetFormatInfo(media_file_format *format, media_codec_info *audio)
+
+
+void
+SavePanel::SetFormatInfo(media_file_format* format,
+	media_codec_info* audio)
 {
 
 
 }
 
-/*******************************************************
-*
-*******************************************************/
+
 SavePanel::~SavePanel() {
 	
 }

@@ -45,8 +45,10 @@
 const uint32 kPlayStop = 'plst'; // message the Play/Stop button sends
 const uint32 kUpdateBtn = 'btup'; // should we update the button title?
 
+
 OpenPanel::OpenPanel(BHandler* handler)
-	: BFilePanel(B_OPEN_PANEL,new BMessenger(handler),NULL,
+	:
+	BFilePanel(B_OPEN_PANEL,new BMessenger(handler),NULL,
 			B_FILE_NODE,false,NULL,NULL,true,true),
 		mSndFile(NULL), mPlayBtn(NULL), mBtnUpdater(NULL)
 {
@@ -107,6 +109,7 @@ OpenPanel::OpenPanel(BHandler* handler)
 	Window()->SetTitle(B_TRANSLATE("Load a sound file..."));
 }
 
+
 OpenPanel::~OpenPanel(void)
 {
 	delete RefFilter();
@@ -115,7 +118,9 @@ OpenPanel::~OpenPanel(void)
 	delete mBtnUpdater;
 }
 
-void OpenPanel::SelectionChanged(void)
+
+void
+OpenPanel::SelectionChanged(void)
 {
 	status_t err;
 	entry_ref ref;
@@ -139,7 +144,6 @@ void OpenPanel::SelectionChanged(void)
 			if (mSndFile->InitCheck() == B_OK) {
 				mPlayBtn->SetEnabled(true);
 
-// ============
 				char s1[128];
 				char s2[128];
 				char s[128];
@@ -191,11 +195,10 @@ void OpenPanel::SelectionChanged(void)
 	//			*duration << (int32)(MAX(audioDuration, videoDuration) / 1000000) << " seconds";
 				delete fMediaFile;
 
-//===============
 				line1->SetText(s1);
 				line2->SetText(s2);
 				
-			}else{
+			} else {
 				line1->SetText(B_TRANSLATE("Unsupported file"));
 				line2->SetText("");
 			}
@@ -209,7 +212,9 @@ void OpenPanel::SelectionChanged(void)
 	}
 }
 
-void OpenPanel::WasHidden(void)
+
+void
+OpenPanel::WasHidden(void)
 {
 	// This will be called any time the user causes
 	// the panel to be hidden, but not if some
@@ -223,16 +228,18 @@ void OpenPanel::WasHidden(void)
 	mBtnUpdater = NULL;
 }
 
-void OpenPanel::MessageReceived(BMessage* msg)
+
+void
+OpenPanel::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
+
 	case kPlayStop:
 		if (mSndFile != NULL) {
 			if (mSndFile->IsPlaying()) {
 				mSndFile->StopPlaying();
 				mPlayBtn->SetLabel(B_TRANSLATE("Play"));
-			}
-			else {
+			} else {
 				mSndFile->StartPlaying();
 				mPlayBtn->SetLabel(B_TRANSLATE("Stop"));
 				
@@ -248,6 +255,7 @@ void OpenPanel::MessageReceived(BMessage* msg)
 			}
 		}
 		break;
+
 	case kUpdateBtn:
 		//fprintf(stderr,"got kUpdateBtn\n");
 		if (mSndFile != NULL) {
@@ -259,22 +267,22 @@ void OpenPanel::MessageReceived(BMessage* msg)
 	}
 }
 
+
 OpenFilter::OpenFilter(void)
-	: BRefFilter()
+	:
+	BRefFilter()
 {
 }
+
 
 OpenFilter::~OpenFilter(void)
 {
 }
 
-#if defined(__HAIKU__)
-bool OpenFilter::Filter(const entry_ref* ref,BNode* node,
+
+bool
+OpenFilter::Filter(const entry_ref* ref,BNode* node,
 	struct stat_beos* st,const char* filetype)
-#else
-bool OpenFilter::Filter(const entry_ref* ref,BNode* node,
-	struct stat* st,const char* filetype)
-#endif
 {
 	bool admitIt = false;
 	char type[256];
@@ -283,8 +291,7 @@ bool OpenFilter::Filter(const entry_ref* ref,BNode* node,
 
 	if (node->IsDirectory()) {
 		admitIt = true;
-	}
-	else {
+	} else {
 		nodeInfo.GetType(type);
 		// allow all files with supertype "audio"
 		admitIt = (mask.Compare(type,mask.CountChars()) == 0);

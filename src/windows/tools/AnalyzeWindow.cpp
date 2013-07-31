@@ -84,6 +84,7 @@ AnalyzeWindow::FramesPerSecond()
 	return m_frames;
 }
 
+
 void 
 AnalyzeWindow::SetFramesPerSecond(int32 frames)
 {
@@ -94,7 +95,7 @@ AnalyzeWindow::SetFramesPerSecond(int32 frames)
 bool
 AnalyzeWindow::QuitRequested()
 {
-	Pool.RemovePlayHook( _PlayBuffer, m_index );
+	Pool.RemovePlayHook(_PlayBuffer, m_index);
 	return true;
 }
 
@@ -107,9 +108,13 @@ AnalyzeWindow::MessageReceived(BMessage* msg)
 	switch(msg->what) {
 
 		case UPDATE:
+		{
 			view = ChildAt(0);
-			if (view)	view->Invalidate();
+			if (view)
+				view->Invalidate();
+
 			break;
+		}
 
 		default:
 			BWindow::MessageReceived(msg);
