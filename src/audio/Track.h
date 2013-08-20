@@ -6,34 +6,76 @@
 #define _TRACK_H
 
 #include <MediaDefs.h>
+#include <String.h>
 
-
-class BString;
 
 class Track {
 public:
-	virtual const BString&	Name() const = 0;
-	virtual void 			SetName(const char* name) = 0;
+							Track();
 
-	virtual float			Volume() const = 0;
-	virtual void			SetVolume(float volume) = 0;
+	virtual bool			IsAudio() const = 0;
+			//bool			IsMIDI() const;
 
-	virtual void			SetBalance(float balance) = 0;
-	virtual float			Balance() const = 0;
+			int64			Start() const;
+			int64			End() const;
 
-	virtual void			SetRecording(bool solo) = 0;
-	virtual bool			IsRecording() const = 0;
+			void			SetPointer(int64 pointer);
+			void			SetSelectionPointer(int64 pointer);
 
-	virtual void	 		MuteTrack(bool mute) = 0;
-	virtual bool 			IsMute() const = 0;
+			int64			Pointer() const;
+			int64			SelectionPointer() const;
 
-	virtual void			SetSolo(bool solo) = 0;
-	virtual bool			IsSolo() const = 0;
+			int64			TrackStart() const;
+			int64			TrackEnd() const;
+
+			void			SetStart(int64 start);
+			void			SetEnd(int64 end);
+
+	virtual const BString&	Name() const;
+	virtual void 			SetName(const char* name);
+
+	virtual float			Volume() const;
+	virtual void			SetVolume(float volume);
+
+	virtual void			SetBalance(float balance);
+	virtual float			Balance() const;
+
+	virtual bool			IsPlaying() const;
+	virtual void			SetPlaying(bool playing);
+
+	virtual void			SetRecording(bool solo);
+	virtual bool			IsRecording() const;
+
+	virtual void	 		MuteTrack(bool mute);
+	virtual bool 			IsMute() const;
+
+	virtual void			SetSolo(bool solo);
+	virtual bool			IsSolo() const;
 
 			void 			SetFormat(media_format format);
 			media_format 	Format() const;
+private:
 
+
+			bool			fMuted;
+			bool			fSolo;
+			bool			fRecording;
+			bool			fPlaying;
+			BString			fName;
+			float			fVolume;
+			float			fBalance;
+
+protected:
 			media_format	fFormat;
+
+			bool			fChanged;
+
+			int64			fStart;
+			int64			fEnd;
+			int64			fSelectionPointer;
+			int32			fSelectionMode;
+
+			int64			fCurrentPointer;
 };
 
 #endif

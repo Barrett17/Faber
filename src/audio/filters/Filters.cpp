@@ -154,7 +154,7 @@ void RunFilter(const char *tag)
 
 void RunFilter(int32 filter)
 {
-	if (__FilterCount == PLAY_HOOKS/2)	return;
+	/*if (__FilterCount == PLAY_HOOKS/2)	return;
 
 	__Last_FilterTmp = filter;
 	RealtimeFilter *pFilter = CreateFilter(filter);
@@ -179,22 +179,22 @@ void RunFilter(int32 filter)
 			pFilter->MoveTo(frame.left +__FilterCount * 40 +40, frame.top + 80 + __FilterCount * 20);
 			
 			pFilter->Run();			// start looper
-			pFilter->InitFilter(Pool.system_frequency, 2);	// initiase
+			//pFilter->InitFilter(Pool.system_frequency, 2);	// initiase
 			pFilter->Start();		// start media buffers
 			pFilter->Show();		// show to user
 		}else{
 			// run without GUI
 			ExecuteFilter(pFilter);
 		}
-	}
+	}*/
 }
 
 void WriteBack(float *src, float *dest, int32 size)
 {
-	if (Pool.selection == BOTH || Pool.sample_type == MONO)
+	/*if (Pool.selection == BOTH || Pool.sample_type == MONO)
 		memcpy( dest, src, size*4 );
 	else
-	if (Pool.selection == LEFT)		/* allways stereo */
+	if (Pool.selection == LEFT)		//allways stereo 
 	{
 		for (int32 x = 0; x < size; x+=2)
 			dest[x] = src[x];
@@ -205,7 +205,7 @@ void WriteBack(float *src, float *dest, int32 size)
 		dest++;
 		for (int32 x = 0; x < size; x+=2)
 			dest[x] = src[x];
-	}
+	}*/
 }
 
 void ExecuteFilter(RealtimeFilter *pFilter)
@@ -224,7 +224,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 		pFilter->DeAllocate();		// remove buffers used for realtime effect
 	}
 
-	if (Pool.PrepareFilter()){
+	/*if (Pool.PrepareFilter()){
 		// init with track data
 		
 		float *filter_buffer = new float[FILTER_BLOCK];
@@ -269,7 +269,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 
 	WindowsManager::MainWindow()->ResetIndexView();
 	WindowsManager::MainWindow()->UpdateMenu();
-	WindowsManager::MainWindow()->RedrawWindow();
+	WindowsManager::MainWindow()->RedrawWindow();*/
 }
 
 void CancelFilter(RealtimeFilter *pFilter)
@@ -371,7 +371,7 @@ bool FadeOutFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 // ============================================================ Trim
 void DoTrim()
 {
-	if (Pool.sample_type == NONE || Pool.selection == NONE)	return;
+	/*if (Pool.sample_type == NONE || Pool.selection == NONE)	return;
 	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP);		// stop playing
 
 	//Hist.Save(H_FULL, 0, Pool.size);	// full undo
@@ -401,7 +401,7 @@ void DoTrim()
 	Pool.changed = true;
 	WindowsManager::MainWindow()->ResetIndexView();
 	WindowsManager::MainWindow()->UpdateMenu();
-	WindowsManager::MainWindow()->RedrawWindow();
+	WindowsManager::MainWindow()->RedrawWindow();*/
 }
 
 #define BUFFER_SIZE		128*1024
@@ -411,12 +411,12 @@ void DoTrim()
 *******************************************************/
 void DoResample()
 {
-	if (Pool.sample_type == NONE)	return;
+	//if (Pool.sample_type == NONE)	return;
 
 	float *buffer = (float*)malloc(BUFFER_SIZE*4+4);
 	if (!buffer)	return;	// error
 	
-	Pool.player->Stop();
+	//Pool.player->Stop();
 	WindowsManager::MainWinMessenger()->SendMessage(TRANSPORT_STOP); // stop playing
 
 	//Hist.Save(H_FULL, 0, Pool.size);	// full undo
@@ -435,7 +435,7 @@ void DoResample()
 	}
 	BEntry e(path.Path());
 
-	float left = 0.0, right = 0.0, add = 0.0;
+	/*float left = 0.0, right = 0.0, add = 0.0;
 	float fraq = Pool.frequency/Prefs.filter_resample_freq;		// the convert frequency
 	float *mem = Pool.sample_memory;
 	float *end = Pool.sample_memory + Pool.size*Pool.sample_type;
@@ -601,7 +601,7 @@ void DoResample()
 	Peak.Init( Pool.size+1, (Pool.sample_type == MONO) );	// Init peakfile
 	WindowsManager::MainWindow()->ResetIndexView();
 	WindowsManager::MainWindow()->UpdateMenu();
-	WindowsManager::MainWindow()->RedrawWindow();
+	WindowsManager::MainWindow()->RedrawWindow();*/
 }
 
 
@@ -611,7 +611,7 @@ void ZeroLL()
 {
 	float left = 0, right = 0, tmpL = 0, tmpR = 0;
 
-	switch(Pool.sample_type){
+	/*switch(Pool.sample_type){
 	case MONO:
 		left = Pool.sample_memory[Pool.pointer];
 		while (Pool.pointer>0){
@@ -632,12 +632,12 @@ void ZeroLL()
 			Pool.pointer--;
 		}
 		break;
-	}
+	}*/
 }
 
 void ZeroLR()
 {
-	float left = 0, right = 0, tmpL = 0, tmpR = 0;
+	/*float left = 0, right = 0, tmpL = 0, tmpR = 0;
 
 	switch(Pool.sample_type){
 	case MONO:
@@ -661,12 +661,12 @@ void ZeroLR()
 		}
 		break;
 	}
-	if (Pool.pointer > Pool.r_sel_pointer)	Pool.selection = NONE;
+	if (Pool.pointer > Pool.r_sel_pointer)	Pool.selection = NONE;*/
 }
 
 void ZeroRL()
 {
-	if (Pool.selection==NONE)
+	/*if (Pool.selection==NONE)
 		return;
 
 	float left = 0, right = 0, tmpL = 0, tmpR = 0;
@@ -692,12 +692,12 @@ void ZeroRL()
 			Pool.r_sel_pointer--;
 		}
 		break;
-	}
+	}*/
 }
 
 void ZeroRR()
 {
-	if (Pool.selection==NONE){
+	/*if (Pool.selection==NONE){
 		Pool.selection = BOTH;
 		Pool.r_sel_pointer = Pool.pointer;
 	}
@@ -724,5 +724,5 @@ void ZeroRR()
 			Pool.r_sel_pointer++;
 		}
 		break;
-	}
+	}*/
 }

@@ -37,21 +37,16 @@
 #include <LayoutBuilder.h>
 #include <Path.h>
 
-//#include "AboutBox.h"
 #include "Faber.h"
 #include "FilterDialogs.h"
 #include "Filters.h"
 #include "Globals.h"
-//#include "MyClipBoard.h"
 #include "PeakFile.h"
 #include "Shortcut.h"
 #include "WindowsManager.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-
-
-cookie_record play_cookie;
 
 
 class MyMenuBar : public BMenuBar {
@@ -67,6 +62,7 @@ MyMenuBar::MyMenuBar(const char *name)
 {
 }
 
+
 void
 MyMenuBar::MakeFocus(bool b)
 {
@@ -75,14 +71,18 @@ MyMenuBar::MakeFocus(bool b)
 }
 
 
-
 FaberWindow::FaberWindow(BRect frame)
 	:
 	BWindow(frame, "Faber" , B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS),
 	fMainMenuBar(NULL)
 {
+	char s[255];
+	sprintf(s, "Faber - %s", B_TRANSLATE("Untitled"));
+	SetTitle(s);
+
 	// init prefs
 	Prefs.Init();
+
 	//ClipBoard.Init();				// clipboard init
 	//Hist.Init();					// Undo init
 
@@ -91,22 +91,14 @@ FaberWindow::FaberWindow(BRect frame)
 
 	// Now init the keyBindings
 	KeyBind.Init();
-	
-	// create the player and recorder nodes
-	Pool.InitBufferPlayer( 44100 );	
 
-	// This is the Pool .. it loads layers and tools and floaters
-	// and all kinds of groovy stuff
-	Pool.Init();
+	fOutputGate = new AudioGate();
+	fOutputGate->Init();
+	fOutputGate->InitNode();
 
 	// Set the last filter
 	FiltersInit();
 
-	char s[255];
-	sprintf(s, "Faber - %s", B_TRANSLATE("Untitled"));
-	SetTitle(s);
-
-	// GUI
 
 	fToolBar = new ToolBar();
 	fToolBar->SetTool(Prefs.tool_mode);
@@ -125,7 +117,7 @@ FaberWindow::FaberWindow(BRect frame)
 		.Add(fInfoToolBar)
 	.End();
 
-	//Pool.SetLoop((fToolBar->IsLoop()));
+	fOutputGate->SetLoop((fToolBar->IsLoop()));
 	SetSizeLimits(MIN_W ,MAX_W, MIN_H , MAX_H);
 	SetPulseRate(50000);
 }
@@ -151,9 +143,9 @@ FaberWindow::UpdateRecent()
 		fRecentMenu->RemoveItem(fRecentMenu->ItemAt(0));
 
 	be_roster->GetRecentDocuments(&msg,10,"audio");
-	while(msg.FindRef("refs",i,&eref) == B_OK){
+	while(msg.FindRef("refs",i,&eref) == B_OK) {
 		e.SetTo(&eref);
-		if(e.InitCheck() == B_OK){
+		if(e.InitCheck() == B_OK) {
 			e.GetName(name);
 			msgout = new BMessage(B_REFS_RECEIVED);//DO_OPEN);
 			msgout->AddRef("refs",&eref);
@@ -168,9 +160,9 @@ FaberWindow::UpdateRecent()
 bool
 FaberWindow::QuitRequested()
 {
-	if (!IsChanged(1)){
+	if (!IsChanged(1)) {
 		Prefs.frame = Frame();
-		Pool.StopPlaying();
+		fOutputGate->Stop();
 		be_app->PostMessage(B_QUIT_REQUESTED);
 		return true;
 	} else {
@@ -190,68 +182,58 @@ FaberWindow::MessageReceived(BMessage *message)
 	switch (message->what)
 	{
 
-	case TRANSPORT_PAUSE:
-		play_cookie.pause = !fToolBar->IsPause();
-		fToolBar->SetPause(!fToolBar->IsPause());
-		break;
-
-	case TRANSPORT_TOGGLE:
-		if (Pool.IsPlaying())
-			PostMessage(TRANSPORT_STOP);
-		else
-			PostMessage(TRANSPORT_PLAY);
-		break;
-	
-	case TRANSPORT_SET:
-		Pool.pointer = Pool.last_pointer;
-		Pool.sample_view_dirty = true;	// update the sample-view
-		RedrawWindow();
-		break;
-
-	case TRANSPORT_PLAY:
-		if (Pool.size == 0)
-			break;
-
-		if (Pool.sample_type == NONE) {
-			fToolBar->SetPlay(false);
+		case TRANSPORT_PAUSE:
+		{
+			fOutputGate->SetPause(!fToolBar->IsPause());
+			fToolBar->SetPause(!fToolBar->IsPause());
 			break;
 		}
 
-		play_cookie.pause = false;
 
-		Pool.SetLoop(fToolBar->IsLoop());
-		// play until the end
-		Pool.StartPlaying(Pool.pointer*Pool.sample_type, true);
-		fToolBar->SetPlay(true);
-		break;
-/*
-	// NOTE - I have removed it as it looked unuseful.
-	case TRANSPORT_PLAYS:
-		if (Pool.size == 0)	break;
-		if (Pool.sample_type == NONE){
-			transport_view->play_sel->SetValue(B_CONTROL_OFF);
-			transport_view->play->SetValue(B_CONTROL_OFF);
+		case TRANSPORT_TOGGLE:
+		{
+			if (fOutputGate->IsStarted())
+				PostMessage(TRANSPORT_STOP);
+			else
+				PostMessage(TRANSPORT_PLAY);
+
 			break;
 		}
-		transport_view->stop->SetValue(B_CONTROL_OFF);
-		transport_view->play_sel->SetValue(B_CONTROL_OFF);
-		transport_view->play->SetValue(B_CONTROL_ON);
 
-//		Pool.SetLoop(  (transport_view->loop->Value() == B_CONTROL_ON) );
-		Pool.StartPlaying(Pool.pointer*Pool.sample_type, false);
-		break;
-*/
+
+		case TRANSPORT_SET:
+			/*Pool.pointer = Pool.last_pointer;
+			Pool.sample_view_dirty = true;	// update the sample-view
+			RedrawWindow();*/
+			break;
+
+		case TRANSPORT_PLAY:
+		{
+			if (fTracksContainer->CountTracks() == 0)
+				break;
+
+			fOutputGate->SetPause(false);
+
+			fOutputGate->SetLoop(fToolBar->IsLoop());
+
+			// play until the end
+			//fOutputGate.StartFrom(Pool.pointer*Pool.sample_type);
+			fOutputGate->Start();
+			fToolBar->SetPlay(true);
+			break;
+		}
 
 	case TRANSPORT_STOP:
-		play_cookie.mem = play_cookie.start_mem;
-		Pool.StopPlaying();
+	{
+		fOutputGate->Stop();
 		FindView("Sample view")->Pulse();
 		fToolBar->SetStop(true);
 		break;
+	}
 
 	case TRANSPORT_LOOP:
 		fToolBar->SetLoop(!fToolBar->IsLoop());
-		Pool.SetLoop(fToolBar->IsLoop());
+		fOutputGate->SetLoop(fToolBar->IsLoop());
 		break;
 
 	case UNDO:
@@ -259,16 +241,26 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 		
 	case B_SELECT_ALL:
-		if (Pool.size == 0)
-			break;
+	{
+		if (fTracksContainer->CountTracks() == 0)
+			return;
+
 		SelectAll();
+
 		break;
+	}
+
 
 	case UNSELECT_ALL:
-		if (Pool.size == 0)
-			break;
+	{
+		if (fTracksContainer->CountTracks() == 0)
+			return;
+
 		DeSelectAll();
+
 		break;
+	}
+
 
 	case B_COPY:
 		//ClipBoard.Copy();
@@ -316,98 +308,31 @@ FaberWindow::MessageReceived(BMessage *message)
 	}
 
 	case ZOOM_IN:
-	{
-		if (Pool.size == 0)
-			break;
+		if (fTracksContainer->CountTracks() == 0)
+			return;
 
-		x = Pool.r_pointer - Pool.l_pointer;
-		
-		if (x < fTracksContainer->CurrentTrack()->Bounds().Width()/64)
-			break;
-		
-		x /= 2;
-
-		if (x < 1)
-			x = 1;
-
-		// window to selection
-		Pool.l_pointer = Pool.l_pointer +x/2;				
-
-		if (Pool.l_pointer<0)
-			Pool.l_pointer = 0;
-
-		Pool.r_pointer = Pool.l_pointer + x;
-
-		if (Pool.r_pointer > Pool.size) {
-			Pool.r_pointer = Pool.size;
-			Pool.l_pointer = Pool.r_pointer - x;
-			if (Pool.l_pointer<0)
-				Pool.l_pointer = 0;
-		}
-
+		fTracksContainer->ZoomIn();
 		UpdateMenu();
-		RedrawWindow();
 		break;
-	}
 
 	case ZOOM_OUT:
-	{
-		if (Pool.size == 0)
-			break;
-
-		x = (Pool.r_pointer - Pool.l_pointer)+1;
-		x *= 2;
-
-		if (x > Pool.size)
-			x = Pool.size;
-
-		// window to selection
-		Pool.l_pointer = Pool.l_pointer -x/4;				
-		if (Pool.l_pointer<0)
-			Pool.l_pointer = 0;
-
-		Pool.r_pointer = Pool.l_pointer + x;
-
-		if (Pool.r_pointer > Pool.size) {
-			Pool.r_pointer = Pool.size;
-			Pool.l_pointer = Pool.r_pointer - x;
-			if (Pool.l_pointer<0)
-				Pool.l_pointer = 0;
-		}
+		fTracksContainer->ZoomOut();
 		UpdateMenu();
-		RedrawWindow();
 		break;
-	}
 
 	case ZOOM_FULL:
-	{
-		if (Pool.size == 0)
-			break;
-
-		Pool.l_pointer = 0;
-		Pool.r_pointer = Pool.size;
+		fTracksContainer->ZoomFull();
 		UpdateMenu();
-		
-		RedrawWindow();
 		break;
-	}
+
 
 	case ZOOM_SELECTION:
-	{
-		if (Pool.size == 0)
-			break;
-
-		if (Pool.selection != NONE){
-			Pool.l_pointer = Pool.pointer;
-			Pool.r_pointer = Pool.r_sel_pointer;
-		}
+		fTracksContainer->ZoomSelection();
 		UpdateMenu();
-		RedrawWindow();
 		break;
-	}
 
-	case ZOOM_LEFT:
-		/*if (Pool.size == 0 || Pool.selection==NONE)	break;
+	/*case ZOOM_LEFT:
+		if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = fTrackView->Bounds().IntegerWidth()/6;
 		Pool.l_pointer = Pool.pointer -x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
@@ -415,10 +340,10 @@ FaberWindow::MessageReceived(BMessage *message)
 
 		UpdateMenu();
 		
-		RedrawWindow();*/
+		RedrawWindow();
 		break;
 	case ZOOM_RIGHT:
-		/*if (Pool.size == 0 || Pool.selection==NONE)	break;
+		if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = fTrackView->Bounds().IntegerWidth()/6;
 		Pool.l_pointer = Pool.r_sel_pointer - x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
@@ -430,15 +355,15 @@ FaberWindow::MessageReceived(BMessage *message)
 
 		UpdateMenu();
 		
-		RedrawWindow();*/
+		RedrawWindow();
 		break;
-		
+
 	case EDIT_L:
 		if (Pool.selection != NONE)
 			Pool.selection = LEFT;
 		UpdateMenu();
 		fTracksContainer->Invalidate();
-		break;	
+		break;
 	case EDIT_R:
 		if (Pool.selection != NONE)
 			Pool.selection = RIGHT;
@@ -450,10 +375,10 @@ FaberWindow::MessageReceived(BMessage *message)
 			Pool.selection = BOTH;
 		UpdateMenu();
 		fTracksContainer->Invalidate();
-		break;
+		break;*/
 
 	case TRANSPORT_REW:
-		x = Pool.r_pointer - Pool.l_pointer;
+	/*	x = Pool.r_pointer - Pool.l_pointer;
 		Pool.pointer -= x/40;
 		if (Pool.pointer <0)
 			Pool.pointer = 0;
@@ -464,20 +389,20 @@ FaberWindow::MessageReceived(BMessage *message)
 				Pool.l_pointer = 0;
 		}
 		Pool.r_pointer = Pool.l_pointer + x;
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 
 	case TRANSPORT_REW_ALL:
-		x = Pool.r_pointer - Pool.l_pointer;
+	/*	x = Pool.r_pointer - Pool.l_pointer;
 		Pool.pointer = 0;
 		Pool.l_pointer = 0;
 		Pool.r_pointer = x;
 		
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 
 	case TRANSPORT_FWD:
-		x = Pool.r_pointer - Pool.l_pointer;
+	/*	x = Pool.r_pointer - Pool.l_pointer;
 		Pool.pointer += x/40;
 		if (Pool.pointer >Pool.size)
 			Pool.pointer = Pool.size;
@@ -488,43 +413,43 @@ FaberWindow::MessageReceived(BMessage *message)
 				Pool.r_pointer = Pool.size;
 		}
 		Pool.l_pointer = Pool.r_pointer - x;
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 
 	case TRANSPORT_FWD_ALL:
-		x = Pool.r_pointer - Pool.l_pointer;
+	/*	x = Pool.r_pointer - Pool.l_pointer;
 		Pool.pointer = Pool.size;
 		Pool.r_pointer = Pool.pointer;
 		Pool.l_pointer = Pool.pointer - x;
 		
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 	
 	case TRANSPORT_HOME:
-		Pool.pointer = Pool.l_pointer;
+	/*	Pool.pointer = Pool.l_pointer;
 		
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 	
 	case TRANSPORT_END:
-		Pool.pointer = Pool.r_pointer;
+		/*Pool.pointer = Pool.r_pointer;
 		
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 	
 	case TRANSPORT_LEFT:
-		x = Pool.r_pointer - Pool.l_pointer;
+		/*x = Pool.r_pointer - Pool.l_pointer;
 		Pool.l_pointer -= x/2;
 		if (Pool.l_pointer<0)
 			Pool.l_pointer = 0;
 
 		Pool.r_pointer = Pool.l_pointer + x;
 		
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 
 	case TRANSPORT_RIGHT:
-		x = Pool.r_pointer - Pool.l_pointer;
+	/*	x = Pool.r_pointer - Pool.l_pointer;
 		Pool.l_pointer += x/2;
 
 		if (Pool.l_pointer>(Pool.size-x))
@@ -532,27 +457,11 @@ FaberWindow::MessageReceived(BMessage *message)
 
 		Pool.r_pointer = Pool.l_pointer + x;
 		
-		RedrawWindow();
+		RedrawWindow();*/
 		break;
 
 	case ABOUT:
 		WindowsManager::ShowAbout();
-	break;
-		
-	case HELP:
-	{
-		BPath path;
-		app_info ai;
-		be_app->GetAppInfo(&ai);
-		BEntry entry(&ai.ref);
-		entry.GetPath(&path);
-		path.GetParent(&path);
-		path.Append("Help/help.html");
-		char *help = new char[strlen(path.Path())+1];
-		sprintf(help, path.Path());
-		be_roster->Launch("text/html",1, &help);
-		delete help;
-	}
 	break;
 
 	case HOMEPAGE:
@@ -572,9 +481,9 @@ FaberWindow::MessageReceived(BMessage *message)
 		break;
 	
 	case REDRAW:
-		Pool.sample_view_dirty = true;	// update the sample-view
-
-		RedrawWindow();
+		//Pool.sample_view_dirty = true;	// update the sample-view
+		fTracksContainer->SetDirty(true);
+		fTracksContainer->Invalidate();
 		break;
 	
 	case TOOL_SELECT:
@@ -593,14 +502,6 @@ FaberWindow::MessageReceived(BMessage *message)
 		fToolBar->SetTool(PLAY_TOOL);
 		Prefs.tool_mode = PLAY_TOOL;
 		UpdateMenu();
-		break;
-
-	case SPECTRUM:
-		WindowsManager::ShowSpectrumWindow();
-		break;
-		
-	case SAMPLE_SCOPE:
-		WindowsManager::ShowSampleScopeWindow();
 		break;
 		
 	case SET_FREQUENCY:
@@ -629,15 +530,15 @@ FaberWindow::MessageReceived(BMessage *message)
 		
 	case RUN_FILTER: // run a filter with or without GUI
 	{
-		if (Pool.size == 0)
-			break;
+		if (fTracksContainer->CountTracks() == 0)
+			return;
 
 		const char *tag = NULL;
-		if (message->FindInt32("filter", &mod) == B_OK) {
+
+		if (message->FindInt32("filter", &mod) == B_OK)
 			RunFilter(mod);
-		} else if (message->FindString("language_key", &tag) == B_OK) {
+		else if (message->FindString("language_key", &tag) == B_OK)
 			RunFilter(tag);
-		}
 	}
 	break;
 
@@ -662,34 +563,35 @@ FaberWindow::MessageReceived(BMessage *message)
 	case ZERO_IN:
 		ZeroLR();
 		ZeroRL();
-		RedrawWindow();
+		//RedrawWindow();
 		break;
 	case ZERO_OUT:
 		ZeroLL();
 		ZeroRR();
-		RedrawWindow();
+		//RedrawWindow();
 		break;
 	case ZERO_LL:
 		ZeroLL();
-		RedrawWindow();
+		//RedrawWindow();
 		break;
 	case ZERO_LR:
 		ZeroLR();
-		RedrawWindow();
+		//RedrawWindow();
 		break;
 	case ZERO_RL:
 		ZeroRL();
-		RedrawWindow();
+		//RedrawWindow();
 		break;
 	case ZERO_RR:
 		ZeroRR();
-		RedrawWindow();
+		//RedrawWindow();
 		break;
-	
+
+
 	case SET_TIME:
 		message->FindInt32("time", &x);
 		Prefs.display_time = x;
-		RedrawWindow();
+		//RedrawWindow();
 		break;
 
 	case B_KEY_DOWN:
@@ -711,21 +613,76 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 		break;
 
-	case NEW:
-	case PASTE_NEW:
-	case OPEN:
-	case SAVE_AUDIO:
-	case SAVE_AS:
-	case SAVE_SELECTION:
-	case B_MIME_DATA:			// let the app parse drops
-	case B_SIMPLE_DATA:
-		be_app->PostMessage(message);
-		break;
+		case NEW:
+		{
+			app_info info;
+			be_app->GetAppInfo(&info);
+			be_roster->Launch(info.signature);
+			break;
+		}
 
-	default:
-		BWindow::MessageReceived(message);
+		case PASTE_NEW:
+		{
+			app_info info;
+			be_app->GetAppInfo(&info);
+			be_roster->Launch(info.signature, new BMessage(B_PASTE));
+			break;
+		}
+
+		case OPEN:
+		{
+			if (!IsChanged())
+				WindowsManager::GetOpenPanel()->Show();
+			break;
+		}
+
+		case SAVE_AUDIO:
+		{
+			break;
+		}
+
+		case SAVE_AS:
+		case SAVE:
+		{
+			if (fTracksContainer->CountTracks() == 0)
+				return;
+
+			fSaveSelection = false;
+
+			SavePanel* panel = WindowsManager::GetSavePanel();
+			panel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
+			panel->Show();
+
+			break;
+		}
+
+
+		case SAVE_SELECTION:
+		{
+			TrackView* current = fTracksContainer->CurrentTrack();
+
+			if (fTracksContainer->CountTracks() == 0
+				|| fTracksContainer->CurrentTrack() == NULL)
+				return;		
+
+			fSaveSelection = true;
+
+			SavePanel* panel = WindowsManager::GetSavePanel();
+			panel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
+
+			panel->Show();
+			break;
+		}
+
+		case B_SIMPLE_DATA:
+		case B_MIME_DATA:
+			be_app->PostMessage(message);
+			break;
+
+		default:
+			BWindow::MessageReceived(message);
 	}
-	
+
 	if (CurrentFocus())
 		CurrentFocus()->MakeFocus(false);
 }
@@ -736,19 +693,9 @@ FaberWindow::RedrawWindow()
 {
 	Lock();
 
- 	fToolBar->Invalidate();
 	fTracksContainer->Invalidate();
-	// Not needed for now
-	//fInfoToolBar->Invalidate();
 
 	Unlock();	
-}
-
-
-void
-FaberWindow::UpdateToolBar()
-{
-
 }
 
 
@@ -777,7 +724,7 @@ FaberWindow::UpdateMenu()
 	int32 filter = 0;
 	char name[255];
 	// TODO rework filters to have a decent API.
-	while(__FilterList[filter].name != NULL) {
+	/*while(__FilterList[filter].name != NULL) {
 		if (strcmp(__FilterList[filter].name, "---") == 0) {
 			menu_transform->AddSeparatorItem();
 		} else {
@@ -794,42 +741,35 @@ FaberWindow::UpdateMenu()
 			menuItem->SetEnabled( __FilterList[filter].type & Pool.sample_type );
 		}
 		filter++;
-	}
-
-	while (menu_analyze->ItemAt(0)) {
-		menuItem = menu_analyze->ItemAt(0);
-		menu_analyze->RemoveItem(menuItem);
-		delete menuItem;
-	}
-	
-	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Spectrum Analyzer"),
-		new BMessage(SPECTRUM), KeyBind.GetKey("SPECTRUM_ANALYZER"), KeyBind.GetMod("SPECTRUM_ANALYZER")));
-
-	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Sample Scope"),
-		new BMessage(SAMPLE_SCOPE), KeyBind.GetKey("SAMPLE_SCOPE"), KeyBind.GetMod("SAMPLE_SCOPE")));
+	}*/
 
 	// TODO remove them, in future the CommonPool will not exist anymore.
-	int32 sample_type = Pool.sample_type;
-	int32 selection = Pool.selection;
+	//int32 sample_type = Pool.sample_type;
+//	int32 selection = Pool.selection;
 
-	menu_transform->SetEnabled(sample_type != NONE);	// transform menu
-	menu_analyze->SetEnabled(sample_type != NONE);		// analyzers menu
+	bool enable = fTracksContainer->CountTracks() != 0;
+	bool selection = fTracksContainer->IsSelected();
+
+	menu_transform->SetEnabled(enable);	// transform menu
 
 //	menu_generate->SetEnabled(false);					// generation menu
 
-	menu_zero->SetEnabled(sample_type != NONE);			// zero cross menu
-	mn_trim->SetEnabled(selection != NONE);				// trim
-	mn_save_sel->SetEnabled(selection != NONE);			// save selection
-	fSaveMenu->SetEnabled(sample_type != NONE && Pool.changed);			// save
-	fSaveAsMenu->SetEnabled(sample_type != NONE);		// save as
-	mn_set_freq->SetEnabled(sample_type != NONE);		// set frequency
-	mn_resample->SetEnabled(sample_type != NONE);		// resample
-	mn_select_all->SetEnabled(sample_type != NONE);		// select all
-	mn_unselect->SetEnabled(selection != NONE);			// DeSelect all
-	mn_cut->SetEnabled(selection != NONE);				// cut
-	mn_copy->SetEnabled(selection != NONE);				// copy
-	mn_copy_silence->SetEnabled(selection != NONE);		// copy & Silence
-	mn_clear->SetEnabled(selection != NONE);			// clear
+	menu_zero->SetEnabled(enable);			// zero cross menu
+
+	mn_trim->SetEnabled(selection);				// trim
+	mn_save_sel->SetEnabled(selection);			// save selection
+
+	fSaveMenu->SetEnabled(enable/* && Pool.changed*/);			// save
+
+	fSaveAsMenu->SetEnabled(enable);		// save as
+	mn_set_freq->SetEnabled(enable);		// set frequency
+	mn_resample->SetEnabled(enable);		// resample
+	mn_select_all->SetEnabled(enable);		// select all
+	mn_unselect->SetEnabled(selection);			// DeSelect all
+	mn_cut->SetEnabled(selection);				// cut
+	mn_copy->SetEnabled(selection);				// copy
+	mn_copy_silence->SetEnabled(selection);		// copy & Silence
+	mn_clear->SetEnabled(selection);			// clear
 
 /*	mn_undo->SetEnabled(Hist.HasUndo());				// need history class for this
 
@@ -839,7 +779,6 @@ FaberWindow::UpdateMenu()
 	mn_paste_mix->SetEnabled(ClipBoard.HasClip());
 	mn_redo->SetEnabled(Hist.HasRedo());				// need history class for this
 */
-	UpdateToolBar();
 	Unlock();
 }
 
@@ -847,7 +786,7 @@ FaberWindow::UpdateMenu()
 //Check for and handle changed files
 bool FaberWindow::IsChanged(int32 mode)
 {
-	if (Pool.changed) {
+	if (fTracksContainer->HasChanged()) {
 		int32 k = (new BAlert(NULL,B_TRANSLATE("This project has changed. Do you want to save it now?"),
 			B_TRANSLATE("Save"),B_TRANSLATE("Discard"),B_TRANSLATE("Cancel")))->Go();
 
@@ -875,6 +814,45 @@ bool FaberWindow::IsChanged(int32 mode)
 }
 
 
+TracksContainer*
+FaberWindow::Container() const
+{
+	return fTracksContainer;
+}
+
+
+// refills the PeakFile Cache
+/*void
+FaberWindow::ResetIndexView()
+{
+	if (fTracksContainer->CountTracks() == 0)
+		break;
+
+	WindowsManager::Get()->StartProgress(B_TRANSLATE("Indexing..."), Pool.size);
+
+	Peak.Init(Pool.size+1, (Pool.sample_type == MONO) );
+	Peak.CreatePeaks(0, Pool.size+1, Pool.size+1);
+
+	WindowsManager::Get()->HideProgress();
+}*/
+
+
+void
+FaberWindow::SelectAll()
+{
+	UpdateMenu();
+	fTracksContainer->SelectAll();
+}
+
+
+void
+FaberWindow::DeSelectAll()
+{
+	UpdateMenu();
+	fTracksContainer->DeSelectAll();
+}
+
+
 BMenuBar*
 FaberWindow::_BuildMenu()
 {
@@ -889,21 +867,16 @@ FaberWindow::_BuildMenu()
 	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("New"), new BMessage(NEW),
 		KeyBind.GetKey("FILE_NEW"), KeyBind.GetMod("FILE_NEW")));
 
-	fRecentMenu = new BMenu(B_TRANSLATE("Open..."));
-	UpdateRecent();
-	menu->AddItem(fRecentMenu);
-	BMenuItem *openitem = menu->FindItem(B_TRANSLATE("Open..."));
-	openitem->SetShortcut(KeyBind.GetKey("FILE_OPEN"),KeyBind.GetMod("FILE_OPEN"));
-	openitem->SetMessage(new BMessage(OPEN));
-//	openitem->SetShortcut('O', 0);
-
 	/*
 	//TODO implement those functionalities
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."), new BMessage(INSERT), KeyBind.GetKey("FILE_INSERT"), KeyBind.GetMod("FILE_INSERT")));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."), new BMessage(INSERT),
+		KeyBind.GetKey("FILE_INSERT"), KeyBind.GetMod("FILE_INSERT")));
 
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Append..."), new BMessage(APPEND), KeyBind.GetKey("FILE_APPEND"), KeyBind.GetMod("FILE_APPEND")));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Append..."), new BMessage(APPEND),
+		KeyBind.GetKey("FILE_APPEND"), KeyBind.GetMod("FILE_APPEND")));
 
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Mix..."), new BMessage(OPEN_MIX), KeyBind.GetKey("FILE_MIX"), KeyBind.GetMod("FILE_MIX")));
+	menu->AddItem(new BMenuItem(B_TRANSLATE("Mix..."), new BMessage(OPEN_MIX),
+		KeyBind.GetKey("FILE_MIX"), KeyBind.GetMod("FILE_MIX")));
 	*/
 	menu->AddSeparatorItem();
 
@@ -944,50 +917,76 @@ FaberWindow::_BuildMenu()
 	fEditMenu->AddItem(mn_copy_silence = new BMenuItem(B_TRANSLATE("Copy & Silence"),
 		new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
 
-	fEditMenu->AddItem(mn_cut = new BMenuItem(B_TRANSLATE("Cut"), new BMessage(B_CUT), KeyBind.GetKey("CUT"), KeyBind.GetMod("CUT")));
+	fEditMenu->AddItem(mn_cut = new BMenuItem(B_TRANSLATE("Cut"), new BMessage(B_CUT),
+		KeyBind.GetKey("CUT"), KeyBind.GetMod("CUT")));
 
-	fEditMenu->AddItem(mn_paste = new BMenuItem(B_TRANSLATE("Paste"), new BMessage(B_PASTE), KeyBind.GetKey("PASTE"), KeyBind.GetMod("PASTE")));
+	fEditMenu->AddItem(mn_paste = new BMenuItem(B_TRANSLATE("Paste"), new BMessage(B_PASTE),
+		KeyBind.GetKey("PASTE"), KeyBind.GetMod("PASTE")));
 
-	fEditMenu->AddItem(mn_paste_new = new BMenuItem(B_TRANSLATE("Paste as new"), new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
+	fEditMenu->AddItem(mn_paste_new = new BMenuItem(B_TRANSLATE("Paste as new"),
+		new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
 
-	fEditMenu->AddItem(mn_paste_mix = new BMenuItem(B_TRANSLATE("Paste & mix"), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
+	fEditMenu->AddItem(mn_paste_mix = new BMenuItem(B_TRANSLATE("Paste & mix"),
+		new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
 
 	fEditMenu->AddSeparatorItem();
-	fEditMenu->AddItem(mn_select_all = new BMenuItem(B_TRANSLATE("Select All"), new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
+	fEditMenu->AddItem(mn_select_all = new BMenuItem(B_TRANSLATE("Select All"),
+		new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
 
-	fEditMenu->AddItem(mn_unselect = new BMenuItem(B_TRANSLATE("Unselect All"), new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"), KeyBind.GetMod("UNSELECT_ALL")));
+	fEditMenu->AddItem(mn_unselect = new BMenuItem(B_TRANSLATE("Unselect All"),
+		new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"), KeyBind.GetMod("UNSELECT_ALL")));
 
 	fEditMenu->AddSeparatorItem();
 	menu_zero = new BMenu(B_TRANSLATE("Zero Crossings"));
 
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Inwards"), new BMessage(ZERO_IN), KeyBind.GetKey("ZERO_IN"), KeyBind.GetMod("ZERO_IN")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Outwards"), new BMessage(ZERO_OUT), KeyBind.GetKey("ZERO_OUT"), KeyBind.GetMod("ZERO_OUT")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Left"), new BMessage(ZERO_LL), KeyBind.GetKey("ZERO_LL"), KeyBind.GetMod("ZERO_LL")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Right"), new BMessage(ZERO_LR), KeyBind.GetKey("ZERO_LR"), KeyBind.GetMod("ZERO_LR")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Left"), new BMessage(ZERO_RL), KeyBind.GetKey("ZERO_RL"), KeyBind.GetMod("ZERO_RL")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Right"), new BMessage(ZERO_RR), KeyBind.GetKey("ZERO_RR"), KeyBind.GetMod("ZERO_RR")));
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Inwards"), new BMessage(ZERO_IN),
+		KeyBind.GetKey("ZERO_IN"), KeyBind.GetMod("ZERO_IN")));
+
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Outwards"), new BMessage(ZERO_OUT),
+		KeyBind.GetKey("ZERO_OUT"), KeyBind.GetMod("ZERO_OUT")));
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Left"), new BMessage(ZERO_LL),
+		KeyBind.GetKey("ZERO_LL"), KeyBind.GetMod("ZERO_LL")));
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Right"), new BMessage(ZERO_LR),
+		KeyBind.GetKey("ZERO_LR"), KeyBind.GetMod("ZERO_LR")));
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Left"), new BMessage(ZERO_RL),
+		KeyBind.GetKey("ZERO_RL"), KeyBind.GetMod("ZERO_RL")));
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Right"), new BMessage(ZERO_RR),
+		KeyBind.GetKey("ZERO_RR"), KeyBind.GetMod("ZERO_RR")));
+
 	fEditMenu->AddItem(menu_zero);
 	
 	fEditMenu->AddSeparatorItem();
-	fEditMenu->AddItem(mn_clear = new BMenuItem(B_TRANSLATE("Clear"), new BMessage(CLEAR), KeyBind.GetKey("CLEAR"), KeyBind.GetMod("CLEAR")));
+	fEditMenu->AddItem(mn_clear = new BMenuItem(B_TRANSLATE("Clear"), new BMessage(CLEAR),
+		KeyBind.GetKey("CLEAR"), KeyBind.GetMod("CLEAR")));
 
-	fEditMenu->AddItem(mn_trim = new BMenuItem(B_TRANSLATE("Trim"), new BMessage(TRIM), KeyBind.GetKey("TRIM"), KeyBind.GetMod("TRIM")));
+	fEditMenu->AddItem(mn_trim = new BMenuItem(B_TRANSLATE("Trim"), new BMessage(TRIM),
+		KeyBind.GetKey("TRIM"), KeyBind.GetMod("TRIM")));
 
-	fEditMenu->AddItem(mn_set_freq = new BMenuItem(B_TRANSLATE("Change frequency..."), new BMessage(SET_FREQUENCY), KeyBind.GetKey("SET_FREQ"), KeyBind.GetMod("SET_FREQ")));
+	fEditMenu->AddItem(mn_set_freq = new BMenuItem(B_TRANSLATE("Change frequency..."),
+		new BMessage(SET_FREQUENCY), KeyBind.GetKey("SET_FREQ"), KeyBind.GetMod("SET_FREQ")));
 
-	fEditMenu->AddItem(mn_resample = new BMenuItem(B_TRANSLATE("Resample"), new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
+	fEditMenu->AddItem(mn_resample = new BMenuItem(B_TRANSLATE("Resample"),
+		new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
+
 
 	fTracksMenu = new BMenu(B_TRANSLATE("Tracks"));
+
 	fMainMenuBar->AddItem(fTracksMenu);
-	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("Add Empty Track"), new BMessage(), KeyBind.GetKey(""), KeyBind.GetMod("")));
-	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("Import Audio File as Track"), new BMessage(), KeyBind.GetKey(""), KeyBind.GetMod("")));
+
+
+	fRecentMenu = new BMenu(B_TRANSLATE("Import..."));
+	UpdateRecent();
+	fTracksMenu->AddItem(fRecentMenu);
+	BMenuItem *openitem = fTracksMenu->FindItem(B_TRANSLATE("Import..."));
+	openitem->SetShortcut(KeyBind.GetKey("FILE_OPEN"),KeyBind.GetMod("FILE_OPEN"));
+	openitem->SetMessage(new BMessage(OPEN));
+
+	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("New Empty Track"),
+		new BMessage(), KeyBind.GetKey(""), KeyBind.GetMod("")));
+
 
 	menu_transform = new BMenu(B_TRANSLATE("Effects"));
 	fMainMenuBar->AddItem(menu_transform);
-
-	menu_analyze = new BMenu(B_TRANSLATE("Analyze"));
-
-	fMainMenuBar->AddItem(menu_analyze);
 
 	menu_generate = new BMenu(B_TRANSLATE("Generate"));
 
@@ -996,11 +995,6 @@ FaberWindow::_BuildMenu()
 
 	menu = new BMenu(B_TRANSLATE("Help"));
 	fMainMenuBar->AddItem(menu);
-
-	menu->AddItem(new BMenuItem(B_TRANSLATE("Help"),
-		new BMessage(HELP), KeyBind.GetKey("HELP"), KeyBind.GetMod("HELP")));
-
-	menu->AddSeparatorItem();
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Homepage"),
 		new BMessage(HOMEPAGE), KeyBind.GetKey("HOMEPAGE"), KeyBind.GetMod("HOMEPAGE")));
@@ -1012,47 +1006,4 @@ FaberWindow::_BuildMenu()
 
 	SetKeyMenuBar(NULL);
 	return fMainMenuBar;
-}
-
-
-// refills the PeakFile Cache
-void
-FaberWindow::ResetIndexView()
-{
-	if (Pool.sample_type == NONE)
-		return;
-
-	WindowsManager::Get()->StartProgress(B_TRANSLATE("Indexing..."), Pool.size);
-
-	Peak.Init(Pool.size+1, (Pool.sample_type == MONO) );
-	Peak.CreatePeaks(0, Pool.size+1, Pool.size+1);
-
-	WindowsManager::Get()->HideProgress();
-}
-
-
-//   Select All
-void
-FaberWindow::SelectAll()
-{
-	if (Pool.sample_type != NONE) {
-		Pool.pointer = 0;
-		Pool.r_sel_pointer = Pool.size;
-		Pool.selection = BOTH;
-		UpdateMenu();
-		RedrawWindow();
-	}
-}
-
-
-//   DeSelect All
-void
-FaberWindow::DeSelectAll()
-{
-	if (Pool.sample_type != NONE && Pool.selection != NONE) {
-		Pool.selection = NONE;
-		Pool.r_sel_pointer = 0;
-		UpdateMenu();
-		RedrawWindow();
-	}
 }

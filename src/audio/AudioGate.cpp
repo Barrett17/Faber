@@ -3,85 +3,127 @@
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-#include "OutputAudioGate.h"
+#include "AudioGate.h"
+
+AudioGate* AudioGate::fInstance = NULL;
 
 
-OutputAudioGate::OutputAudioGate(TracksManager* fTracksManager)
+AudioGate::AudioGate(/*TracksManager* fTracksManager*/)
 	:
 	MediaGate()
 {
 }
 
-OutputAudioGate::~OutputAudioGate()
+AudioGate::~AudioGate()
 {
 }
 
 
+AudioGate*
+AudioGate::Get()
+{
+	if (fInstance == NULL)
+		fInstance = new AudioGate();
+
+	return fInstance;	
+}
+
+
 status_t
-OutputAudioGate::Start()
+AudioGate::Start()
 {
 	fStarted = true;
 
-	fSoundPlayer->Start();
 }
 
 
 status_t
-OutputAudioGate::StartFrom()
+AudioGate::StartFrom(int64 position)
 {
 }
 
 
 status_t
-OutputAudioGate::Stop()
+AudioGate::Stop()
 {
 	fStarted = false;
 }
 
 
 void
-OutputAudioGate::SetLoop(bool loop)
+AudioGate::SetPause(bool pause)
 {
+	fStarted = !pause;
 }
 
 
 bool
-OutputAudioGate::Loop() const
+AudioGate::IsStarted() const
+{
+	return fStarted;
+}
+
+
+bool
+AudioGate::IsPaused() const
+{
+	return !fStarted;
+}
+
+
+void
+AudioGate::SetLoop(bool loop)
+{
+	fLoop = loop;
+}
+
+
+bool
+AudioGate::Loop() const
+{
+	return fLoop;
+}
+
+
+void
+AudioGate::SetFilterHook(FilterHook* hook)
 {
 }
 
 
 void
-OutputAudioGate::SetFilterHook(FilterHook* hook)
+AudioGate::RemoveFilterHook(FilterHook* hook)
 {
 }
 
 
 void
-OutputAudioGate::RemoveFilterHook(FilterHook* hook)
+AudioGate::SetFramerate(float framerate)
 {
 }
 
 
 void
-OutputAudioGate::SetFramerate(float framerate)
+AudioGate::SetFormat(media_format format)
 {
-}
-
-
-void
-OutputAudioGate::SetFormat(media_format format)
-{
+	fFormat = format;
 }
 
 
 media_format
-OutputAudioGate::Format() const
+AudioGate::Format() const
 {
 	return fFormat;
 }
 
-void 
-OutputAudioGate::_Init()
+
+status_t
+AudioGate::Init()
+{
+}
+
+
+status_t
+AudioGate::InitNode()
 {
 }

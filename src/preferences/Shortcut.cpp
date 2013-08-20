@@ -344,7 +344,6 @@ void Shortcut::InstallDefaults(){
 
 	// help
 	Install(0,"HELP_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
-	Install(1,"HELP",	       		'H', B_COMMAND_KEY,					 14, 0,							HELP			);
 	Install(1,"ABOUT",			      0, 0,								  0, 0,							ABOUT			);
 
 	// The Transporter
@@ -395,8 +394,6 @@ void Shortcut::InstallDefaults(){
 
 	// analyze menu
 	Install(0,"ANALYZE_MENU2",		  0, 0,							  0, 0,							SPLITTER		);
-	Install(1,"SPECTRUM_ANALYZER",	  0, 0,							  0, 0,							SPECTRUM		);
-	Install(1,"SAMPLE_SCOPE",	 	  0, 0,							  0, 0,							SAMPLE_SCOPE	);
 
 	// The sample-tools
 	Install(0,"SAMPLE_TOOLS",		  0, 0,								  0, 0,						SPLITTER		);

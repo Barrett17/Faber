@@ -9,37 +9,31 @@
 
 #include "Track.h"
 
+class CPeakFile;
 
 class AudioTrack : public Track {
 public:
-	virtual const BString&	Name() const;
-	virtual void 			SetName(const char* name);
+							AudioTrack();
 
-	virtual float			Volume() const;
-	virtual void			SetVolume(float volume);
-
-	virtual void			SetBalance(float balance);
-	virtual float			Balance() const;
-
-	virtual void			SetRecording(bool solo);
-	virtual bool			IsRecording() const;
-
-	virtual void	 		MuteTrack(bool mute);
-	virtual bool 			IsMute() const;
-
-	virtual void			SetSolo(bool solo);
-	virtual bool			IsSolo() const;
+	virtual bool			IsAudio() const;
 
 			void			SetFramerate(float framerate);
 			int32			CountChannels() const;
 
+			bool			IsMono() const;
+			bool			IsStereo() const;
+			
+			void			SetArea(float* area, int64 size);
+			int64			Size() const;
+			float*			Area() const;
+			void			InitPeakFile();
+			CPeakFile*		PeakFile() const;
+
 private:
-			bool			fMuted;
-			bool			fSolo;
-			bool			fRecording;
-			BString			fName;
-			float			fVolume;
-			float			fBalance;
+
+			float*			fArea;
+			int64			fSize;
+			CPeakFile*		fPeak;
 };
 
 #endif

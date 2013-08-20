@@ -43,7 +43,6 @@ Application Faber :
 	SampleView.cpp
 
 	TracksContainer.cpp
-	TimeBarView.cpp # TODO rework or rewrite it
 	MouseIcons.cpp
 
 	# managers
@@ -51,14 +50,11 @@ Application Faber :
 
 	# Various windows
 	# TODO those should be reworked with layouts
-	AnalyzeWindow.cpp
-	SpectrumWindow.cpp
-	SampleScopeWindow.cpp
 	ProgressWindow.cpp
 	SavePanel.cpp
 	OpenPanel.cpp
-	FreqWindow.cpp
-	ResampleWindow.cpp
+	#FreqWindow.cpp
+	#ResampleWindow.cpp
 
 	# app and libstilnovo implementation base classes
 	SeekSlider.cpp
@@ -84,16 +80,16 @@ Application Faber :
 
 	# Common
 	#MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
-	CommonPool.cpp # TODO Remove it
+	#CommonPool.cpp # TODO Remove it
 	PeakFile.cpp
-	#History.cpp # TODO fix codestyle
+	TrackIO.cpp
 
 	# Audio internal API
 	Track.cpp
 	AudioTrack.cpp
 
 	MediaGate.cpp
-	OutputAudioGate.cpp
+	AudioGate.cpp
 
 	# Audio nodes
 	FaberNode.cpp

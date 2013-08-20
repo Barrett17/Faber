@@ -17,34 +17,33 @@
 #include "SampleView.h"
 #include "TrackView.h"
 
+class SampleView;
+
 
 class AudioTrackView : public TrackView
 {
 public:
 							AudioTrackView(const char* name = "AudioTrackView",
-								//AudioTrack* track,
+								AudioTrack* track = NULL,
 								uint32 resizingMode = B_FOLLOW_ALL_SIDES
 								| B_WILL_DRAW);
 	virtual 				~AudioTrackView();
 
-	virtual const BString&	Name() const;
-	virtual void 			SetName(const char* name);
 
-	virtual float			Volume() const;
-	virtual void			SetVolume(float volume);
-
-	virtual void	 		MuteTrack(bool mute);
-	virtual bool 			IsMute() const;
-
-	virtual void			SetSolo(bool solo);
-	virtual bool			IsSolo() const;
 
 			// Utility methods for fast access to the
 			// Track's values
-			//int32			ChannelCount() const;
-			//int32			FrameRate() const;
+			int32			CountChannels() const;
+			int32			FrameRate() const;
 
-			//AudioTrack*		Track() const;
+			AudioTrack*		Track() const;
+
+			void			SetUpdateDrawCache(bool value);
+			bool			UpdateDrawCache() const;
+
+			// needed by the SampleView
+			void			SetDirty(bool dirty);
+			bool			Dirty() const;
 
 			// Drawing related methods
 			void			Pulse();
@@ -52,6 +51,9 @@ public:
 private:
 			SampleView*		fSampleView;
 			AudioTrack*		fTrack;
+
+			bool			fUpdateDrawCache;
+			bool			fDirty;
 };
 
 #endif

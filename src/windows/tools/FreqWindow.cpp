@@ -92,7 +92,7 @@ FreqWindow::FreqWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),B_TRANSLATE("S
 	list->SetInvocationMessage(new BMessage(SELECT));
 	SetList();
 
-	m_old = Pool.frequency;
+	//m_old = Pool.frequency;
 	Run();
 	Show();
 }
@@ -100,14 +100,18 @@ FreqWindow::FreqWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),B_TRANSLATE("S
 /*******************************************************
 *   
 *******************************************************/
-void FreqWindow::SetList(){
+void FreqWindow::SetList()
+{
 
 	BStringItem *it = NULL;
-	for (int32 i=0; i<list->CountItems(); i++){
+	for (int32 i=0; i<list->CountItems(); i++) {
 		it = (BStringItem*)list->ItemAt(i);
 		it->Deselect();
 		float frequency = atof( it->Text() );
-		if (Pool.frequency == frequency){	it->Select();	text->SetValue(Pool.frequency);	}
+		/*if (Pool.frequency == frequency) {
+			it->Select();
+			text->SetValue(Pool.frequency);
+		}*/
 	}
 }
 
@@ -115,7 +119,7 @@ void FreqWindow::SetList(){
 *   
 *******************************************************/
 bool FreqWindow::QuitRequested(){
-	Pool.frequency = m_old;
+	//Pool.frequency = m_old;
 	return true;
 }
 
@@ -128,13 +132,13 @@ void FreqWindow::MessageReceived(BMessage* msg){
 
 	switch(msg->what){
 	case QUIT:
-		Pool.frequency = m_old;
+		//Pool.frequency = m_old;
 		Quit();
 		break;
 	
 	case SET:
 		// set the freq
-		Pool.InitBufferPlayer( Pool.frequency );
+		//Pool.InitBufferPlayer( Pool.frequency );
 		Quit();
 		break;	
 
@@ -143,14 +147,14 @@ void FreqWindow::MessageReceived(BMessage* msg){
 		if(i < 0)	break;		// nothing selected 
 		item = (BStringItem*)list->ItemAt(i);
 		
-		Pool.frequency = atof( item->Text() );
-		text->SetValue(Pool.frequency);
+		//Pool.frequency = atof( item->Text() );
+		//text->SetValue(Pool.frequency);
 		SetList();
 		list->Invalidate();
 		break;
 
 	case SET_TEXT:
-		Pool.frequency = text->Value();
+		///Pool.frequency = text->Value();
 		SetList();
 		list->Invalidate();
 		break;

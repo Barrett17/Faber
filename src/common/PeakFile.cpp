@@ -35,13 +35,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-CPeakFile Peak;
-
 // 64Kb
 #define BUFFER_SIZE		64*256	
 
 
-CPeakFile::CPeakFile()
+CPeakFile::CPeakFile(AudioTrack* track)
+	:
+	fTrack(track)
 {
 	buffer_left = NULL;
 	buffer_right = NULL;
@@ -105,78 +105,101 @@ void CPeakFile::CreatePeaks(int32 start, int32 end, int32 progress)
 	float min, max, max_r, min_r;
 	int32 to, ii;
 
-	start &= 0xfffffff8;	// mask off 1st 7 bits to round on 128 bytes
+	// mask off 1st 7 bits to round on 128 bytes
+	start &= 0xfffffff8;	
 	int32 p_add = 0, p_count = 0, count = 0;
-	if (progress){	// init progress process
+
+	// init progress process
+	if (progress) {	
+
 		p_count = (end-start)/(100*128);
 		p_add = progress/100;
-		if (!m_mono)	p_add <<=1;
+
+		if (!m_mono)
+			p_add <<=1;
 	}
 
-	if (m_mono)		// mono
-	{
-		float *p = Pool.sample_memory;
+	float* p = fTrack->Area();
+	int64 size = fTrack->Size();
 
-		for (int32 i=start; i<=end; i+=128){
+	// mono
+	if (m_mono)	{
+
+		for (int32 i=start; i<=end; i+=128) {
 			min = max = 0.0;
 			to = i+127;
-			if (to>Pool.size)	to = Pool.size;
-			for (int32 x=i; x<=to; x++){
-					if (p[x]>max)	max = p[x];
-					if (p[x]<min)	min = p[x];
+
+			if (to > size)
+				to = size;
+
+			for (int32 x=i; x<=to; x++) {
+					if (p[x]>max)
+						max = p[x];
+
+					if (p[x]<min)
+						min = p[x];
 			}
 			ii = i>>6;
 			buffer_left[ii] = (int16)(min * 32767);
 			buffer_left[ii+1] = (int16)(max * 32767);
 
-			if (progress && count--<0){	count = p_count;
-			WindowsManager::Get()->ProgressUpdate( p_add );
+			if (progress && count--<0) {
+				count = p_count;
+				WindowsManager::Get()->ProgressUpdate( p_add );
+			}
 		}
-		}
-	}
-	else	// Stereo
-	{
-		float *p = Pool.sample_memory;
+	} else { // Stereo
 
 		for (int32 i=start*2; i<=end*2; i+=256){
 			min = max = 0.0;
 			min_r = max_r = 0.0;
 			to = i+255;
-			if (to>Pool.size)	to = Pool.size;
+
+			if (to > size)
+				to = size;
+
 			for (int32 x=i; x<=to; x+=2){
-				if (p[x]>max)		max = p[x];
-				if (p[x]<min)		min = p[x];
-				if (p[x+1]>max_r)	max_r = p[x+1];
-				if (p[x+1]<min_r)	min_r = p[x+1];
+				if (p[x]>max)
+					max = p[x];
+
+				if (p[x]<min)
+					min = p[x];
+
+				if (p[x+1]>max_r)
+					max_r = p[x+1];
+
+				if (p[x+1]<min_r)
+					min_r = p[x+1];
 			}
+
 			ii = i>>6;
 			buffer_left[ii] = (int16)(min * 32767);
 			buffer_left[ii+1] = (int16)(max * 32767);
 			buffer_right[ii] = (int16)(min_r * 32767);
 			buffer_right[ii+1] = (int16)(max_r * 32767);
 
-			if (progress && count--<0){	count = p_count;
+			if (progress && count--<0){
+				count = p_count;
 				WindowsManager::Get()->ProgressUpdate(p_add);
 			}
 		}
 	}
-	Pool.update_peak = true;
 }
 
 
 
 void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 {
-	if (!buffer_left || !m_mono)	return;
+	if (!buffer_left || !m_mono)
+		return;
 	
 	float step = (end - start)/w;
 	int32 iStep = (int32)step;
 	int32 index, to;
 
-	if ( step <= 1 )
-	{
+	float* p = fTrack->Area();
 
-		float *p = Pool.sample_memory;
+	if ( step <= 1 ) {
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -187,10 +210,8 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 			*out++ = fTemp;
 			*out++ = 0.0f;
 		}
-	}else
-	if ( step < 64 )
-	{	float min, max;
-		float *p = Pool.sample_memory;
+	} else if ( step < 64 ) {
+		float min, max;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -206,11 +227,8 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 			else			*out++ = MAX(min, -1);
 			*out++ = 0.0f;
 		}
-	}else
-	if ( step < 128 )
-	{	float min, max;
-
-		float *p = Pool.sample_memory;
+	} else if ( step < 128 ) {
+		float min, max;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -225,19 +243,22 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 			*out++ = min;
 			*out++ = max;
 		}
-	}
-	else
-	{	int16 min, max;
-		for (int32 x = 0; x<w; x++){
+	} else {
+		int16 min, max;
+		for (int32 x = 0; x<w; x++) {
 			index = start + (int32)(x * step);
 			to = index + iStep;	if (to>m_size)	to = m_size;
 			index >>= 6;	index &= 0xfffffffe;
 			to >>= 6;		to &= 0xfffffffe;
 
 			min = max = 0;
-			for (int32 i=index; i<=to; i+=2){
-				if (buffer_left[i]<min)		min = buffer_left[i];
-				if (buffer_left[i+1]>max)	max = buffer_left[i+1];
+			for (int32 i=index; i<=to; i+=2) {
+
+				if (buffer_left[i]<min)
+					min = buffer_left[i];
+
+				if (buffer_left[i+1]>max)
+					max = buffer_left[i+1];
 			}
 
 			*out++ = min/32767.0;
@@ -247,21 +268,20 @@ void CPeakFile::MonoBuffer(float *out, int32 start, int32 end, float w)
 }
 
 
-// ============================================================
 void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, float w)
 {
 	if (!buffer_left ||!buffer_right || m_mono)
 		return;
-	
+
+	float* p = fTrack->Area();
+
 	float step = (end - start)/w;
 	int32 iStep = (int32)step;
 	int32 index, to;
 
-	if ( step <= 1 )
-	{
-		float *p = Pool.sample_memory;
+	if ( step <= 1 ) {
 
-		for (int32 x = 0; x<w; x++){
+		for (int32 x = 0; x<w; x++) {
 			index = start + (int32)(x * step);
 			float fTemp = p[index*2];
 			float fTempR = p[index*2+1];
@@ -275,11 +295,8 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 			*out_r++ = fTempR;
 			*out_r++ = 0.0f;
 		}
-	}else
-	if ( step < 64 )
-	{	float min, max, min_r, max_r;
-
-		float *p = Pool.sample_memory;
+	} else if ( step < 64 ) {
+		float min, max, min_r, max_r;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -303,11 +320,8 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 			else				*out_r++ = MAX(min_r, -1);
 			*out_r++ = 0.0f;
 		}
-	}else
-	if (step <128)
-	{	float min, max, min_r, max_r;
-
-		float *p = Pool.sample_memory;
+	} else if (step <128) {
+		float min, max, min_r, max_r;
 
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
@@ -328,9 +342,8 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 			*out_r++ = min_r;
 			*out_r++ = max_r;
 		}
-	}
-	else
-	{	int16 min, max, min_r, max_r;
+	} else {
+		int16 min, max, min_r, max_r;
 		for (int32 x = 0; x<w; x++){
 			index = start + (int32)(x * step);
 			to = index + iStep;	if (to>m_size)	to = m_size;

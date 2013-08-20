@@ -26,86 +26,78 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _SAMPLE_VIEW
-#define _SAMPLE_VIEW
+#ifndef _Sample_VIEW
+#define _Sample_VIEW
 
 #include <View.h>
 #include <Bitmap.h>
 
+#include "AudioTrack.h"
+
+class AudioTrackView;
+
 // peak: from peakfile
 // plain: lines, editable
 // points: draggable points
-enum {
-	DRAW_PEAK,
-	DRAW_PLAIN,
-	DRAW_POINTS
-};
+enum {DRAW_PEAK, DRAW_PLAIN, DRAW_POINTS };
 
-
-class SampleView: public BView
-{
-public:
-					SampleView();
-	virtual 		~SampleView();
-	virtual void	AttachedToWindow();
-	virtual void	Draw(BRect);
-	virtual void	MouseDown(BPoint);
-	virtual void	MouseUp(BPoint);
-	virtual void	MouseMoved(BPoint, uint32, const BMessage*);
-	virtual void	Pulse();
-	virtual void	FrameResized(float width, float height);
+class SampleView: public BView{
+ public:
+	SampleView(AudioTrackView* track);
+	virtual ~SampleView();
+	virtual void AttachedToWindow();
+	virtual void Draw(BRect);
+	virtual void MouseDown(BPoint);
+	virtual void MouseUp(BPoint);
+	virtual void MouseMoved(BPoint, uint32, const BMessage *);
+	virtual void Pulse();
+	virtual void FrameResized(float width, float height);
 	
-			void	EditPoint(BPoint p);
-			void	EditLine(BPoint, BPoint);
-			void	DoDraw(int64 ptr, int32 add, float v);
+	void EditPoint(BPoint p);
+	void EditLine(BPoint, BPoint);
+	void DoDraw(int64 ptr, int32 add, float v);
 	
-			void 	Init();
+	void Init();
 
-private:
-			void 	CalculateCache();
-			void 	DrawMono(BRect, bool left, bool draw_selection);
-			void 	DrawStereo(BRect);
-			void	DrawPart(rgb_color* inBits, rgb_color* outBits,
-							rgb_color col, float* peak_buffer,
-							BRect r, int32 size, int32 size2);
+ private:
+ 	void CalculateCache();
+ 	void DrawMono(BRect, bool left, bool draw_selection);
+ 	void DrawStereo(BRect);
+	void DrawPart(	rgb_color *inBits, rgb_color *outBits,
+					rgb_color col, float *peak_buffer,
+					BRect r, int32 size, int32 size2);
 
- 	BBitmap*		OffScreen;
- 	BBitmap*		leftCache;
- 	BBitmap*		rightCache;
- 	BBitmap*		leftSelected;
- 	BBitmap*		rightSelected;
- 
-	BPoint 			old;
-	BPoint			start_selection;
+ 	BBitmap *OffScreen;
+ 	BBitmap *leftCache, *rightCache, *leftSelected, *rightSelected;
+	BPoint old, start_selection;
  	
- 	rgb_color*		leftBits;
- 	rgb_color*		leftSelectedBits;
- 	rgb_color*		rightBits;
- 	rgb_color*		rightSelectedBits;
- 	rgb_color*		screenBits;
-	
- 	int32			leftWidth;
- 	int32			rightWidth;
- 	int32			screenWidth;
-	int32			edit_channel;
-	
- 	int64			pointer;
- 	int64			m_old_l_pointer;
- 	int64			m_old_r_pointer;
-	int64 			t;
-	int64			t2;
-	
- 	float			old_x;
-	float			m_width;
-	float			old_v;
-	float*			peak_buffer_l;
-	float*			peak_buffer_r;
+ 	rgb_color *leftBits, *leftSelectedBits;
+ 	rgb_color *rightBits, *rightSelectedBits;
+ 	rgb_color *screenBits;
+
+ 	int32 leftWidth, rightWidth, screenWidth;
+	int32 edit_channel;
+
+ 	int64 pointer, m_old_l_pointer, m_old_r_pointer;
+	int64 t, t2;
+
+ 	float old_x;
+	float m_width;
+	float old_v;
+	float *peak_buffer_l;
+	float *peak_buffer_r;
 
 	bool drag, edit, stop_following, draw_selection;
 	bool drag_border, drag_selection;
  	bool m_resized, cache_left_valid, cache_right_valid;
  	
 	sem_id viewSem;
+
+	AudioTrackView* fOwner;
+	AudioTrack* fTrack;
 };
 
 #endif
+
+
+

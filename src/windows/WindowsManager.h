@@ -60,8 +60,6 @@ public:
 	static SavePanel*		GetSavePanel();
 
 	// App tool windows
-	static void				ShowSpectrumWindow();
-	static void				ShowSampleScopeWindow();
 	static void				ShowResampleWindow();
 	static void				ShowFrequencyWindow();
 

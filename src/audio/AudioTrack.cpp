@@ -5,87 +5,80 @@
 #include "AudioTrack.h"
 
 #include "Globals.h"
+#include "PeakFile.h"
 
 
-const BString&
-AudioTrack::Name() const
+AudioTrack::AudioTrack()
 {
-	return fName;
-}
-
-
-void
-AudioTrack::SetName(const char* name)
-{
-	fName.SetTo(name);
-}
-
-
-float
-AudioTrack::Volume() const
-{
-	return fVolume;
-}
-
-
-void
-AudioTrack::SetVolume(float volume)
-{
-	fVolume = volume;
-}
-
-
-float
-AudioTrack::Balance() const
-{
-	return fBalance;
-}
-
-
-void
-AudioTrack::SetBalance(float balance)
-{
-	fBalance = balance;
-}
-
-
-void
-AudioTrack::MuteTrack(bool mute)
-{
-	fMuted = mute;
+	fPeak = new CPeakFile(this);
 }
 
 
 bool
-AudioTrack::IsRecording() const
+AudioTrack::IsAudio() const
 {
-	return fRecording;
+	return true;
 }
 
 
 void
-AudioTrack::SetRecording(bool recording)
+AudioTrack::SetArea(float* area, int64 size)
 {
-	fRecording = recording;
+	fArea = area;
+	fSize = size;
+	fEnd = fSize;
 }
 
 
-bool
-AudioTrack::IsMute() const
+int32
+AudioTrack::CountChannels() const
 {
-	return fMuted;
+	return fFormat.u.raw_audio.channel_count;
 }
 
 
 void
-AudioTrack::SetSolo(bool solo)
+AudioTrack::InitPeakFile()
 {
-	fSolo = solo;
+	bool flag = false;
+	if (fFormat.u.raw_audio.channel_count == 1)
+		flag = true;
+
+	fPeak->Init(fSize+1, flag);
+	fPeak->CreatePeaks(0, fSize+1, fSize+1);
+}
+
+
+CPeakFile*
+AudioTrack::PeakFile() const
+{
+	return fPeak;
 }
 
 
 bool
-AudioTrack::IsSolo() const
+AudioTrack::IsMono() const
 {
-	return fSolo;
+	return fFormat.u.raw_audio.channel_count == 1;
+}
+
+
+bool
+AudioTrack::IsStereo() const
+{
+	return fFormat.u.raw_audio.channel_count == 2;
+}
+
+
+int64
+AudioTrack::Size() const
+{
+	return fSize;
+}
+
+
+float*
+AudioTrack::Area() const
+{
+	return fArea;
 }

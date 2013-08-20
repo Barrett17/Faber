@@ -40,9 +40,7 @@
 #define QUIT		'quit'
 #define SET			'setF'
 
-/*******************************************************
-*   
-*******************************************************/
+
 RealtimeFilter::RealtimeFilter(const char *name, bool realtime)
 	: BWindow(BRect(1,1,240,200),name, B_FLOATING_WINDOW_LOOK,B_FLOATING_APP_WINDOW_FEEL, B_NOT_ZOOMABLE | B_NOT_RESIZABLE| B_AVOID_FOCUS)
 	, m_passes(1), m_pass(0)
@@ -67,16 +65,14 @@ RealtimeFilter::RealtimeFilter(const char *name, bool realtime)
 	AddChild(view);
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void RealtimeFilter::Start()
 {
 	// set the playHook
-	m_id = Pool.SetPlayHook( _FilterBuffer, 0, (void*)this);
+/*	m_id = Pool.SetPlayHook( _FilterBuffer, 0, (void*)this);
 	if (m_id == -1){
 		// error
-	}
+	}*/
 
 /*	if (!Pool.IsPlaying()){
 		play_self = true;
@@ -88,17 +84,13 @@ void RealtimeFilter::Start()
 */
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 BView *RealtimeFilter::ConfigView()
 {
 	return NULL;
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void RealtimeFilter::_FilterBuffer(float *buffer, size_t size, void *cookie)
 {
 	RealtimeFilter *win = (RealtimeFilter*)cookie;	// cast to our own clas
@@ -107,6 +99,7 @@ void RealtimeFilter::_FilterBuffer(float *buffer, size_t size, void *cookie)
 	if (win->box->Value() == B_CONTROL_OFF)
 		win->FilterBuffer(buffer, size);
 }
+
 
 /*******************************************************
 *   Aquire user memory
@@ -124,12 +117,14 @@ bool RealtimeFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 	}
 }
 
+
 /*******************************************************
 *   To delete user memory
 *******************************************************/
 void RealtimeFilter::DeAllocate()
 {
 }
+
 
 /*******************************************************
 *   To enable multi-pass filters
@@ -144,19 +139,15 @@ int32 RealtimeFilter::Passes()
 	return m_passes;
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void RealtimeFilter::UpdateValues()
 {
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void RealtimeFilter::Stop()
 {
-	Pool.RemovePlayHook( _FilterBuffer, m_id );
+	//Pool.RemovePlayHook( _FilterBuffer, m_id );
 /*	if (play_self){
 		Pool.mainWindow->PostMessage(TRANSPORT_STOP);
 		Pool.SetLoop(loop);
@@ -176,9 +167,7 @@ bool RealtimeFilter::QuitRequested()
 	return false;
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void RealtimeFilter::MessageReceived(BMessage* msg){
 	switch(msg->what){
 	case SET:

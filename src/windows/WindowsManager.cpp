@@ -135,40 +135,20 @@ WindowsManager::GetSavePanel()
 
 
 void
-WindowsManager::ShowSpectrumWindow()
-{
-	if (!IsWindowValid(Get()->fSpectrumWindow))
-		Get()->fSpectrumWindow = new SpectrumWindow();
-	else
-		Get()->fSpectrumWindow->Show();
-}
-
-
-void
-WindowsManager::ShowSampleScopeWindow()
-{
-	if (!IsWindowValid(Get()->fSampleScopeWindow))
-		Get()->fSampleScopeWindow = new SampleScopeWindow();
-	else
-		Get()->fSampleScopeWindow->Show();
-}
-
-
-void
 WindowsManager::ShowResampleWindow()
 {
-	BPoint point = _CalculateWindowPoint();
+	/*BPoint point = _CalculateWindowPoint();
 
-	(new ResampleWindow(point));
+	(new ResampleWindow(point));*/
 }
 
 
 void
 WindowsManager::ShowFrequencyWindow()
 {
-	BPoint point = _CalculateWindowPoint();
+	/*BPoint point = _CalculateWindowPoint();
 
-	(new FreqWindow(point));
+	(new FreqWindow(point));*/
 }
 
 

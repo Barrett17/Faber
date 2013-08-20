@@ -26,6 +26,7 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 #include "AnalyzeWindow.h"
+#include "AudioGate.h"
 
 #include "Globals.h"
 #include "SpinControl.h"
@@ -34,24 +35,6 @@
 #define UPDATE		'updt'
 #define QUIT		'quit'
 #define SET			'setF'
-
-
-AnalyzeWindow::AnalyzeWindow(BRect r, const char *name)
-	:
-	BWindow(r,name, B_FLOATING_WINDOW_LOOK,
-		B_FLOATING_APP_WINDOW_FEEL, B_NOT_ZOOMABLE | B_AVOID_FOCUS)
-{
-	// 25 frames per second by default
-	m_frames = 25;
-	m_count = 0;
-
-	// set the playHook
-	m_index = Pool.SetPlayHook( _PlayBuffer, PLAY_HOOKS/2, (void*)this);
-
-	SetPulseRate(50000);
-	Run();
-	Show();
-}
 
 
 void
@@ -72,10 +55,37 @@ AnalyzeWindow::_PlayBuffer(float *buffer, size_t size, void *cookie)
 	win->m_count -= size;
 
 	if (win->m_count <0) {
-		win->m_count = (int)Pool.system_frequency*2/win->m_frames;
+		//win->m_count = (int)Pool.system_frequency*2/win->m_frames;
 		win->PostMessage(UPDATE);
 	}
 }
+
+
+AnalyzeWindow::AnalyzeWindow(BRect r, const char *name)
+	:
+	BWindow(r,name, B_FLOATING_WINDOW_LOOK,
+		B_FLOATING_APP_WINDOW_FEEL, B_NOT_ZOOMABLE | B_AVOID_FOCUS)
+{
+	// 25 frames per second by default
+	m_frames = 25;
+	m_count = 0;
+
+	// set the playHook
+	AudioGate* gate = AudioGate::Get();
+	FilterHook* filter = new FilterHook();
+
+	filter->hook = _PlayBuffer;
+	filter->cookie = (void*) this;
+	gate->SetFilterHook(filter);
+
+	//m_index = Pool.SetPlayHook( _PlayBuffer, PLAY_HOOKS/2, (void*)this);
+
+	SetPulseRate(50000);
+	Run();
+	Show();
+}
+
+
 
 
 int32
@@ -95,7 +105,7 @@ AnalyzeWindow::SetFramesPerSecond(int32 frames)
 bool
 AnalyzeWindow::QuitRequested()
 {
-	Pool.RemovePlayHook(_PlayBuffer, m_index);
+	//AudioGate::Get()->RemoveFilterHook(_PlayBuffer);
 	return true;
 }
 

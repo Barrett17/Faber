@@ -55,7 +55,7 @@
 *******************************************************/
 ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),B_TRANSLATE("Resample"),B_FLOATING_WINDOW_LOOK,B_MODAL_APP_WINDOW_FEEL, B_NOT_RESIZABLE|B_NOT_ZOOMABLE)
 {
-	m_frequency = Pool.frequency;
+	//m_frequency = Pool.frequency;
 
 	BRect rect(0,0,350,200);
 	ResizeTo(rect.Width(), rect.Height());
@@ -100,10 +100,15 @@ ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),B_TRAN
 	r.OffsetBy(0,8);
 	r.bottom = r.top + 19;
 	c_box->AddChild(mono = new BRadioButton(r, NULL, B_TRANSLATE("Mono"), new BMessage(CHANGE_CHANNEL)));
-	if (Pool.sample_type == MONO)	mono->SetValue(B_CONTROL_ON);
+
+	if (Pool.sample_type == MONO)
+		mono->SetValue(B_CONTROL_ON);
+
 	r.OffsetBy(0,20);
 	c_box->AddChild(stereo = new BRadioButton(r, NULL, B_TRANSLATE("Stereo"), new BMessage(CHANGE_CHANNEL)));
-	if (Pool.sample_type == STEREO)	stereo->SetValue(B_CONTROL_ON);
+
+	if (Pool.sample_type == STEREO)
+		stereo->SetValue(B_CONTROL_ON);
 
 	float x = 8 + MAX( be_plain_font->StringWidth(B_TRANSLATE("Left Mix (%)")), be_plain_font->StringWidth(B_TRANSLATE("RIGHT_MIX")));
 	r.OffsetBy(0,30);
@@ -256,7 +261,8 @@ void ResampleWindow::MessageReceived(BMessage* msg)
 
 	case SELECT_BITS:
 		i = resolution->CurrentSelection();
-		if(i < 0)	break;		// nothing selected 
+		if(i < 0)
+			break;		// nothing selected 
 		item = (BStringItem*)resolution->ItemAt(i);
 		
 		m_bits = atoi( item->Text() );
@@ -278,7 +284,7 @@ void ResampleWindow::MessageReceived(BMessage* msg)
 		break;
 	
 	case CHANGE_CHANNEL:
-		if (mono->Value()){			// mono selected
+		/*if (mono->Value()){			// mono selected
 			if (Pool.sample_type == MONO){
 				left->SetEnabled(false);
 				right->SetEnabled(false);
@@ -298,7 +304,7 @@ void ResampleWindow::MessageReceived(BMessage* msg)
 				left->SetValue(Prefs.filter_resample_sl);
 				right->SetValue(Prefs.filter_resample_sr);
 			}
-		}
+		}*/
 		break;
 
 	default:

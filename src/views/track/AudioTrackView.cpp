@@ -18,13 +18,13 @@
 #include "VolumeSlider.h"
 
 
-AudioTrackView::AudioTrackView(const char* name, uint32 resizingMode)
+AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
+	uint32 resizingMode)
 	:
-	TrackView(name, resizingMode)
+	TrackView(name, track, resizingMode),
+	fTrack(track)
 {
-	fTrack = new AudioTrack();
-
-	fSampleView = new SampleView();
+	fSampleView = new SampleView(this);
 	fSampleView->Init();
 
 	BBox* box = new BBox("box");
@@ -37,7 +37,6 @@ AudioTrackView::AudioTrackView(const char* name, uint32 resizingMode)
 	muteButton->TrimIcon();
 
 	IconButton* recButton = new IconButton(NULL, 0, NULL, NULL, this);
-	// Well those could go into the constructor, but no reason for now.
 	recButton->SetToolTip(B_TRANSLATE("Disable Recording"));
 	recButton->SetIcon(kRecordIcon);
 	recButton->TrimIcon();
@@ -92,58 +91,36 @@ AudioTrackView::Pulse()
 }
 
 
-const BString&
-AudioTrackView::Name() const
+AudioTrack*
+AudioTrackView::Track() const
 {
-	return fTrack->Name();
+	return fTrack;
 }
 
 
 void
-AudioTrackView::SetName(const char* name)
+AudioTrackView::SetUpdateDrawCache(bool value)
 {
-	fTrack->SetName(name);
-}
-
-
-float
-AudioTrackView::Volume() const
-{
-	return fTrack->Volume();
-}
-
-
-void
-AudioTrackView::SetVolume(float volume)
-{
-	fTrack->SetVolume(volume);
-}
-
-
-
-void
-AudioTrackView::MuteTrack(bool mute)
-{
-	fTrack->MuteTrack(mute);
+	fUpdateDrawCache = value;
 }
 
 
 bool
-AudioTrackView::IsMute() const
+AudioTrackView::UpdateDrawCache() const
 {
-	return fTrack->IsMute();
+	return fUpdateDrawCache;
 }
 
 
 void
-AudioTrackView::SetSolo(bool solo)
+AudioTrackView::SetDirty(bool dirty)
 {
-	fTrack->SetSolo(solo);
+	fDirty = dirty;
 }
 
 
 bool
-AudioTrackView::IsSolo() const
+AudioTrackView::Dirty() const
 {
-	return fTrack->IsSolo();
+	return fDirty;
 }

@@ -24,10 +24,6 @@
 #include <PopUpMenu.h>
 #include <Window.h>
 
-// To be removed
-#include "CommonPool.h"
-extern cookie_record play_cookie;
-//
 
 #undef B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT "MediaPlayer-PeakView"
@@ -206,7 +202,7 @@ PeakView::FrameResized(float width, float height)
 void
 PeakView::Pulse()
 {
-	if (!Pool.IsPlaying()){
+	/*if (!Pool.IsPlaying()){
 		play_cookie.left = play_cookie.right = 0.0;
 	} else {
 		SetMax(play_cookie.left, 0);
@@ -234,7 +230,7 @@ PeakView::Pulse()
 	fGotData = false;
 
 	_DrawBitmap();
-	Flush();
+	Flush();*/
 }
 
 

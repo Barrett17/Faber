@@ -43,7 +43,7 @@ InfoToolBar::~InfoToolBar()
 void
 InfoToolBar::Pulse()
 {
-	int64 p = 0;
+	/*int64 p = 0;
 	if (Pool.sample_type){
 		if (Pool.IsPlaying()){
 			p = Pool.last_pointer;
@@ -54,7 +54,7 @@ InfoToolBar::Pulse()
 	if (p != pointer){
 		pointer = p;
 		fPointerTextView->SetText(BString() << p);
-	}
+	}*/
 }
 
 

@@ -245,8 +245,8 @@ PrefColors::MessageReceived(BMessage *msg)
 		if(i < 0){
 			control->SetEnabled(false);
 			color_view->SetEnabled(false);
-			Pool.sample_view_dirty = true;	// update the sample-view
-			Pool.update_draw_cache = true;	// update the draw cache
+		/*	Pool.sample_view_dirty = true;	// update the sample-view
+			Pool.update_draw_cache = true;	// update the draw cache*/
 					// update the index cache
 			 WindowsManager::MainWindow()->RedrawWindow();
 			break; // nothign selected 
@@ -257,8 +257,8 @@ PrefColors::MessageReceived(BMessage *msg)
 		c.alpha = 255;
 		control->SetValue(c);
 		color_view->SetColor(c);
-		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.update_draw_cache = true;	// update the draw cache
+		/*Pool.sample_view_dirty = true;	// update the sample-view
+		Pool.update_draw_cache = true;	// update the draw cache*/
 				// update the index cache
 		WindowsManager::MainWindow()->RedrawWindow();
 		break;
@@ -280,8 +280,8 @@ PrefColors::MessageReceived(BMessage *msg)
 		col->blue = c.blue;
 		col->alpha = c.alpha;
 		control->SetValue(c);
-		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.update_draw_cache = true;	// update the draw cache
+		/*Pool.sample_view_dirty = true;	// update the sample-view
+		Pool.update_draw_cache = true;	// update the draw cache*/
 				// update the index cache
 		WindowsManager::MainWindow()->RedrawWindow();
 		break;
@@ -303,8 +303,8 @@ PrefColors::MessageReceived(BMessage *msg)
 		col->blue = c.blue;
 		col->alpha = c.alpha;
 		color_view->SetColor(c);
-		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.update_draw_cache = true;	// update the draw cache
+		/*Pool.sample_view_dirty = true;	// update the sample-view
+		Pool.update_draw_cache = true;	// update the draw cache*/
 				// update the index cache
 		WindowsManager::MainWindow()->RedrawWindow();
 		break;

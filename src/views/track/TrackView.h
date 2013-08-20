@@ -20,9 +20,13 @@ class TrackView : public BView
 {
 public:
 							TrackView(const char* name,
-								uint32 resizingMode);
+								Track* track, uint32 resizingMode);
 
 	virtual 				~TrackView();
+
+			bool			IsSelected() const { };
+			bool			RightSelected() const;
+			bool			LeftSelected() const;
 
 			void			CurrentSelection(int64* start,int64* end) const;
 			void			SelectAt(int64 start,int64 end);
@@ -30,29 +34,35 @@ public:
 			int64			SelectionStart() const;
 			int64			SelectionEnd() const;
 
-			int64			TrackStart() const;
-			int64			TrackEnd() const;
+
 
 			void			SelectAll();
 			void			Unselect();
 
+	virtual const BString&	Name() const;
+	virtual void 			SetName(const char* name);
 
-	virtual const BString&	Name() const = 0;
-	virtual void 			SetName(const char* name) = 0;
+	virtual float			Volume() const;
+	virtual void			SetVolume(float volume);
 
-	virtual float			Volume() const = 0;
-	virtual void			SetVolume(float volume) = 0;
+	virtual void			SetBalance(float balance);
+	virtual float			Balance() const;
 
-	virtual void	 		MuteTrack(bool mute) = 0;
-	virtual bool 			IsMute() const = 0;
+	virtual bool			IsPlaying() const;
+	virtual void			SetPlaying(bool playing);
 
-	virtual void			SetSolo(bool solo) = 0;
-	virtual bool			IsSolo() const = 0;
+	virtual void			SetRecording(bool solo);
+	virtual bool			IsRecording() const;
 
-	virtual	void			Invalidate() = 0;
-	virtual void			Pulse() = 0;
+	virtual void	 		MuteTrack(bool mute);
+	virtual bool 			IsMute() const;
+
+	virtual void			SetSolo(bool solo);
+	virtual bool			IsSolo() const;
 
 private:
+			Track*			fTrack;
+
 			int64			fStart;
 			int64			fEnd;
 

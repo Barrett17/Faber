@@ -32,12 +32,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "AudioTrack.h"
 #include "Globals.h"
 
 class CPeakFile
 {
 public:
-				CPeakFile();
+				CPeakFile(AudioTrack* track);
 				~CPeakFile();
 	void		Init(int32 size, bool mono);	// size in samples
 
@@ -54,6 +55,7 @@ public:
 					int32 end, float w);
 
 private:
+	AudioTrack*	fTrack;
 
 	// memory size in samples
   	int32 		m_size;		
@@ -62,7 +64,5 @@ private:
 	int16*		buffer_right;
 	float*		buffer;
 };
-
-extern CPeakFile Peak; // Included so you don't have too
 
 #endif

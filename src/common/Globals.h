@@ -39,12 +39,10 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-
 #include <SupportDefs.h>
 #include <Locale.h>
 #include <Catalog.h>
 
-#include "CommonPool.h"
 #include "Preferences.h"
 //#include "History.h"
 
@@ -80,6 +78,7 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 #define KEYBINDINGS_CONF_NAME "KeyBindings"
 
 // Math
+
 #define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
 #define INT_MUL3(a,b,c,t)			((t) = (a) * (b) * (c)+ 0x7F5B, ((((t) >> 7) + (t)) >> 16))
 #define INT_BLEND(a,b,alpha,tmp)	(INT_MUL((a)-(b), alpha, tmp) + (b))
@@ -130,6 +129,9 @@ enum {
 };
 
 // Messages
+#define ABOUT				'bout'
+#define HOMEPAGE			'hmep'
+
 #define SAVE_AS   			'ssam'
 #define NEW					'Bnew'
 #define OPEN				'Bopn'
@@ -147,9 +149,7 @@ enum {
 #define PASTE_MIXED			'pmix'
 #define PREFERENCES			'pref'
 #define OPEN_MIX			'opnM'
-#define HELP				'help'
-#define ABOUT				'bout'
-#define HOMEPAGE			'hmep'
+
 #define ZERO_IN				'zrIn'
 #define ZERO_OUT			'zrOt'
 #define ZERO_LL				'zrLL'
@@ -202,9 +202,6 @@ enum {
 	TOOL_DRAW	= 1,
 	TOOL_PLAY	= 2
 };
-
-#define SPECTRUM			'spct'
-#define SAMPLE_SCOPE		'spls'
 
 #define SET_TIME			'setT'
 

@@ -203,15 +203,15 @@ PrefGeneral::MessageReceived(BMessage* msg)
 		Prefs.show_peak = (c_peak->Value() == B_CONTROL_ON);
 		Prefs.follow_playing = (c_follow_playing->Value() == B_CONTROL_ON);
 		Prefs.drag_drop = (c_drag_drop->Value() == B_CONTROL_ON);
-		Pool.update_draw_cache = true;	// update the draw cache
-		Pool.sample_view_dirty = true;	// update the sample-view
+		/*Pool.update_draw_cache = true;	// update the draw cache
+		Pool.sample_view_dirty = true;	// update the sample-view*/
 		 WindowsManager::MainWindow()->RedrawWindow();
 		break;
 	
 	case PEAK_LEVEL:
 		Prefs.peak = s_peak->Value()/100.0;
-		Pool.sample_view_dirty = true;	// update the sample-view
-		Pool.update_draw_cache = true;	// update the draw cache
+		/*Pool.sample_view_dirty = true;	// update the sample-view
+		Pool.update_draw_cache = true;	// update the draw cache*/
 		 WindowsManager::MainWindow()->RedrawWindow();
 		break;
 

@@ -13,12 +13,7 @@ TracksContainer::TracksContainer()
 	BGroupView(B_VERTICAL, 0),
 	fTrackViews(false)
 {
-	fTimeBar = new TimeBarView();
-	GroupLayout()->AddView(fTimeBar);
-	GroupLayout()->SetInsets(10, 10, 10, 10);
-
-	AddTrack(new AudioTrackView());
-	//AddTrack(new AudioTrackView());
+	//GroupLayout()->SetInsets(10, 10, 10, 10);
 }
 
 
@@ -33,8 +28,6 @@ TracksContainer::Invalidate()
 	for (int i = 0; i < CountTracks(); i++)
 		TrackAt(i)->Invalidate();
 
-	fTimeBar->Invalidate();
-
 	BView::Invalidate();
 }
 
@@ -44,8 +37,6 @@ TracksContainer::Pulse()
 {
 	for (int i = 0; i < CountTracks(); i++)
 		TrackAt(i)->Pulse();
-
-	fTimeBar->Pulse();
 }
 
 
@@ -54,6 +45,18 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 {
 	GroupLayout()->AddView(track);
 	return fTrackViews.AddItem(track, index);
+}
+
+
+status_t
+TracksContainer::AddTrack(Track* track)
+{
+	if (track->IsAudio()) {
+		AudioTrackView* trackView = new AudioTrackView("AudioTrack",
+			(AudioTrack*) track);
+		return AddTrack(trackView);
+	}
+	return B_ERROR;
 }
 
 
@@ -83,4 +86,70 @@ TrackView*
 TracksContainer::CurrentTrack()
 {
 	
+}
+
+
+bool
+TracksContainer::IsSelected()
+{
+	
+}
+
+
+bool
+TracksContainer::HasChanged()
+{
+	return false;
+}
+
+
+void
+TracksContainer::SelectAll()
+{
+	
+}
+
+
+void
+TracksContainer::DeSelectAll()
+{
+	
+}
+
+
+void
+TracksContainer::ZoomIn()
+{
+	
+}
+
+
+void
+TracksContainer::ZoomOut()
+{
+	
+}
+
+
+void
+TracksContainer::ZoomFull()
+{
+	
+}
+
+
+void
+TracksContainer::ZoomSelection()
+{
+	
+}
+
+
+void
+TracksContainer::SetDirty(bool dirty)
+{
+	for (int i = 0; i < CountTracks(); i++) {
+		AudioTrackView* track = (AudioTrackView*) TrackAt(i);
+		track->SetDirty(dirty);
+	}
 }
