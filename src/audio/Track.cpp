@@ -29,7 +29,9 @@ Track::Track()
 	fPlaying(false),
 	fRecording(false),
 	fStart(0),
-	fEnd(0)
+	fEnd(0),
+	fVolume(5),
+	fBalance(5)
 {
 
 }

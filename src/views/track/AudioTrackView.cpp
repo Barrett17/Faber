@@ -22,11 +22,14 @@
 #include <Box.h>
 #include <Button.h>
 #include <LayoutBuilder.h>
+#include <PopUpMenu.h>
 #include <StringView.h>
 
 #include "FaberResources.h"
 #include "IconButton.h"
 #include "PeakView.h"
+#include "Shortcut.h"
+#include "ToolButton.h"
 #include "VolumeSlider.h"
 
 
@@ -40,39 +43,115 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fSampleView->Init();
 
 	BBox* box = new BBox("box");
-	box->SetExplicitMaxSize(BSize(120, 400));
 
 	IconButton* muteButton = new IconButton(NULL, 0, NULL, NULL, this);
 	// Well those could go into the constructor, but no reason for now.
 	muteButton->SetToolTip(B_TRANSLATE("Mute Track"));
 	muteButton->SetIcon(kMuteIcon);
 	muteButton->TrimIcon();
+	muteButton->SetValue(fTrack->IsMute());
 
 	IconButton* recButton = new IconButton(NULL, 0, NULL, NULL, this);
 	recButton->SetToolTip(B_TRANSLATE("Disable Recording"));
 	recButton->SetIcon(kRecordIcon);
 	recButton->TrimIcon();
 
+	ToolButton* toolButton = new ToolButton(NULL, track->Name(), NULL);
+	recButton->SetToolTip(B_TRANSLATE("Track Options"));
+	toolButton->SetIcon(kMuteIcon);
+
+	// Track menu
+	BPopUpMenu* trackMenu = new BPopUpMenu("TrackMenu");
+
+	trackMenu->AddItem(new BMenuItem("Set Name...",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem("Mono",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Stereo (right)",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Stereo (left)",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem("Select All",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem("Edit Left",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Edit Right",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Edit Both",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."), new BMessage(INSERT),
+		KeyBind.GetKey("FILE_INSERT"), KeyBind.GetMod("FILE_INSERT")));
+
+	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."), new BMessage(APPEND),
+		KeyBind.GetKey("FILE_APPEND"), KeyBind.GetMod("FILE_APPEND")));
+
+	toolButton->SetMenu(trackMenu);
+
+	trackMenu->SetTargetForItems(this);
+
+	IconButton* closeButton = new IconButton(NULL, 0, NULL, NULL, this);
+	closeButton->SetToolTip(B_TRANSLATE("Close"));
+	closeButton->SetIcon(kCloseTrackIcon);
+	closeButton->TrimIcon();
+
 	PeakView* peak = new PeakView("OutputPeakView", false, false);
 	peak->SetExplicitMaxSize(BSize(200, 15));
 
-	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
-	slider->SetLabel("Volume");
-	
+	VolumeSlider* volumeSlider = new VolumeSlider("volumeSlider",
+		0, 10, 7, NULL);
+	volumeSlider->SetLabel("Volume");
+	volumeSlider->SetToolTip(B_TRANSLATE(
+		"Move vertically to set the track volume."));
+	volumeSlider->SetValue(fTrack->Volume());
+
+	VolumeSlider* balanceSlider = new VolumeSlider("balanceSlider",
+		0, 10, 7, NULL);
+	balanceSlider->SetLabel("Balance");
+	balanceSlider->SetToolTip(B_TRANSLATE(
+		"Move vertically to balance the sound."));
+	balanceSlider->SetValue(fTrack->Balance());
+
 	BLayoutBuilder::Group<>(box, B_VERTICAL, 2)
 		.SetInsets(10, 10, 10, 10)
-		.Add(new BStringView("", "Track name"))
+
 		.AddGroup(B_HORIZONTAL, 0)
-			.Add(recButton)
-			.Add(muteButton)
-			.Add(new BButton("S"))
+			.Add(closeButton)
+			.AddStrut(30.0f)
+			.Add(toolButton)
 		.End()
-		.Add(new BStringView("", "Input"))
-		.Add(peak)
-		.Add(slider)
-		.Add(new BStringView("", "Balance"))
-		.Add(new VolumeSlider("slider", 0, 10, 7, NULL))
+
+		.AddSplit(B_VERTICAL, 2.0f)
+			.AddGroup(B_HORIZONTAL)
+				.Add(new BStringView("", "Input"))
+				.Add(peak)
+			.End()
+			.AddGroup(B_HORIZONTAL, 0)
+				.Add(recButton)
+				.Add(muteButton)
+				.Add(new BButton("S"))
+			.End()
+		.End()
+
+		.Add(volumeSlider)
+		.Add(balanceSlider)
 		.AddGlue()
+
 	.End();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)

@@ -36,7 +36,9 @@ enum {
 	kZoomFullWaveIcon,
 
 	// track icons
-	kMuteIcon
+	kMuteIcon,
+	kTrackMenuIcon,
+	kCloseTrackIcon
 };
 
 #endif

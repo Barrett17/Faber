@@ -12,12 +12,11 @@
 
 int main()
 {
-	FaberApp* faberApp;
-	faberApp = new FaberApp();
+	FaberApp* faber;
+	faber = new FaberApp();
 
-	faberApp->Run();
+	faber->Run();
 
-	delete faberApp;
 	return 0;
 }
 
@@ -50,13 +49,8 @@ FaberApp::QuitRequested()
 void
 FaberApp::MessageReceived(BMessage* message)
 {
-	message->PrintToStream();
 	switch (message->what)
 	{
-		case UPDATE_MENU:
-			fFaberWindow->UpdateMenu();
-		break;
-
 		case DROP_PASTE:
 		case B_PASTE:
 			fFaberWindow->PostMessage(message);
@@ -77,7 +71,12 @@ void
 FaberApp::RefsReceived(BMessage* message)
 {
 	Track* track = TrackIO::Get()->Load(message);
+
+	if (track == NULL)
+		return;
+
 	fFaberWindow->Container()->AddTrack(track);
+	fFaberWindow->UpdateMenu();
 }
 
 

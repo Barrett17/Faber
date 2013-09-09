@@ -32,6 +32,7 @@ public:
 						TracksContainer();
 	virtual 			~TracksContainer();
 
+	void				MessageReceived(BMessage* message);
 
 	TrackView*			CurrentTrack();
 	TrackView*			CurrentSelection();
@@ -45,7 +46,7 @@ public:
 	bool 				HasChanged();
 
 	void				SelectAll();
-	void				DeSelectAll();
+	void				UnselectAll();
 	/*
 	status_t 			MuteAllTracks(bool mute);
 	//status_t			ReorderTracks(enum reorderType);*/

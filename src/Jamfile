@@ -66,6 +66,7 @@ Application Faber :
 	FStringItem.cpp
 	IconButton.cpp
 	BitmapDrawer.cpp
+	ToolButton.cpp
 
 	# Settings
 	SettingsWindow.cpp

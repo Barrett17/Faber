@@ -26,7 +26,6 @@ TrackView::TrackView(const char* name,
 	BView(name, resizingMode),
 	fTrack(track)
 {
-	SetExplicitMaxSize(BSize(120, 80));
 }
 
 
@@ -131,3 +130,72 @@ TrackView::IsSolo() const
 {
 	return fTrack->IsSolo();
 }
+
+
+
+
+
+void
+TrackView::SelectAll()
+{
+
+}
+
+
+void
+TrackView::Unselect()
+{
+
+}
+
+/*
+void
+TrackView::SetRightSelection(bool right)
+{
+	fRightSelection = right;
+}
+
+
+
+void
+TrackView::SetLeftSelection(bool left)
+{
+
+	fLeftSelection = left;
+}
+
+
+void
+TrackView::SetBothSelection(bool both)
+{
+
+	fBothSelection = both;
+}*/
+
+
+bool
+TrackView::IsSelected() const
+{
+	return false;
+}
+
+/*
+bool
+TrackView::RightSelection() const
+{
+	return fRightSelection;
+}
+
+
+bool
+TrackView::LeftSelection() const
+{
+	return fLeftSelection;
+}
+
+
+bool
+TrackView::BothSelection() const
+{
+	return fBothSelection;
+}*/

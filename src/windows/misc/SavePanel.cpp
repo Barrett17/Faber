@@ -1,30 +1,30 @@
 /*
-   	Copyright (c) 2003, Xentronix
-	Author: Frans van Nispen (frans@xentronix.com)
-	All rights reserved.
-	
-	Redistribution and use in source and binary forms, with or without modification,
-	are permitted provided that the following conditions are met:
-	
-	Redistributions of source code must retain the above copyright notice, this list
-	of conditions and the following disclaimer. Redistributions in binary form must
-	reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution. 
-	
-	Neither the name of Xentronix nor the names of its contributors may be used
-	to endorse or promote products derived from this software without specific prior
-	written permission. 
-	
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-	SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+        Copyright (c) 2003, Xentronix
+        Author: Frans van Nispen (frans@xentronix.com)
+        All rights reserved.
+
+        Redistribution and use in source and binary forms, with or without modification,
+        are permitted provided that the following conditions are met:
+
+        Redistributions of source code must retain the above copyright notice, this list
+        of conditions and the following disclaimer. Redistributions in binary form must
+        reproduce the above copyright notice, this list of conditions and the following
+        disclaimer in the documentation and/or other materials provided with the distribution.
+
+        Neither the name of Xentronix nor the names of its contributors may be used
+        to endorse or promote products derived from this software without specific prior
+        written permission.
+
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+        EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+        OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+        SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+        INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+        INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+        LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #include <InterfaceKit.h>
 #include <TranslationKit.h>
@@ -67,8 +67,8 @@ FileFormatMenuItem::~FileFormatMenuItem()
 SavePanel::SavePanel(BHandler *handler)
 	:
 	BFilePanel(B_SAVE_PANEL, new BMessenger(handler),
-		NULL, B_FILE_NODE, false,new BMessage(SAVE_AUDIO),
-		NULL, true, true)
+	           NULL, B_FILE_NODE, false,new BMessage(SAVE_AUDIO),
+	           NULL, true, true)
 {
 	if (Window()->Lock()) {
 		float minw, maxw, minh, maxh;
@@ -107,14 +107,14 @@ SavePanel::SavePanel(BHandler *handler)
 			countvw->MoveBy(0, -40);
 
 		BView* textview = (BView *)background->FindView("text view");
-		if (textview){
+		if (textview) {
 			textview->ResizeBy(50, 0);
 			textview->MoveBy(0, -40);
 		}
-		
+
 		// Add the new BHandler to the window's looper
 		Window()->AddHandler(this);
-		
+
 		if (!cancel || !textview || !hscrollbar) {
 			//printf("Couldn't find necessary controls.\n");
 			return;
@@ -128,18 +128,18 @@ SavePanel::SavePanel(BHandler *handler)
 		BPopUpMenu* popmenu = new BPopUpMenu(B_TRANSLATE("Format"));
 
 		fFormatMenu = new BMenuField(rect, NULL, B_TRANSLATE("Format"),
-			popmenu , B_FOLLOW_LEFT | B_FOLLOW_BOTTOM,
-			B_WILL_DRAW | B_NAVIGABLE);
+		                             popmenu, B_FOLLOW_LEFT | B_FOLLOW_BOTTOM,
+		                             B_WILL_DRAW | B_NAVIGABLE);
 
 		background->AddChild(fFormatMenu);
-	
+
 		rect.OffsetBy(0,24);
 
 		popmenu = new BPopUpMenu(B_TRANSLATE("Codec"));
 
 		fAudioMenu = new BMenuField(rect, NULL, B_TRANSLATE("Codec"),
-			popmenu,B_FOLLOW_LEFT | B_FOLLOW_BOTTOM,
-			B_WILL_DRAW | B_NAVIGABLE);
+		                            popmenu,B_FOLLOW_LEFT | B_FOLLOW_BOTTOM,
+		                            B_WILL_DRAW | B_NAVIGABLE);
 
 		background->AddChild(fAudioMenu);
 
@@ -148,7 +148,7 @@ SavePanel::SavePanel(BHandler *handler)
 
 		BuildFormatMenu();
 		BuildAudioMenu();
-		
+
 		Window()->Unlock();
 	}
 }
@@ -160,17 +160,17 @@ void
 SavePanel::MessageReceived(BMessage *message)
 {
 	switch (message->what) {
-		case PANEL_FORMAT:
-			BuildAudioMenu();
-			break;
+	case PANEL_FORMAT:
+		BuildAudioMenu();
+		break;
 
-		case PANEL_CODEC:
-			break;
+	case PANEL_CODEC:
+		break;
 
-		default:
-			BHandler::MessageReceived(message);
-			break;
-		}
+	default:
+		BHandler::MessageReceived(message);
+		break;
+	}
 }
 
 
@@ -192,7 +192,7 @@ SavePanel::BuildFormatMenu()
 		menu->AddItem(ff_item);
 		ff_item->SetTarget(this);
 	}
-	
+
 	// mark first item
 	item = menu->ItemAt(0);
 	if (item != NULL) {
@@ -224,7 +224,7 @@ SavePanel::BuildAudioMenu()
 
 	// add available audio encoders to menu
 	format.type = B_MEDIA_RAW_AUDIO;
-	format.u.raw_audio = media_raw_audio_format::wildcard;	
+	format.u.raw_audio = media_raw_audio_format::wildcard;
 	while (get_next_encoder(&cookie, mf_format, &format, &outfmt, &codec_info) == B_OK) {
 		cmi = new CodecMenuItem(&codec_info, PANEL_CODEC);
 		menu->AddItem(cmi);
@@ -251,18 +251,18 @@ SavePanel::BuildAudioMenu()
 
 void
 SavePanel::GetSelectedFormatInfo(media_file_format** format,
-	media_codec_info **audio)
+                                 media_codec_info **audio)
 {
 	*format = NULL;
 	FileFormatMenuItem *formatItem =
-		dynamic_cast<FileFormatMenuItem*>(fFormatMenu->Menu()->FindMarked());
+	        dynamic_cast<FileFormatMenuItem*>(fFormatMenu->Menu()->FindMarked());
 	if (formatItem != NULL) {
 		*format = &(formatItem->fFileFormat);
 	}
-	
+
 	*audio = NULL;
 	CodecMenuItem *codecItem =
-		dynamic_cast<CodecMenuItem*>(fAudioMenu->Menu()->FindMarked());
+	        dynamic_cast<CodecMenuItem*>(fAudioMenu->Menu()->FindMarked());
 	if (codecItem != NULL) {
 		*audio =  &(codecItem->fCodecInfo);
 	}
@@ -271,7 +271,7 @@ SavePanel::GetSelectedFormatInfo(media_file_format** format,
 
 void
 SavePanel::SetFormatInfo(media_file_format* format,
-	media_codec_info* audio)
+                         media_codec_info* audio)
 {
 
 
@@ -279,5 +279,5 @@ SavePanel::SetFormatInfo(media_file_format* format,
 
 
 SavePanel::~SavePanel() {
-	
+
 }

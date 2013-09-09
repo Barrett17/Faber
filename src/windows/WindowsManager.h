@@ -22,7 +22,6 @@
 
 #include <Messenger.h>
 
-#include "Analyzers.h"
 #include "FaberWindow.h"
 #include "OpenPanel.h"
 #include "ProgressWindow.h"
@@ -99,9 +98,6 @@ private:
 	FaberWindow*			fMainWindow;
 	SettingsWindow*			fSettingsWindow;
 	ProgressWindow*			fProgress;
-
-	SpectrumWindow*			fSpectrumWindow;
-	SampleScopeWindow*		fSampleScopeWindow;
 
 	OpenPanel*				fOpenPanel;
 	SavePanel*				fSavePanel;

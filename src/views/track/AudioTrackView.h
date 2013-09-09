@@ -41,8 +41,6 @@ public:
 								| B_WILL_DRAW);
 	virtual 				~AudioTrackView();
 
-
-
 			// Utility methods for fast access to the
 			// Track's values
 			int32			CountChannels() const;
@@ -53,7 +51,7 @@ public:
 			void			SetUpdateDrawCache(bool value);
 			bool			UpdateDrawCache() const;
 
-			// needed by the SampleView
+			// Needed by the SampleView
 			void			SetDirty(bool dirty);
 			bool			Dirty() const;
 

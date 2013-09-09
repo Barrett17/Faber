@@ -64,10 +64,6 @@ public:
 
 			// Create the IndexZoomView data
 			//void 				ResetIndexView();
-			// TODO those methods should be moved to
-			// TracksContainer
-			void				SelectAll();
-			void				DeSelectAll();
 
 			TracksContainer*	Container() const;
 private:
@@ -84,16 +80,15 @@ private:
 
 			bool				fSaveSelection;
 
-	friend class SampleView;
-
 			BMenu*				fTracksMenu;
+
 	// TODO polish them
 	BMenu		*fEditMenu, *menu_transform, *menu_zero, *menu_generate;
 	BMenuItem	*fSaveMenu, *fSaveAsMenu, *mn_save_sel, *mn_undo, *mn_cut, *mn_copy;
 	BMenuItem	*mn_paste, *mn_select_all, *mn_trim, *mn_set_freq, *mn_resample;
 	BMenuItem	*mn_clear, *mn_unselect, *mn_copy_silence, *mn_paste_new;
 
-	BMenuItem	*mn_paste_mix, *mn_copy_to_stack, *mn_redo;
+	BMenuItem	*mn_redo;
 };
 
 #endif

@@ -28,9 +28,11 @@
 #include <Roster.h>
 #include <TranslationUtils.h>
 #include <Window.h>
+
 #include "IconUtils.h"
 
 using std::nothrow;
+
 
 // constructor
 IconButton::IconButton(const char* name, uint32 id, const char* label,

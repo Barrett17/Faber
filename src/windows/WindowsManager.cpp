@@ -30,8 +30,6 @@ WindowsManager*	WindowsManager::fInstance = NULL;
 
 WindowsManager::WindowsManager()
 	:
-	fSampleScopeWindow(NULL),
-	fSpectrumWindow(NULL),
 	fSavePanel(NULL),
 	fOpenPanel(NULL),
 	fSettingsWindow(NULL)

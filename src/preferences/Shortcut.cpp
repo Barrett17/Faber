@@ -324,8 +324,6 @@ void Shortcut::InstallDefaults(){
 	Install(1,"PASTE",			  	'V', B_COMMAND_KEY,					  0, 0,							B_PASTE			);
 	Install(1,"PASTE_NEW",			'V', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							PASTE_NEW		);
 
-	Install(1,"EDIT_PASTE_MIX",		'V', B_COMMAND_KEY | B_CONTROL_KEY,	  0, 0,							PASTE_MIXED		);
-
 	Install(1,"CLEAR",				'B', B_COMMAND_KEY,			   B_DELETE, 0,							CLEAR			);
 
 //	Install(1,"COPY_TO_STACK",		'C', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							TO_STACK		);

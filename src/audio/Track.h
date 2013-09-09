@@ -40,9 +40,6 @@ public:
 			int64			Pointer() const;
 			int64			SelectionPointer() const;
 
-			int64			TrackStart() const;
-			int64			TrackEnd() const;
-
 			void			SetStart(int64 start);
 			void			SetEnd(int64 end);
 

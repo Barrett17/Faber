@@ -19,8 +19,9 @@
 
 #include "TracksContainer.h"
 
-#include "TrackView.h"
 #include "AudioTrackView.h"
+#include "TrackView.h"
+#include "WindowsManager.h"
 
 
 TracksContainer::TracksContainer()
@@ -28,7 +29,7 @@ TracksContainer::TracksContainer()
 	BGroupView(B_VERTICAL, 0),
 	fTrackViews(false)
 {
-	//GroupLayout()->SetInsets(10, 10, 10, 10);
+	//SetExplicitMinSize(BSize(800, 600));
 }
 
 
@@ -60,6 +61,7 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 {
 	GroupLayout()->AddView(track);
 	return fTrackViews.AddItem(track, index);
+	WindowsManager::MainWindow()->UpdateMenu();
 }
 
 
@@ -121,14 +123,20 @@ TracksContainer::HasChanged()
 void
 TracksContainer::SelectAll()
 {
-	
+	for (int i = 0; i < CountTracks(); i++) {
+		AudioTrackView* track = (AudioTrackView*) TrackAt(i);
+		track->SelectAll();
+	}
 }
 
 
 void
-TracksContainer::DeSelectAll()
+TracksContainer::UnselectAll()
 {
-	
+	for (int i = 0; i < CountTracks(); i++) {
+		AudioTrackView* track = (AudioTrackView*) TrackAt(i);
+		track->Unselect();
+	}
 }
 
 
@@ -166,5 +174,65 @@ TracksContainer::SetDirty(bool dirty)
 	for (int i = 0; i < CountTracks(); i++) {
 		AudioTrackView* track = (AudioTrackView*) TrackAt(i);
 		track->SetDirty(dirty);
+	}
+}
+
+
+void
+TracksContainer::MessageReceived(BMessage* message)
+{
+	if (CountTracks() == 0)
+			return;
+
+	switch (message->what)
+	{
+
+		case B_SELECT_ALL:
+			//SelectAll();
+			break;
+		
+		case UNSELECT_ALL:
+			//UnselectAll();
+			break;
+
+		case ZOOM_IN:
+			ZoomIn();
+			break;
+	
+		case ZOOM_OUT:
+			ZoomOut();
+			break;
+	
+		case ZOOM_FULL:
+			ZoomFull();
+			break;
+
+		case ZOOM_SELECTION:
+			ZoomSelection();
+			break;
+
+		case B_COPY:
+			//fTrack->Copy();
+			break;
+
+		case COPY_SILENCE:
+			//fTrack->CutAndSilence()
+			break;
+
+		case B_CUT:
+			//fTrack->Cut(true);
+			break;
+
+		case B_PASTE:
+			//fTrack->Paste();
+			break;
+
+		case DROP_PASTE:
+			//fTrack->DropPaste();
+			break;
+
+		default:
+			BView::MessageReceived(message);
+
 	}
 }

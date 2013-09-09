@@ -36,17 +36,17 @@ public:
 
 	virtual 				~TrackView();
 
-			bool			IsSelected() const { };
-			bool			RightSelected() const;
-			bool			LeftSelected() const;
+			bool			IsSelected() const;
+
+			int32			Selection() const { return fSelection; };
+
+			void			SetSelection(int32 value) { fSelection = value; };
 
 			void			CurrentSelection(int64* start,int64* end) const;
 			void			SelectAt(int64 start,int64 end);
 
 			int64			SelectionStart() const;
 			int64			SelectionEnd() const;
-
-
 
 			void			SelectAll();
 			void			Unselect();
@@ -80,6 +80,8 @@ private:
 
 			int64			fStartSelection;
 			int64			fEndSelection;
+
+			int32			fSelection;
 };
 
 
