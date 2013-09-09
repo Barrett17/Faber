@@ -44,7 +44,6 @@
 #include <Catalog.h>
 
 #include "Preferences.h"
-//#include "History.h"
 
 #include <stdio.h>
 
@@ -60,10 +59,11 @@
 const int32 WINDOW_DEFAULT_SIZE_X			= 800;
 const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 
-#define MIN_W 	530
-#define MIN_H	256
-#define MAX_W 	2048
-#define MAX_H	1536
+const int32 WINDOW_MIN_SIZE_X				= 300;
+const int32 WINDOW_MIN_SIZE_Y				= 200;
+
+const int32 WINDOW_MAX_SIZE_X				= 2048;
+const int32 WINDOW_MAX_SIZE_Y				= 1536;
 
 // TODO replace them where needed in the code
 #define VERSUT_HOMEPAGE "http://www.versut.com/"
@@ -92,34 +92,11 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 
 // Enums
 
-enum FaberTrackType {
-	FABER_AUDIO_TRACK,
-	FABER_VIDEO_TRACK,
-	FABER_MIDI_TRACK
-};
-
 enum {
 	NONE=0,
 	LEFT,
 	RIGHT,
 	BOTH
-};
-
-enum {
-	SAMPLES,
-	TIME
-};
-
-enum {
-	PLAY=1,
-	RECORD,
-	PLAY_PAUSE,
-	RECORD_PAUSE
-};
-
-enum {
-	MONO=1,
-	STEREO=2
 };
 
 enum {
@@ -146,7 +123,6 @@ enum {
 #define PASTE_NEW			'pnew'
 #define DROP_PASTE			'drpP'
 
-#define PASTE_MIXED			'pmix'
 #define PREFERENCES			'pref'
 #define OPEN_MIX			'opnM'
 
@@ -204,9 +180,6 @@ enum {
 };
 
 #define SET_TIME			'setT'
-
-#define UPDATE_MENU			'_udm'
-#define REDRAW				'rdrw'
 
 #define UPDATE				'updt'
 

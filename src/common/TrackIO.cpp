@@ -75,9 +75,7 @@ TrackIO::Load(BMessage* message)
 
 		if (inFile.InitCheck() == B_OK) {
 
-			char s[B_FILE_NAME_LENGTH +20];
-			sprintf(s, "Faber - %s", ref.name);
-			track->SetName(s);
+			track->SetName(ref.name);
 
 			// gather the necessary format information
 			int32 tracks = inFile.CountTracks();
@@ -245,10 +243,9 @@ TrackIO::Load(BMessage* message)
 			WindowsManager::Get()->HideProgress();
 		} else {
 			(new BAlert(NULL,B_TRANSLATE("This file is not supported!"),B_TRANSLATE("OK")))->Go();
+			return NULL;
 		}
 	}
-
-	//Pool.InitBufferPlayer( Pool.frequency );
 
 	return track;
 }
