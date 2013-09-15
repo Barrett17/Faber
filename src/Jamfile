@@ -53,8 +53,6 @@ Application Faber :
 	ProgressWindow.cpp
 	SavePanel.cpp
 	OpenPanel.cpp
-	#FreqWindow.cpp
-	#ResampleWindow.cpp
 
 	# app and libstilnovo implementation base classes
 	SeekSlider.cpp
@@ -81,7 +79,7 @@ Application Faber :
 
 	# Common
 	#MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
-	#CommonPool.cpp # TODO Remove it
+
 	PeakFile.cpp
 	TrackIO.cpp
 

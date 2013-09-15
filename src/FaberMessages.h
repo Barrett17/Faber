@@ -1,44 +1,10 @@
 /*
  * Copyright 2013, Dario Casalinuovo. All rights reserved.
- * Distributed under the terms of the MIT License.
+ * Distributed under the terms of the GPL v3 License.
  */
-#ifndef FABER_RESOURCES_H
-#define FABER_RESOURCES_H
+ 
+#ifndef FABER_MESSAGES_H
+#define FABER_MESSAGES_H
 
-enum {
-	kPlayIcon = 0,
-	kNewDocumentIcon,
-	kOpenDocumentIcon,
-	kDocumentSaveIcon,
-
-	kCutIcon,
-	kCopyIcon,
-	kPasteIcon,
-	kUndoIcon,
-	kRedoIcon,
-
-	kDrawingToolIcon,
-	kSelectionToolIcon,
-	kPlayingToolIcon,
-
-	kStopIcon,
-	kPauseIcon,
-	kRecordIcon,
-	kLoopIcon,
-	kSeekForwardIcon,
-	kSeekForwardAllIcon,
-	kSeekBackwardIcon,
-	kSeekBackwardAllIcon,
-
-	kZoomInIcon,
-	kZoomOutIcon,
-	kZoomToSelectionIcon,
-	kZoomFullWaveIcon,
-
-	// track icons
-	kMuteIcon,
-	kTrackMenuIcon,
-	kCloseTrackIcon
-};
 
 #endif

@@ -56,39 +56,25 @@
 
 // Various settings
 
-const int32 WINDOW_DEFAULT_SIZE_X			= 800;
-const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
+#define WINDOW_DEFAULT_SIZE_X	800
+#define WINDOW_DEFAULT_SIZE_Y	600
 
-const int32 WINDOW_MIN_SIZE_X				= 300;
-const int32 WINDOW_MIN_SIZE_Y				= 200;
+#define WINDOW_MIN_SIZE_X		530
+#define WINDOW_MIN_SIZE_Y		256
 
-const int32 WINDOW_MAX_SIZE_X				= 2048;
-const int32 WINDOW_MAX_SIZE_Y				= 1536;
+#define WINDOW_MAX_SIZE_X		2048
+#define WINDOW_MAX_SIZE_Y		1536
 
 // TODO replace them where needed in the code
 #define VERSUT_HOMEPAGE "http://www.versut.com/"
 #define FABER_MIMETYPE 	"application/x-vnd.Faber"
-
 #define FABER_HOMEPAGE	"http://www.versut.com/Faber"
 
 #define COPY_RIGHT 		"Copyright 2002 Xentronix\n Copyright 2013 Versut"
 
 #define SETTINGS_DIR    "Faber"
-#define FABER_CONF_NAME	"Faber"
+#define FABER_CONF_NAME	"FaberSettings"
 #define KEYBINDINGS_CONF_NAME "KeyBindings"
-
-// Math
-
-#define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
-#define INT_MUL3(a,b,c,t)			((t) = (a) * (b) * (c)+ 0x7F5B, ((((t) >> 7) + (t)) >> 16))
-#define INT_BLEND(a,b,alpha,tmp)	(INT_MUL((a)-(b), alpha, tmp) + (b))
-#define WITHIN(a, b, c)				((((a) <= (b)) && ((b) <= (c))) ? 1 : 0)
-#define ROUND(a)					(( ( (a)-long((a)) ) >=.5 ) ? (long((a))+1) : long((a)))
-#define CLAMP(a, b, c)				( (a) = (a)<(b) ? (b) : (  (a)>(c) ? (c) : (a) ) )
-
-#ifndef PI
-	#define PI 3.14159265358979323846
-#endif
 
 // Enums
 

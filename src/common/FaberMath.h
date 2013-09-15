@@ -1,4 +1,4 @@
-/*
+ /*
    	Copyright (c) 2003, Xentronix
 	Author: Frans van Nispen (frans@xentronix.com)
 	All rights reserved.
@@ -26,40 +26,13 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef ANALYZE_DIALOGS_H
-#define ANALYZE_DIALOGS_H
+#define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
+#define INT_MUL3(a,b,c,t)			((t) = (a) * (b) * (c)+ 0x7F5B, ((((t) >> 7) + (t)) >> 16))
+#define INT_BLEND(a,b,alpha,tmp)	(INT_MUL((a)-(b), alpha, tmp) + (b))
+#define WITHIN(a, b, c)				((((a) <= (b)) && ((b) <= (c))) ? 1 : 0)
+#define ROUND(a)					(( ( (a)-long((a)) ) >=.5 ) ? (long((a))+1) : long((a)))
+#define CLAMP(a, b, c)				( (a) = (a)<(b) ? (b) : (  (a)>(c) ? (c) : (a) ) )
 
-#include <Window.h>
-#include <View.h>
-
-#include "AnalyzeWindow.h"
-
-
-#define QUIT			'quit'
-#define SET				'setF'
-
-
-// SpectrumAnalyzer
-class SpectrumWindow : public AnalyzeWindow
-{
-public:
-					SpectrumWindow();
-	virtual void	PlayBuffer(float *, size_t);
-
-private:
-			BView* view;
-};
-
-
-// SampleScope
-class SampleScopeWindow : public AnalyzeWindow
-{
-public:
-					SampleScopeWindow();
-	virtual void	PlayBuffer(float *, size_t);
-
-private:
-			BView*	view;
-};
-
+#ifndef PI
+	#define PI 3.14159265358979323846
 #endif
