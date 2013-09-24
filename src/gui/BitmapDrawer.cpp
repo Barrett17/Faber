@@ -29,7 +29,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+
 #include "BitmapDrawer.h"
+#include "FaberMath.h"
 
 BitmapDrawer::BitmapDrawer(BBitmap *bitmap)
 {
