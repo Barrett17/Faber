@@ -32,6 +32,8 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
+#define HEIGHT_VAL_REF 220
+
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	uint32 resizingMode)
@@ -42,7 +44,13 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fSampleView = new SampleView(this);
 	fSampleView->Init();
 
+	fSampleView->SetExplicitMinSize(BSize(200, HEIGHT_VAL_REF));
+	fSampleView->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, HEIGHT_VAL_REF));
+
 	BBox* box = new BBox("box");
+	
+	box->SetExplicitMinSize(BSize(200, HEIGHT_VAL_REF));
+	box->SetExplicitMaxSize(BSize(200, HEIGHT_VAL_REF));
 
 	IconButton* muteButton = new IconButton(NULL, 0, NULL, NULL, this);
 	// Well those could go into the constructor, but no reason for now.
@@ -130,28 +138,25 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	BLayoutBuilder::Group<>(box, B_VERTICAL, 2)
 		.SetInsets(10, 10, 10, 10)
 
-		.AddGroup(B_HORIZONTAL, 0)
-			.Add(closeButton)
-			.AddStrut(30.0f)
-			.Add(toolButton)
-		.End()
+		.AddSplit(B_VERTICAL, 1.0f)
 
-		.AddSplit(B_VERTICAL, 2.0f)
-			.AddGroup(B_HORIZONTAL)
-				.Add(new BStringView("", "Input"))
+			.AddGroup(B_HORIZONTAL, 0)
+				//.Add(closeButton)
+				.Add(toolButton)
+				.AddStrut(1.0f)
 				.Add(peak)
 			.End()
-			.AddGroup(B_HORIZONTAL, 0)
-				.Add(recButton)
-				.Add(muteButton)
-				.Add(new BButton("S"))
+
+			.AddSplit(B_HORIZONTAL, 1.0f)
+					.Add(recButton)
+					.Add(muteButton)
+					.Add(new BButton("S"))
 			.End()
+
+			.Add(volumeSlider)
+			.Add(balanceSlider)
+
 		.End()
-
-		.Add(volumeSlider)
-		.Add(balanceSlider)
-		.AddGlue()
-
 	.End();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)

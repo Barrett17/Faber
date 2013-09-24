@@ -108,7 +108,7 @@ FaberWindow::FaberWindow(BRect frame)
 	fInfoToolBar = new InfoToolBar();
 
 	BScrollView* tracksScrollView = new BScrollView("scrollviewR",
-		fTracksContainer, B_WILL_DRAW | B_FOLLOW_ALL, true, true);
+		fTracksContainer, B_FOLLOW_ALL, true, true);
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.Add(_BuildMenu())
