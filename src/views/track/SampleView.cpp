@@ -1154,6 +1154,8 @@ SampleView::DrawPart(rgb_color *inBits, rgb_color *outBits,
 	rgb_color col, float *peak_buffer,
 	BRect r, int32 size, int32 size2)
 {
+	#ifndef DEBUG_DISABLE_DRAWPART 
+
 	rgb_color *src = NULL;
 	rgb_color *dest = NULL;
 
@@ -1260,6 +1262,7 @@ SampleView::DrawPart(rgb_color *inBits, rgb_color *outBits,
 			break;
 		}
 	}
+	#endif
 }
 
 
