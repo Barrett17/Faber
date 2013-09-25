@@ -75,7 +75,7 @@
 #define FABER_MIMETYPE 	"application/x-vnd.Faber"
 #define FABER_HOMEPAGE	"http://www.versut.com/Faber"
 
-#define COPY_RIGHT 		"Copyright 2002 Xentronix\n Copyright 2013 Versut"
+#define COPY_RIGHT 		"Copyright 2002 Xentronix\n Copyright 2013 Versut\n"
 
 #define SETTINGS_DIR    "Faber"
 #define FABER_CONF_NAME	"FaberSettings"

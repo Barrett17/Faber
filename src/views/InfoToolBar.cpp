@@ -38,12 +38,25 @@ InfoToolBar::InfoToolBar()
 	.Add(fPointerTextView)
 
 	.AddGlue()
-	.Add(_BuildButton(B_TRANSLATE("Zoom in"), new BMessage(ZOOM_IN), kZoomInIcon))
-	.Add(_BuildButton(B_TRANSLATE("Zoom out"), new BMessage(ZOOM_OUT), kZoomOutIcon))
-	.Add(_BuildButton(B_TRANSLATE("Zoom to selection"), new BMessage(ZOOM_SELECTION), kZoomToSelectionIcon))
-	.Add(_BuildButton(B_TRANSLATE("Zoom full wave"), new BMessage(ZOOM_FULL), kZoomFullWaveIcon))
-	.Add(_BuildButton(B_TRANSLATE("Zoom to left pointer"), new BMessage(ZOOM_LEFT), kZoomInIcon))
-	.Add(_BuildButton(B_TRANSLATE("Zoom to right pointer"), new BMessage(ZOOM_RIGHT), kZoomInIcon))
+
+	.Add(_BuildButton(B_TRANSLATE("Zoom in"), 
+		new BMessage(ZOOM_IN), kZoomInIcon))
+
+	.Add(_BuildButton(B_TRANSLATE("Zoom out"),
+		new BMessage(ZOOM_OUT), kZoomOutIcon))
+
+	.Add(_BuildButton(B_TRANSLATE("Zoom to selection"),
+		new BMessage(ZOOM_SELECTION), kZoomToSelectionIcon))
+
+	.Add(_BuildButton(B_TRANSLATE("Zoom full wave"),
+		new BMessage(ZOOM_FULL), kZoomFullWaveIcon))
+
+	.Add(_BuildButton(B_TRANSLATE("Zoom to left pointer"),
+		new BMessage(ZOOM_LEFT), kZoomInIcon))
+
+	.Add(_BuildButton(B_TRANSLATE("Zoom to right pointer"),
+		new BMessage(ZOOM_RIGHT), kZoomInIcon))
+
 	.AddStrut(5.0f)
 	.End();
 }
