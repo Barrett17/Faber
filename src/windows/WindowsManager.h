@@ -46,9 +46,8 @@ public:
 	// to set the main window. Don't use it.
 	FaberWindow*			IstantiateMainWindow(BRect rect);
 
-	// TODO possible static implementation of BWindow::RedrawWindow()
-	// something calling the BWindow version :
-	// static void			RedrawWindow();
+	// TODO possible static implementation of FaberWindow::RedrawWindow()
+	// static void			RedrawMainWindow();
 
 	// Extending, it could be good to have methods like those
 	// static void			UpdateMainMenu();
@@ -61,8 +60,11 @@ public:
 	// by using a function to create alerts, this should
 	// avoid duplication of "new BAlert(..)"*, so imagine something like :
 
-	// static void			ShowAlert(const char* msg,
-	//						const char* butt1, const char* butt2);
+	// static void			ShowAlert(const char* title, const char* text
+	//							const char* butt1, const char* butt2 = NULL,
+	//							const char* butt3 = NULL,
+	//							button_width width = B_WIDTH_AS_USUAL,
+	//							alert_type type = B_INFO_ALERT);
 
 	void					ShowSettings();
 	SettingsWindow*			GetSettingsWindow();
