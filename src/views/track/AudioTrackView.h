@@ -57,7 +57,7 @@ public:
 
 			// Drawing related methods
 			void			Pulse();
-			void			Invalidate();
+			//void			Invalidate();
 private:
 			SampleView*		fSampleView;
 			AudioTrack*		fTrack;

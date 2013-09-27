@@ -18,3 +18,81 @@
 */
 
 #include "FaberView.h"
+
+#include <LayoutBuilder.h>
+#include <ScrollView.h>
+
+
+FaberView::FaberView()
+	:
+	BGroupView(B_VERTICAL, 0)
+{
+	fToolBar = new ToolBar();
+	fToolBar->SetTool(Prefs.tool_mode);
+
+	fTracksContainer = new TracksContainer();
+
+	fInfoToolBar = new InfoToolBar();
+
+	BScrollView* tracksScrollView = new BScrollView("scrollviewR",
+		fTracksContainer, B_FOLLOW_ALL, true, true);
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL)
+		.Add(fToolBar)
+		.Add(tracksScrollView)
+		.Add(fInfoToolBar)
+	.End();
+}
+
+
+FaberView::~FaberView()
+{
+}
+
+
+void
+FaberView::MessageReceived(BMessage* message)
+{
+	switch (message->what)
+	{
+
+		default:
+			BGroupView::MessageReceived(message);
+	}
+}
+
+
+TracksContainer*
+FaberView::Container() const
+{
+	return fTracksContainer;
+}
+
+
+bool
+FaberView::IsEmpty() const
+{
+	return fTracksContainer->CountTracks() == 0;
+}
+
+
+bool
+FaberView::IsSelected()
+{
+	
+}
+
+
+bool
+FaberView::HasChanged()
+{
+	return fTracksContainer->HasChanged();
+}
+
+
+/*
+void
+FaberView::Pulse()
+{
+	fInfoToolBar->Pulse();
+}*/

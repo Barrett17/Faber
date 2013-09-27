@@ -59,7 +59,7 @@ public:
 //	void				ZoomLeft();
 
 	void				Pulse();
-	void				Invalidate();
+//	void				Invalidate();
 
 	void				ReindexTracks();
 	void				RedrawTracks();

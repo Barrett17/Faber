@@ -20,6 +20,36 @@
 #ifndef FABER_VIEW_H
 #define FABER_VIEW_H
 
+#include <GroupLayout.h>
+#include <GroupView.h>
+
+#include "InfoToolBar.h"
+#include "ToolBar.h"
+#include "TracksContainer.h"
+
+
+class FaberView : public BGroupView
+{
+public:
+								FaberView();
+	virtual 					~FaberView();
+
+			void				MessageReceived(BMessage* message);
+
+			TracksContainer*	Container() const;
+
+			bool				IsEmpty() const;
+
+			bool				IsSelected();
+
+			bool 				HasChanged();
+private:
+
+			TracksContainer*	fTracksContainer;
+			ToolBar*			fToolBar;
+			InfoToolBar*		fInfoToolBar;
+
+};
 
 
 #endif

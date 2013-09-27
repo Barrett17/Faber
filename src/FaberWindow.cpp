@@ -100,21 +100,11 @@ FaberWindow::FaberWindow(BRect frame)
 	// Set the last filter
 	FiltersInit();
 
-	fToolBar = new ToolBar();
-	fToolBar->SetTool(Prefs.tool_mode);
-
-	fTracksContainer = new TracksContainer();
-
-	fInfoToolBar = new InfoToolBar();
-
-	BScrollView* tracksScrollView = new BScrollView("scrollviewR",
-		fTracksContainer, B_FOLLOW_ALL, true, true);
+	fFaberView = new FaberView();
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.Add(_BuildMenu())
-		.Add(fToolBar)
-		.Add(tracksScrollView)
-		.Add(fInfoToolBar)
+		.Add(fFaberView)
 	.End();
 
 	//fOutputGate->SetLoop((fToolBar->IsLoop()));
@@ -229,7 +219,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		case SAVE_AS:
 		case SAVE:
 		{
-			if (fTracksContainer->CountTracks() == 0)
+			if (fFaberView->IsEmpty())
 				return;
 
 			fSaveSelection = false;
@@ -240,12 +230,12 @@ FaberWindow::MessageReceived(BMessage *message)
 
 			break;
 		}
-
+#if 0
 		case SAVE_SELECTION:
 		{
 			TrackView* current = fTracksContainer->CurrentTrack();
 
-			if (fTracksContainer->CountTracks() == 0
+			if (fFaberView->IsEmpty()
 				|| fTracksContainer->CurrentTrack() == NULL)
 				return;		
 
@@ -283,7 +273,7 @@ FaberWindow::MessageReceived(BMessage *message)
 
 		case TRANSPORT_PLAY:
 		{
-			if (fTracksContainer->CountTracks() == 0)
+			if (fFaberView->IsEmpty())
 				break;
 
 			fOutputGate->SetPause(false);
@@ -392,7 +382,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			
 			RedrawWindow();*/
 			break;
-	
+#endif
 		case B_SELECT_ALL:
 		case UNSELECT_ALL:
 
@@ -414,7 +404,7 @@ FaberWindow::MessageReceived(BMessage *message)
 		case DROP_PASTE:
 
 		case UNDO:
-			fTracksContainer->Looper()->PostMessage(msg);
+			fFaberView->Looper()->PostMessage(msg);
 			break;
 
 		case B_MOUSE_WHEEL_CHANGED:
@@ -430,10 +420,9 @@ FaberWindow::MessageReceived(BMessage *message)
 		}
 
 		case UPDATE:
-			fTracksContainer->Pulse();
-			fInfoToolBar->Pulse();
+			//fFaberView->Pulse();
 			break;
-
+/*
 		case TOOL_SELECT:
 			fToolBar->SetTool(SELECT_TOOL);
 			Prefs.tool_mode = SELECT_TOOL;
@@ -450,7 +439,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			fToolBar->SetTool(PLAY_TOOL);
 			Prefs.tool_mode = PLAY_TOOL;
 			UpdateMenu();
-			break;
+			break;*/
 
 		case SET_FREQUENCY:
 			WindowsManager::ShowFrequencyWindow();
@@ -508,7 +497,7 @@ FaberWindow::RedrawWindow()
 {
 	Lock();
 
-	fTracksContainer->Invalidate();
+	fFaberView->Invalidate();
 
 	Unlock();	
 }
@@ -560,8 +549,8 @@ FaberWindow::UpdateMenu()
 		filter++;
 	}*/
 
-	bool enable = fTracksContainer->CountTracks() > 0;
-	bool selection = fTracksContainer->IsSelected();
+	bool enable = !fFaberView->IsEmpty();
+	bool selection = fFaberView->IsSelected();
 
 	menu_transform->SetEnabled(enable);
 
@@ -578,6 +567,8 @@ FaberWindow::UpdateMenu()
 	menu_generate->SetEnabled(enable);
 
 	fSaveAsMenu->SetEnabled(enable);
+	mn_save_sel->SetEnabled(enable);
+
 	mn_set_freq->SetEnabled(enable);
 	mn_resample->SetEnabled(enable);
 	mn_select_all->SetEnabled(enable);
@@ -601,7 +592,7 @@ FaberWindow::UpdateMenu()
 //Check for and handle changed files
 bool FaberWindow::IsChanged(int32 mode)
 {
-	if (fTracksContainer->HasChanged()) {
+	if (fFaberView->HasChanged()) {
 		int32 k = (new BAlert(NULL,B_TRANSLATE("This project has changed. Do you want to save it now?"),
 			B_TRANSLATE("Save"),B_TRANSLATE("Discard"),B_TRANSLATE("Cancel")))->Go();
 
@@ -629,10 +620,10 @@ bool FaberWindow::IsChanged(int32 mode)
 }
 
 
-TracksContainer*
-FaberWindow::Container() const
+FaberView*
+FaberWindow::MainView() const
 {
-	return fTracksContainer;
+	return fFaberView;
 }
 
 
@@ -655,13 +646,13 @@ FaberWindow::_BuildMenu()
 		new BMessage(SAVE), KeyBind.GetKey("FILE_SAVE"),
 		KeyBind.GetMod("FILE_SAVE")));
 
-	fRecentMenu = new BMenu(B_TRANSLATE("Recent Files..."));
+	fRecentMenu = new BMenu(B_TRANSLATE("Open Files..."));
 
 	UpdateRecent();
 
 	menu->AddItem(fRecentMenu);
 
-	BMenuItem *openitem = menu->FindItem(B_TRANSLATE("Recent Files..."));
+	BMenuItem *openitem = menu->FindItem(B_TRANSLATE("Open Files..."));
 	openitem->SetShortcut(KeyBind.GetKey("FILE_OPEN"),KeyBind.GetMod("FILE_OPEN"));
 	openitem->SetMessage(new BMessage(OPEN));
 

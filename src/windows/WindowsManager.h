@@ -60,7 +60,7 @@ public:
 	// by using a function to create alerts, this should
 	// avoid duplication of "new BAlert(..)"*, so imagine something like :
 
-	// static void			ShowAlert(const char* title, const char* text
+	// static int32			ShowAlert(const char* title, const char* text
 	//							const char* butt1, const char* butt2 = NULL,
 	//							const char* butt3 = NULL,
 	//							button_width width = B_WIDTH_AS_USUAL,

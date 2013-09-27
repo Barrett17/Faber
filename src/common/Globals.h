@@ -50,7 +50,7 @@
 // Debug
 
 //#define FABER_DEBUG 0
-#define DEBUG_DISABLE_DRAWPART 0
+//#define DEBUG_DISABLE_DRAWPART 0
 
 // Translation
 

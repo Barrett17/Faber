@@ -31,30 +31,29 @@ SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
 
 
 Application Faber :
-	# this is the core code
+	# Core
 	Faber.cpp
 	FaberWindow.cpp
+	FaberView.cpp
+
+	TracksContainer.cpp
 	ToolBar.cpp
 	InfoToolBar.cpp
 
-	# trackviews implementation and containers
+	# TrackViews implementations
 	TrackView.cpp
 	AudioTrackView.cpp
 	SampleView.cpp
 
-	TracksContainer.cpp
-	MouseIcons.cpp
-
-	# managers
+	# Managers
 	WindowsManager.cpp
 
 	# Various windows
-	# TODO those should be reworked with layouts
 	ProgressWindow.cpp
 	SavePanel.cpp
 	OpenPanel.cpp
 
-	# app and libstilnovo implementation base classes
+	# Gui Widgets
 	SeekSlider.cpp
 	SpinControl.cpp
 	SpinSlider.cpp
@@ -78,15 +77,13 @@ Application Faber :
 	SwatchView.cpp
 
 	# Common
-	#MyClipBoard.cpp # TODO Rename it Clipboard or FaberClipboard
-
 	PeakFile.cpp
 	TrackIO.cpp
+	MouseIcons.cpp
 
 	# Audio internal API
 	Track.cpp
 	AudioTrack.cpp
-
 	MediaGate.cpp
 	AudioGate.cpp
 
@@ -102,7 +99,6 @@ Application Faber :
 	CompressorFilter.cpp
 	NormalizeFilter.cpp
 	RoomFilter.cpp
-
 	ReverbWindow.cpp
 	DelayWindow.cpp
 

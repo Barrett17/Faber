@@ -37,15 +37,15 @@ TracksContainer::~TracksContainer()
 {
 }
 
-
+/*
 void
 TracksContainer::Invalidate()
 {
 	for (int i = 0; i < CountTracks(); i++)
 		TrackAt(i)->Invalidate();
 
-	BView::Invalidate();
-}
+	BGroupView::Invalidate();
+}*/
 
 
 void
@@ -181,8 +181,8 @@ TracksContainer::SetDirty(bool dirty)
 void
 TracksContainer::MessageReceived(BMessage* message)
 {
-	if (CountTracks() == 0)
-			return;
+	//if (CountTracks() == 0)
+		//	return;
 
 	switch (message->what)
 	{

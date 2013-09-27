@@ -37,9 +37,7 @@
 #include <Window.h>
 
 #include "AudioGate.h"
-#include "InfoToolBar.h"
-#include "ToolBar.h"
-#include "TracksContainer.h"
+#include "FaberView.h"
 
 class BMenu;
 class BMenuBar;
@@ -65,16 +63,15 @@ public:
 			// Create the IndexZoomView data
 			//void 				ResetIndexView();
 
-			TracksContainer*	Container() const;
+			FaberView*			MainView() const;
+
 private:
 			BMenuBar*			_BuildMenu();
 
+			FaberView*			fFaberView;
+
 			BMenuBar*			fMainMenuBar;
 			BMenu*				fRecentMenu;
-
-			TracksContainer*	fTracksContainer;
-			ToolBar*			fToolBar;
-			InfoToolBar*		fInfoToolBar;
 
 			AudioGate*			fOutputGate;
 

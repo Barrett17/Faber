@@ -37,6 +37,7 @@ enum {
 
 	// track icons
 	kMuteIcon,
+	kSoloIcon,
 	kTrackMenuIcon,
 	kCloseTrackIcon
 };

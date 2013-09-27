@@ -89,7 +89,7 @@ FaberApp::RefsReceived(BMessage* message)
 	if (track == NULL)
 		return;
 
-	fFaberWindow->Container()->AddTrack(track);
+	fFaberWindow->MainView()->Container()->AddTrack(track);
 	fFaberWindow->UpdateMenu();
 }
 
