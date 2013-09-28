@@ -20,6 +20,7 @@
 #include "FaberView.h"
 
 #include <LayoutBuilder.h>
+#include <ScrollBar.h>
 #include <ScrollView.h>
 
 
@@ -34,12 +35,25 @@ FaberView::FaberView()
 
 	fInfoToolBar = new InfoToolBar();
 
-	BScrollView* tracksScrollView = new BScrollView("scrollviewR",
-		fTracksContainer, B_FOLLOW_ALL, true, true);
+	BScrollView* verticalScrollView = new BScrollView("scrollviewV",
+		fTracksContainer, B_FOLLOW_NONE, false, true);
+	verticalScrollView->ScrollBar(B_VERTICAL)->SetRange(0, 0);
+
+	// This is needed to stop the vertical scrollview to go out of the window
+	verticalScrollView->SetExplicitMinSize(BSize(B_SIZE_UNSET, 200));
+
+
+	BScrollBar* horizontalScrollBar = new BScrollBar("scrollviewH",
+		fTracksContainer,
+		0, 0, B_HORIZONTAL);
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.Add(fToolBar)
-		.Add(tracksScrollView)
+		.AddGroup(B_VERTICAL)
+			.Add(verticalScrollView)
+			.Add(horizontalScrollBar)
+		.End()
+		.AddGlue(0.0f)
 		.Add(fInfoToolBar)
 	.End();
 }

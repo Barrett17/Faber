@@ -23,7 +23,7 @@
 TrackView::TrackView(const char* name,
 	Track* track, uint32 resizingMode)
 	:
-	BView(name, resizingMode),
+	BGroupView(B_HORIZONTAL, resizingMode),
 	fTrack(track)
 {
 }
@@ -132,9 +132,6 @@ TrackView::IsSolo() const
 }
 
 
-
-
-
 void
 TrackView::SelectAll()
 {
@@ -148,54 +145,9 @@ TrackView::Unselect()
 
 }
 
-/*
-void
-TrackView::SetRightSelection(bool right)
-{
-	fRightSelection = right;
-}
-
-
-
-void
-TrackView::SetLeftSelection(bool left)
-{
-
-	fLeftSelection = left;
-}
-
-
-void
-TrackView::SetBothSelection(bool both)
-{
-
-	fBothSelection = both;
-}*/
-
 
 bool
 TrackView::IsSelected() const
 {
 	return false;
 }
-
-/*
-bool
-TrackView::RightSelection() const
-{
-	return fRightSelection;
-}
-
-
-bool
-TrackView::LeftSelection() const
-{
-	return fLeftSelection;
-}
-
-
-bool
-TrackView::BothSelection() const
-{
-	return fBothSelection;
-}*/

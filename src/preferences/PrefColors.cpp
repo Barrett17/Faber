@@ -62,7 +62,7 @@ struct colorNames {
 };
 
 static struct defaultSchemeNames gColorSchemes[] = {
-{ B_TRANSLATE("Cold Cut") },
+{ B_TRANSLATE("Default") },
 { B_TRANSLATE("Shades of blue") },
 { B_TRANSLATE("Cool Colors") },
 { B_TRANSLATE("Black & White") },

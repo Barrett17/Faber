@@ -19,6 +19,8 @@
 
 #include "TracksContainer.h"
 
+#include <GroupLayoutBuilder.h>
+
 #include "AudioTrackView.h"
 #include "TrackView.h"
 #include "WindowsManager.h"
@@ -26,26 +28,17 @@
 
 TracksContainer::TracksContainer()
 	:
-	BGroupView(B_VERTICAL, 0),
+	BGroupView(B_VERTICAL, 5.0f),
 	fTrackViews(false)
 {
-	//SetExplicitMinSize(BSize(800, 600));
+	SetViewColor(Prefs.back_color);
+	BGroupLayoutBuilder(GroupLayout()).AddGlue(5.0f);
 }
 
 
 TracksContainer::~TracksContainer()
 {
 }
-
-/*
-void
-TracksContainer::Invalidate()
-{
-	for (int i = 0; i < CountTracks(); i++)
-		TrackAt(i)->Invalidate();
-
-	BGroupView::Invalidate();
-}*/
 
 
 void
@@ -60,8 +53,9 @@ status_t
 TracksContainer::AddTrack(TrackView* track, int32 index)
 {
 	GroupLayout()->AddView(track);
-	return fTrackViews.AddItem(track, index);
 	WindowsManager::MainWindow()->UpdateMenu();
+
+	return fTrackViews.AddItem(track, index);
 }
 
 

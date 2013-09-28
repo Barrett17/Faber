@@ -37,8 +37,7 @@ class AudioTrackView : public TrackView
 public:
 							AudioTrackView(const char* name = "AudioTrackView",
 								AudioTrack* track = NULL,
-								uint32 resizingMode = B_FOLLOW_ALL_SIDES
-								| B_WILL_DRAW);
+								uint32 resizingMode = B_FOLLOW_NONE);
 	virtual 				~AudioTrackView();
 
 			// Utility methods for fast access to the
@@ -57,7 +56,7 @@ public:
 
 			// Drawing related methods
 			void			Pulse();
-			//void			Invalidate();
+
 private:
 			SampleView*		fSampleView;
 			AudioTrack*		fTrack;

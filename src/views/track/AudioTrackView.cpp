@@ -39,7 +39,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	uint32 resizingMode)
 	:
 	TrackView(name, track, resizingMode),
-	fTrack(track)
+	fTrack(track),
+	fDirty(false)
 {
 	fSampleView = new SampleView(this);
 	fSampleView->Init();
@@ -69,9 +70,12 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	soloButton->SetIcon(kSoloIcon);
 	soloButton->TrimIcon();
 
+	BString trackName(track->Name());
+	if (trackName.Length() > 20)
+		trackName.Truncate(20);
 
-	ToolButton* toolButton = new ToolButton(NULL, track->Name(), NULL);
-	recButton->SetToolTip(B_TRANSLATE("Track Options"));
+	ToolButton* toolButton = new ToolButton(NULL, trackName.String(), NULL);
+	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
 	toolButton->SetIcon(kMuteIcon);
 
 	// Track menu
@@ -176,15 +180,6 @@ AudioTrackView::~AudioTrackView()
 {
 }
 
-/*
-void
-AudioTrackView::Invalidate()
-{
-	//fSampleView->Invalidate();
-
-	BView::Invalidate();
-}
-*/
 
 void
 AudioTrackView::Pulse()

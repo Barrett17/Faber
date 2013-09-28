@@ -21,14 +21,14 @@
 #define TRACK_VIEW__H
 
 #include <ObjectList.h>
-#include <View.h>
+#include <GroupView.h>
 
 #include "Globals.h"
 #include "SampleView.h"
 #include "Track.h"
 
 
-class TrackView : public BView
+class TrackView : public BGroupView
 {
 public:
 							TrackView(const char* name,
