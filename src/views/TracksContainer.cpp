@@ -28,10 +28,11 @@
 
 TracksContainer::TracksContainer()
 	:
-	BGroupView(B_VERTICAL, 5.0f),
+	BGroupView(B_VERTICAL, 7.0f),
 	fTrackViews(false)
 {
-	SetViewColor(Prefs.back_color);
+	rgb_color color = {120,120,120};
+	SetViewColor(color);
 	BGroupLayoutBuilder(GroupLayout()).AddGlue(5.0f);
 }
 

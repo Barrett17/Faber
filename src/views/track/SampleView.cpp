@@ -43,7 +43,7 @@
 
 #include <stdio.h>
 
-#define POINTER_BAR_HEIGHT	12
+#define POINTER_BAR_HEIGHT	6
 
 
 SampleView::SampleView(AudioTrackView* track)
@@ -478,7 +478,9 @@ SampleView::MouseDown(BPoint p)
 
 			// Set the play-pointer
 			fTrack->SetSelectionPointer(0);
-			fTrack->SetPointer((int32)(fTrack->Start() + p.x * (fTrack->End() - fTrack->Start())/Bounds().Width()));
+			fTrack->SetPointer((int32)(fTrack->Start() + p.x
+				* (fTrack->End() - fTrack->Start())/Bounds().Width()));
+
 			if (button) {
 				bool bRight = (button & B_SECONDARY_MOUSE_BUTTON);
 				

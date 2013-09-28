@@ -32,7 +32,7 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 220
+#define HEIGHT_VAL_REF 200
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
@@ -133,22 +133,24 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	VolumeSlider* volumeSlider = new VolumeSlider("volumeSlider",
 		0, 10, 7, NULL);
-	volumeSlider->SetLabel("Volume");
 	volumeSlider->SetToolTip(B_TRANSLATE(
 		"Move vertically to set the track volume."));
 	volumeSlider->SetValue(fTrack->Volume());
+	volumeSlider->SetHashMarkCount(10);
+	volumeSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 
 	VolumeSlider* balanceSlider = new VolumeSlider("balanceSlider",
 		0, 10, 7, NULL);
-	balanceSlider->SetLabel("Balance");
 	balanceSlider->SetToolTip(B_TRANSLATE(
 		"Move vertically to balance the sound."));
 	balanceSlider->SetValue(fTrack->Balance());
+	balanceSlider->SetHashMarkCount(10);
+	balanceSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 
-	BLayoutBuilder::Group<>(box, B_VERTICAL, 2)
+	BLayoutBuilder::Group<>(box, B_VERTICAL, 0)
 		.SetInsets(10, 10, 10, 10)
 
-		.AddSplit(B_VERTICAL, 1.0f)
+		.AddSplit(B_VERTICAL, 0)
 
 			.AddGroup(B_HORIZONTAL, 0)
 				//.Add(closeButton)
@@ -162,11 +164,19 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 					.Add(muteButton)
 					.Add(soloButton)
 			.End()
-
-			.Add(volumeSlider)
-			.Add(balanceSlider)
-
 		.End()
+			.AddGroup(B_HORIZONTAL, 0)
+				.Add(new BStringView("", "v-", B_WILL_DRAW))
+				.Add(volumeSlider)
+				.Add(new BStringView("", "v+", B_WILL_DRAW))
+			.End()
+			.AddGroup(B_HORIZONTAL, 0)
+				.Add(new BStringView("", "b-", B_WILL_DRAW))
+				.Add(balanceSlider)
+				.Add(new BStringView("", "b+", B_WILL_DRAW))
+			.End()
+
+
 	.End();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
