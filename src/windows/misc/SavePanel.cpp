@@ -67,7 +67,7 @@ FileFormatMenuItem::~FileFormatMenuItem()
 SavePanel::SavePanel(BHandler *handler)
 	:
 	BFilePanel(B_SAVE_PANEL, new BMessenger(handler),
-	           NULL, B_FILE_NODE, false,new BMessage(SAVE_AUDIO),
+	           NULL, B_FILE_NODE, false,new BMessage(FABER_SAVE_PROJECT_AUDIO),
 	           NULL, true, true)
 {
 	if (Window()->Lock()) {

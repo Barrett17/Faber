@@ -26,8 +26,8 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef SAVEPANEL_H
-#define SAVEPANEL_H
+#ifndef FABER_SAVE_PROJECTPANEL_H
+#define FABER_SAVE_PROJECTPANEL_H
 
 #include <storage/FilePanel.h>
 #include <InterfaceKit.h>
@@ -35,7 +35,7 @@
 
 #define PANEL_FORMAT 	 'sfpf'
 #define PANEL_CODEC		 'sfps'
-#define SAVE_AUDIO		'sveA'
+#define FABER_SAVE_PROJECT_AUDIO		'sveA'
 
 // ------------------- FileFormatMenuItem -------------------
 

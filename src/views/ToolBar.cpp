@@ -22,7 +22,6 @@ ToolBar::ToolBar()
 
 	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
 
-
 	fPlayButton = _BuildButton(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAY), kPlayIcon);
 	//fPauseButton = _BuildButton(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE), kPauseIcon);
 	fStopButton = _BuildButton(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), kStopIcon);
@@ -32,10 +31,8 @@ ToolBar::ToolBar()
 	fToolButtons[1] = _BuildButton(B_TRANSLATE("Drawing Tool"), new BMessage(TOOL_DRAW), kDrawingToolIcon);
 	fToolButtons[2] = _BuildButton(B_TRANSLATE("Playing Tool"), new BMessage(TOOL_PLAY), kPlayingToolIcon);
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.AddGroup(B_HORIZONTAL, 0)
-			.AddStrut(10.0f)
-
+	BGroupView* transportView = new BGroupView(B_HORIZONTAL);
+	BLayoutBuilder::Group<>(transportView, B_HORIZONTAL, 0)
 			.Add(fStopButton)
 			.Add(fPlayButton)
 			.Add(_BuildButton(B_TRANSLATE("Record"), new BMessage(TRANSPORT_REC), kRecordIcon))
@@ -44,7 +41,15 @@ ToolBar::ToolBar()
 			.Add(_BuildButton(B_TRANSLATE("Forward"), new BMessage(TRANSPORT_FWD), kSeekForwardIcon))
 			.Add(_BuildButton(B_TRANSLATE("Forward All"), new BMessage(TRANSPORT_FWD_ALL), kSeekForwardAllIcon))
 			.Add(fLoopButton)
+		.End();
 
+	//rgb_color backgroundColor = {120,120,120};
+	//transportView->SetViewColor(backgroundColor);
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.AddGroup(B_HORIZONTAL, 0)
+			.AddStrut(10.0f)
+			.Add(transportView)
 			.AddStrut(15.0f)
 			.Add(new BStringView(NULL, "Output", B_WILL_DRAW))
 			.Add(fOutputPeakView)

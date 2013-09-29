@@ -17,11 +17,14 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberResources.h"
 #include "InfoToolBar.h"
 
+#include <GroupView.h>
 #include <LayoutBuilder.h>
 #include <TextView.h>
+
+#include "FaberMessages.h"
+#include "FaberResources.h"
 
 
 InfoToolBar::InfoToolBar()
@@ -34,30 +37,37 @@ InfoToolBar::InfoToolBar()
 	fPointerTextView->SetExplicitMaxSize(BSize(1500, 20));
 	fPointerTextView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
+	BGroupView* zoomView = new BGroupView(B_HORIZONTAL);
+	rgb_color backgroundColor = {120,120,120};
+
+
+	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL)
+		.Add(_BuildButton(B_TRANSLATE("Zoom in"), 
+			new BMessage(FABER_ZOOM_IN), kZoomInIcon))
+
+		.Add(_BuildButton(B_TRANSLATE("Zoom out"),
+			new BMessage(FABER_ZOOM_OUT), kZoomOutIcon))
+
+		.Add(_BuildButton(B_TRANSLATE("Zoom to selection"),
+			new BMessage(FABER_ZOOM_SELECTION), kZoomToSelectionIcon))
+
+		.Add(_BuildButton(B_TRANSLATE("Zoom full wave"),
+			new BMessage(FABER_ZOOM_FULL), kZoomFullWaveIcon))
+
+		.Add(_BuildButton(B_TRANSLATE("Zoom to left pointer"),
+			new BMessage(FABER_ZOOM_LEFT), kZoomInIcon))
+
+		.Add(_BuildButton(B_TRANSLATE("Zoom to right pointer"),
+			new BMessage(FABER_ZOOM_RIGHT), kZoomInIcon))
+	.End();
+
+	zoomView->SetViewColor(backgroundColor);
+
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
-	.Add(fPointerTextView)
-
-	.AddGlue()
-
-	.Add(_BuildButton(B_TRANSLATE("Zoom in"), 
-		new BMessage(ZOOM_IN), kZoomInIcon))
-
-	.Add(_BuildButton(B_TRANSLATE("Zoom out"),
-		new BMessage(ZOOM_OUT), kZoomOutIcon))
-
-	.Add(_BuildButton(B_TRANSLATE("Zoom to selection"),
-		new BMessage(ZOOM_SELECTION), kZoomToSelectionIcon))
-
-	.Add(_BuildButton(B_TRANSLATE("Zoom full wave"),
-		new BMessage(ZOOM_FULL), kZoomFullWaveIcon))
-
-	.Add(_BuildButton(B_TRANSLATE("Zoom to left pointer"),
-		new BMessage(ZOOM_LEFT), kZoomInIcon))
-
-	.Add(_BuildButton(B_TRANSLATE("Zoom to right pointer"),
-		new BMessage(ZOOM_RIGHT), kZoomInIcon))
-
-	.AddStrut(5.0f)
+		.Add(fPointerTextView)
+		.AddGlue()
+		.Add(zoomView)
+		.AddStrut(5.0f)
 	.End();
 }
 

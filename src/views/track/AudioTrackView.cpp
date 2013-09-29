@@ -61,11 +61,11 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	IconButton* recButton = new IconButton(NULL, 0, NULL, NULL, this);
 	recButton->SetToolTip(B_TRANSLATE("Disable Recording"));
-	recButton->SetIcon(kRecordIcon);
+	recButton->SetIcon(kMiniRecordIcon);
 	recButton->TrimIcon();
 
 	IconButton* soloButton = new IconButton(NULL, 0, NULL, NULL, this);
-	soloButton->SetToolTip(B_TRANSLATE("Disable Recording"));
+	soloButton->SetToolTip(B_TRANSLATE("Solo"));
 	soloButton->SetIcon(kSoloIcon);
 	soloButton->TrimIcon();
 
@@ -111,16 +111,16 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 		.SetInsets(10, 10, 10, 10)
 		.AddSplit(B_VERTICAL, 0)
 			.AddGroup(B_HORIZONTAL, 0)
-				//.Add(closeButton)
+				.Add(closeButton)
+				.AddStrut(2.0f)
 				.Add(toolButton)
-				.AddStrut(1.0f)
-				.Add(peak)
 			.End()
-
-			.AddSplit(B_HORIZONTAL, 0)
-					.Add(recButton)
-					.Add(muteButton)
-					.Add(soloButton)
+			.Add(peak)
+			.AddGroup(B_HORIZONTAL, 0)
+				.Add(recButton)
+				.Add(muteButton)
+				.Add(soloButton)
+				.AddGlue()
 			.End()
 		.End()
 			.AddGroup(B_HORIZONTAL, 0)
@@ -139,6 +139,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 		.Add(box)
 		.Add(fSampleView)
 	.End();
+
+
 }
 
 

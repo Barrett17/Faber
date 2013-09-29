@@ -97,32 +97,12 @@ enum {
 };
 
 // Messages
-#define ABOUT				'bout'
-#define HOMEPAGE			'hmep'
 
-#define SAVE_AS   			'ssam'
-#define NEW					'Bnew'
-#define OPEN				'Bopn'
-#define DO_OPEN				'Dopn'
-#define SAVE				'Bsav'
-#define SAVE_SELECTION		'Bsva'
 #define INSERT				'Bins'
 #define APPEND				'apnd'
 #define UNDO				'undo'
 #define REDO				'redo'
 
-#define PASTE_NEW			'pnew'
-#define DROP_PASTE			'drpP'
-
-#define PREFERENCES			'pref'
-#define OPEN_MIX			'opnM'
-
-#define ZERO_IN				'zrIn'
-#define ZERO_OUT			'zrOt'
-#define ZERO_LL				'zrLL'
-#define ZERO_LR				'zrLR'
-#define ZERO_RL				'zrRL'
-#define ZERO_RR				'zrRR'
 #define TRIM				'trim'
 #define SET_FREQUENCY		'setF'
 #define RESAMPLE			'rspl'
@@ -130,10 +110,6 @@ enum {
 #define CLEAR				'clrD'
 #define UNSELECT_ALL		'usel'
 #define COPY_SILENCE		'cpyS'
-
-#define EDIT_L				'EdiL'
-#define EDIT_R				'EdiR'
-#define EDIT_B				'EdiB'
 
 #define TRANSPORT_REW		'Trew'
 #define TRANSPORT_REW_ALL	'Trwa'
@@ -150,13 +126,6 @@ enum {
 #define TRANSPORT_RIGHT		'Tlrg'
 #define TRANSPORT_TOGGLE	'Tltg'
 #define TRANSPORT_SET		'Tlst'
-
-#define ZOOM_IN				'zmIn'
-#define ZOOM_OUT			'zmOt'
-#define ZOOM_FULL			'zmFl'
-#define ZOOM_SELECTION		'zmSl'
-#define ZOOM_LEFT			'zmLf'
-#define ZOOM_RIGHT			'zmRg'
 
 #define RUN_FILTER			'FXrn'
 #define RUN_FILTER_KEY		'FXky'

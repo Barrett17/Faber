@@ -19,6 +19,7 @@
 
 #include "Faber.h"
 
+#include "FaberMessages.h"
 #include "FaberWindow.h"
 #include "TrackIO.h"
 #include "WindowsManager.h"
@@ -65,7 +66,7 @@ FaberApp::MessageReceived(BMessage* message)
 {
 	switch (message->what)
 	{
-		case DROP_PASTE:
+		case FABER_DROP_PASTE:
 		case B_PASTE:
 			fFaberWindow->PostMessage(message);
 		break;

@@ -22,6 +22,7 @@
 #include <LayoutBuilder.h>
 
 #include "AudioTrackView.h"
+#include "FaberMessages.h"
 #include "TrackView.h"
 #include "WindowsManager.h"
 
@@ -200,19 +201,19 @@ TracksContainer::MessageReceived(BMessage* message)
 			UnselectAll();
 			break;
 
-		case ZOOM_IN:
+		case FABER_ZOOM_IN:
 			ZoomIn();
 			break;
 	
-		case ZOOM_OUT:
+		case FABER_ZOOM_OUT:
 			ZoomOut();
 			break;
 	
-		case ZOOM_FULL:
+		case FABER_ZOOM_FULL:
 			ZoomFull();
 			break;
 
-		case ZOOM_SELECTION:
+		case FABER_ZOOM_SELECTION:
 			ZoomSelection();
 			break;
 
@@ -232,7 +233,7 @@ TracksContainer::MessageReceived(BMessage* message)
 			//fTrack->Paste();
 			break;
 
-		case DROP_PASTE:
+		case FABER_DROP_PASTE:
 			//fTrack->DropPaste();
 			break;
 

@@ -31,6 +31,7 @@
 #include <InterfaceDefs.h>
 #include <stdio.h>
 
+#include "FaberMessages.h"
 #include "Globals.h"
 #include "Shortcut.h"
 #include "Settings.h"
@@ -301,15 +302,15 @@ void Shortcut::InstallDefaults(){
 
 	// The FileMenu
 	Install(0,"FILE_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
-	Install(1,"FILE_NEW",			'N', B_COMMAND_KEY,					  0, 0,							NEW				);
-	Install(1,"FILE_OPEN",			'O', B_COMMAND_KEY,					'O', 0,							OPEN			);
+	Install(1,"FABER_NEW_PROJECT",			'N', B_COMMAND_KEY,					  0, 0,					FABER_NEW_PROJECT			);
+	Install(1,"FABER_FILE_OPEN",			'O', B_COMMAND_KEY,					'O', 0,					FABER_FILE_OPEN			);
 	Install(1,"FILE_INSERT",   	    'I', B_COMMAND_KEY,			   B_INSERT, B_SHIFT_KEY,				INSERT			);
 	Install(1,"FILE_APPEND",		  0, 0,								  0, 0,							APPEND			);
-	Install(1,"FILE_MIX",			'M', B_COMMAND_KEY,					  0, 0,							OPEN_MIX		);
-	Install(1,"FILE_SAVE",			'S', B_COMMAND_KEY,					  0, 0,							SAVE			);
-	Install(1,"FILE_SAVE_AS",		'S', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							SAVE_AS			);
-	Install(1,"FILE_SAVE_SELECTION",'S', B_COMMAND_KEY | B_CONTROL_KEY,	'S', B_SHIFT_KEY,				SAVE_SELECTION	);
-	Install(1,"PREFERENCES",		'P', B_COMMAND_KEY,					'P', B_SHIFT_KEY,				PREFERENCES		);
+	//Install(1,"FILE_MIX",			'M', B_COMMAND_KEY,					  0, 0,							OPEN_MIX		);
+	Install(1,"FABER_SAVE_PROJECT",			'S', B_COMMAND_KEY,					  0, 0,							FABER_SAVE_PROJECT			);
+	Install(1,"FABER_EXPORT_PROJECT",		'S', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_EXPORT_PROJECT			);
+	Install(1,"FABER_SAVE_SELECTION",'S', B_COMMAND_KEY | B_CONTROL_KEY,	'S', B_SHIFT_KEY,				FABER_SAVE_SELECTION	);
+	Install(1,"FABER_PREFERENCES",		'P', B_COMMAND_KEY,					'P', B_SHIFT_KEY,				FABER_PREFERENCES		);
 	Install(1,"FILE_QUIT",			'Q', B_COMMAND_KEY,					  0, 0,							B_QUIT_REQUESTED);
 
 	// edit menu
@@ -322,7 +323,7 @@ void Shortcut::InstallDefaults(){
 	Install(1,"COPY_SILENCE",		'X', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							COPY_SILENCE	);
 	Install(1,"CUT",				'X', B_COMMAND_KEY,					  0, 0,							B_CUT			);
 	Install(1,"PASTE",			  	'V', B_COMMAND_KEY,					  0, 0,							B_PASTE			);
-	Install(1,"PASTE_NEW",			'V', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							PASTE_NEW		);
+	Install(1,"FABER_PASTE_NEW",			'V', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_PASTE_NEW		);
 
 	Install(1,"CLEAR",				'B', B_COMMAND_KEY,			   B_DELETE, 0,							CLEAR			);
 
@@ -330,19 +331,19 @@ void Shortcut::InstallDefaults(){
 
 	Install(1,"SELECT_ALL",			'A', B_COMMAND_KEY,					  0, 0,							B_SELECT_ALL	);
 	Install(1,"UNSELECT_ALL",		'U', B_COMMAND_KEY,					  0, 0,							UNSELECT_ALL	);
-	Install(1,"ZERO_IN",			  0, 0,								  0, 0,							ZERO_IN			);
-	Install(1,"ZERO_OUT",			  0, 0,								  0, 0,							ZERO_OUT		);
-	Install(1,"ZERO_LL",			  0, 0,								  0, 0,							ZERO_LL			);
-	Install(1,"ZERO_LR",			  0, 0,								  0, 0,							ZERO_LR			);
-	Install(1,"ZERO_RL",			  0, 0,								  0, 0,							ZERO_RL			);
-	Install(1,"ZERO_RR",			  0, 0,								  0, 0,							ZERO_RR			);
+	Install(1,"FABER_ZERO_IN",			  0, 0,								  0, 0,							FABER_ZERO_IN			);
+	Install(1,"FABER_ZERO_OUT",			  0, 0,								  0, 0,							FABER_ZERO_OUT		);
+	Install(1,"FABER_ZERO_LL",			  0, 0,								  0, 0,							FABER_ZERO_LL			);
+	Install(1,"FABER_ZERO_LR",			  0, 0,								  0, 0,							FABER_ZERO_LR			);
+	Install(1,"FABER_ZERO_RL",			  0, 0,								  0, 0,							FABER_ZERO_RL			);
+	Install(1,"FABER_ZERO_RR",			  0, 0,								  0, 0,							FABER_ZERO_RR			);
 	Install(1,"TRIM",				  0, 0,								  0, 0,							TRIM			);
 	Install(1,"SET_FREQ",	  		  0, 0,								  0, 0,							SET_FREQUENCY	);
 	Install(1,"RESAMPLE",	  		  0, 0,								  0, 0,							RESAMPLE		);
 
 	// help
 	Install(0,"HELP_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
-	Install(1,"ABOUT",			      0, 0,								  0, 0,							ABOUT			);
+	Install(1,"FABER_ABOUT",			      0, 0,								  0, 0,							FABER_ABOUT			);
 
 	// The Transporter
 	Install(0,"TRANSPORT",	  		  0, 0,					  0, 0,							SPLITTER		);
@@ -365,18 +366,18 @@ void Shortcut::InstallDefaults(){
 
 	//zoom
 	Install(0,"ZOOM_FUNCTIONS",	 	  0, 0,								  0, 0,							SPLITTER		);
-	Install(0,"ZOOM_IN",			  B_UP_ARROW, 0,				0,0,				ZOOM_IN				);
-	Install(0,"ZOOM_OUT",		  	  B_DOWN_ARROW, 0,				0,0,				ZOOM_OUT			);
-	Install(0,"ZOOM_FULL",		  	  B_UP_ARROW, B_SHIFT_KEY,		0,0,				ZOOM_FULL			);
-	Install(0,"ZOOM_SELECTION",	  	  B_DOWN_ARROW, B_SHIFT_KEY,	0,0,				ZOOM_SELECTION		);
-	Install(0,"ZOOM_LEFT",		  	  B_LEFT_ARROW, B_SHIFT_KEY,	0,0,				ZOOM_LEFT			);
-	Install(0,"ZOOM_RIGHT",		  	  B_RIGHT_ARROW, B_SHIFT_KEY,	0,0,				ZOOM_RIGHT			);
+	Install(0,"FABER_ZOOM_IN",			  B_UP_ARROW, 0,				0,0,				FABER_ZOOM_IN				);
+	Install(0,"FABER_ZOOM_OUT",		  	  B_DOWN_ARROW, 0,				0,0,				FABER_ZOOM_OUT			);
+	Install(0,"FABER_ZOOM_FULL",		  	  B_UP_ARROW, B_SHIFT_KEY,		0,0,				FABER_ZOOM_FULL			);
+	Install(0,"FABER_ZOOM_SELECTION",	  	  B_DOWN_ARROW, B_SHIFT_KEY,	0,0,				FABER_ZOOM_SELECTION		);
+	Install(0,"FABER_ZOOM_LEFT",		  	  B_LEFT_ARROW, B_SHIFT_KEY,	0,0,				FABER_ZOOM_LEFT			);
+	Install(0,"FABER_ZOOM_RIGHT",		  	  B_RIGHT_ARROW, B_SHIFT_KEY,	0,0,				FABER_ZOOM_RIGHT			);
 
 	//channel selection
 	Install(0,"CHANNELS",			  0, 0,					  0, 0,							SPLITTER		);
-	Install(0,"EDIT_L",				  0, 0,					  0, 0,							EDIT_L				);
-	Install(0,"EDIT_R",				  0, 0,					  0, 0,							EDIT_R				);
-	Install(0,"EDIT_B",				  0, 0,					  0, 0,							EDIT_B				);
+	Install(0,"FABER_EDIT_L",				  0, 0,					  0, 0,							FABER_EDIT_L				);
+	Install(0,"FABER_EDIT_R",				  0, 0,					  0, 0,							FABER_EDIT_R				);
+	Install(0,"FABER_EDIT_B",				  0, 0,					  0, 0,							FABER_EDIT_B				);
 
 	// transform -- when done
 	Install(0,"TRANSFORM_MENU2",	  0, 0,								  0, 0,						SPLITTER		);

@@ -39,7 +39,9 @@ enum {
 	kMuteIcon,
 	kSoloIcon,
 	kTrackMenuIcon,
-	kCloseTrackIcon
+
+	kCloseTrackIcon,
+	kMiniRecordIcon
 };
 
 #endif

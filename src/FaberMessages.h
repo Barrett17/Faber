@@ -20,17 +20,23 @@
 #ifndef FABER_MESSAGES_H
 #define FABER_MESSAGES_H
 
-const uint32 FABER_ABOUT				=	'abou';
-const uint32 FABER_HOMEPAGE				=	'hmpg';
+// GUI
 
-const uint32 FABER_SAVE_AS   			=	'svas';
-const uint32 FABER_NEW					=	'fnew';
-const uint32 FABER_OPEN					=	'open';
-const uint32 FABER_DO_OPEN				=	'dopn';
-const uint32 FABER_SAVE					=	'save';
+const uint32 FABER_ABOUT				=	'abou';
+const uint32 FABER_OPEN_HOMEPAGE		=	'hmpg';
+
+const uint32 FABER_EXPORT_PROJECT   	=	'fepj';
+const uint32 FABER_NEW_PROJECT			=	'fnew';
+const uint32 FABER_SAVE_PROJECT			=	'save';
+
+const uint32 FABER_NEW_EMPTY_TRACK		=   'FNEt';
+
+const uint32 FABER_FILE_OPEN			=	'open';
+
 const uint32 FABER_SAVE_SELECTION		=	'svsl';
 const uint32 FABER_INSERT				=	'insr';
 const uint32 FABER_APPEND				=	'appn';
+
 const uint32 FABER_UNDO					=	'undo';
 const uint32 FABER_REDO					=	'redo';
 
@@ -38,7 +44,39 @@ const uint32 FABER_PASTE_NEW			=	'pnnw';
 const uint32 FABER_DROP_PASTE			=	'drps';
 
 const uint32 FABER_PREFERENCES			=	'prfs';
-const uint32 FABER_OPEN_MIX				=	'opnm';
+
+const uint32 FABER_EDIT_L				=	'edtl';
+const uint32 FABER_EDIT_R				=	'edtr';
+const uint32 FABER_EDIT_B				=	'edtb';
+
+// Transport
+
+const uint32 FABER_TRANSPORT_REW		=	'trew';
+const uint32 FABER_TRANSPORT_REW_ALL	=	'trwa';
+const uint32 FABER_TRANSPORT_FWD		=	'trwd';
+const uint32 FABER_TRANSPORT_FWD_ALL	=	'trfa';
+const uint32 FABER_TRANSPORT_PLAY		=	'trly';
+const uint32 FABER_TRANSPORT_STOP		=	'trtp';
+const uint32 FABER_TRANSPORT_REC		=	'trec';
+const uint32 FABER_TRANSPORT_PAUSE		=	'trse';
+const uint32 FABER_TRANSPORT_LOOP		=	'trop';
+const uint32 FABER_TRANSPORT_HOME		=	'trhm';
+const uint32 FABER_TRANSPORT_END		=	'tred';
+const uint32 FABER_TRANSPORT_LEFT		=	'trlf';
+const uint32 FABER_TRANSPORT_RIGHT		=	'trrg';
+const uint32 FABER_TRANSPORT_TOGGLE		=	'trtg';
+const uint32 FABER_TRANSPORT_SET		=	'trst';
+
+// Zoom
+
+const uint32 FABER_ZOOM_IN				=	'zooi';
+const uint32 FABER_ZOOM_OUT				=	'zoot';
+const uint32 FABER_ZOOM_FULL			=	'zofl';
+const uint32 FABER_ZOOM_SELECTION		=	'zosl';
+const uint32 FABER_ZOOM_LEFT			=	'zoLf';
+const uint32 FABER_ZOOM_RIGHT			=	'zorg';
+
+// Effects and audio manipulation
 
 const uint32 FABER_ZERO_IN				=	'zrin';
 const uint32 FABER_ZERO_OUT				=	'zrot';
@@ -54,33 +92,6 @@ const uint32 FABER_RESAMPLE_DO			=	'resd';
 const uint32 FABER_CLEAR				=	'cler';
 const uint32 FABER_UNSELECT_ALL			=	'unsl';
 const uint32 FABER_COPY_SILENCE			=	'cpsl';
-
-const uint32 FABER_EDIT_L				=	'edtl';
-const uint32 FABER_EDIT_R				=	'edtr';
-const uint32 FABER_EDIT_B				=	'edtb';
-
-const uint32 FABER_TRANSPORT_REW		=	'trew';
-const uint32 FABER_TRANSPORT_REW_ALL	=	'trwa';
-const uint32 FABER_TRANSPORT_FWD		=	'trwd';
-const uint32 FABER_TRANSPORT_FWD_ALL	=	'trwa';
-const uint32 FABER_TRANSPORT_PLAY		=	'trly';
-const uint32 FABER_TRANSPORT_STOP		=	'trtp';
-const uint32 FABER_TRANSPORT_REC		=	'trec';
-const uint32 FABER_TRANSPORT_PAUSE		=	'trse';
-const uint32 FABER_TRANSPORT_LOOP		=	'trop';
-const uint32 FABER_TRANSPORT_HOME		=	'trhm';
-const uint32 FABER_TRANSPORT_END		=	'tred';
-const uint32 FABER_TRANSPORT_LEFT		=	'trlf';
-const uint32 FABER_TRANSPORT_RIGHT		=	'trrg';
-const uint32 FABER_TRANSPORT_TOGGLE		=	'trtg';
-const uint32 FABER_TRANSPORT_SET		=	'trst';
-
-const uint32 FABER_ZOOM_IN				=	'zooi';
-const uint32 FABER_ZOOM_OUT				=	'zoot';
-const uint32 FABER_ZOOM_FULL			=	'zofl';
-const uint32 FABER_ZOOM_SELECTION		=	'zosl';
-const uint32 FABER_ZOOM_LEFT			=	'zoLf';
-const uint32 FABER_ZOOM_RIGHT			=	'zorg';
 
 const uint32 FABER_RUN_FILTER			=	'rufl';
 const uint32 FABER_RUN_FILTER_KEY		=	'rufk';

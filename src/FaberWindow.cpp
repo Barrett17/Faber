@@ -38,6 +38,7 @@
 #include <Path.h>
 
 #include "Faber.h"
+#include "FaberMessages.h"
 #include "FilterDialogs.h"
 #include "Filters.h"
 #include "Globals.h"
@@ -173,22 +174,22 @@ FaberWindow::MessageReceived(BMessage *message)
 
 	switch (message->what)
 	{
-		case ABOUT:
+		case FABER_ABOUT:
 			WindowsManager::ShowAbout();
 			break;
 	
-		case HOMEPAGE:
+		case FABER_OPEN_HOMEPAGE:
 		{
 			const char* homepage = FABER_HOMEPAGE;
 			be_roster->Launch("text/html", 1, const_cast<char**>(&homepage));
 			break;
 		}
 			
-		case PREFERENCES:
+		case FABER_PREFERENCES:
 			WindowsManager::Get()->ShowSettings();
 			break;
 
-		case NEW:
+		case FABER_NEW_PROJECT:
 		{
 			app_info info;
 			be_app->GetAppInfo(&info);
@@ -196,7 +197,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			break;
 		}
 
-		case PASTE_NEW:
+		case FABER_PASTE_NEW:
 		{
 			app_info info;
 			be_app->GetAppInfo(&info);
@@ -204,20 +205,20 @@ FaberWindow::MessageReceived(BMessage *message)
 			break;
 		}
 
-		case OPEN:
+		case FABER_FILE_OPEN:
 		{
 			if (!IsChanged())
 				WindowsManager::GetOpenPanel()->Show();
 			break;
 		}
 
-		case SAVE_AUDIO:
+		case FABER_SAVE_PROJECT_AUDIO:
 		{
 			break;
 		}
 
-		case SAVE_AS:
-		case SAVE:
+		case FABER_EXPORT_PROJECT:
+		case FABER_SAVE_PROJECT:
 		{
 			if (fFaberView->IsEmpty())
 				return;
@@ -231,7 +232,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			break;
 		}
 
-		case SAVE_SELECTION:
+		case FABER_SAVE_SELECTION:
 		{
 			TrackView* current = fFaberView->Container()->CurrentTrack();
 
@@ -385,38 +386,26 @@ FaberWindow::MessageReceived(BMessage *message)
 		case B_SELECT_ALL:
 		case UNSELECT_ALL:
 
-		case ZOOM_IN:
-		case ZOOM_OUT:
-		case ZOOM_FULL:
-		case ZOOM_SELECTION:
-		case ZOOM_LEFT:
-		case ZOOM_RIGHT:
+		case FABER_ZOOM_IN:
+		case FABER_ZOOM_OUT:
+		case FABER_ZOOM_FULL:
+		case FABER_ZOOM_SELECTION:
+		case FABER_ZOOM_LEFT:
+		case FABER_ZOOM_RIGHT:
 
-		case EDIT_L:
-		case EDIT_R:
-		case EDIT_B:
+		case FABER_EDIT_L:
+		case FABER_EDIT_R:
+		case FABER_EDIT_B:
 
 		case B_COPY:
 		case COPY_SILENCE:
 		case B_CUT:		
 		case B_PASTE:
-		case DROP_PASTE:
+		case FABER_DROP_PASTE:
 
 		case UNDO:
 			fFaberView->Looper()->PostMessage(msg);
 			break;
-
-		case B_MOUSE_WHEEL_CHANGED:
-		{
-			message->FindFloat("be:wheel_delta_y", &y);
-			if (y==-1)
-				PostMessage(ZOOM_IN);
-	
-			if (y==1)
-				PostMessage(ZOOM_OUT);
-
-			break;
-		}
 
 		case UPDATE:
 			//fFaberView->Pulse();
@@ -599,7 +588,7 @@ bool FaberWindow::IsChanged(int32 mode)
 
 			case 0:
 			{
-				BMessage* msg = new BMessage(SAVE_AS);
+				BMessage* msg = new BMessage(FABER_EXPORT_PROJECT);
 				msg->AddBool("SaveMode", mode);
 				be_app->PostMessage(msg);
 				return true;
@@ -637,39 +626,40 @@ FaberWindow::_BuildMenu()
 	menu = new BMenu(B_TRANSLATE("File"));
 	fMainMenuBar->AddItem(menu);
 
-	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("New Project"),
-		new BMessage(NEW), KeyBind.GetKey("FILE_NEW"),
-		KeyBind.GetMod("FILE_NEW")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("New Empty Project"),
+		new BMessage(FABER_NEW_PROJECT), KeyBind.GetKey("FABER_NEW_PROJECT"),
+		KeyBind.GetMod("FABER_NEW_PROJECT")));
 
 	menu->AddItem(fSaveMenu = new BMenuItem(B_TRANSLATE("Save Project"),
-		new BMessage(SAVE), KeyBind.GetKey("FILE_SAVE"),
-		KeyBind.GetMod("FILE_SAVE")));
+		new BMessage(FABER_SAVE_PROJECT), KeyBind.GetKey("FABER_SAVE_PROJECT"),
+		KeyBind.GetMod("FABER_SAVE_PROJECT")));
 
 	fRecentMenu = new BMenu(B_TRANSLATE("Open Files..."));
-
 	UpdateRecent();
-
 	menu->AddItem(fRecentMenu);
 
 	BMenuItem *openitem = menu->FindItem(B_TRANSLATE("Open Files..."));
-	openitem->SetShortcut(KeyBind.GetKey("FILE_OPEN"),KeyBind.GetMod("FILE_OPEN"));
-	openitem->SetMessage(new BMessage(OPEN));
+
+	openitem->SetShortcut(KeyBind.GetKey("FABER_FILE_OPEN"),
+		KeyBind.GetMod("FABER_FILE_OPEN"));
+
+	openitem->SetMessage(new BMessage(FABER_FILE_OPEN));
 
 	menu->AddSeparatorItem();
 
 	menu->AddItem(fSaveAsMenu = new BMenuItem(B_TRANSLATE("Export..."),
-		new BMessage(SAVE_AS), KeyBind.GetKey("FILE_SAVE_AS"),
-		KeyBind.GetMod("FILE_SAVE_AS")));
+		new BMessage(FABER_EXPORT_PROJECT), KeyBind.GetKey("FABER_EXPORT_PROJECT"),
+		KeyBind.GetMod("FABER_EXPORT_PROJECT")));
 
 	menu->AddItem(mn_save_sel = new BMenuItem(B_TRANSLATE("Export Selection..."),
-		new BMessage(SAVE_SELECTION), KeyBind.GetKey("FILE_SAVE_SELECTION"),
-		KeyBind.GetMod("FILE_SAVE_SELECTION")));
+		new BMessage(FABER_SAVE_SELECTION), KeyBind.GetKey("FABER_SAVE_SELECTION"),
+		KeyBind.GetMod("FABER_SAVE_SELECTION")));
 
 	menu->AddSeparatorItem();
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Preferences..."),
-		new BMessage(PREFERENCES), KeyBind.GetKey("PREFERENCES"),
-		KeyBind.GetMod("PREFERENCES")));
+		new BMessage(FABER_PREFERENCES), KeyBind.GetKey("FABER_PREFERENCES"),
+		KeyBind.GetMod("FABER_PREFERENCES")));
 
 	menu->AddSeparatorItem();
 
@@ -705,8 +695,8 @@ FaberWindow::_BuildMenu()
 		KeyBind.GetMod("PASTE")));
 
 	fEditMenu->AddItem(mn_paste_new = new BMenuItem(B_TRANSLATE("Paste as new"),
-		new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"),
-		KeyBind.GetMod("PASTE_NEW")));
+		new BMessage(FABER_PASTE_NEW), KeyBind.GetKey("FABER_PASTE_NEW"),
+		KeyBind.GetMod("FABER_PASTE_NEW")));
 
 	fEditMenu->AddSeparatorItem();
 	fEditMenu->AddItem(mn_select_all = new BMenuItem(B_TRANSLATE("Select All"),
@@ -739,7 +729,7 @@ FaberWindow::_BuildMenu()
 	fMainMenuBar->AddItem(fTracksMenu);
 
 	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("New Track"),
-		new BMessage(), KeyBind.GetKey(""), KeyBind.GetMod("")));
+		new BMessage(FABER_NEW_EMPTY_TRACK), KeyBind.GetKey(""), KeyBind.GetMod("")));
 
 	menu_transform = new BMenu(B_TRANSLATE("Effects"));
 
@@ -747,19 +737,23 @@ FaberWindow::_BuildMenu()
 
 	menu_zero = new BMenu(B_TRANSLATE("Zero Crossings"));
 
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Inwards"), new BMessage(ZERO_IN),
-		KeyBind.GetKey("ZERO_IN"), KeyBind.GetMod("ZERO_IN")));
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Inwards"), new BMessage(FABER_ZERO_IN),
+		KeyBind.GetKey("FABER_ZERO_IN"), KeyBind.GetMod("FABER_ZERO_IN")));
 
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Outwards"), new BMessage(ZERO_OUT),
-		KeyBind.GetKey("ZERO_OUT"), KeyBind.GetMod("ZERO_OUT")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Left"), new BMessage(ZERO_LL),
-		KeyBind.GetKey("ZERO_LL"), KeyBind.GetMod("ZERO_LL")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Right"), new BMessage(ZERO_LR),
-		KeyBind.GetKey("ZERO_LR"), KeyBind.GetMod("ZERO_LR")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Left"), new BMessage(ZERO_RL),
-		KeyBind.GetKey("ZERO_RL"), KeyBind.GetMod("ZERO_RL")));
-	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Right"), new BMessage(ZERO_RR),
-		KeyBind.GetKey("ZERO_RR"), KeyBind.GetMod("ZERO_RR")));
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Outwards"), new BMessage(FABER_ZERO_OUT),
+		KeyBind.GetKey("FABER_ZERO_OUT"), KeyBind.GetMod("FABER_ZERO_OUT")));
+	
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Left"), new BMessage(FABER_ZERO_LL),
+		KeyBind.GetKey("FABER_ZERO_LL"), KeyBind.GetMod("FABER_ZERO_LL")));
+	
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Left to Right"), new BMessage(FABER_ZERO_LR),
+		KeyBind.GetKey("FABER_ZERO_LR"), KeyBind.GetMod("FABER_ZERO_LR")));
+	
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Left"), new BMessage(FABER_ZERO_RL),
+		KeyBind.GetKey("FABER_ZERO_RL"), KeyBind.GetMod("FABER_ZERO_RL")));
+	
+	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Right"), new BMessage(FABER_ZERO_RR),
+		KeyBind.GetKey("FABER_ZERO_RR"), KeyBind.GetMod("FABER_ZERO_RR")));
 
 	menu_transform->AddItem(menu_zero);
 
@@ -771,12 +765,14 @@ FaberWindow::_BuildMenu()
 	fMainMenuBar->AddItem(menu);
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("Homepage"),
-		new BMessage(HOMEPAGE), KeyBind.GetKey("HOMEPAGE"), KeyBind.GetMod("HOMEPAGE")));
+		new BMessage(FABER_OPEN_HOMEPAGE),
+			KeyBind.GetKey("FABER_OPEN_HOMEPAGE"),
+			KeyBind.GetMod("FABER_OPEN_HOMEPAGE")));
 
 	menu->AddSeparatorItem();
 
 	menu->AddItem(new BMenuItem(B_TRANSLATE("About"),
-		new BMessage(ABOUT), KeyBind.GetKey("ABOUT"), KeyBind.GetMod("ABOUT")));
+		new BMessage(FABER_ABOUT), KeyBind.GetKey("FABER_ABOUT"), KeyBind.GetMod("FABER_ABOUT")));
 
 	SetKeyMenuBar(NULL);
 	return fMainMenuBar;

@@ -33,6 +33,7 @@
 
 #include "AudioTrackView.h"
 #include "FaberMath.h"
+#include "FaberMessages.h"
 #include "Globals.h"
 #include "PeakFile.h"
 #include "BitmapDrawer.h"
@@ -615,7 +616,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 			else
 				ClipBoard.Copy();*/
 
-			BMessage msg(DROP_PASTE);
+			BMessage msg(FABER_DROP_PASTE);
 			DragMessage(&msg, r);
 			
 			drag_selection = false;
