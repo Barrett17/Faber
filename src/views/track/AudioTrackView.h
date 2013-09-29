@@ -22,6 +22,7 @@
 
 #include "AudioTrackView.h"
 
+#include <PopUpMenu.h>
 #include <View.h>
 
 #include "AudioTrack.h"
@@ -58,6 +59,8 @@ public:
 			void			Pulse();
 
 private:
+			BPopUpMenu*		_BuildMenu();
+
 			SampleView*		fSampleView;
 			AudioTrack*		fTrack;
 

@@ -46,11 +46,12 @@ enum {
 };
 
 
-class SampleView : public BView {
+class SampleView : public BView
+{
 public:
 							SampleView(AudioTrackView* track);
 	virtual 				~SampleView();
-	virtual void			AttachedToWindow();
+	//virtual void			AttachedToWindow();
 	virtual void			Draw(BRect);
 	virtual void			MouseDown(BPoint);
 	virtual void			MouseUp(BPoint);
@@ -72,7 +73,6 @@ private:
 			void 			DrawPart(rgb_color* inBits, rgb_color* outBits,
 								rgb_color col, float* peak_buffer,
 								BRect r, int32 size, int32 size2);
-
  
  			BBitmap*		fOffScreen;
  
@@ -95,9 +95,8 @@ private:
 			int32			fScreenWidth;
 			int32 			fEditChannel;
 
-			int64			pointer;
-			int64			m_old_l_pointer;
-			int64			m_old_r_pointer;
+			int64			fOldLeftPointer;
+			int64			fOldRightPointer;
 			int64			t;
 			int64			t2;
 

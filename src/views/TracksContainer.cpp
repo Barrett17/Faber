@@ -19,7 +19,7 @@
 
 #include "TracksContainer.h"
 
-#include <GroupLayoutBuilder.h>
+#include <LayoutBuilder.h>
 
 #include "AudioTrackView.h"
 #include "TrackView.h"
@@ -31,14 +31,24 @@ TracksContainer::TracksContainer()
 	BGroupView(B_VERTICAL, 7.0f),
 	fTrackViews(false)
 {
-	rgb_color color = {120,120,120};
-	SetViewColor(color);
-	BGroupLayoutBuilder(GroupLayout()).AddGlue(5.0f);
+	// TODO fix color schemes
+	rgb_color backgroundColor = {120,120,120};
+
+	fLayout = new BGroupLayout(B_VERTICAL, 4.0f);
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.AddStrut(1.0f)
+		.Add(fLayout)
+		.AddGlue(0.0f)
+	.End();
+
+	SetViewColor(backgroundColor);
 }
 
 
 TracksContainer::~TracksContainer()
 {
+	delete fLayout;
 }
 
 
@@ -53,7 +63,7 @@ TracksContainer::Pulse()
 status_t
 TracksContainer::AddTrack(TrackView* track, int32 index)
 {
-	GroupLayout()->AddView(track);
+	fLayout->AddView(track, index);
 	WindowsManager::MainWindow()->UpdateMenu();
 
 	return fTrackViews.AddItem(track, index);
@@ -176,18 +186,18 @@ TracksContainer::SetDirty(bool dirty)
 void
 TracksContainer::MessageReceived(BMessage* message)
 {
-	//if (CountTracks() == 0)
-		//	return;
+	if (CountTracks() == 0)
+			return;
 
 	switch (message->what)
 	{
 
 		case B_SELECT_ALL:
-			//SelectAll();
+			SelectAll();
 			break;
 		
 		case UNSELECT_ALL:
-			//UnselectAll();
+			UnselectAll();
 			break;
 
 		case ZOOM_IN:

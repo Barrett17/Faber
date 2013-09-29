@@ -97,3 +97,10 @@ AudioTrack::Area() const
 {
 	return fArea;
 }
+
+
+status_t
+AudioTrack::ApplyEffect(int32 id, int64 start, int64 end)
+{
+
+}

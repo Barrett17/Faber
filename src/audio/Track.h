@@ -66,6 +66,8 @@ public:
 
 			void 			SetFormat(media_format format);
 			media_format 	Format() const;
+
+
 private:
 
 

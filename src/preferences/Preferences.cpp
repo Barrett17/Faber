@@ -603,7 +603,7 @@ void Preferences::SetColorScheme(int32 i){
 		mid_right_color = 			(rgb_color){180, 180, 170};
 		mid_left_selected_color =	(rgb_color){0, 80, 80};
 		mid_right_selected_color = 	(rgb_color){80, 80, 0};
-		pointer_color = 			(rgb_color){255,20,62};
+		pointer_color = 			(rgb_color){100,100,100};
 
 		time_back_color = (rgb_color){216,216,216};
 		time_marks_color = (rgb_color){150,150,150};

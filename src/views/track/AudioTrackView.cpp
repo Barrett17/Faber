@@ -49,12 +49,11 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fSampleView->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, HEIGHT_VAL_REF));
 
 	BBox* box = new BBox("box");
-	
+
 	box->SetExplicitMinSize(BSize(200, HEIGHT_VAL_REF));
 	box->SetExplicitMaxSize(BSize(200, HEIGHT_VAL_REF));
 
 	IconButton* muteButton = new IconButton(NULL, 0, NULL, NULL, this);
-	// Well those could go into the constructor, but no reason for now.
 	muteButton->SetToolTip(B_TRANSLATE("Mute Track"));
 	muteButton->SetIcon(kMuteIcon);
 	muteButton->TrimIcon();
@@ -79,46 +78,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	toolButton->SetIcon(kMuteIcon);
 
 	// Track menu
-	BPopUpMenu* trackMenu = new BPopUpMenu("TrackMenu");
-
-	trackMenu->AddItem(new BMenuItem("Set Name...",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Mono",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Stereo (right)",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Stereo (left)",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Select All",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Edit Left",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Edit Right",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Edit Both",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."), new BMessage(INSERT),
-		KeyBind.GetKey("FILE_INSERT"), KeyBind.GetMod("FILE_INSERT")));
-
-	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."), new BMessage(APPEND),
-		KeyBind.GetKey("FILE_APPEND"), KeyBind.GetMod("FILE_APPEND")));
-
+	BPopUpMenu* trackMenu = _BuildMenu();
 	toolButton->SetMenu(trackMenu);
 
 	trackMenu->SetTargetForItems(this);
@@ -149,9 +109,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	BLayoutBuilder::Group<>(box, B_VERTICAL, 0)
 		.SetInsets(10, 10, 10, 10)
-
 		.AddSplit(B_VERTICAL, 0)
-
 			.AddGroup(B_HORIZONTAL, 0)
 				//.Add(closeButton)
 				.Add(toolButton)
@@ -175,8 +133,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 				.Add(balanceSlider)
 				.Add(new BStringView("", "b+", B_WILL_DRAW))
 			.End()
-
-
 	.End();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
@@ -230,4 +186,53 @@ bool
 AudioTrackView::Dirty() const
 {
 	return fDirty;
+}
+
+
+BPopUpMenu*
+AudioTrackView::_BuildMenu()
+{
+	BPopUpMenu* trackMenu = new BPopUpMenu("TrackMenu");
+
+	trackMenu->AddItem(new BMenuItem("Set Name...",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem("Mono",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Stereo (right)",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Stereo (left)",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem("Select All",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem("Edit Left",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Edit Right",
+		NULL));
+
+	trackMenu->AddItem(new BMenuItem("Edit Both",
+		NULL));
+
+	trackMenu->AddItem(new BSeparatorItem());
+
+	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."),
+		new BMessage(INSERT), KeyBind.GetKey("FILE_INSERT"),
+		KeyBind.GetMod("FILE_INSERT")));
+
+	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."),
+		new BMessage(APPEND), KeyBind.GetKey("FILE_APPEND"),
+		KeyBind.GetMod("FILE_APPEND")));
+
+	return trackMenu;
 }

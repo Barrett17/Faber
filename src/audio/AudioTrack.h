@@ -44,6 +44,9 @@ public:
 			void			InitPeakFile();
 			CPeakFile*		PeakFile() const;
 
+
+			status_t		ApplyEffect(int32 id, int64 start, int64 end);
+
 private:
 
 			float*			fArea;

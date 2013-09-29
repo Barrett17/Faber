@@ -230,13 +230,12 @@ FaberWindow::MessageReceived(BMessage *message)
 
 			break;
 		}
-#if 0
+
 		case SAVE_SELECTION:
 		{
-			TrackView* current = fTracksContainer->CurrentTrack();
+			TrackView* current = fFaberView->Container()->CurrentTrack();
 
-			if (fFaberView->IsEmpty()
-				|| fTracksContainer->CurrentTrack() == NULL)
+			if (fFaberView->IsEmpty() || current == NULL)
 				return;		
 
 			fSaveSelection = true;
@@ -247,7 +246,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			panel->Show();
 			break;
 		}
-
+#if 0
 		case TRANSPORT_PAUSE:
 		{
 			fOutputGate->SetPause(!fToolBar->IsPause());
