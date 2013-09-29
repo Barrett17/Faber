@@ -37,10 +37,6 @@ InfoToolBar::InfoToolBar()
 	fPointerTextView->SetExplicitMaxSize(BSize(1500, 20));
 	fPointerTextView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	BGroupView* zoomView = new BGroupView(B_HORIZONTAL);
-	rgb_color backgroundColor = {120,120,120};
-
-
 	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL)
 		.Add(_BuildButton(B_TRANSLATE("Zoom in"), 
 			new BMessage(FABER_ZOOM_IN), kZoomInIcon))
@@ -61,6 +57,7 @@ InfoToolBar::InfoToolBar()
 			new BMessage(FABER_ZOOM_RIGHT), kZoomInIcon))
 	.End();
 
+	rgb_color backgroundColor = {120,120,120};
 	zoomView->SetViewColor(backgroundColor);
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
