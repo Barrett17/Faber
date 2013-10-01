@@ -63,11 +63,11 @@ SampleView::SampleView(AudioTrackView* track)
 	cache_left_valid = false;
 	cache_right_valid = false;
 	fOld.Set(-1,-1);
-	old_x = -1;
+	fOldX = -1;
 	
-	peak_buffer_l = NULL;
-	peak_buffer_r = NULL;
-	m_width = -1;
+	fLeftPeakBuffer = NULL;
+	fRightPeakBuffer = NULL;
+	fWidth = -1;
 
 	fOffScreen = NULL;
 	fLeftCache = NULL;
@@ -81,7 +81,7 @@ SampleView::SampleView(AudioTrackView* track)
 	// need to create background buffers
 	m_resized = false;		
 
-	if ((viewSem = create_sem(1, "SampleView Sem")) < 0) {
+	if ((fViewSem = create_sem(1, "SampleView Sem")) < 0) {
 //		debugger(CREATE_SEM_FAIL_MSG);
 	}
 }
@@ -89,11 +89,11 @@ SampleView::SampleView(AudioTrackView* track)
 
 SampleView::~SampleView()
 {
-	if (peak_buffer_l)
-		delete peak_buffer_l;
+	if (fLeftPeakBuffer)
+		delete fLeftPeakBuffer;
 
-	if (peak_buffer_r)
-		delete peak_buffer_r;
+	if (fRightPeakBuffer)
+		delete fRightPeakBuffer;
 
 	if (fLeftCache)
 		delete fLeftCache;
@@ -111,22 +111,16 @@ SampleView::~SampleView()
 		delete fOffScreen;
 }
 
-/*
-void
-SampleView::AttachedToWindow()
-{
-}*/
-
 
 void
 SampleView::Init()
 {
-	peak_buffer_l = new float[ WINDOW_MAX_SIZE_X * 2 ];
-	peak_buffer_r = new float[ WINDOW_MAX_SIZE_X * 2 ];
+	fLeftPeakBuffer = new float[ WINDOW_MAX_SIZE_X * 2 ];
+	fRightPeakBuffer = new float[ WINDOW_MAX_SIZE_X * 2 ];
 
 	// wipe buffers
-	memset( peak_buffer_l, 0, WINDOW_MAX_SIZE_X * 2 * sizeof(float));
-	memset( peak_buffer_r, 0, WINDOW_MAX_SIZE_X * 2 * sizeof(float));
+	memset( fLeftPeakBuffer, 0, WINDOW_MAX_SIZE_X * 2 * sizeof(float));
+	memset( fRightPeakBuffer, 0, WINDOW_MAX_SIZE_X * 2 * sizeof(float));
 }
 
 
@@ -139,11 +133,11 @@ SampleView::Pulse()
 	r.top += POINTER_BAR_HEIGHT;
 
 	if (!Pool.IsPlaying() && !play_cookie.pause) {
-		if (old_x != -1) {
+		if (fOldX != -1) {
 			SetDrawingMode(B_OP_INVERT);
-			StrokeLine( BPoint( old_x, r.top), BPoint( old_x, r.bottom));
+			StrokeLine( BPoint( fOldX, r.top), BPoint( fOldX, r.bottom));
 			SetDrawingMode(B_OP_COPY);
-			old_x = -1;
+			fOldX = -1;
 		}
 		return;
 	}
@@ -153,13 +147,13 @@ SampleView::Pulse()
 		if (Pool.IsPlaying()) {
 			p = Pool.last_pointer;
 		} else {
-			p = fTrack->Pointer();
+			p = fOwner->Pointer();
 		}
 	}	
 	if (p!=pointer) {
 		pointer = p;
 		
-		int32 xx = fTrack->End() - fTrack->Start();
+		int32 xx = fOwner->End() - fOwner->Start();
 		if (Prefs.follow_playing && !stop_following && pointer < fTrack->Size() - xx/2)
 		{
 			int64 ptr;
@@ -167,21 +161,21 @@ SampleView::Pulse()
 			if ( ptr > (fTrack->Size()-xx))	ptr = fTrack->Size()-xx;
 			if ( ptr < 0 )				ptr = 0;
 
-			if ( fTrack->Start() != ptr )
+			if ( fOwner->Start() != ptr )
 			{
-				fTrack->Start() = ptr;
-				fTrack->End() = fTrack->Start() + xx;
+				fOwner->Start() = ptr;
+				fOwner->End() = fOwner->Start() + xx;
 
 				WindowsManager::MainWinMessenger()->SendMessage(UPDATE);
 			}
 		}	
 
 		// play pointer
-		float x = (pointer-fTrack->Start()) * Bounds().Width() /(fTrack->End() - fTrack->Start());
+		float x = (pointer-fOwner->Start()) * Bounds().Width() /(fOwner->End() - fOwner->Start());
 		SetDrawingMode(B_OP_INVERT);
 
-		StrokeLine( BPoint( old_x, r.top), BPoint( old_x, r.bottom));
-		old_x = x;
+		StrokeLine( BPoint( fOldX, r.top), BPoint( fOldX, r.bottom));
+		fOldX = x;
 		StrokeLine( BPoint( x, r.top), BPoint( x, r.bottom));
 
 		SetDrawingMode(B_OP_COPY);
@@ -192,7 +186,7 @@ SampleView::Pulse()
 void
 SampleView::Draw(BRect rect)
 {
-	//printf("SampleView::Draw\n");
+	printf("SampleView::Draw\n");
 
 	Looper()->Lock();
 
@@ -200,9 +194,9 @@ SampleView::Draw(BRect rect)
 		CalculateCache();
 
 	if (m_resized) {
-		printf("SampleView::Draw fResized == true\n");
+		//printf("SampleView::Draw fResized == true\n");
 
-		acquire_sem(viewSem);
+		acquire_sem(fViewSem);
 
 		// allocate offscreen bitmap here
 		if (fOffScreen)
@@ -235,7 +229,7 @@ SampleView::Draw(BRect rect)
 
 		}
 		
-		release_sem(viewSem);
+		release_sem(fViewSem);
 
 		// recalculate caches for resized screen
 		CalculateCache();
@@ -285,8 +279,8 @@ SampleView::Draw(BRect rect)
 	BRect r = Bounds();
 	int32 xx = POINTER_BAR_HEIGHT/2 -2;
 	if (fSelection == NONE) {
-		float x = (fTrack->Pointer()-fTrack->Start()) * Bounds().Width()
-			/ (fTrack->End() - fTrack->Start());
+		float x = (fOwner->Pointer()-fOwner->Start()) * Bounds().Width()
+			/ (fOwner->End() - fOwner->Start());
 
 		SetHighColor(Prefs.pointer_color);
 		SetLowColor(Prefs.back_color);
@@ -296,27 +290,27 @@ SampleView::Draw(BRect rect)
 
 		StrokeLine( BPoint( x, POINTER_BAR_HEIGHT), BPoint( x, r.bottom));
 	} else {
-		float x = (fTrack->Pointer()-fTrack->Start())
-			* Bounds().Width() /(fTrack->End() - fTrack->Start());
+		float x = (fOwner->Pointer()-fOwner->Start())
+			* Bounds().Width() /(fOwner->End() - fOwner->Start());
 		SetHighColor(Prefs.pointer_color);
 
 		StrokeLine( BPoint( x, POINTER_BAR_HEIGHT), BPoint( x, r.bottom));
 
-		x = (fTrack->SelectionPointer()-fTrack->Start() +1)
-			* Bounds().Width() /(fTrack->End() - fTrack->Start());
+		x = (fOwner->SelectionPointer()-fOwner->Start() +1)
+			* Bounds().Width() /(fOwner->End() - fOwner->Start());
 
 		StrokeLine( BPoint( x, POINTER_BAR_HEIGHT), BPoint( x, r.bottom));
 	}
 	
 	/*if (Pool.IsPlaying()) {				// remove line
 		SetDrawingMode(B_OP_INVERT);
-		StrokeLine( BPoint( old_x, Bounds().top+POINTER_BAR_HEIGHT), BPoint( old_x, Bounds().bottom));
+		StrokeLine( BPoint( fOldX, Bounds().top+POINTER_BAR_HEIGHT), BPoint( fOldX, Bounds().bottom));
 		SetDrawingMode(B_OP_COPY);
 	}*/
 
 	// these are to notify screen changes to update peak-caches or scroll fast
-	fOldLeftPointer = fTrack->Start();
-	fOldRightPointer = fTrack->End();
+	fOldLeftPointer = fOwner->Start();
+	fOldRightPointer = fOwner->End();
 	m_resized = false;					//  put here, so all sub-routines can benefit
 	fOwner->SetUpdateDrawCache(false);
 	fUpdatePeak = false;				// needed for pencil edit
@@ -351,11 +345,11 @@ SampleView::MouseDown(BPoint p)
 				float middle = (Bounds().Height()-POINTER_BAR_HEIGHT)*0.50+POINTER_BAR_HEIGHT;	// middle
 				// calculate position of cursors on screen
 
-				float pointer_x = (fTrack->Pointer()-fTrack->Start())
-					* Bounds().Width()/(fTrack->End() - fTrack->Start());
+				float pointer_x = (fOwner->Pointer()-fOwner->Start())
+					* Bounds().Width()/(fOwner->End() - fOwner->Start());
 
-				float sel_pointer_x = (fTrack->SelectionPointer()-fTrack->Start()+1)
-					* Bounds().Width() /(fTrack->End() - fTrack->Start());
+				float sel_pointer_x = (fOwner->SelectionPointer()-fOwner->Start()+1)
+					* Bounds().Width() /(fOwner->End() - fOwner->Start());
 		
 				bool left_select = false, right_select = false;
 
@@ -390,19 +384,19 @@ SampleView::MouseDown(BPoint p)
 					// Drag the end-pointers 
 					drag_border = true;
 
-					t = (int32)(fTrack->Start() + p.x 
-						* (fTrack->End() - fTrack->Start())/Bounds().Width());
+					t = (int32)(fOwner->Start() + p.x 
+						* (fOwner->End() - fOwner->Start())/Bounds().Width());
 
 					// drag the right part
-					if (t > (fTrack->Pointer() + fTrack->SelectionPointer())/2) {
+					if (t > (fOwner->Pointer() + fOwner->SelectionPointer())/2) {
 						drag = true;
 
 						// use original begin of selection
-						t = (int32)fTrack->Pointer();			
+						t = (int32)fOwner->Pointer();			
 						MouseMoved( p, 0, NULL );
 					} else {
 						drag = true;
-						t = (int32)(fTrack->SelectionPointer());
+						t = (int32)(fOwner->SelectionPointer());
 						MouseMoved( p, 0, NULL );
 					}
 				} else if (drag_area) { 
@@ -412,12 +406,12 @@ SampleView::MouseDown(BPoint p)
 				}
 				// Here we start a new selection
 				else if (button == B_PRIMARY_MOUSE_BUTTON && !(modifiers() & B_SHIFT_KEY)) {					// do new selection
-					old_x = -1;
+					fOldX = -1;
 					drag = true;
 					fSelection = NONE;
-					fTrack->SetSelectionPointer(0);
-					t = (int32)(fTrack->Start() + p.x * (fTrack->End() - fTrack->Start())/Bounds().Width());
-					fTrack->SetPointer(t);
+					fOwner->SetSelectionPointer(0);
+					t = (int32)(fOwner->Start() + p.x * (fOwner->End() - fOwner->Start())/Bounds().Width());
+					fOwner->SetPointer(t);
 				
 					fOld = p;
 					fStartSelection = p;
@@ -426,8 +420,8 @@ SampleView::MouseDown(BPoint p)
 				
 					float factor;
 					float y = p.y;
-					int32 m = (fTrack->End()+fTrack->Start())/2;				// center
-					int32 x = fTrack->End() - fTrack->Start();
+					int32 m = (fOwner->End()+fOwner->Start())/2;				// center
+					int32 x = fOwner->End() - fOwner->Start();
 					float old_y = p.y;
 	
 					int32 in = (int32)(x - Bounds().Width()/16);		// possible to zoom in
@@ -435,12 +429,12 @@ SampleView::MouseDown(BPoint p)
 					if (out > in*6)			out = in*6;
 					int32 z;
 				
-					float old_x = p.x;
+					float fOldX = p.x;
 	
 					while(button) {
 						GetMouse(&p, &button);
 						
-						if (p.y != old_y || p.x != old_x) {
+						if (p.y != old_y || p.x != fOldX) {
 							// scaled zoom
 							factor = (y-p.y) *0.005;
 							if (factor<0) {
@@ -451,21 +445,21 @@ SampleView::MouseDown(BPoint p)
 								z = (int32)(factor * out/2 +x/2);
 							}
 	
-							int32 add = (int32)((old_x-p.x)*x/Bounds().Width());
+							int32 add = (int32)((fOldX-p.x)*x/Bounds().Width());
 			
-							fTrack->SetStart(m - z + add);
-							fTrack->SetEnd(m + z + add);
+							fOwner->SetStart(m - z + add);
+							fOwner->SetEnd(m + z + add);
 						
-							if (fTrack->Start() < 0)
-								fTrack->SetStart(0);
+							if (fOwner->Start() < 0)
+								fOwner->SetStart(0);
 					
-							if (fTrack->End() > fTrack->Size())
-								fTrack->SetEnd(fTrack->Size());
+							if (fOwner->End() > fTrack->Size())
+								fOwner->SetEnd(fTrack->Size());
 	
 							Invalidate();
 
 							old_y = p.y;
-							old_x = p.x;
+							fOldX = p.x;
 						}
 						snooze(100000);
 					}
@@ -481,7 +475,7 @@ SampleView::MouseDown(BPoint p)
 			/* Drawing with the Pencil */
 			if (Prefs.tool_mode == DRAW_TOOL && clicks == 1) {
 				// save undo data
-				//Hist.Save(H_REPLACE, fTrack->Start(), fTrack->End());
+				//Hist.Save(H_REPLACE, fOwner->Start(), fOwner->End());
 				WindowsManager::MainWindow()->UpdateMenu();
 	
 				fEditChannel = NONE;
@@ -499,14 +493,14 @@ SampleView::MouseDown(BPoint p)
 			fSelection = NONE;
 
 			// Set the play-pointer
-			fTrack->SetSelectionPointer(0);
-			fTrack->SetPointer((int32)(fTrack->Start() + p.x
-				* (fTrack->End() - fTrack->Start())/Bounds().Width()));
+			fOwner->SetSelectionPointer(0);
+			fOwner->SetPointer((int32)(fOwner->Start() + p.x
+				* (fOwner->End() - fOwner->Start())/Bounds().Width()));
 
 			if (button) {
 				bool bRight = (button & B_SECONDARY_MOUSE_BUTTON);
 				
-				//Pool.StartPlaying(fTrack->Pointer()*Pool.sample_type, true);	// play till end
+				//Pool.StartPlaying(fOwner->Pointer()*Pool.sample_type, true);	// play till end
 				
 				Draw(Bounds());
 				snooze(10000);
@@ -522,7 +516,7 @@ SampleView::MouseDown(BPoint p)
 
 				/*Pool.StopPlaying();
 				if (bRight)
-					fTrack->SetPointer(Pool.last_pointer);*/
+					fOwner->SetPointer(Pool.last_pointer);*/
 	
 				stop_following = false;
 			}
@@ -544,16 +538,21 @@ void
 SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 {
 	// area where the cursors work for left/right selection
-	float top = (Bounds().Height()-POINTER_BAR_HEIGHT)*0.20 +POINTER_BAR_HEIGHT;	// left
-	float bottom = (Bounds().Height()-POINTER_BAR_HEIGHT)*0.80+POINTER_BAR_HEIGHT;	// right
-	float middle = (Bounds().Height()-POINTER_BAR_HEIGHT)*0.50+POINTER_BAR_HEIGHT;	// middle
+	float top = (Bounds().Height() - POINTER_BAR_HEIGHT)
+		* 0.20 + POINTER_BAR_HEIGHT;
+
+	float bottom = (Bounds().Height() - POINTER_BAR_HEIGHT)
+		* 0.80 + POINTER_BAR_HEIGHT;
+
+	float middle = (Bounds().Height() - POINTER_BAR_HEIGHT)
+		* 0.50 + POINTER_BAR_HEIGHT;
 
 	// calculate position of cursors on screen
-	float pointer_x = (fTrack->Pointer()- fTrack->Start())
-		* Bounds().Width() /(fTrack->End() - fTrack->Start());
+	float pointer_x = (fOwner->Pointer() - fOwner->Start())
+		* Bounds().Width() /(fOwner->End() - fOwner->Start());
 
-	float sel_pointer_x = (fTrack->SelectionPointer() - fTrack->Start()+1)
-		* Bounds().Width() /(fTrack->End() - fTrack->Start());
+	float sel_pointer_x = (fOwner->SelectionPointer() - fOwner->Start()+1)
+		* Bounds().Width() /(fOwner->End() - fOwner->Start());
 	
 	bool left_pointer = (p.x < pointer_x+3 && p.x > pointer_x-3)
 		&& fOwner->IsSelected();
@@ -570,8 +569,8 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		right_select = true;
 		
 	bool drag_area = (p.x > pointer_x && p.x < sel_pointer_x)
-		&& fOwner->IsSelected()
-		&& !left_pointer && !right_pointer && (left_select || right_select);
+		&& fOwner->IsSelected() && !left_pointer && !right_pointer
+		&& (left_select || right_select);
 
 	if (Prefs.tool_mode == DRAW_TOOL)
 		// pencil mouse cursor 
@@ -630,40 +629,49 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 			SetViewCursor( MouseIcons::MouseArrow() );
 		} else {
 			// Check to see which channels are selected 
-
 			if (p.y < top) {
-				if (fSelection == BOTH)	full_update = true;
+				if (fSelection == BOTH)
+					full_update = true;
+
 				fSelection = LEFT;
 			} else if (p.y > bottom) {
-				if (fSelection == BOTH)	full_update = true;
+				if (fSelection == BOTH)
+					full_update = true;
+
 				fSelection = RIGHT;
 			} else {
-				if (fSelection == LEFT || fSelection == RIGHT)	full_update = true;
+				if (fSelection == LEFT || fSelection == RIGHT)
+					full_update = true;
+
 				fSelection = BOTH;
 			}
 		}
 
-		t2 = (int32)(fTrack->Start() + p.x * (fTrack->End()
-			- fTrack->Start())/Bounds().Width());
+		t2 = (int32)(fOwner->Start() + p.x * (fOwner->End()
+			- fOwner->Start())/Bounds().Width());
 		
 		if (t > t2) {
-			fTrack->SetPointer(t2);
-			fTrack->SetSelectionPointer(t);
+			fOwner->SetPointer(t2);
+			fOwner->SetSelectionPointer(t);
 		} else {
-			fTrack->SetPointer(t);
-			fTrack->SetSelectionPointer(t2);
+			fOwner->SetPointer(t);
+			fOwner->SetSelectionPointer(t2);
 		}
 
-		if (fTrack->Pointer() < 0)
-			fTrack->SetPointer(0);
+		if (fOwner->Pointer() < 0)
+			fOwner->SetPointer(0);
 
-		if (fTrack->SelectionPointer() > fTrack->Size())
-			fTrack->SetSelectionPointer(fTrack->Size());
+		if (fOwner->SelectionPointer() > fTrack->Size())
+			fOwner->SetSelectionPointer(fTrack->Size());
 
-		int32 step = (int32)((fTrack->End()-fTrack->Start())/Bounds().Width());
-		int32 zoom_x = 4;		// normal case just extend the width of the selection triangles
+		int32 step = (int32)((fOwner->End()
+			- fOwner->Start())/Bounds().Width());
+
+		// normal case just extend the width of the selection triangles
+		int32 zoom_x = 4;
 		if (step==0)
-			zoom_x =  (int32)MAX(ceil(Bounds().Width()/(fTrack->End() - fTrack->Start())),POINTER_BAR_HEIGHT) ;
+			zoom_x = (int32)MAX(ceil(Bounds().Width()
+				/ (fOwner->End() - fOwner->Start())),POINTER_BAR_HEIGHT);
 
 		BRect update;
 		if (full_update)
@@ -675,7 +683,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 
 		/*if (Pool.IsPlaying()) {				// remove line
 			SetDrawingMode(B_OP_INVERT);
-			StrokeLine( BPoint( old_x, Bounds().top+POINTER_BAR_HEIGHT), BPoint( old_x, Bounds().bottom));
+			StrokeLine( BPoint( fOldX, Bounds().top+POINTER_BAR_HEIGHT), BPoint( fOldX, Bounds().bottom));
 			SetDrawingMode(B_OP_COPY);
 		}*/
 
@@ -693,10 +701,11 @@ SampleView::MouseUp(BPoint p)
 {
 	if (drag_selection && fStartSelection == p) {
 		// single clicked in selection without drag -> deselect 
-		old_x = -1;
+		fOldX = -1;
 		fSelection = NONE;
-		fTrack->SetSelectionPointer(0);
-		fTrack->SetPointer((fTrack->Start() + p.x * (fTrack->End() - fTrack->Start())/Bounds().Width()));
+		fOwner->SetSelectionPointer(0);
+		fOwner->SetPointer((fOwner->Start() + p.x
+			* (fOwner->End() - fOwner->Start())/Bounds().Width()));
 		
 		Invalidate();
 	}
@@ -725,10 +734,11 @@ SampleView::EditPoint(BPoint p)
 		p.x = r.right;
 
 	// get the offset sample
-	int64 ptr = (int64)(fTrack->Start() + p.x * (fTrack->End() - fTrack->Start())/Bounds().Width());
+	int64 ptr = (int64)(fOwner->Start() + p.x
+		* (fOwner->End() - fOwner->Start())/Bounds().Width());
 
 	// step between samples
-	//float step = (fTrack->End()-fTrack->Start())/Bounds().Width();
+	//float step = (fOwner->End()-fOwner->Start())/Bounds().Width();
 	float v;
 
 	if (fTrack->IsMono()) {
@@ -775,15 +785,16 @@ SampleView::EditPoint(BPoint p)
 
 	// Do some screen updating
 	fUpdatePeak = true;
-	
 
 	int32 zoom_x =  (int32)MAX(ceil(Bounds().Width()
-		/ (fTrack->End() - fTrack->Start())),POINTER_BAR_HEIGHT);
+		/ (fOwner->End() - fOwner->Start())),POINTER_BAR_HEIGHT);
 
 	if (p.x>fOld.x) {
-		Invalidate(BRect(BPoint(fOld.x-zoom_x*2, 0), BPoint(p.x+zoom_x, Bounds().bottom)));
+		Invalidate(BRect(BPoint(fOld.x-zoom_x*2, 0),
+			BPoint(p.x+zoom_x, Bounds().bottom)));
 	} else {
-		Invalidate(BRect(BPoint(p.x-zoom_x*2, 0), BPoint(fOld.x+zoom_x, Bounds().bottom)));
+		Invalidate(BRect(BPoint(p.x-zoom_x*2, 0),
+			BPoint(fOld.x+zoom_x, Bounds().bottom)));
 	}
 	fOld = p;
 }
@@ -792,7 +803,7 @@ SampleView::EditPoint(BPoint p)
 void
 SampleView::DoDraw(int64 ptr, int32 add, float v)
 {
-	int32 step = (int32)ceil((fTrack->End()-fTrack->Start())/Bounds().Width());
+	int32 step = (int32)ceil((fOwner->End()-fOwner->Start())/Bounds().Width());
 
 	float* area = fTrack->Area();
 
@@ -854,7 +865,7 @@ SampleView::CalculateCache()
 	if (fTrack->Size() == 0)
 		return;
 
-	acquire_sem(viewSem);
+	acquire_sem(fViewSem);
 
 	BFont font;
 	GetFont(&font);
@@ -897,13 +908,16 @@ SampleView::CalculateCache()
 		size = (int32)(amp+1)/2;
 
 	int32 height_div = (int)ceil(amp/font.Size()) & 0xfffffe;
-	if (height_div>20)	height_div = 20;
+
+	if (height_div>20)
+		height_div = 20;
+
 	height_div = conv[height_div/2];
 
 	int32 peak = (int32)(r.top + amp*(1.0f - Prefs.peak));
 
 	// size of cache
-	BRect rect(0,0,size, size);
+	BRect rect(0, 0, size, size);
 		
 	fLeftCache = new BBitmap(rect, B_RGB32);
 	fLeftSelected = new BBitmap(rect, B_RGB32);
@@ -1041,7 +1055,7 @@ SampleView::CalculateCache()
 		}
 		cache_right_valid = true;
 	}
-	release_sem(viewSem);
+	release_sem(fViewSem);
 }
 
 
@@ -1049,24 +1063,24 @@ SampleView::CalculateCache()
 void
 SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 {
-	acquire_sem(viewSem);
-	
+	acquire_sem(fViewSem);
+
 	// Update the peak-cache if needed
 	if (fUpdatePeak
 	 || fOwner->UpdateDrawCache()
-	 || fOldLeftPointer != fTrack->Start()
-	 || fOldRightPointer != fTrack->End()) {
+	 || fOldLeftPointer != fOwner->Start()
+	 || fOldRightPointer != fOwner->End()) {
 
 		if (left) {
 			if (fTrack->IsMono()) {
 
-				fTrack->PeakFile()->MonoBuffer(peak_buffer_l, fTrack->Start(),
-					fTrack->End(), Bounds().IntegerWidth()+1);
+				fTrack->PeakFile()->MonoBuffer(fLeftPeakBuffer, fOwner->Start(),
+					fOwner->End(), Bounds().IntegerWidth()+1);
 
 			} else if (fTrack->IsStereo()) {
 
-				fTrack->PeakFile()->StereoBuffer(peak_buffer_l, peak_buffer_r,
-					fTrack->Start(), fTrack->End(), Bounds().IntegerWidth()+1);
+				fTrack->PeakFile()->StereoBuffer(fLeftPeakBuffer, fRightPeakBuffer,
+					fOwner->Start(), fOwner->End(), Bounds().IntegerWidth()+1);
 			}
 		}
 	}
@@ -1093,7 +1107,7 @@ SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 		inSelectedBits = fLeftSelectedBits;
 		col = Prefs.left_color2;
 		colS = Prefs.left_selected_color2;
-		peak_buffer = peak_buffer_l;
+		peak_buffer = fLeftPeakBuffer;
 	} else {
 		// fill pointers for right channel
 		outBits = fScreenBits + size*2 * fScreenWidth;
@@ -1101,7 +1115,7 @@ SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 		inSelectedBits = fRightSelectedBits;
 		col = Prefs.right_color2;
 		colS = Prefs.right_selected_color2;
-		peak_buffer = peak_buffer_r;
+		peak_buffer = fRightPeakBuffer;
 	}
 
 	// swap red/blue for direct draw
@@ -1111,14 +1125,14 @@ SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 	red = colS.red; colS.red = colS.blue; colS.blue = red;
 
 	// do the left part of the back
-	if (!draw_selection || fTrack->Start()<fTrack->Pointer()
-		|| fTrack->SelectionPointer()<fTrack->Start()) {
+	if (!draw_selection || fOwner->Start()<fOwner->Pointer()
+		|| fOwner->SelectionPointer()<fOwner->Start()) {
 		BRect r = Bounds();
-		if (draw_selection && fTrack->End()>fTrack->SelectionPointer()
-			&& !(fTrack->SelectionPointer() < fTrack->Start()))
+		if (draw_selection && fOwner->End()>fOwner->SelectionPointer()
+			&& !(fOwner->SelectionPointer() < fOwner->Start()))
 			// clip
-			r.right -= (fTrack->End()-fTrack->Pointer())
-				* Bounds().Width() /(fTrack->End() - fTrack->Start());
+			r.right -= (fOwner->End()-fOwner->Pointer())
+				* Bounds().Width() /(fOwner->End() - fOwner->Start());
 		
 		// only draw when in update section
 		if (r.right >= rect.left) {
@@ -1129,48 +1143,55 @@ SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 	}
 
 	// do the middle part of the back
-	if (draw_selection && fTrack->SelectionPointer()>=fTrack->Start()
-		&& fTrack->Pointer()<=fTrack->End()) {
+	if (draw_selection && fOwner->SelectionPointer()>=fOwner->Start()
+		&& fOwner->Pointer()<=fOwner->End()) {
 
 		BRect r = Bounds();
-		if (fTrack->Pointer()>fTrack->Start())		// clip left
-			r.left += floor((fTrack->Pointer()-fTrack->Start())
-				* Bounds().Width() /(fTrack->End() - fTrack->Start())+1);
+		if (fOwner->Pointer()>fOwner->Start())		// clip left
+			r.left += floor((fOwner->Pointer()-fOwner->Start())
+				* Bounds().Width() /(fOwner->End() - fOwner->Start())+1);
 
-		if (fTrack->SelectionPointer()<fTrack->End())	// clip right
-			r.right -= ceil((fTrack->End()-fTrack->SelectionPointer()-1)
-				* Bounds().Width() /(fTrack->End() - fTrack->Start())-1);
+		if (fOwner->SelectionPointer()<fOwner->End())	// clip right
+			r.right -= ceil((fOwner->End()-fOwner->SelectionPointer()-1)
+				* Bounds().Width() /(fOwner->End() - fOwner->Start())-1);
 
 		if (r.right == r.left)
 			// make sure there is always a selection visible, even when 1 pixel
 			r.left--;	
 
 		if (r.right >= rect.left && r.left <= rect.right) {
-			if (r.right > rect.right)	r.right = rect.right;
-			if (r.left < rect.left)		r.left = rect.left;
-			DrawPart( inSelectedBits, outBits, colS, peak_buffer, r, size, size2);
+			if (r.right > rect.right)
+				r.right = rect.right;
+
+			if (r.left < rect.left)
+				r.left = rect.left;
+
+			DrawPart(inSelectedBits, outBits, colS,
+				peak_buffer, r, size, size2);
 		}
 	}
 
 	// do the right part of the back
-	if (draw_selection && fTrack->SelectionPointer()>fTrack->Start()
-		&& fTrack->SelectionPointer()<fTrack->End()) {
+	if (draw_selection && fOwner->SelectionPointer() > fOwner->Start()
+		&& fOwner->SelectionPointer()<fOwner->End()) {
 
 		BRect r = Bounds();
-		r.left += (fTrack->SelectionPointer()-fTrack->Start()+1)
-			* Bounds().Width() / (fTrack->End() - fTrack->Start())+1;
+		r.left += (fOwner->SelectionPointer()-fOwner->Start()+1)
+			* Bounds().Width() / (fOwner->End() - fOwner->Start())+1;
 
 		if (r.left <= rect.right) {
 
 			if (rect.left > r.left)
 				r.left = rect.left;
+	
 			if (rect.right < r.right)
 				r.right = rect.right;
 
-			DrawPart( inBits, outBits, col, peak_buffer, r, size, size2);
+			DrawPart( inBits, outBits, col,
+				peak_buffer, r, size, size2);
 		}
 	}
-	release_sem(viewSem);
+	release_sem(fViewSem);
 }
 
 
@@ -1186,7 +1207,7 @@ SampleView::DrawPart(rgb_color *inBits, rgb_color *outBits,
 	rgb_color *dest = NULL;
 
 	int32 draw_mode;
-	int32 step = (fTrack->End()-fTrack->Start())
+	int32 step = (fOwner->End()-fOwner->Start())
 		/ Bounds().IntegerWidth();
 
 	if (step < 1)
@@ -1209,7 +1230,7 @@ SampleView::DrawPart(rgb_color *inBits, rgb_color *outBits,
 			if (old_index<0)
 				old_index = 0;
 	
-			int32 old_x1 = (int32)(size*peak_buffer[old_index]);
+			int32 fOldX1 = (int32)(size*peak_buffer[old_index]);
 
 			for (int32 x = (int32)r.left; x<=(int32)r.right; x++) {
 
@@ -1232,26 +1253,26 @@ SampleView::DrawPart(rgb_color *inBits, rgb_color *outBits,
 					dest += fScreenWidth;
 				}
 	
-				if (x1 == old_x1) {
+				if (x1 == fOldX1) {
 					*(outBits + x + (size-x1)*fScreenWidth) = col;
-				} else if (x1 < old_x1) {
-					middle = ( x1 + old_x1 +1)>>1;
+				} else if (x1 < fOldX1) {
+					middle = ( x1 + fOldX1 +1)>>1;
 					for (int32 offset = x1; offset < middle; offset++)
 						*(outBits + x + (size-offset)*fScreenWidth) = col;
 	
 					if (x != 0)
-						for (int32 offset = middle; offset < old_x1; offset++)
+						for (int32 offset = middle; offset < fOldX1; offset++)
 							*(outBits + x-1 + (size-offset)*fScreenWidth) = col;
 				} else {
-					middle = ( x1 + old_x1 )>>1;
+					middle = ( x1 + fOldX1 )>>1;
 					if (x != 0)
-						for (int32 offset = old_x1; offset < middle; offset++)
+						for (int32 offset = fOldX1; offset < middle; offset++)
 							*(outBits + x-1 + (size-offset)*fScreenWidth) = col;
 	
 					for (int32 offset = middle; offset < x1; offset++)
 						*(outBits + x + (size-offset)*fScreenWidth) = col;
 				}
-				old_x1 = x1;
+				fOldX1 = x1;
 						
 				index += 2;
 			}

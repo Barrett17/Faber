@@ -130,7 +130,7 @@ FaberWindow::UpdateRecent()
 	BMessage *msgout = NULL;
 	entry_ref eref;
 	BEntry e;
-	int32 i = 0;
+
 	char name[B_FILE_NAME_LENGTH];
 	
 	while(fRecentMenu->ItemAt(0))
@@ -226,7 +226,7 @@ FaberWindow::MessageReceived(BMessage *message)
 			fSaveSelection = false;
 
 			SavePanel* panel = WindowsManager::GetSavePanel();
-			panel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
+			panel->Window()->SetTitle(B_TRANSLATE("Save project..."));
 			panel->Show();
 
 			break;
@@ -572,6 +572,10 @@ FaberWindow::UpdateMenu()
 	mn_paste_mix->SetEnabled(ClipBoard.HasClip());
 	mn_redo->SetEnabled(Hist.HasRedo());
 */
+
+	// Set target for menus
+
+	fTracksMenu->SetTargetForItems(fFaberView->Container());
 
 	Unlock();
 }

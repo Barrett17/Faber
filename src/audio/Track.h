@@ -31,18 +31,6 @@ public:
 	virtual bool			IsAudio() const = 0;
 			//bool			IsMIDI() const;
 
-			int64			Start() const;
-			int64			End() const;
-
-			void			SetPointer(int64 pointer);
-			void			SetSelectionPointer(int64 pointer);
-
-			int64			Pointer() const;
-			int64			SelectionPointer() const;
-
-			void			SetStart(int64 start);
-			void			SetEnd(int64 end);
-
 	virtual const BString&	Name() const;
 	virtual void 			SetName(const char* name);
 
@@ -66,8 +54,6 @@ public:
 
 			void 			SetFormat(media_format format);
 			media_format 	Format() const;
-
-
 private:
 
 
@@ -81,15 +67,6 @@ private:
 
 protected:
 			media_format	fFormat;
-
-			bool			fChanged;
-
-			int64			fStart;
-			int64			fEnd;
-			int64			fSelectionPointer;
-			int32			fSelectionMode;
-
-			int64			fCurrentPointer;
 };
 
 #endif

@@ -22,6 +22,7 @@
 
 #include <GroupLayout.h>
 #include <GroupView.h>
+#include <ScrollBar.h>
 
 #include "TrackView.h"
 
@@ -36,17 +37,19 @@ public:
 
 	TrackView*			CurrentTrack();
 	TrackView*			CurrentSelection();
-	bool				IsSelected();
-	int32 				CountTracks() const;
-	TrackView*			TrackAt(int32 index) const;
-	status_t 			AddTrack(TrackView* track, int32 index = 0);
-	status_t			AddTrack(Track* track);
-
-	status_t			RemoveTrack(TrackView* track = NULL);
-	bool 				HasChanged();
-
 	void				SelectAll();
 	void				UnselectAll();
+
+	int32 				CountTracks() const;
+	TrackView*			TrackAt(int32 index) const;
+	TrackView*			TrackByID(int32 id);
+	status_t 			AddTrack(TrackView* track, int32 index = 0);
+	status_t			AddTrack(Track* track);
+	status_t			RemoveTrack(int32 index);
+	status_t			RemoveTrack(TrackView* track = NULL);
+
+	bool 				HasChanged();
+
 	/*
 	status_t 			MuteAllTracks(bool mute);
 	//status_t			ReorderTracks(enum reorderType);*/
@@ -55,20 +58,28 @@ public:
 	void				ZoomOut();
 	void				ZoomFull();
 	void				ZoomSelection();
-//	void				ZoomRight();
-//	void				ZoomLeft();
+	void				ZoomRight();
+	void				ZoomLeft();
 
 	void				Pulse();
 
-	void				ReindexTracks();
-	void				RedrawTracks();
-
 	void				SetDirty(bool dirty);
 
+	// NOTE this will not update the scroll bar
+	// don't use it, use the following method instead.
+	void				UpdateTracksScroll(float newValue);
+
+	/*void				SetHorizontalScroll(float newValue);
+	void				SetVerticalScroll(float newValue);*/
+
 private:
+
+	BGroupView*			fView;
 	BGroupLayout*		fLayout;
 	TrackViewList		fTrackViews;
 
+	BScrollBar*			fVerticalScroll;
+	BScrollBar*			fHorizontalScroll;
 };
 
 #endif

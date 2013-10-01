@@ -51,18 +51,18 @@ class SampleView : public BView
 public:
 							SampleView(AudioTrackView* track);
 	virtual 				~SampleView();
-	//virtual void			AttachedToWindow();
+
 	virtual void			Draw(BRect);
 	virtual void			MouseDown(BPoint);
 	virtual void			MouseUp(BPoint);
 	virtual void			MouseMoved(BPoint, uint32, const BMessage* );
 	virtual void			Pulse();
 	virtual void			FrameResized(float width, float height);
-	
+
 			void			EditPoint(BPoint p);
 			void			EditLine(BPoint, BPoint);
 			void			DoDraw(int64 ptr, int32 add, float v);
-	
+
 			void			Init();
 
 private:
@@ -73,9 +73,9 @@ private:
 			void 			DrawPart(rgb_color* inBits, rgb_color* outBits,
 								rgb_color col, float* peak_buffer,
 								BRect r, int32 size, int32 size2);
- 
+
  			BBitmap*		fOffScreen;
- 
+
  			BBitmap*		fLeftCache;
  			BBitmap*		fRightCache;
  			BBitmap*		fLeftSelected;
@@ -83,7 +83,7 @@ private:
 
 			BPoint			fOld;
 			BPoint			fStartSelection;
- 	
+
  			rgb_color*		fLeftBits;
 			rgb_color*		fLeftSelectedBits;
 			rgb_color*		fRightBits;
@@ -97,20 +97,21 @@ private:
 
 			int64			fOldLeftPointer;
 			int64			fOldRightPointer;
+
 			int64			t;
 			int64			t2;
 
-			float			old_x;
-			float			m_width;
-			float			old_v;
-			float*			peak_buffer_l;
-			float*			peak_buffer_r;
+			float			fOldX;
+			float			fWidth;
+
+			float*			fLeftPeakBuffer;
+			float*			fRightPeakBuffer;
 
 			bool			drag, edit, stop_following, draw_selection;
 			bool			drag_border, drag_selection;
 		 	bool			m_resized, cache_left_valid, cache_right_valid;
- 	
-			sem_id			viewSem;
+
+			sem_id			fViewSem;
 
 			AudioTrackView* fOwner;
 			AudioTrack*		fTrack;

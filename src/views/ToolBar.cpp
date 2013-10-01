@@ -51,9 +51,11 @@ ToolBar::ToolBar()
 			.AddStrut(10.0f)
 			.Add(transportView)
 			.AddStrut(15.0f)
+			
 			.Add(new BStringView(NULL, "Output", B_WILL_DRAW))
 			.Add(fOutputPeakView)
 			.Add(slider)
+
 			.AddGlue()
 
 			.AddStrut(5.0f)

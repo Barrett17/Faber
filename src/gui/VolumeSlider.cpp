@@ -12,8 +12,8 @@
 #include <string.h>
 
 
-#define KNOB_EMBEDDED 0
-#define ROUND_KNOB 0
+#define KNOB_EMBEDDED 1
+#define ROUND_KNOB 1
 
 static const rgb_color kGreen = (rgb_color){ 116, 224, 0, 255 };
 

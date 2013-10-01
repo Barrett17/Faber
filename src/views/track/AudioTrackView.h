@@ -58,6 +58,15 @@ public:
 			// Drawing related methods
 			void			Pulse();
 
+			void			ZoomIn();
+			void			ZoomOut();
+			void			ZoomFull();
+			void			ZoomSelection();
+			void			ZoomRight();
+			void			ZoomLeft();
+
+			void			UpdateScroll(float newValue);
+
 private:
 			BPopUpMenu*		_BuildMenu();
 
@@ -66,6 +75,8 @@ private:
 
 			bool			fUpdateDrawCache;
 			bool			fDirty;
+
+			float			fOldScroll;
 };
 
 #endif

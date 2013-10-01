@@ -21,75 +21,14 @@
 
 Track::Track()
 	:
-	fSelectionPointer(0),
-	fCurrentPointer(0),
-	fChanged(false),
 	fMuted(false),
 	fSolo(false),
 	fPlaying(false),
 	fRecording(false),
-	fStart(0),
-	fEnd(0),
 	fVolume(5),
 	fBalance(5)
 {
 
-}
-
-
-int64
-Track::Pointer() const
-{
-	return fCurrentPointer;
-}
-
-
-int64
-Track::SelectionPointer() const
-{
-	return fSelectionPointer;
-}
-
-
-int64
-Track::Start() const
-{
-	return 0;
-}
-
-
-int64
-Track::End() const
-{
-	return fEnd;
-}
-
-
-void
-Track::SetPointer(int64 pointer)
-{
-	fCurrentPointer = pointer;
-}
-
-
-void
-Track::SetSelectionPointer(int64 pointer)
-{
-	fSelectionPointer = pointer;
-}
-
-
-void
-Track::SetStart(int64 start)
-{
-	fStart = start;
-}
-
-
-void
-Track::SetEnd(int64 end)
-{
-	fEnd = end;
 }
 
 

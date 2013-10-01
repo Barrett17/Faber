@@ -24,7 +24,11 @@ TrackView::TrackView(const char* name,
 	Track* track, uint32 resizingMode)
 	:
 	BGroupView(B_HORIZONTAL, resizingMode),
-	fTrack(track)
+	fTrack(track),
+	fStart(0),
+	fEnd(0),
+	fSelectionPointer(0),
+	fPointer(0)
 {
 }
 
@@ -150,4 +154,60 @@ bool
 TrackView::IsSelected() const
 {
 	return false;
+}
+
+
+int64
+TrackView::Pointer() const
+{
+	return fPointer;
+}
+
+
+int64
+TrackView::SelectionPointer() const
+{
+	return fSelectionPointer;
+}
+
+
+int64
+TrackView::Start() const
+{
+	return 0;
+}
+
+
+int64
+TrackView::End() const
+{
+	return fEnd;
+}
+
+
+void
+TrackView::SetPointer(int64 pointer)
+{
+	fPointer = pointer;
+}
+
+
+void
+TrackView::SetSelectionPointer(int64 pointer)
+{
+	fSelectionPointer = pointer;
+}
+
+
+void
+TrackView::SetStart(int64 start)
+{
+	fStart = start;
+}
+
+
+void
+TrackView::SetEnd(int64 end)
+{
+	fEnd = end;
 }

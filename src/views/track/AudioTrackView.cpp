@@ -25,6 +25,7 @@
 #include <PopUpMenu.h>
 #include <StringView.h>
 
+#include "FaberMessages.h"
 #include "FaberResources.h"
 #include "IconButton.h"
 #include "PeakView.h"
@@ -42,6 +43,11 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fTrack(track),
 	fDirty(false)
 {
+	fEnd = track->Size();
+
+	rgb_color barColor = { 0, 200, 0 };
+	rgb_color fillColor = { 240, 240, 240 };
+
 	fSampleView = new SampleView(this);
 	fSampleView->Init();
 
@@ -70,8 +76,10 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	soloButton->TrimIcon();
 
 	BString trackName(track->Name());
-	if (trackName.Length() > 20)
-		trackName.Truncate(20);
+	if (trackName.Length() > 27) {
+		trackName.Truncate(24);
+		trackName.Append("...");
+	}
 
 	ToolButton* toolButton = new ToolButton(NULL, trackName.String(), NULL);
 	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
@@ -83,7 +91,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	trackMenu->SetTargetForItems(this);
 
-	IconButton* closeButton = new IconButton(NULL, 0, NULL, NULL, this);
+	BMessage* msg = new BMessage(FABER_REMOVE_TRACK);
+	IconButton* closeButton = new IconButton(NULL, 0, NULL, msg, this);
 	closeButton->SetToolTip(B_TRANSLATE("Close"));
 	closeButton->SetIcon(kCloseTrackIcon);
 	closeButton->TrimIcon();
@@ -98,6 +107,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	volumeSlider->SetValue(fTrack->Volume());
 	volumeSlider->SetHashMarkCount(10);
 	volumeSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	volumeSlider->UseFillColor(true, &fillColor);
 
 	VolumeSlider* balanceSlider = new VolumeSlider("balanceSlider",
 		0, 10, 7, NULL);
@@ -106,41 +116,43 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	balanceSlider->SetValue(fTrack->Balance());
 	balanceSlider->SetHashMarkCount(10);
 	balanceSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	balanceSlider->UseFillColor(true, &fillColor);
 
-	BLayoutBuilder::Group<>(box, B_VERTICAL, 0)
+	BLayoutBuilder::Group<>(box, B_VERTICAL, 1.0f)
 		.SetInsets(10, 10, 10, 10)
+
 		.AddSplit(B_VERTICAL, 0)
 			.AddGroup(B_HORIZONTAL, 0)
 				.Add(closeButton)
-				.AddStrut(2.0f)
+				.AddGlue()
 				.Add(toolButton)
 			.End()
-			.Add(peak)
 			.AddGroup(B_HORIZONTAL, 0)
+				.Add(peak)
 				.Add(recButton)
 				.Add(muteButton)
 				.Add(soloButton)
-				.AddGlue()
 			.End()
 		.End()
-			.AddGroup(B_HORIZONTAL, 0)
+
+		.AddGroup(B_HORIZONTAL, 0)
 				.Add(new BStringView("", "v-", B_WILL_DRAW))
 				.Add(volumeSlider)
 				.Add(new BStringView("", "v+", B_WILL_DRAW))
-			.End()
-			.AddGroup(B_HORIZONTAL, 0)
-				.Add(new BStringView("", "b-", B_WILL_DRAW))
-				.Add(balanceSlider)
-				.Add(new BStringView("", "b+", B_WILL_DRAW))
-			.End()
+		.End()
+
+		.AddGroup(B_HORIZONTAL, 0)
+			.Add(new BStringView("", "b-", B_WILL_DRAW))
+			.Add(balanceSlider)
+			.Add(new BStringView("", "b+", B_WILL_DRAW))
+		.End()
+
 	.End();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(box)
 		.Add(fSampleView)
 	.End();
-
-
 }
 
 
@@ -237,4 +249,84 @@ AudioTrackView::_BuildMenu()
 		KeyBind.GetMod("FILE_APPEND")));
 
 	return trackMenu;
+}
+
+
+void
+AudioTrackView::ZoomIn()
+{
+	printf("AudioTrackView::ZoomIn\n");
+
+	fEnd = fEnd/2;
+	float framerate = fTrack->Format().u.raw_audio.frame_rate/100;
+
+	if (fEnd < framerate)
+		fEnd = framerate;
+
+	fSampleView->Invalidate();
+}
+
+
+void
+AudioTrackView::ZoomOut()
+{
+	fEnd = fEnd*2;
+
+	if (fEnd > fTrack->Size())
+		fEnd = fTrack->Size();
+
+	fSampleView->Invalidate();
+}
+
+
+void
+AudioTrackView::ZoomFull()
+{
+	fStart = 0;
+	fEnd = fTrack->Size();
+
+	fSampleView->Invalidate();
+}
+
+
+void
+AudioTrackView::ZoomSelection()
+{
+	fStart = fSelectionPointer;
+	fEnd = fPointer;
+
+	fSampleView->Invalidate();
+}
+
+
+void
+AudioTrackView::ZoomLeft()
+{
+
+}
+
+
+void
+AudioTrackView::ZoomRight()
+{
+	
+}
+
+
+void
+AudioTrackView::UpdateScroll(float newValue)
+{
+	int64 value = fTrack->Size()/newValue;
+
+	if (fOldScroll > newValue) {
+		fStart -= value;
+		fEnd -= value;
+	} else if (fOldScroll < newValue) {
+		fStart += value;
+		fEnd += value;
+	}
+
+	fOldScroll = newValue;
+
+	fSampleView->Invalidate(); 
 }

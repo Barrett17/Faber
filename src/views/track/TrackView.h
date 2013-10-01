@@ -38,18 +38,25 @@ public:
 
 			bool			IsSelected() const;
 
-			int32			Selection() const { return fSelection; };
-
-			void			SetSelection(int32 value) { fSelection = value; };
-
+			/*
 			void			CurrentSelection(int64* start,int64* end) const;
 			void			SelectAt(int64 start,int64 end);
-
-			int64			SelectionStart() const;
-			int64			SelectionEnd() const;
+			*/
 
 			void			SelectAll();
 			void			Unselect();
+
+			int64			Start() const;
+			int64			End() const;
+
+			void			SetPointer(int64 pointer);
+			void			SetSelectionPointer(int64 pointer);
+
+			int64			Pointer() const;
+			int64			SelectionPointer() const;
+
+			void			SetStart(int64 start);
+			void			SetEnd(int64 end);
 
 	virtual const BString&	Name() const;
 	virtual void 			SetName(const char* name);
@@ -72,16 +79,20 @@ public:
 	virtual void			SetSolo(bool solo);
 	virtual bool			IsSolo() const;
 
-private:
+	virtual void			ZoomIn() = 0;
+	virtual void			ZoomOut() = 0;
+	virtual void			ZoomFull() = 0;
+	virtual void			ZoomSelection() = 0;
+	virtual	void			ZoomRight() = 0;
+	virtual	void			ZoomLeft() = 0;
+
+protected:
 			Track*			fTrack;
 
+			int64			fPointer;
 			int64			fStart;
 			int64			fEnd;
-
-			int64			fStartSelection;
-			int64			fEndSelection;
-
-			int32			fSelection;
+			int64			fSelectionPointer;
 };
 
 

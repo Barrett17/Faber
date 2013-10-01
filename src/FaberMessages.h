@@ -30,6 +30,7 @@ const uint32 FABER_NEW_PROJECT			=	'fnew';
 const uint32 FABER_SAVE_PROJECT			=	'save';
 
 const uint32 FABER_NEW_EMPTY_TRACK		=   'FNEt';
+const uint32 FABER_REMOVE_TRACK			=	'Frtk';
 
 const uint32 FABER_FILE_OPEN			=	'open';
 

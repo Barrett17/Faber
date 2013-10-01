@@ -37,8 +37,10 @@
 #include <MediaDefs.h>
 #include <MediaFile.h>
 #include <MediaTrack.h>
+#include <String.h>
 
 #include "AudioTrack.h"
+#include "FaberMath.h"
 #include "Globals.h"
 #include "WindowsManager.h"
 
@@ -256,7 +258,7 @@ TrackIO::Save(BMessage *message)
 {
 	// Grab the stuff we know is there .. or should be :P
 
-	/*entry_ref dir_ref, file_ref;
+	entry_ref dir_ref, file_ref;
 	const char *name;
 	BFile newFile;
 	BDirectory dir;
@@ -270,15 +272,19 @@ TrackIO::Save(BMessage *message)
 		&& (message->FindString("name", &name) == B_OK)) {
 		dir.SetTo(&dir_ref);
 		if (dir.InitCheck() != B_OK)
-			return;
+			return NULL;
 			
 		dir.CreateFile(name, &newFile);
 		
 		BEntry entry(&dir, name);
-		if (entry.InitCheck() != B_OK) 
-		{
-			(new BAlert(NULL, B_TRANSLATE("Can't overwrite file."), B_TRANSLATE("OK")))->Go();
-			return;
+		status_t ret = entry.InitCheck();
+		if (ret != B_OK) {
+			BString error(B_TRANSLATE("Error:"));
+			error << strerror(ret);
+
+			(new BAlert(NULL, error.String(), B_TRANSLATE("OK")))->Go();
+
+			return NULL;
 		}
 		entry.GetRef(&file_ref);
 
@@ -295,7 +301,8 @@ TrackIO::Save(BMessage *message)
 
 		if (audioCodec != NULL) {
 			//format = Pool.m_format;
-			memcpy(&format, &Pool.m_format, sizeof(format));
+
+			//memcpy(&format, &Pool.m_format, sizeof(format));
 			raf_in = &(format.u.raw_audio);
 			format.type = B_MEDIA_RAW_AUDIO;
 
@@ -306,7 +313,7 @@ TrackIO::Save(BMessage *message)
 			BMediaFile file(&file_ref, fileFormat, B_MEDIA_FILE_REPLACE_MODE);
 			if (file.InitCheck() != B_OK) {
 				(new BAlert(NULL, B_TRANSLATE("Can't overwrite file."), B_TRANSLATE("OK")))->Go();
-				return;
+				return NULL;
 			}
 
 			BMediaTrack *outTrack = file.CreateTrack(&format, audioCodec);
@@ -314,11 +321,12 @@ TrackIO::Save(BMessage *message)
 			if (outTrack) {
 				file.CommitHeader();
 
-				if (save_start == 0) {			// save as
+				/*if (save_start == 0) {
+					// save as
 					char s[B_FILE_NAME_LENGTH +20];
 					sprintf(s, "Faber - %s", file_ref.name);
 					fFaberWindow->SetTitle(s);
-				}
+				}*/
 
 				raf = &(format.u.raw_audio);
 				buffer = (char*)malloc(raf->buffer_size);
@@ -327,9 +335,9 @@ TrackIO::Save(BMessage *message)
 				
 				int32 buffer_step = raf->buffer_size / frame_size;
 
-				float *mem = Pool.sample_memory + save_start*Pool.sample_type;	// src memory
+				float *mem /*= Pool.sample_memory + save_start*Pool.sample_type*/;	// src memory
 
-				WindowsManager::Get()->StartProgress(
+				/*WindowsManager::Get()->StartProgress(
 					B_TRANSLATE("Saving file..."), (int32) (save_end-save_start));
 
 				for (int64 i=save_start; i<save_end; i+=buffer_step) {
@@ -390,22 +398,13 @@ TrackIO::Save(BMessage *message)
 							break;
 						}
 	
-						/*case media_raw_audio_format::B_AUDIO_DOUBLE:
-						{	
-							int8 *tmp = (int8*)buffer;
-							for (int32 count = 0; count<block*channels; count++) {
-								t = *mem++;
-								*tmp++ = (double) ROUND(t * 127.0);		// xor 128 to invert sign bit
-							break;
-							}
-						}	
 					}
 
 					WindowsManager::Get()->ProgressUpdate(block);
 					outTrack->WriteFrames(buffer, block);
-				}
+				}*/
 
-				Pool.changed = false;
+				//Pool.changed = false;
 
 				outTrack->Flush();
 
@@ -431,10 +430,11 @@ TrackIO::Save(BMessage *message)
 		(new BAlert(NULL, B_TRANSLATE("This project has changed. Do you want to save it now?"), B_TRANSLATE("OK")))->Go();
 	}
 
-	if (fSaveMode == 2)
+	/*if (fSaveMode == 2)
 		PostMessage(B_QUIT_REQUESTED);
+
 	if (fSaveMode == 1)
-		fFaberWindow->PostMessage(OPEN);
-*/
+		fFaberWindow->PostMessage(OPEN);*/
+
 	fSaveMode = 0;
 }

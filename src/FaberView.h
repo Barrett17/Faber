@@ -25,6 +25,7 @@
 
 #include "InfoToolBar.h"
 #include "ToolBar.h"
+#include "Track.h"
 #include "TracksContainer.h"
 
 
@@ -43,12 +44,14 @@ public:
 			bool				IsSelected();
 
 			bool 				HasChanged();
+			void				Pulse();
+
+			status_t 			AddTrack(Track* track);
 private:
 
 			TracksContainer*	fTracksContainer;
 			ToolBar*			fToolBar;
 			InfoToolBar*		fInfoToolBar;
-
 };
 
 

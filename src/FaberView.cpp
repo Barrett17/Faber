@@ -20,8 +20,8 @@
 #include "FaberView.h"
 
 #include <LayoutBuilder.h>
-#include <ScrollBar.h>
-#include <ScrollView.h>
+
+#include "FaberMessages.h"
 
 
 FaberView::FaberView()
@@ -35,25 +35,11 @@ FaberView::FaberView()
 
 	fInfoToolBar = new InfoToolBar();
 
-	BScrollView* verticalScrollView = new BScrollView("scrollviewV",
-		fTracksContainer, B_FOLLOW_NONE, false, true);
-	verticalScrollView->ScrollBar(B_VERTICAL)->SetRange(0, 0);
-
-	// This is needed to stop the vertical scrollview to go out of the window
-	verticalScrollView->SetExplicitMinSize(BSize(B_SIZE_UNSET, 200));
-
-
-	BScrollBar* horizontalScrollBar = new BScrollBar("scrollviewH",
-		fTracksContainer,
-		0, 0, B_HORIZONTAL);
-
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.Add(fToolBar)
-		.AddGroup(B_VERTICAL)
-			.Add(verticalScrollView)
-			.Add(horizontalScrollBar)
+		.AddGroup(B_VERTICAL, 0)
+			.Add(fTracksContainer)
 		.End()
-		.AddGlue(0.0f)
 		.Add(fInfoToolBar)
 	.End();
 }
@@ -67,8 +53,32 @@ FaberView::~FaberView()
 void
 FaberView::MessageReceived(BMessage* message)
 {
+	message->PrintToStream();
 	switch (message->what)
 	{
+		case FABER_ZOOM_IN:
+			fTracksContainer->ZoomIn();
+			break;
+	
+		case FABER_ZOOM_OUT:
+			fTracksContainer->ZoomOut();
+			break;
+	
+		case FABER_ZOOM_FULL:
+			fTracksContainer->ZoomFull();
+			break;
+
+		case FABER_ZOOM_SELECTION:
+			fTracksContainer->ZoomSelection();
+			break;
+
+		case FABER_ZOOM_RIGHT:
+			fTracksContainer->ZoomRight();
+			break;
+
+		case FABER_ZOOM_LEFT:
+			fTracksContainer->ZoomLeft();
+			break;
 
 		default:
 			BGroupView::MessageReceived(message);
@@ -97,6 +107,13 @@ FaberView::IsSelected()
 }
 
 
+status_t
+FaberView::AddTrack(Track* track)
+{
+	return fTracksContainer->AddTrack(track);
+}
+
+
 bool
 FaberView::HasChanged()
 {
@@ -104,9 +121,11 @@ FaberView::HasChanged()
 }
 
 
-/*
+
 void
 FaberView::Pulse()
 {
 	fInfoToolBar->Pulse();
-}*/
+	fToolBar->Pulse();
+	fTracksContainer->Pulse();
+}

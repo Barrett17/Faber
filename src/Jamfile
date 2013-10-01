@@ -39,6 +39,7 @@ Application Faber :
 	TracksContainer.cpp
 	ToolBar.cpp
 	InfoToolBar.cpp
+	FaberScrollBar.cpp
 
 	# TrackViews implementations
 	TrackView.cpp

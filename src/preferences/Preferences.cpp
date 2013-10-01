@@ -579,7 +579,7 @@ void Preferences::SetColorScheme(int32 i){
 		index_pointer_color = (rgb_color){255,0,64};
 
 		back_color =				(rgb_color){150,150,150};
-		back_color2 =				(rgb_color){255, 255, 255};
+		back_color2 =				(rgb_color){200, 200, 200};
 		back_selected_color =		(rgb_color){193,197,206};
 		back_selected_color2 =		(rgb_color){246,246,255};
 

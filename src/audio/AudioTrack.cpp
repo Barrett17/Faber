@@ -41,7 +41,6 @@ AudioTrack::SetArea(float* area, int64 size)
 {
 	fArea = area;
 	fSize = size;
-	fEnd = fSize;
 }
 
 
