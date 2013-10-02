@@ -21,7 +21,7 @@
 
 #include "FreqWindow.h"
 #include "Filters.h"
-#include "FilterDialogs.h"
+#include "ResampleWindow.h"
 
 
 WindowsManager*	WindowsManager::fInstance = NULL;

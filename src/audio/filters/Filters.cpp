@@ -31,9 +31,10 @@
 #include <File.h>
 
 #include "FaberDefs.h"
-#include "FilterDialogs.h"
+
 #include "Globals.h"
 #include "PeakFile.h"
+#include "ResampleWindow.h"
 #include "WindowsManager.h"
 
 // the filters with GUI
