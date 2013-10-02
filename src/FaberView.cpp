@@ -21,7 +21,7 @@
 
 #include <LayoutBuilder.h>
 
-#include "FaberMessages.h"
+#include "FaberDefs.h"
 
 
 FaberView::FaberView()
@@ -53,7 +53,7 @@ FaberView::~FaberView()
 void
 FaberView::MessageReceived(BMessage* message)
 {
-	message->PrintToStream();
+
 	switch (message->what)
 	{
 		case FABER_ZOOM_IN:
@@ -70,14 +70,6 @@ FaberView::MessageReceived(BMessage* message)
 
 		case FABER_ZOOM_SELECTION:
 			fTracksContainer->ZoomSelection();
-			break;
-
-		case FABER_ZOOM_RIGHT:
-			fTracksContainer->ZoomRight();
-			break;
-
-		case FABER_ZOOM_LEFT:
-			fTracksContainer->ZoomLeft();
 			break;
 
 		default:

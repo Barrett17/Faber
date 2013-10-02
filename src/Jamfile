@@ -40,6 +40,7 @@ Application Faber :
 	ToolBar.cpp
 	InfoToolBar.cpp
 	FaberScrollBar.cpp
+	TimeBar.cpp
 
 	# TrackViews implementations
 	TrackView.cpp
@@ -88,10 +89,13 @@ Application Faber :
 	MediaGate.cpp
 	AudioGate.cpp
 
+	EffectsManager.cpp
+	FaberEffect.cpp
+
 	# Audio nodes
 	FaberNode.cpp
 
-	# filters
+	# Effects
 	AmplifierFilter.cpp
 	Filters.cpp
 	RealtimeFilter.cpp

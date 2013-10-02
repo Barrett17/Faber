@@ -8,6 +8,7 @@
 #include <LayoutBuilder.h>
 #include <StringView.h>
 
+#include "FaberDefs.h"
 #include "FaberResources.h"
 #include "IconButton.h"
 #include "VolumeSlider.h"
@@ -84,7 +85,7 @@ ToolBar::SetPlay(bool play)
 {
 	if (play == true) {
 		fStopButton->SetPressed(false);
-		fPlayButton->SetMessage(new BMessage(TRANSPORT_PAUSE));
+		//fPlayButton->SetMessage(new BMessage(TRANSPORT_PAUSE));
 		fPlayButton->SetIcon(kPauseIcon);
 		fPlayButton->TrimIcon();
 	}

@@ -19,7 +19,6 @@
 
 #include "WindowsManager.h"
 
-//#include "AboutBox.h"
 #include "FreqWindow.h"
 #include "Filters.h"
 #include "FilterDialogs.h"
@@ -34,7 +33,7 @@ WindowsManager::WindowsManager()
 	fOpenPanel(NULL),
 	fSettingsWindow(NULL)
 {
-	fProgress = new ProgressWindow(BRect(0,0,300,30));
+	fProgress = new ProgressWindow(BRect(0, 0, 300, 40));
 }
 
 
@@ -100,8 +99,10 @@ WindowsManager::ShowSettings()
 		GetSettingsWindow();
 
 	if (fSettingsWindow->LockLooper()) {
+
 		if (fSettingsWindow->IsHidden())
 			fSettingsWindow->Show();
+
 		fSettingsWindow->Activate();
 		fSettingsWindow->UnlockLooper();
 	}
@@ -123,7 +124,8 @@ WindowsManager::ShowAbout()
 {
 	/*BPoint point = _CalculateWindowPoint();
 
-	(new AboutBox(point));*/
+	AboutBox* box = new AboutBox();
+	*/
 }
 
 
@@ -165,43 +167,28 @@ WindowsManager::ShowFrequencyWindow()
 }
 
 
-// Those progress methods were created originally by Frans van Nispen
 void WindowsManager::StartProgress(const char *label, int32 max)
 {
-	if (fProgress->Lock()) {
-		fProgress->StartProgress(label, max);
-		fProgress->Unlock();
-	}
+	fProgress->StartProgress(label, max);
 }
 
 
 void WindowsManager::ProgressUpdate(int32 delta)
 {
-	if (fProgress->Lock()) {
-		fProgress->SetProgress(delta);
-		fProgress->Unlock();
-	}
+	fProgress->SetProgress(delta);
 }
 
 
 void WindowsManager::SetProgressName(const char *name)
 {
-	if (fProgress->Lock()) {
-		fProgress->SetTitle(name);
-		fProgress->Unlock();
-	}
+	fProgress->SetProgressName(name);
 }
 
 
 void WindowsManager::HideProgress()
 {
-	if (fProgress->Lock()) {
-		if (!fProgress->IsHidden())
-			fProgress->Hide();
-		fProgress->Unlock();
-	}
+	fProgress->HideProgress();
 }
-// End of progress methods.
 
 
 bool
@@ -217,5 +204,5 @@ WindowsManager::_CalculateWindowPoint()
 {
 	BRect frame = Get()->MainWindow()->Frame();
 	return BPoint((frame.left + frame.right) / 2,
-		(frame.top+frame.bottom) / 2);
+		(frame.top + frame.bottom) / 2);
 }

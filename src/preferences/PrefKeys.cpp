@@ -42,6 +42,7 @@
 #include <TranslationUtils.h>
 #include <stdio.h>
 
+#include "FaberDefs.h"
 #include "Globals.h"
 #include "PrefKeys.h"
 #include "Shortcut.h"

@@ -17,28 +17,27 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _EFFECTS_MANAGER_H_
-#define _EFFECTS_MANAGER_H_
+#ifndef _TIME_BAR
+#define _TIME_BAR
 
-public class EffectsManager
+#include <GroupView.h>
+
+
+class TimeBar : public BGroupView
 {
 public:
-								EffectsManager();
-	virtual 					~EffectsManager();
+						TimeBar();
+	virtual 			~TimeBar();
 
-	const char*					EffectToString(int32 index) const;
+	void				MessageReceived(BMessage* message);
 
-	BMenuItem*					FilterItemAt(int32 index) const;
-	int32						CountFilterItems() const;
+	void				SetDuration(bigtime_t duration);
+	bigtime_t			Duration();
 
-	FaberEffect*				GetEffect(int32 id) const;
+	
 
-	status_t					RunEffect(AudioTrack* track,
-									float* buffer, size_t size
-									int32 id);
 private:
 
-	BObjectList<FaberEffect*>	fEffectsList;
-}
+};
 
-#endif	// _EFFECTSM_ANAGER_H_
+#endif

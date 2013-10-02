@@ -40,6 +40,7 @@
 #include <String.h>
 
 #include "AudioTrack.h"
+#include "FaberDefs.h"
 #include "FaberMath.h"
 #include "Globals.h"
 #include "WindowsManager.h"

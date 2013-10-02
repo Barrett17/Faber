@@ -20,6 +20,7 @@
 #include <LayoutBuilder.h>
 #include <SpaceLayoutItem.h>
 
+#include "FaberDefs.h"
 #include "Globals.h"
 #include "PrefGeneral.h"
 #include "PrefKeys.h"

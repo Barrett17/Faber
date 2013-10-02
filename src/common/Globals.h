@@ -39,26 +39,6 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <SupportDefs.h>
-#include <Locale.h>
-#include <Catalog.h>
-
-#include "Preferences.h"
-
-#include <stdio.h>
-
-// Debug
-
-//#define FABER_DEBUG 0
-//#define DEBUG_DISABLE_DRAWPART 0
-
-// Translation
-
-#define B_TRANSLATION_CONTEXT "Faber"
-
-#define catSig "x-vnd.Be.locale.Faber"
-#define catName catSig".catalog"
-
 // Various settings
 
 #define WINDOW_DEFAULT_SIZE_X	800
@@ -84,13 +64,6 @@
 // Enums
 
 enum {
-	NONE=0,
-	LEFT,
-	RIGHT,
-	BOTH
-};
-
-enum {
 	SELECT_TOOL,
 	DRAW_TOOL,
 	PLAY_TOOL,
@@ -98,8 +71,6 @@ enum {
 
 // Messages
 
-#define INSERT				'Bins'
-#define APPEND				'apnd'
 #define UNDO				'undo'
 #define REDO				'redo'
 
@@ -118,14 +89,7 @@ enum {
 #define TRANSPORT_PLAY		'Tply'
 #define TRANSPORT_STOP		'Tstp'
 #define TRANSPORT_REC		'Trec'
-#define TRANSPORT_PAUSE		'Tpse'
 #define TRANSPORT_LOOP		'Tlop'
-#define TRANSPORT_HOME		'Tlhm'
-#define TRANSPORT_END		'Tled'
-#define TRANSPORT_LEFT		'Tllf'
-#define TRANSPORT_RIGHT		'Tlrg'
-#define TRANSPORT_TOGGLE	'Tltg'
-#define TRANSPORT_SET		'Tlst'
 
 #define RUN_FILTER			'FXrn'
 #define RUN_FILTER_KEY		'FXky'
@@ -138,9 +102,5 @@ enum {
 	TOOL_DRAW	= 1,
 	TOOL_PLAY	= 2
 };
-
-#define SET_TIME			'setT'
-
-#define UPDATE				'updt'
 
 #endif

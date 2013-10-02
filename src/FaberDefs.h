@@ -17,28 +17,38 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _EFFECTS_MANAGER_H_
-#define _EFFECTS_MANAGER_H_
+#ifndef FABER_DEFS_H
+#define FABER_DEFS_H
 
-public class EffectsManager
-{
-public:
-								EffectsManager();
-	virtual 					~EffectsManager();
+#include <SupportDefs.h>
+#include <Locale.h>
+#include <Catalog.h>
 
-	const char*					EffectToString(int32 index) const;
+#include "FaberMessages.h"
+#include "FaberResources.h"
+#include "Preferences.h"
 
-	BMenuItem*					FilterItemAt(int32 index) const;
-	int32						CountFilterItems() const;
+#include <stdio.h>
 
-	FaberEffect*				GetEffect(int32 id) const;
+// Debug
 
-	status_t					RunEffect(AudioTrack* track,
-									float* buffer, size_t size
-									int32 id);
-private:
+//#define FABER_DEBUG 0
+//#define DEBUG_DISABLE_DRAWPART 0
 
-	BObjectList<FaberEffect*>	fEffectsList;
-}
+// Translation
 
-#endif	// _EFFECTSM_ANAGER_H_
+#define B_TRANSLATION_CONTEXT "Faber"
+
+#define catSig "x-vnd.Be.locale.Faber"
+#define catName catSig".catalog"
+
+// Enums
+
+enum {
+	FABER_SELECTION_TOOL,
+	FABER_DRAW_TOOL,
+	FABER_PLAY_TOOL	
+};
+
+
+#endif

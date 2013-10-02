@@ -32,8 +32,8 @@
 #include <PopUpMenu.h>
 
 #include "AudioTrackView.h"
+#include "FaberDefs.h"
 #include "FaberMath.h"
-#include "FaberMessages.h"
 #include "Globals.h"
 #include "PeakFile.h"
 #include "BitmapDrawer.h"
@@ -51,7 +51,8 @@ SampleView::SampleView(AudioTrackView* track)
 	:
 	BView("", B_FRAME_EVENTS | B_WILL_DRAW),
 	fTrack(track->Track()),
-	fOwner(track)
+	fOwner(track),
+	fSelected(false)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
 	drag = false;
@@ -165,8 +166,6 @@ SampleView::Pulse()
 			{
 				fOwner->Start() = ptr;
 				fOwner->End() = fOwner->Start() + xx;
-
-				WindowsManager::MainWinMessenger()->SendMessage(UPDATE);
 			}
 		}	
 
@@ -186,7 +185,7 @@ SampleView::Pulse()
 void
 SampleView::Draw(BRect rect)
 {
-	printf("SampleView::Draw\n");
+	//printf("SampleView::Draw\n");
 
 	Looper()->Lock();
 
@@ -243,7 +242,7 @@ SampleView::Draw(BRect rect)
 		if (fTrack->IsMono() && cache_left_valid) {
 
 			rect.bottom = Bounds().bottom-POINTER_BAR_HEIGHT;
-			DrawMono(rect, true, (fSelection == BOTH));
+			DrawMono(rect, true, fSelected);
 			rect.bottom = Bounds().bottom;
 
 		} else if (fTrack->IsStereo()) {
@@ -278,7 +277,8 @@ SampleView::Draw(BRect rect)
 	// Draw the pointer
 	BRect r = Bounds();
 	int32 xx = POINTER_BAR_HEIGHT/2 -2;
-	if (fSelection == NONE) {
+
+	if (!fSelected) {
 		float x = (fOwner->Pointer()-fOwner->Start()) * Bounds().Width()
 			/ (fOwner->End() - fOwner->Start());
 
@@ -359,15 +359,12 @@ SampleView::MouseDown(BPoint p)
 				bool right_pointer = 
 					(p.x < sel_pointer_x+3 && p.x > sel_pointer_x-3)
 					&& fOwner->IsSelected();
-	
-				if (fSelection == BOTH 
-					|| (fSelection == LEFT && p.y <= middle))
+
+				if (fSelected) {
 					left_select = true;
-	
-				if (fSelection == BOTH
-					|| (fSelection == RIGHT && p.y >= middle))
 					right_select = true;
-	
+				}
+
 				bool drag_area = (p.x > pointer_x && p.x < sel_pointer_x) && fOwner->IsSelected()
 								&& !left_pointer && !right_pointer && (left_select || right_select);
 	
@@ -408,7 +405,7 @@ SampleView::MouseDown(BPoint p)
 				else if (button == B_PRIMARY_MOUSE_BUTTON && !(modifiers() & B_SHIFT_KEY)) {					// do new selection
 					fOldX = -1;
 					drag = true;
-					fSelection = NONE;
+					fSelected = false;
 					fOwner->SetSelectionPointer(0);
 					t = (int32)(fOwner->Start() + p.x * (fOwner->End() - fOwner->Start())/Bounds().Width());
 					fOwner->SetPointer(t);
@@ -473,7 +470,7 @@ SampleView::MouseDown(BPoint p)
 		case DRAW_TOOL:												
 		{
 			/* Drawing with the Pencil */
-			if (Prefs.tool_mode == DRAW_TOOL && clicks == 1) {
+			/*if (Prefs.tool_mode == DRAW_TOOL && clicks == 1) {
 				// save undo data
 				//Hist.Save(H_REPLACE, fOwner->Start(), fOwner->End());
 				WindowsManager::MainWindow()->UpdateMenu();
@@ -483,14 +480,14 @@ SampleView::MouseDown(BPoint p)
 				fOld = p;
 				EditPoint( p );
 				edit = true;
-			}	
+			}	*/
 			break;
 		}
 
 		case PLAY_TOOL:
 		{
 			stop_following = true;
-			fSelection = NONE;
+			fSelected = false;
 
 			// Set the play-pointer
 			fOwner->SetSelectionPointer(0);
@@ -562,12 +559,11 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 
 	bool left_select = false, right_select = false;
 
-	if (fSelection == BOTH || (fSelection == LEFT && p.y <= middle))
+	if (fSelected) {
 		left_select = true;
-
-	if (fSelection == BOTH || (fSelection == RIGHT && p.y >= middle))
 		right_select = true;
-		
+	}
+
 	bool drag_area = (p.x > pointer_x && p.x < sel_pointer_x)
 		&& fOwner->IsSelected() && !left_pointer && !right_pointer
 		&& (left_select || right_select);
@@ -623,28 +619,16 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		fOld = p;
 	} else if (drag && p!=fOld) {
 
-		// do the selecting
+		// do the selection
 		if (fTrack->IsMono()) {
-			fSelection = BOTH;
-			SetViewCursor( MouseIcons::MouseArrow() );
+			fSelected = true;
+			SetViewCursor(MouseIcons::MouseArrow());
 		} else {
 			// Check to see which channels are selected 
-			if (p.y < top) {
-				if (fSelection == BOTH)
+				if (fSelected)
 					full_update = true;
 
-				fSelection = LEFT;
-			} else if (p.y > bottom) {
-				if (fSelection == BOTH)
-					full_update = true;
-
-				fSelection = RIGHT;
-			} else {
-				if (fSelection == LEFT || fSelection == RIGHT)
-					full_update = true;
-
-				fSelection = BOTH;
-			}
+				fSelected = true;
 		}
 
 		t2 = (int32)(fOwner->Start() + p.x * (fOwner->End()
@@ -702,11 +686,12 @@ SampleView::MouseUp(BPoint p)
 	if (drag_selection && fStartSelection == p) {
 		// single clicked in selection without drag -> deselect 
 		fOldX = -1;
-		fSelection = NONE;
+		fSelected = false;
+
 		fOwner->SetSelectionPointer(0);
 		fOwner->SetPointer((fOwner->Start() + p.x
 			* (fOwner->End() - fOwner->Start())/Bounds().Width()));
-		
+
 		Invalidate();
 	}
 
@@ -724,7 +709,7 @@ SampleView::MouseUp(BPoint p)
 void
 SampleView::EditPoint(BPoint p)
 {
-	// the sampleView area
+	/*// the sampleView area
 	BRect r = Bounds();
 	r.top += POINTER_BAR_HEIGHT;
 
@@ -796,7 +781,7 @@ SampleView::EditPoint(BPoint p)
 		Invalidate(BRect(BPoint(p.x-zoom_x*2, 0),
 			BPoint(fOld.x+zoom_x, Bounds().bottom)));
 	}
-	fOld = p;
+	fOld = p;*/
 }
 
 
@@ -1326,11 +1311,11 @@ void SampleView::DrawStereo(BRect rect)
 	r.bottom -= POINTER_BAR_HEIGHT;
 	r.bottom /= 2;
 	if (cache_left_valid)
-		DrawMono(r, true, (fSelection == LEFT || fSelection == BOTH));
+		DrawMono(r, true, fSelected);
 	
 	r.OffsetBy(0, r.Height());
 	if (cache_right_valid)
-		DrawMono(r, false, (fSelection == RIGHT || fSelection == BOTH));
+		DrawMono(r, false, fSelected);
 }
 
 

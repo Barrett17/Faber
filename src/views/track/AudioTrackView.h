@@ -62,10 +62,9 @@ public:
 			void			ZoomOut();
 			void			ZoomFull();
 			void			ZoomSelection();
-			void			ZoomRight();
-			void			ZoomLeft();
 
-			void			UpdateScroll(float newValue);
+			void			UpdateScroll(float newValue,
+								float max, float min);
 
 private:
 			BPopUpMenu*		_BuildMenu();
@@ -77,6 +76,8 @@ private:
 			bool			fDirty;
 
 			float			fOldScroll;
+
+			bool			fUpdating;
 };
 
 #endif

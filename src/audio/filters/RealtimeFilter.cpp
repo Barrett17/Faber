@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "FaberDefs.h"
 #include "Globals.h"
 #include "RealtimeFilter.h"
 #include "WindowsManager.h"

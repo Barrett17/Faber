@@ -23,6 +23,7 @@
 #include <LayoutBuilder.h>
 #include <TextView.h>
 
+#include "FaberDefs.h"
 #include "FaberMessages.h"
 #include "FaberResources.h"
 
@@ -51,12 +52,6 @@ InfoToolBar::InfoToolBar()
 
 		.Add(_BuildButton(B_TRANSLATE("Zoom full wave"),
 			new BMessage(FABER_ZOOM_FULL), kZoomFullWaveIcon))
-
-		.Add(_BuildButton(B_TRANSLATE("Zoom to left pointer"),
-			new BMessage(FABER_ZOOM_LEFT), kZoomInIcon))
-
-		.Add(_BuildButton(B_TRANSLATE("Zoom to right pointer"),
-			new BMessage(FABER_ZOOM_RIGHT), kZoomInIcon))
 	.End();
 
 	//rgb_color backgroundColor = {120,120,120};

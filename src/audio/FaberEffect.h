@@ -17,28 +17,15 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _TRACKS_CONTAINER
-#define _TRACKS_CONTAINER
+#ifndef _FABEREFFECT_H_
+#define _FABEREFFECT_H_
 
-
-#include <GroupView.h>
-
-
-class TimeTrack.h : public BGroupView
+public class EffectsManager
 {
 public:
-						TracksContainer();
-	virtual 			~TracksContainer();
+							FaberEffect();
+	virtual 				~FaberEffect();
 
-	void				MessageReceived(BMessage* message);
+}
 
-	void				SetDuration(bigtime_t duration);
-	bigtime_t			Duration();
-
-	
-
-private:
-
-};
-
-#endif
+#endif	// _FABEREFFECT_H_

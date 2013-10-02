@@ -40,6 +40,7 @@
 #include <GroupLayoutBuilder.h>
 #include <ControlLook.h>
 
+#include "FaberDefs.h"
 #include "Globals.h"
 #include "PrefColors.h"
 #include "SwatchView.h"

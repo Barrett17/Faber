@@ -17,28 +17,40 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _EFFECTS_MANAGER_H_
-#define _EFFECTS_MANAGER_H_
+#include "TimeBar.h"
 
-public class EffectsManager
+#include <GroupView.h>
+
+TimeBar::TimeBar()
+	:
+	BGroupView(B_HORIZONTAL)
 {
-public:
-								EffectsManager();
-	virtual 					~EffectsManager();
+	SetExplicitMinSize(BSize(B_SIZE_UNSET, 25));
+	SetExplicitMaxSize(BSize(B_SIZE_UNSET, 25));
 
-	const char*					EffectToString(int32 index) const;
-
-	BMenuItem*					FilterItemAt(int32 index) const;
-	int32						CountFilterItems() const;
-
-	FaberEffect*				GetEffect(int32 id) const;
-
-	status_t					RunEffect(AudioTrack* track,
-									float* buffer, size_t size
-									int32 id);
-private:
-
-	BObjectList<FaberEffect*>	fEffectsList;
+	rgb_color backgroundColor = {120,120,120};
+	SetViewColor(backgroundColor);
 }
 
-#endif	// _EFFECTSM_ANAGER_H_
+
+TimeBar::~TimeBar()
+{
+}
+
+
+void
+TimeBar::MessageReceived(BMessage* message)
+{
+}
+
+
+void
+TimeBar::SetDuration(bigtime_t duration)
+{
+}
+
+
+bigtime_t
+TimeBar::Duration()
+{
+}

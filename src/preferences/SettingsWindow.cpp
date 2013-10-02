@@ -40,6 +40,7 @@
 #include <Window.h>
 #include <View.h>
 
+#include "FaberDefs.h"
 #include "Globals.h"
 #include "SettingsView.h"
 #include "Shortcut.h"

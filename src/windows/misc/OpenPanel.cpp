@@ -38,6 +38,7 @@
 #include <MediaFormats.h>
 #include <MediaTrack.h>
 
+#include "FaberDefs.h"
 #include "Globals.h"
 
 #include <stdio.h>

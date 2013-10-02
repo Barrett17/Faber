@@ -35,6 +35,7 @@ const uint32 FABER_REMOVE_TRACK			=	'Frtk';
 const uint32 FABER_FILE_OPEN			=	'open';
 
 const uint32 FABER_SAVE_SELECTION		=	'svsl';
+
 const uint32 FABER_INSERT				=	'insr';
 const uint32 FABER_APPEND				=	'appn';
 
@@ -46,10 +47,6 @@ const uint32 FABER_DROP_PASTE			=	'drps';
 
 const uint32 FABER_PREFERENCES			=	'prfs';
 
-const uint32 FABER_EDIT_L				=	'edtl';
-const uint32 FABER_EDIT_R				=	'edtr';
-const uint32 FABER_EDIT_B				=	'edtb';
-
 // Transport
 
 const uint32 FABER_TRANSPORT_REW		=	'trew';
@@ -59,14 +56,7 @@ const uint32 FABER_TRANSPORT_FWD_ALL	=	'trfa';
 const uint32 FABER_TRANSPORT_PLAY		=	'trly';
 const uint32 FABER_TRANSPORT_STOP		=	'trtp';
 const uint32 FABER_TRANSPORT_REC		=	'trec';
-const uint32 FABER_TRANSPORT_PAUSE		=	'trse';
 const uint32 FABER_TRANSPORT_LOOP		=	'trop';
-const uint32 FABER_TRANSPORT_HOME		=	'trhm';
-const uint32 FABER_TRANSPORT_END		=	'tred';
-const uint32 FABER_TRANSPORT_LEFT		=	'trlf';
-const uint32 FABER_TRANSPORT_RIGHT		=	'trrg';
-const uint32 FABER_TRANSPORT_TOGGLE		=	'trtg';
-const uint32 FABER_TRANSPORT_SET		=	'trst';
 
 // Zoom
 
@@ -74,8 +64,6 @@ const uint32 FABER_ZOOM_IN				=	'zooi';
 const uint32 FABER_ZOOM_OUT				=	'zoot';
 const uint32 FABER_ZOOM_FULL			=	'zofl';
 const uint32 FABER_ZOOM_SELECTION		=	'zosl';
-const uint32 FABER_ZOOM_LEFT			=	'zoLf';
-const uint32 FABER_ZOOM_RIGHT			=	'zorg';
 
 // Effects and audio manipulation
 
@@ -99,5 +87,9 @@ const uint32 FABER_RUN_FILTER_KEY		=	'rufk';
 const uint32 FABER_EXE_FILTER			=	'exfl';
 const uint32 FABER_CANCEL_FILTER		=	'cnfl';
 const uint32 FABER_RUN_LAST_FILTER		=	'rulf';
+
+// Other
+
+const uint32 FABER_TIME_HAS_CHANGED		=	'fthc';
 
 #endif

@@ -107,9 +107,15 @@ private:
 			float*			fLeftPeakBuffer;
 			float*			fRightPeakBuffer;
 
-			bool			drag, edit, stop_following, draw_selection;
-			bool			drag_border, drag_selection;
-		 	bool			m_resized, cache_left_valid, cache_right_valid;
+			bool			drag;
+			bool			edit;
+			bool			stop_following;
+			bool			draw_selection;
+			bool			drag_border;
+			bool			drag_selection;
+		 	bool			m_resized;
+		 	bool			cache_left_valid;
+		 	bool			cache_right_valid;
 
 			sem_id			fViewSem;
 
@@ -117,7 +123,7 @@ private:
 			AudioTrack*		fTrack;
 			bool			fUpdatePeak;
 
-			int32			fSelection;
+			bool			fSelected;
 };
 
 #endif

@@ -31,9 +31,9 @@
 #include <InterfaceKit.h>
 #include <LayoutBuilder.h>
 
+#include "FaberDefs.h"
 #include "Globals.h"
 #include "RealtimeFilter.h"
-//#include "AmplifierFilter.h"
 #include "LimiterFilter.h"
 
 #include <stdlib.h>

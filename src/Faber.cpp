@@ -43,7 +43,6 @@ FaberApp::FaberApp()
 	BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
 
 	fFaberWindow = WindowsManager::Get()->IstantiateMainWindow(rect);
-	fFaberWindow->UpdateMenu();
 	fFaberWindow->Show();
 }
 

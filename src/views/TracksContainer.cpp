@@ -25,6 +25,7 @@
 #include "AudioTrackView.h"
 #include "FaberMessages.h"
 #include "FaberScrollBar.h"
+#include "TimeBar.h"
 #include "TrackView.h"
 #include "WindowsManager.h"
 
@@ -36,15 +37,29 @@ TracksContainer::TracksContainer()
 {
 	// TODO fix color schemes
 	rgb_color backgroundColor = {120,120,120};
+	rgb_color whiteBackgroundColor = { 240, 240, 240 };
 
 	fView = new BGroupView(B_VERTICAL, 0);
 	fLayout = new BGroupLayout(B_VERTICAL, 4.0f);
 
+	BStringView* durationView = new BStringView(NULL,
+		"Duration: ", B_WILL_DRAW);
+
+	durationView->SetExplicitMinSize(BSize(180, 25));
+	durationView->SetExplicitMaxSize(BSize(180, 25));
+
 	BLayoutBuilder::Group<>(fView, B_VERTICAL, 0)
+		.AddStrut(1.0f)
+		.AddGroup(B_HORIZONTAL)
+			.Add(durationView)
+			.Add(new TimeBar())
+		.End()
 		.AddStrut(1.0f)
 		.Add(fLayout)
 		.AddGlue()
 	.End();
+
+	fView->SetViewColor(backgroundColor);
 
 	BScrollView* verticalScrollView = new BScrollView("scrollviewV",
 		fView, B_FOLLOW_NONE, false, true);
@@ -59,12 +74,12 @@ TracksContainer::TracksContainer()
 	fHorizontalScroll = new FaberScrollBar("scrollviewH",
 		this, 0, 0, B_HORIZONTAL);
 
+	fHorizontalScroll->SetRange(0,100);
+
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(verticalScrollView)
 		.Add(fHorizontalScroll)
 	.End();
-
-	fView->SetViewColor(backgroundColor);
 }
 
 
@@ -287,26 +302,6 @@ TracksContainer::ZoomSelection()
 
 
 void
-TracksContainer::ZoomLeft()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->ZoomLeft();
-	}	
-}
-
-
-void
-TracksContainer::ZoomRight()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->ZoomRight();
-	}	
-}
-
-
-void
 TracksContainer::SetDirty(bool dirty)
 {
 	for (int i = 0; i < CountTracks(); i++) {
@@ -319,8 +314,11 @@ TracksContainer::SetDirty(bool dirty)
 void
 TracksContainer::UpdateTracksScroll(float newValue)
 {
+	float max, min;
+	fVerticalScroll->GetRange(&min, &max);
+
 	for (int i = 0; i < CountTracks(); i++) {
 		AudioTrackView* track = (AudioTrackView*) TrackAt(i);
-		track->UpdateScroll(newValue);
+		track->UpdateScroll(newValue, max, min);
 	}
 }

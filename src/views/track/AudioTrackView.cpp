@@ -25,6 +25,7 @@
 #include <PopUpMenu.h>
 #include <StringView.h>
 
+#include "FaberDefs.h"
 #include "FaberMessages.h"
 #include "FaberResources.h"
 #include "IconButton.h"
@@ -41,7 +42,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	:
 	TrackView(name, track, resizingMode),
 	fTrack(track),
-	fDirty(false)
+	fDirty(false),
+	fUpdating(false)
 {
 	fEnd = track->Size();
 
@@ -153,6 +155,9 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 		.Add(box)
 		.Add(fSampleView)
 	.End();
+
+	printf("%lld %lld\n", fStart, fEnd);
+
 }
 
 
@@ -229,23 +234,21 @@ AudioTrackView::_BuildMenu()
 
 	trackMenu->AddItem(new BSeparatorItem());
 
-	trackMenu->AddItem(new BMenuItem("Edit Left",
+	trackMenu->AddItem(new BMenuItem("Create two mono tracks",
 		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Edit Right",
+	trackMenu->AddItem(new BMenuItem("Separate stereo track",
 		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Edit Both",
+	trackMenu->AddItem(new BMenuItem("Merge adiacent track",
 		NULL));
 
 	trackMenu->AddItem(new BSeparatorItem());
 
 	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."),
-		new BMessage(INSERT), KeyBind.GetKey("FILE_INSERT"),
+		new BMessage(FABER_INSERT), KeyBind.GetKey("FILE_INSERT"),
 		KeyBind.GetMod("FILE_INSERT")));
 
 	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."),
-		new BMessage(APPEND), KeyBind.GetKey("FILE_APPEND"),
+		new BMessage(FABER_APPEND), KeyBind.GetKey("FILE_APPEND"),
 		KeyBind.GetMod("FILE_APPEND")));
 
 	return trackMenu;
@@ -257,11 +260,18 @@ AudioTrackView::ZoomIn()
 {
 	printf("AudioTrackView::ZoomIn\n");
 
-	fEnd = fEnd/2;
-	float framerate = fTrack->Format().u.raw_audio.frame_rate/100;
+	printf("%lld %lld\n", fStart, fEnd);
 
-	if (fEnd < framerate)
-		fEnd = framerate;
+	int64 base = fEnd/4;
+
+	fStart += base;
+	fEnd -= base;
+
+	if (fStart < 0)
+		fStart = 0;
+
+	if (fEnd > fTrack->Size())
+		fEnd = fTrack->Size();
 
 	fSampleView->Invalidate();
 }
@@ -270,7 +280,13 @@ AudioTrackView::ZoomIn()
 void
 AudioTrackView::ZoomOut()
 {
-	fEnd = fEnd*2;
+	int64 base = fEnd/4;
+
+	fStart -= base;
+	fEnd += base;
+
+	if (fStart < 0)
+		fStart = 0;
 
 	if (fEnd > fTrack->Size())
 		fEnd = fTrack->Size();
@@ -300,33 +316,55 @@ AudioTrackView::ZoomSelection()
 
 
 void
-AudioTrackView::ZoomLeft()
+AudioTrackView::UpdateScroll(float newValue, float min, float max)
 {
+	if (fUpdating)
+		return;
 
-}
+	fUpdating = true;
+
+	if (fStart == 0 && fEnd == fTrack->Size())
+		return;
+
+	int64 size = fTrack->Size();
+
+	int64 base = fEnd/10;
+
+	if (fOldScroll < newValue) {
+
+	fStart += base;
+	fEnd -= base;
+
+	if (fStart < 0)
+		fStart = 0;
+
+	if (fEnd > fTrack->Size())
+		fEnd = fTrack->Size();
+
+	if (fEnd < fStart)
+		fEnd = fStart;
 
 
-void
-AudioTrackView::ZoomRight()
-{
-	
-}
+	} else if (fOldScroll > newValue) {
 
+	fStart -= base;
+	fEnd += base;
 
-void
-AudioTrackView::UpdateScroll(float newValue)
-{
-	int64 value = fTrack->Size()/newValue;
+	if (fStart < 0)
+		fStart = 0;
 
-	if (fOldScroll > newValue) {
-		fStart -= value;
-		fEnd -= value;
-	} else if (fOldScroll < newValue) {
-		fStart += value;
-		fEnd += value;
+	if (fEnd > fTrack->Size())
+		fEnd = fTrack->Size();
+
+	if (fEnd < fStart)
+		fEnd = fStart;
 	}
+
+	printf("%lld %lld\n", fStart, fEnd);
 
 	fOldScroll = newValue;
 
 	fSampleView->Invalidate(); 
+
+	fUpdating = false;
 }

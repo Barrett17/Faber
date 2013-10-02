@@ -30,6 +30,7 @@
 #include <Path.h>
 #include <File.h>
 
+#include "FaberDefs.h"
 #include "FilterDialogs.h"
 #include "Globals.h"
 #include "PeakFile.h"

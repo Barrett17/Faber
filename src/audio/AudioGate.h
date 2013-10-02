@@ -34,8 +34,7 @@ public:
 
 class AudioGate : public MediaGate {
 public:
-									AudioGate(
-										/*TracksManager* fTracksManager*/);
+									AudioGate();
 
 			virtual					~AudioGate();
 

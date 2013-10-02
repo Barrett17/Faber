@@ -83,8 +83,6 @@ public:
 	virtual void			ZoomOut() = 0;
 	virtual void			ZoomFull() = 0;
 	virtual void			ZoomSelection() = 0;
-	virtual	void			ZoomRight() = 0;
-	virtual	void			ZoomLeft() = 0;
 
 protected:
 			Track*			fTrack;

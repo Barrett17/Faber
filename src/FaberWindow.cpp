@@ -33,45 +33,13 @@
 
 #include "FaberWindow.h"
 
-#include <Cursor.h>
 #include <LayoutBuilder.h>
-#include <Path.h>
 
 #include "Faber.h"
-#include "FaberMessages.h"
-#include "FilterDialogs.h"
-#include "Filters.h"
+#include "FaberDefs.h"
 #include "Globals.h"
-#include "PeakFile.h"
 #include "Shortcut.h"
 #include "WindowsManager.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-
-
-class MyMenuBar : public BMenuBar
-{
-public:
-  					MyMenuBar(const char *name);
-	virtual void	MakeFocus(bool b);
-};
-
-
-MyMenuBar::MyMenuBar(const char *name)
-	:
-	BMenuBar(name)
-{
-}
-
-
-void
-MyMenuBar::MakeFocus(bool b)
-{
-	// This one does make sure the MenuBar does NOT get focus !!!
-	// To avoid the key-navigation to stop working
-}
-
 
 FaberWindow::FaberWindow(BRect frame)
 	:
@@ -88,18 +56,15 @@ FaberWindow::FaberWindow(BRect frame)
 	//ClipBoard.Init();
 	//Hist.Init();
 
-	ResizeTo( Prefs.frame.Width(), Prefs.frame.Height() );
-	MoveTo( Prefs.frame.left, Prefs.frame.top );
+	ResizeTo(Prefs.frame.Width(), Prefs.frame.Height());
+	MoveTo(Prefs.frame.left, Prefs.frame.top);
 
-	// Now init the keyBindings
+	// Init the keyBindings
 	KeyBind.Init();
 
 	fOutputGate = new AudioGate();
 	fOutputGate->Init();
 	fOutputGate->InitNode();
-
-	// Set the last filter
-	FiltersInit();
 
 	fFaberView = new FaberView();
 
@@ -114,6 +79,8 @@ FaberWindow::FaberWindow(BRect frame)
 		WINDOW_MAX_SIZE_X, WINDOW_MAX_SIZE_Y);
 
 	SetPulseRate(50000);
+
+	UpdateMenu();
 }
 
 
@@ -167,10 +134,6 @@ FaberWindow::QuitRequested()
 void
 FaberWindow::MessageReceived(BMessage *message)
 {
-	RealtimeFilter *filter = NULL;
-	int32 x, key, mod, raw_key;
-	uint32 msg;
-	float y;
 
 	switch (message->what)
 	{
@@ -255,22 +218,6 @@ FaberWindow::MessageReceived(BMessage *message)
 			break;
 		}
 
-		case TRANSPORT_TOGGLE:
-		{
-			if (fOutputGate->IsStarted())
-				PostMessage(TRANSPORT_STOP);
-			else
-				PostMessage(TRANSPORT_PLAY);
-
-			break;
-		}
-
-		case TRANSPORT_SET:
-			/*Pool.pointer = Pool.last_pointer;
-			Pool.sample_view_dirty = true;	// update the sample-view
-			RedrawWindow();*/
-			break;
-
 		case TRANSPORT_PLAY:
 		{
 			if (fFaberView->IsEmpty())
@@ -347,55 +294,10 @@ FaberWindow::MessageReceived(BMessage *message)
 			
 			RedrawWindow();*/
 			break;
-		
-		case TRANSPORT_HOME:
-		/*	Pool.pointer = Pool.l_pointer;
-			
-			RedrawWindow();*/
-			break;
-		
-		case TRANSPORT_END:
-			/*Pool.pointer = Pool.r_pointer;
-			
-			RedrawWindow();*/
-			break;
-		
-		case TRANSPORT_LEFT:
-			/*x = Pool.r_pointer - Pool.l_pointer;
-			Pool.l_pointer -= x/2;
-			if (Pool.l_pointer<0)
-				Pool.l_pointer = 0;
-	
-			Pool.r_pointer = Pool.l_pointer + x;
-			
-			RedrawWindow();*/
-			break;
-	
-		case TRANSPORT_RIGHT:
-		/*	x = Pool.r_pointer - Pool.l_pointer;
-			Pool.l_pointer += x/2;
-	
-			if (Pool.l_pointer>(Pool.size-x))
-				Pool.l_pointer = Pool.size-x;
-	
-			Pool.r_pointer = Pool.l_pointer + x;
-			
-			RedrawWindow();*/
-			break;
+
 #endif
 		case B_SELECT_ALL:
 		case UNSELECT_ALL:
-
-		case FABER_ZOOM_IN:
-		case FABER_ZOOM_OUT:
-		case FABER_ZOOM_FULL:
-		case FABER_ZOOM_SELECTION:
-		case FABER_ZOOM_LEFT:
-		case FABER_ZOOM_RIGHT:
-
-		case FABER_EDIT_L:
-		case FABER_EDIT_R:
-		case FABER_EDIT_B:
 
 		case B_COPY:
 		case COPY_SILENCE:
@@ -404,30 +306,8 @@ FaberWindow::MessageReceived(BMessage *message)
 		case FABER_DROP_PASTE:
 
 		case UNDO:
-			fFaberView->Looper()->PostMessage(msg);
+			fFaberView->Looper()->PostMessage(message);
 			break;
-
-		case UPDATE:
-			//fFaberView->Pulse();
-			break;
-/*
-		case TOOL_SELECT:
-			fToolBar->SetTool(SELECT_TOOL);
-			Prefs.tool_mode = SELECT_TOOL;
-			UpdateMenu();
-			break;
-
-		case TOOL_DRAW:
-			fToolBar->SetTool(DRAW_TOOL);
-			Prefs.tool_mode = DRAW_TOOL;
-			UpdateMenu();
-			break;
-
-		case TOOL_PLAY:
-			fToolBar->SetTool(PLAY_TOOL);
-			Prefs.tool_mode = PLAY_TOOL;
-			UpdateMenu();
-			break;*/
 
 		case SET_FREQUENCY:
 			WindowsManager::ShowFrequencyWindow();
@@ -437,17 +317,13 @@ FaberWindow::MessageReceived(BMessage *message)
 			WindowsManager::ShowResampleWindow();
 			break;
 	
-		case RESAMPLE_DO:
+		/*case RESAMPLE_DO:
 			DoResample();
-			break;
-
-		case SET_TIME:
-			message->FindInt32("time", &x);
-			Prefs.display_time = x;
-			//RedrawWindow();
-			break;
+			break;*/
 	
 		case B_KEY_DOWN:
+			int32 key, mod, raw_key, msg;
+
 			message->FindInt32("key", &raw_key);
 			message->FindInt32("modifiers", &mod);
 			message->FindInt32("raw_char", &key);
@@ -505,38 +381,6 @@ FaberWindow::UpdateMenu()
 				KeyBind.GetMod("REPEAT_ACTION")));
 	}
 
-	BMessage *filter_msg;
-	int32 filter = 0;
-	char name[255];
-
-/*
-	// TODO rework filters to have a decent API.
-	while (menu_transform->ItemAt(0)) {
-		menuItem = menu_transform->ItemAt(0);
-		menu_transform->RemoveItem(menuItem);
-		delete menuItem;
-	}
-
-
-	while(__FilterList[filter].name != NULL) {
-		if (strcmp(__FilterList[filter].name, "---") == 0) {
-			menu_transform->AddSeparatorItem();
-		} else {
-			// can do some stuff to organise menu here
-		 	filter_msg = new BMessage(RUN_FILTER);
-			filter_msg->AddInt32("filter", filter);
-
-			sprintf(name, B_TRANSLATE(__FilterList[filter].name));
-			if ( __FilterList[filter].type & FILTER_GUI )
-				strcat(name, "...");
-
-			menu_transform->AddItem(menuItem = new BMenuItem(name, filter_msg,
-				KeyBind.GetKey(__FilterList[filter].name), KeyBind.GetMod(__FilterList[filter].name)));
-			menuItem->SetEnabled( __FilterList[filter].type & Pool.sample_type );
-		}
-		filter++;
-	}*/
-
 	bool enable = !fFaberView->IsEmpty();
 	bool selection = fFaberView->IsSelected();
 
@@ -573,7 +417,7 @@ FaberWindow::UpdateMenu()
 	mn_redo->SetEnabled(Hist.HasRedo());
 */
 
-	// Set target for menus
+	// Set targets for menus
 
 	fTracksMenu->SetTargetForItems(fFaberView->Container());
 
@@ -625,7 +469,7 @@ FaberWindow::_BuildMenu()
 	BMenu* menu;
 	BMenuItem* menuItem;
 
-	fMainMenuBar = new MyMenuBar("MenuBar");
+	fMainMenuBar = new BMenuBar("MenuBar");
 
 	menu = new BMenu(B_TRANSLATE("File"));
 	fMainMenuBar->AddItem(menu);

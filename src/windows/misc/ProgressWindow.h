@@ -37,12 +37,19 @@ class ProgressWindow : public BWindow {
 						ProgressWindow(BRect frame);
 	virtual				~ProgressWindow();
 	virtual void		MessageReceived(BMessage *message);
-	
-			void 		StartProgress(const char *label, int32 max = 100);
+
 			void 		SetProgress(int32 p);
 
+			void		ProgressUpdate(int32 delta);
+			void		StartProgress(const char *label,
+								int32 max = 100);
+
+			void		HideProgress();
+			void		SetProgressName(const char *name);
+
+
  private:
-			BStatusBar*	bar;
+			BStatusBar*	fBar;
 };
 
 #endif

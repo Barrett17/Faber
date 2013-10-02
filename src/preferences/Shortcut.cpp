@@ -304,8 +304,8 @@ void Shortcut::InstallDefaults(){
 	Install(0,"FILE_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
 	Install(1,"FABER_NEW_PROJECT",			'N', B_COMMAND_KEY,					  0, 0,					FABER_NEW_PROJECT			);
 	Install(1,"FABER_FILE_OPEN",			'O', B_COMMAND_KEY,					'O', 0,					FABER_FILE_OPEN			);
-	Install(1,"FILE_INSERT",   	    'I', B_COMMAND_KEY,			   B_INSERT, B_SHIFT_KEY,				INSERT			);
-	Install(1,"FILE_APPEND",		  0, 0,								  0, 0,							APPEND			);
+	Install(1,"FILE_INSERT",   	    'I', B_COMMAND_KEY,			   B_INSERT, B_SHIFT_KEY,				FABER_INSERT			);
+	Install(1,"FILE_APPEND",		  0, 0,								  0, 0,							FABER_APPEND			);
 	//Install(1,"FILE_MIX",			'M', B_COMMAND_KEY,					  0, 0,							OPEN_MIX		);
 	Install(1,"FABER_SAVE_PROJECT",			'S', B_COMMAND_KEY,					  0, 0,							FABER_SAVE_PROJECT			);
 	Install(1,"FABER_EXPORT_PROJECT",		'S', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_EXPORT_PROJECT			);
@@ -349,20 +349,13 @@ void Shortcut::InstallDefaults(){
 	Install(0,"TRANSPORT",	  		  0, 0,					  0, 0,							SPLITTER		);
 	//Install(0,"TRANSPORT_PLAYS",	' ', B_SHIFT_KEY,		  0, 0,							TRANSPORT_PLAYS		);
 	Install(0,"TRANSPORT_PLAY",		' ', B_CONTROL_KEY,		  0, 0,							TRANSPORT_PLAY		);
-	Install(0,"TRANSPORT_TOGGLE",	' ', 0,					  0, 0,							TRANSPORT_TOGGLE	);
 	Install(0,"TRANSPORT_STOP",		  0, 0,					  0, 0,							TRANSPORT_STOP		);
-	Install(0,"TRANSPORT_PAUSE",	'P', 0,					  0, 0,							TRANSPORT_PAUSE	);
 	Install(0,"TRANSPORT_REW",		  0, 0,					  0, 0,							TRANSPORT_REW		);
 	Install(0,"TRANSPORT_REW_ALL",B_HOME, B_SHIFT_KEY,		  0, 0,							TRANSPORT_REW_ALL	);
 	Install(0,"TRANSPORT_FWD",		  0, 0,					  0, 0,							TRANSPORT_FWD		);
 	Install(0,"TRANSPORT_FWD_ALL",B_END, B_SHIFT_KEY,		  0, 0,							TRANSPORT_FWD_ALL	);
 	Install(0,"TRANSPORT_REC",		  0, 0,					  0, 0,							TRANSPORT_REC		);
 	Install(0,"TRANSPORT_LOOP",		'L', 0,					  0, 0,							TRANSPORT_LOOP	);
-	Install(0,"TRANSPORT_HOME",  B_HOME, 0,				 	  0, 0,							TRANSPORT_HOME		);
-	Install(0,"TRANSPORT_END",	  B_END, 0,				  	  0, 0,							TRANSPORT_END		);
-	Install(0,"TRANSPORT_LEFT",B_LEFT_ARROW, 0,			 	  0, 0,							TRANSPORT_LEFT		);
-	Install(0,"TRANSPORT_RIGHT",B_RIGHT_ARROW, 0,		  	  0, 0,							TRANSPORT_RIGHT		);
-	Install(0,"TRANSPORT_SET",  B_ENTER, 0,				  	'S', 0,							TRANSPORT_SET		);
 
 	//zoom
 	Install(0,"ZOOM_FUNCTIONS",	 	  0, 0,								  0, 0,							SPLITTER		);
@@ -370,14 +363,9 @@ void Shortcut::InstallDefaults(){
 	Install(0,"FABER_ZOOM_OUT",		  	  B_DOWN_ARROW, 0,				0,0,				FABER_ZOOM_OUT			);
 	Install(0,"FABER_ZOOM_FULL",		  	  B_UP_ARROW, B_SHIFT_KEY,		0,0,				FABER_ZOOM_FULL			);
 	Install(0,"FABER_ZOOM_SELECTION",	  	  B_DOWN_ARROW, B_SHIFT_KEY,	0,0,				FABER_ZOOM_SELECTION		);
-	Install(0,"FABER_ZOOM_LEFT",		  	  B_LEFT_ARROW, B_SHIFT_KEY,	0,0,				FABER_ZOOM_LEFT			);
-	Install(0,"FABER_ZOOM_RIGHT",		  	  B_RIGHT_ARROW, B_SHIFT_KEY,	0,0,				FABER_ZOOM_RIGHT			);
 
 	//channel selection
 	Install(0,"CHANNELS",			  0, 0,					  0, 0,							SPLITTER		);
-	Install(0,"FABER_EDIT_L",				  0, 0,					  0, 0,							FABER_EDIT_L				);
-	Install(0,"FABER_EDIT_R",				  0, 0,					  0, 0,							FABER_EDIT_R				);
-	Install(0,"FABER_EDIT_B",				  0, 0,					  0, 0,							FABER_EDIT_B				);
 
 	// transform -- when done
 	Install(0,"TRANSFORM_MENU2",	  0, 0,								  0, 0,						SPLITTER		);
