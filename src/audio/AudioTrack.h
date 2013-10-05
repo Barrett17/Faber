@@ -29,6 +29,7 @@ class CPeakFile;
 class AudioTrack : public Track {
 public:
 							AudioTrack();
+							~AudioTrack();
 
 	virtual bool			IsAudio() const;
 

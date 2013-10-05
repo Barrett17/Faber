@@ -66,6 +66,8 @@ public:
 			void			UpdateScroll(float newValue,
 								float max, float min);
 
+			bool			IsSelected() const;
+
 private:
 			BPopUpMenu*		_BuildMenu();
 

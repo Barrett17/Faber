@@ -54,8 +54,11 @@ public:
 
 			void 			SetFormat(media_format format);
 			media_format 	Format() const;
-private:
 
+protected:
+			media_format	fFormat;
+
+private:
 
 			bool			fMuted;
 			bool			fSolo;
@@ -64,9 +67,6 @@ private:
 			BString			fName;
 			float			fVolume;
 			float			fBalance;
-
-protected:
-			media_format	fFormat;
 };
 
 #endif

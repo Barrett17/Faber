@@ -96,6 +96,7 @@ Application Faber :
 	FaberNode.cpp
 
 	# Effects
+	SimpleEffects.cpp
 	AmplifierFilter.cpp
 	Filters.cpp
 	RealtimeFilter.cpp

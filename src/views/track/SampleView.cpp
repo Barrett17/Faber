@@ -85,6 +85,8 @@ SampleView::SampleView(AudioTrackView* track)
 	if ((fViewSem = create_sem(1, "SampleView Sem")) < 0) {
 //		debugger(CREATE_SEM_FAIL_MSG);
 	}
+
+	Init();
 }
 
 
@@ -572,6 +574,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		// pencil mouse cursor 
 		SetViewCursor( MouseIcons::MousePencil());
 	else if (Prefs.tool_mode == SELECT_TOOL) {
+		printf("move\n");
 		// mousecursors for selections
 		if (drag_selection)
 			// drag&drop cursor goes above all

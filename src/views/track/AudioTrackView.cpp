@@ -51,7 +51,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	rgb_color fillColor = { 240, 240, 240 };
 
 	fSampleView = new SampleView(this);
-	fSampleView->Init();
 
 	fSampleView->SetExplicitMinSize(BSize(200, HEIGHT_VAL_REF));
 	fSampleView->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, HEIGHT_VAL_REF));
@@ -308,6 +307,9 @@ AudioTrackView::ZoomFull()
 void
 AudioTrackView::ZoomSelection()
 {
+	if (!IsSelected())
+		return;
+
 	fStart = fSelectionPointer;
 	fEnd = fPointer;
 
@@ -367,4 +369,11 @@ AudioTrackView::UpdateScroll(float newValue, float min, float max)
 	fSampleView->Invalidate(); 
 
 	fUpdating = false;
+}
+
+
+bool
+AudioTrackView::IsSelected() const
+{
+
 }

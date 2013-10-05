@@ -40,15 +40,11 @@ public:
 			TracksContainer*	Container() const;
 
 			bool				IsEmpty() const;
-
 			bool				IsSelected();
-
 			bool 				HasChanged();
 			void				Pulse();
-
 			status_t 			AddTrack(Track* track);
 private:
-
 			TracksContainer*	fTracksContainer;
 			ToolBar*			fToolBar;
 			InfoToolBar*		fInfoToolBar;

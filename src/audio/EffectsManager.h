@@ -36,6 +36,10 @@ public:
 	status_t					RunEffect(AudioTrack* track,
 									float* buffer, size_t size
 									int32 id);
+
+	status_t					RunEffect(AudioTrack* track,
+									float* buffer, size_t size
+									FaberEffect* effect);
 private:
 
 	BObjectList<FaberEffect*>	fEffectsList;

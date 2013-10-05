@@ -35,6 +35,7 @@ TrackView::TrackView(const char* name,
 
 TrackView::~TrackView()
 {
+	delete fTrack;
 }
 
 

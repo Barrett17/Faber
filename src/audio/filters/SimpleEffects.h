@@ -26,30 +26,54 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _FILTER_H
-#define _FILTER_H
+#ifndef _SIMPLE_FILTERS_H_
+#define _SIMPLE_FILTERS_H_
+
 #include "RealtimeFilter.h"
 
-#define FILTER_MONO 	0x01
-#define FILTER_STEREO	0x02
-#define FILTER_BOTH		0x03
-#define FILTER_REALTIME	0x04
-#define FILTER_GUI		0x08
+void DoTrim();
+void DoResample();
+void ZeroLL();
+void ZeroLR();
+void ZeroRL();
+void ZeroRR();
 
-typedef struct filter_info
-{
-	const char *name;
-	int32 type;
-	int32 passes;
+//===================== Realtime Filter classes without GUI
 
-} filter_info;
+class SwapFilter : public RealtimeFilter {
+  public:
+	SwapFilter();
+	virtual void FilterBuffer(float *, size_t);
+};
 
-void FiltersInit();
-void RunFilter(int32 filter);
-void RunFilter(const char *tag);
-void ExecuteFilter(RealtimeFilter *filter);
-void CancelFilter(RealtimeFilter *filter);
-void RunLastFilter();
+class InvertFilter : public RealtimeFilter {
+  public:
+	InvertFilter();
+	virtual void FilterBuffer(float *, size_t);
+};
 
+class SilenceFilter : public RealtimeFilter {
+  public:
+	SilenceFilter();
+	virtual void FilterBuffer(float *, size_t);
+};
 
-#endif
+class FadeInFilter : public RealtimeFilter {
+  public:
+	FadeInFilter();
+	virtual void FilterBuffer(float *, size_t);
+	virtual bool InitFilter(float f, int32 channels = 2, int32 pass = 0, int32 size = 0);
+  private:
+	int32 count;
+};
+
+class FadeOutFilter : public RealtimeFilter {
+  public:
+	FadeOutFilter();
+	virtual void FilterBuffer(float *, size_t);
+	virtual bool InitFilter(float f, int32 channels = 2, int32 pass = 0, int32 size = 0);
+  private:
+	int32 count;
+};
+
+#endif	// _SIMPLEFILTERS_H_

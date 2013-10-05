@@ -38,7 +38,8 @@ ProgressWindow::ProgressWindow(BRect frame)
 	BWindow(frame, "Progress",
 		B_MODAL_WINDOW_LOOK,
 		B_MODAL_APP_WINDOW_FEEL, 
-		B_NOT_RESIZABLE | B_NOT_CLOSABLE | B_NOT_ZOOMABLE)
+		B_NOT_RESIZABLE	| B_NOT_CLOSABLE
+		| B_NOT_ZOOMABLE | B_NOT_MOVABLE)
 {
 	Looper()->SetName("Progress Window");
 

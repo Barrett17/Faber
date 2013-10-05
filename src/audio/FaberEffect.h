@@ -17,15 +17,28 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _FABEREFFECT_H_
-#define _FABEREFFECT_H_
+#ifndef _FABER_EFFECT_H_
+#define _FABER_EFFECT_H_
 
-public class EffectsManager
+public class FaberEffect
 {
 public:
-							FaberEffect();
+							FaberEffect(const char* name);
 	virtual 				~FaberEffect();
 
-}
+	const char*				Name() const;
 
-#endif	// _FABEREFFECT_H_
+	BView*					SettingsPanel();
+	BMenuItem*				BuildItem();
+
+	int32					Kind() const;
+
+	status_t				Run(AudioTrack* track,
+								float* buffer, size_t size);
+
+	status_t				FlattenSettings(BMessage* message);
+	status_t				UnflattenSettings(BMessage* message);
+
+};
+
+#endif	// _FABER_EFFECT_H_

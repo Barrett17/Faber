@@ -80,8 +80,6 @@ public:
 	static void				ShowFrequencyWindow();
 
 	// Progress window methods
-	// Maybe makes sense to move them in another class.
-	// Or implement as static in the ProgressWindow.
 	void					ProgressUpdate(int32 delta);
 	void					StartProgress(const char *label,
 								int32 max = 100);

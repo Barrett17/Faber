@@ -29,6 +29,13 @@ AudioTrack::AudioTrack()
 }
 
 
+AudioTrack::~AudioTrack()
+{
+	delete fArea;
+	delete fPeak;
+}
+
+
 bool
 AudioTrack::IsAudio() const
 {
