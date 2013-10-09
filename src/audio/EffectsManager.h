@@ -33,16 +33,14 @@ public:
 
 	FaberEffect*				GetEffect(int32 id) const;
 
-	status_t					RunEffect(AudioTrack* track,
-									float* buffer, size_t size
-									int32 id);
+	status_t					RunEffect(int32 id, AudioTrack* track,
+									size_t size);
 
-	status_t					RunEffect(AudioTrack* track,
-									float* buffer, size_t size
-									FaberEffect* effect);
+	status_t					RunEffect(FaberEffect* effect,
+									AudioTrack* track, size_t size);
 private:
 
 	BObjectList<FaberEffect*>	fEffectsList;
 }
 
-#endif	// _EFFECTSM_ANAGER_H_
+#endif	// _EFFECTS_MANAGER_H_

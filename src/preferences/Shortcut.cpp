@@ -35,25 +35,16 @@
 #include "Globals.h"
 #include "Shortcut.h"
 #include "Settings.h"
-#include "Filters.h"
 
 
 // our Global def
 Shortcut KeyBind;
 
-// this is the list with filters for the basic version
-extern filter_info __FilterList[];
-
-/*******************************************************
-*   
-*******************************************************/
 Shortcut::Shortcut(){
    lastkb = NULL;
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 Shortcut::~Shortcut(){
 	// delete everthing in the list :P
 	Settings prefs = Settings(SETTINGS_DIR"/"KEYBINDINGS_CONF_NAME);
@@ -78,9 +69,7 @@ Shortcut::~Shortcut(){
 	}
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void Shortcut::Init(){
 	lastkb = NULL;
 
@@ -111,6 +100,7 @@ void Shortcut::Init(){
 	}
 }
 
+
 /*******************************************************
 *   Get the keys
 *******************************************************/
@@ -129,7 +119,8 @@ char Shortcut::GetKeyAlt(const char *ID){
 
 	return 0;
 }
-   
+
+
 /*******************************************************
 *   Get the ID
 *******************************************************/
@@ -371,13 +362,13 @@ void Shortcut::InstallDefaults(){
 	Install(0,"TRANSFORM_MENU2",	  0, 0,								  0, 0,						SPLITTER		);
 	Install(1,"REPEAT_ACTION",		'R', B_COMMAND_KEY,				  0, 0,							RUN_LAST_FILTER	);
 
-	// add the filters for the basic version
-	int32 filter = 0;
+	// add the effects
+	/*int32 filter = 0;
 	while(__FilterList[filter].name != NULL)
 	{
 		Install(1,__FilterList[filter].name,0, 0,						  0, 0,						RUN_FILTER		);
 		filter++;
-	}
+	}*/
 
 	// analyze menu
 	Install(0,"ANALYZE_MENU2",		  0, 0,							  0, 0,							SPLITTER		);

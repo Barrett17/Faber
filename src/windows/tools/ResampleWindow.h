@@ -33,7 +33,6 @@
 #include <AppKit.h>
 #include <InterfaceKit.h>
 #include <String.h>
-#include "RealtimeFilter.h"
 #include "SpinControl.h"
 #include "SpinSlider.h"
 

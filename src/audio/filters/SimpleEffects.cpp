@@ -30,7 +30,6 @@
 
 #include <Path.h>
 
-#include "Filters.h"
 #include "WindowsManager.h"
 
 #include <stdlib.h>

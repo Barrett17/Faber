@@ -26,70 +26,70 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <Window.h>
+#include "AmplifierEffect.h"
+
 #include <View.h>
-#include <InterfaceKit.h>
 #include <LayoutBuilder.h>
 
 #include "FaberDefs.h"
-#include "Globals.h"
-#include "RealtimeFilter.h"
-#include "AmplifierFilter.h"
 
 
-/*******************************************************
-*   
-*******************************************************/
-AmplifierFilter::AmplifierFilter(bool b)
+AmplifierEffect::AmplifierEffect(uint32 flags)
 	:
-	RealtimeFilter(B_TRANSLATE("Amplifier"), b)
+	FaberEffect(B_TRANSLATE("Amplifier"), flags)
 {
 
 }
 
 
-/*******************************************************
-*   
-*******************************************************/
 BView*
-AmplifierFilter::ConfigView()
+AmplifierEffect::SettingsPanel()
 {
 	BRect r(0,0,200,60);
 
-	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
+	BView* view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	value = new SpinSlider("level", B_TRANSLATE("Level (%)"),
+	SpinSlider* slider = new SpinSlider("level", B_TRANSLATE("Level (%)"),
 		new BMessage(CONTROL_CHANGED), 1, 300);
 
-	value->SetValue(Prefs.filter_amplifier_value);
+	slider->SetValue(Prefs.filter_amplifier_value);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL)
-		.Add(value)
+		.Add(slider)
 	.End();
 
 	return view;
 }
 
-void
-AmplifierFilter::UpdateValues()
+
+status_t
+AmplifierEffect::FlattenSettings(BMessage* msg)
 {
-	Prefs.filter_amplifier_value = value->Value();
+	//Prefs.filter_amplifier_value = value->Value();
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
+status_t
+AmplifierEffect::UnflattenSettings(BMessage* msg)
+{
+}
+
+
 void
-AmplifierFilter::FilterBuffer(float *buffer, size_t size)
+AmplifierEffect::FilterBuffer(float* buffer, size_t size)
 {
 	float amp = Prefs.filter_amplifier_value/100.0;
 	float tmp;
 
-	for (size_t i=0; i<size; i++){
+	for (size_t i=0; i<size; i++) {
 		tmp = *buffer * amp;
-		if (tmp>1.0)	tmp = 1.0;
-		if (tmp<-1.0)	tmp = -1.0;
+		if (tmp>1.0)
+			tmp = 1.0;
+
+		if (tmp<-1.0)
+			tmp = -1.0;
+
 		*buffer++ = tmp;
 	}
 }

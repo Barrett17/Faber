@@ -29,7 +29,7 @@
 #ifndef _SIMPLE_FILTERS_H_
 #define _SIMPLE_FILTERS_H_
 
-#include "RealtimeFilter.h"
+#include "FaberEffect.h"
 
 void DoTrim();
 void DoResample();

@@ -25,7 +25,6 @@
 #include "AudioTrackView.h"
 #include "FaberMessages.h"
 #include "FaberScrollBar.h"
-#include "TimeBar.h"
 #include "TrackView.h"
 #include "WindowsManager.h"
 
@@ -42,19 +41,7 @@ TracksContainer::TracksContainer()
 	fView = new BGroupView(B_VERTICAL, 0);
 	fLayout = new BGroupLayout(B_VERTICAL, 4.0f);
 
-	BStringView* durationView = new BStringView(NULL,
-		"Duration: ", B_WILL_DRAW);
-
-	durationView->SetExplicitMinSize(BSize(180, 25));
-	durationView->SetExplicitMaxSize(BSize(180, 25));
-
 	BLayoutBuilder::Group<>(fView, B_VERTICAL, 0)
-		.AddStrut(1.0f)
-		.AddGroup(B_HORIZONTAL)
-			.Add(durationView)
-			.Add(new TimeBar())
-		.End()
-		.AddStrut(1.0f)
 		.Add(fLayout)
 		.AddGlue()
 	.End();

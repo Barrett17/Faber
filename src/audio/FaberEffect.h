@@ -20,25 +20,49 @@
 #ifndef _FABER_EFFECT_H_
 #define _FABER_EFFECT_H_
 
-public class FaberEffect
+#include <MenuItem.h>
+
+#include "AudioTrack.h"
+
+enum FaberEffectsKind {
+	FABER_AUDIO_EFFECT,
+	FABER_CONSUMER,
+	FABER_FILTER,
+	FABER_MULTIPASS_EFFECT,
+	FABER_PRODUCER,
+	FABER_REALTIME_EFFECT
+};
+
+#define CONTROL_CHANGED	'chgd'
+
+
+class FaberEffect
 {
 public:
-							FaberEffect(const char* name);
+							FaberEffect(const char* name, uint32 flags);
 	virtual 				~FaberEffect();
 
 	const char*				Name() const;
 
-	BView*					SettingsPanel();
+	virtual BView*			SettingsPanel() = 0;
 	BMenuItem*				BuildItem();
 
-	int32					Kind() const;
+	int32					Flags() const;
 
-	status_t				Run(AudioTrack* track,
-								float* buffer, size_t size);
+	status_t				FilterTrack(AudioTrack* track,
+								int64 start, size_t size);
+
+	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
 
 	status_t				FlattenSettings(BMessage* message);
 	status_t				UnflattenSettings(BMessage* message);
 
+	//int32					Pass() const;
+	//void					SetPass(int32 pass);
+
+private:
+	uint32					fFlags;
+	const char*				fName;
 };
 
 #endif	// _FABER_EFFECT_H_

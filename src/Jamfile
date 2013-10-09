@@ -96,17 +96,15 @@ Application Faber :
 	FaberNode.cpp
 
 	# Effects
-	SimpleEffects.cpp
-	AmplifierFilter.cpp
-	Filters.cpp
-	RealtimeFilter.cpp
-	BassBoostFilter.cpp
-	LimiterFilter.cpp
-	CompressorFilter.cpp
-	NormalizeFilter.cpp
-	RoomFilter.cpp
-	ReverbWindow.cpp
-	DelayWindow.cpp
+	#SimpleEffects.cpp
+	AmplifierEffect.cpp
+	#BassBoostFilter.cpp
+	#LimiterFilter.cpp
+	#CompressorFilter.cpp
+	#NormalizeFilter.cpp
+	#RoomFilter.cpp
+	#ReverbWindow.cpp
+	#DelayWindow.cpp
 
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
 	: Faber.rdef ToolBarIcons.rdef

@@ -20,7 +20,6 @@
 #include "WindowsManager.h"
 
 #include "FreqWindow.h"
-#include "Filters.h"
 #include "ResampleWindow.h"
 
 

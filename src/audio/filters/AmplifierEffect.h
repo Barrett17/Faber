@@ -29,16 +29,25 @@
 #ifndef AMP_FILTER_H
 #define AMP_FILTER_H
 
-class AmplifierFilter : public RealtimeFilter {
-  public:
-	AmplifierFilter(bool r = true);
-	virtual void FilterBuffer(float *, size_t);
-	virtual void UpdateValues();
+#include <SpinSlider.h>
 
-	virtual BView *ConfigView();
-   
-  private:
-	SpinSlider *value;
+#include "AudioTrack.h"
+#include "FaberEffect.h"
+
+
+class AmplifierEffect : public FaberEffect
+{
+public:
+							AmplifierEffect(
+								uint32 flags = FABER_REALTIME_EFFECT
+									| FABER_FILTER);
+
+	BView*					SettingsPanel();
+
+	void					FilterBuffer(float* buffer, size_t size);
+
+	status_t				FlattenSettings(BMessage* message);
+	status_t				UnflattenSettings(BMessage* message);
 };
 
 #endif
