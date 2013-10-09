@@ -35,7 +35,7 @@
 #include <stdlib.h>
 
 // ============================================================ Swap
-SwapFilter::SwapFilter() : RealtimeFilter(NULL, false)
+SwapFilter::SwapFilter() : FaberEffect(NULL, false)
 {}
 
 void SwapFilter::FilterBuffer(float *buffer, size_t size)
@@ -48,7 +48,7 @@ void SwapFilter::FilterBuffer(float *buffer, size_t size)
 }
 
 // ============================================================ Invert
-InvertFilter::InvertFilter() : RealtimeFilter(NULL, false)
+InvertFilter::InvertFilter() : FaberEffect(NULL, false)
 {}
 
 void InvertFilter::FilterBuffer(float *buffer, size_t size)
@@ -60,7 +60,7 @@ void InvertFilter::FilterBuffer(float *buffer, size_t size)
 }
 
 // ============================================================ Silence
-SilenceFilter::SilenceFilter() : RealtimeFilter(NULL, false)
+SilenceFilter::SilenceFilter() : FaberEffect(NULL, false)
 {}
 
 void SilenceFilter::FilterBuffer(float *buffer, size_t size)
@@ -71,7 +71,7 @@ void SilenceFilter::FilterBuffer(float *buffer, size_t size)
 }
 
 // ============================================================ FadeIn
-FadeInFilter::FadeInFilter() : RealtimeFilter(NULL, false)
+FadeInFilter::FadeInFilter() : FaberEffect(NULL, false)
 {}
 
 void FadeInFilter::FilterBuffer(float *buffer, size_t size)
@@ -85,13 +85,13 @@ void FadeInFilter::FilterBuffer(float *buffer, size_t size)
 
 bool FadeInFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 {
-	RealtimeFilter::InitFilter(f, c, pass, size);
+	FaberEffect::InitFilter(f, c, pass, size);
 	count = 0;
 	return true;
 }
 
 // ============================================================ FadeOut
-FadeOutFilter::FadeOutFilter() : RealtimeFilter(NULL, false)
+FadeOutFilter::FadeOutFilter() : FaberEffect(NULL, false)
 {}
 
 void FadeOutFilter::FilterBuffer(float *buffer, size_t size)
@@ -105,7 +105,7 @@ void FadeOutFilter::FilterBuffer(float *buffer, size_t size)
 
 bool FadeOutFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 {
-	RealtimeFilter::InitFilter(f, c, pass, size);
+	FaberEffect::InitFilter(f, c, pass, size);
 	count = size;
 	return true;
 }
