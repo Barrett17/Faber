@@ -42,7 +42,7 @@ Application Faber :
 	FaberScrollBar.cpp
 	TimeBar.cpp
 
-	# TrackViews implementations
+	# TrackView implementations
 	TrackView.cpp
 	AudioTrackView.cpp
 	SampleView.cpp
@@ -98,13 +98,13 @@ Application Faber :
 	# Effects
 	#SimpleEffects.cpp
 	Amplifier.cpp
-	#BassBoostFilter.cpp
-	#LimiterFilter.cpp
-	#CompressorFilter.cpp
-	#NormalizeFilter.cpp
-	#RoomFilter.cpp
-	#ReverbWindow.cpp
-	#DelayWindow.cpp
+	#BassBoost.cpp
+	#Limiter.cpp
+	#Compressor.cpp
+	#Normalize.cpp
+	#Room.cpp
+	#Reverb.cpp
+	#Delay.cpp
 
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
 	: Faber.rdef ToolBarIcons.rdef
