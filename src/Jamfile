@@ -9,7 +9,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src audio ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src audio filters ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src audio effects ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio node ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
@@ -97,7 +97,7 @@ Application Faber :
 
 	# Effects
 	#SimpleEffects.cpp
-	AmplifierEffect.cpp
+	Amplifier.cpp
 	#BassBoostFilter.cpp
 	#LimiterFilter.cpp
 	#CompressorFilter.cpp
