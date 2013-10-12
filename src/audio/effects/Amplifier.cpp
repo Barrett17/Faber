@@ -36,7 +36,7 @@
 
 AmplifierEffect::AmplifierEffect(uint32 flags)
 	:
-	FaberEffect(B_TRANSLATE("Amplifier"), flags)
+	AudioEffect(B_TRANSLATE("Amplifier"), flags)
 {
 
 }

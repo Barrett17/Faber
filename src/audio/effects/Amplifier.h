@@ -32,16 +32,15 @@
 #include <SpinSlider.h>
 
 #include "AudioTrack.h"
-#include "FaberEffect.h"
+#include "AudioEffect.h"
 
 
-class AmplifierEffect : public FaberEffect
+class AmplifierEffect : public AudioEffect
 {
 public:
 							AmplifierEffect(
-								uint32 flags = FABER_AUDIO_EFFECT |
-									FABER_REALTIME_EFFECT | FABER_FILTER
-									| FABER_GUI_EFFECT);
+								uint32 flags = FABER_REALTIME_EFFECT
+									| FABER_FILTER | FABER_GUI_EFFECT);
 
 	BView*					SettingsPanel();
 
