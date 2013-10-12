@@ -26,20 +26,30 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef BASS_BOOST_FILTER_H
-#define BASS_BOOST_FILTER_H
+#ifndef BASS_BOOST_EFFECT_H
+#define BASS_BOOST_EFFECT_H
 
-class BassBoostFilter : public RealtimeFilter {
-  public:
-	BassBoostFilter(bool r = true);
-	virtual bool InitFilter(float f, int32 channels = 2, int32 pass = 0, int32 size = 0);
-	virtual void DeAllocate();
-	virtual void FilterBuffer(float *, size_t);
-	virtual void UpdateValues();
+#include <SpinSlider.h>
 
-	virtual BView *ConfigView();
-   
-  private:
+#include "AudioEffect.h"
+
+class BassBoostEffect : public AudioEffect
+{
+public:
+					BassBoostEffect(uint32 flags = FABER_REALTIME_EFFECT
+									| FABER_FILTER | FABER_GUI_EFFECT);
+
+	BView*			SettingsPanel();
+
+	void			FilterBuffer(float* buffer, size_t size);
+
+	status_t		FlattenSettings(BMessage* message);
+	status_t		UnflattenSettings(BMessage* message);
+
+private:
+	bool			_InitFilter(float f, int32 channels = 2,
+						int32 pass = 0, int32 size = 0);
+
 	float *delay_buffer;
 	int32 buffer_size, pBuffer;
 	SpinSlider *freq, *boost;

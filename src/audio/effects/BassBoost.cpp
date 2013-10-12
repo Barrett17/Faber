@@ -26,31 +26,23 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <Window.h>
 #include <View.h>
-#include <InterfaceKit.h>
 #include <LayoutBuilder.h>
 
 #include "FaberDefs.h"
-#include "Globals.h"
-#include "RealtimeFilter.h"
-#include "BassBoostFilter.h"
+#include "BassBoost.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-/*******************************************************
-*   
-*******************************************************/
-BassBoostFilter::BassBoostFilter(bool b) : RealtimeFilter(B_TRANSLATE("Bass Boost"), b)
+BassBoostEffect::BassBoostEffect(uint32 flags)
+	:
+	AudioEffect(B_TRANSLATE("Bass Boost"), flags)
 {
 
 }
 
-/*******************************************************
-*   
-*******************************************************/
-BView* BassBoostFilter::ConfigView()
+
+BView*
+BassBoostEffect::SettingsPanel()
 {
 	BRect r(0,0,200,100);
 
@@ -73,18 +65,20 @@ BView* BassBoostFilter::ConfigView()
 	return view;
 }
 
-void BassBoostFilter::UpdateValues()
+
+status_t
+BassBoostEffect::FlattenSettings(BMessage* message)
 {
-	Prefs.filter_bassboost_frequency = freq->Value();
-	Prefs.filter_bassboost_boost = boost->Value();
+	//Prefs.filter_bassboost_frequency = freq->Value();
+	//Prefs.filter_bassboost_boost = boost->Value();
 }
 
-/*******************************************************
-*   Init & exit
-*******************************************************/
-bool BassBoostFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
+
+// Init & exit
+bool
+BassBoostEffect::_InitFilter(float f, int32 c, int32 pass, int32 size)
 {
-	RealtimeFilter::InitFilter(f, c);
+	//RealtimeFilter::InitFilter(f, c);
 
 	xn1 = 0, xn2 = 0, yn1 = 0, yn2 = 0;
 	xn3 = 0, xn4 = 0, yn3 = 0, yn4 = 0;
@@ -92,37 +86,36 @@ bool BassBoostFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 	return true;
 }
 
-void BassBoostFilter::DeAllocate()
-{
-}
 
-/*******************************************************
-*   
-*******************************************************/
-void BassBoostFilter::FilterBuffer(float *buffer, size_t size)
+void
+BassBoostEffect::FilterBuffer(float *buffer, size_t size)
 {
-	/* Compute coefficents of the biquand IIR filter */
-	float omega = 2 * 3.141592653589 * Prefs.filter_bassboost_frequency / m_frequency;
+	// Compute coefficents of the biquand IIR filter
+	/*float omega = 2 * 3.141592653589 * Prefs.filter_bassboost_frequency / m_frequency;
+
 	float sn = sin(omega);
 	float cs = cos(omega);
+
 	float a = exp(log(10) * Prefs.filter_bassboost_boost / 40);
-	float shape = 1.0;           /*Low Shelf filter's shape, if this is too large
-                                   or too small it will result an unstable filter */
+
+	//Low Shelf filter's shape, if this is too large
+	// or too small it will result an unstable filter
+	float shape = 1.0;
 	float beta = sqrt((a * a + 1) / shape - (pow((a - 1), 2)));
-	/*  Coefficients  */
+
+	//  Coefficients  
 	float b0 = a * ((a + 1) - (a - 1) * cs + beta * sn);
 	float b1 = 2 * a * ((a - 1) - (a + 1) * cs);
 	float b2 = a * ((a + 1) - (a - 1) * cs - beta * sn);
 	float a0 = ((a + 1) + (a - 1) * cs + beta * sn);
 	float a1 = -2 * ((a - 1) + (a + 1) * cs);
 	float a2 = (a + 1) + (a - 1) * cs - beta * sn;
-	/* initialise the filter */
 
+	// initialise the filter
 	float out, in = 0;
 
 	if (m_channels == 2){
-// Stereo
-		// left
+	// Stereo left
 		for (size_t i=0; i<size; i+=2){
 			in = buffer[i];
 			out = (b0 * in + b1 * xn1 + b2 * xn2 - a1 * yn1 - a2 * yn2) / a0;
@@ -148,7 +141,7 @@ void BassBoostFilter::FilterBuffer(float *buffer, size_t size)
 			yn4 = yn3;
 			yn3 = out;
 
-//			out += in;
+			//out += in;
 			if (out < -1.0)
 				out = -1.0;
 			else if (out > 1.0)
@@ -157,7 +150,8 @@ void BassBoostFilter::FilterBuffer(float *buffer, size_t size)
 			buffer[i] = out;
 		}
 	}else if (m_channels ==1 ){
-// Mono	
+
+		// Mono	
 		for (size_t i=0; i<size; i++){
 			in = buffer[i];
 			out = (b0 * in + b1 * xn1 + b2 * xn2 - a1 * yn1 - a2 * yn2) / a0;
@@ -173,5 +167,5 @@ void BassBoostFilter::FilterBuffer(float *buffer, size_t size)
 
 			buffer[i] = out;
 		}
-	}
+	}*/
 }

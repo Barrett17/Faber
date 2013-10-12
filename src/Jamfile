@@ -101,7 +101,7 @@ Application Faber :
 	# Effects
 	#SimpleEffects.cpp
 	Amplifier.cpp
-	#BassBoost.cpp
+	BassBoost.cpp
 	#Limiter.cpp
 	#Compressor.cpp
 	#Normalize.cpp
