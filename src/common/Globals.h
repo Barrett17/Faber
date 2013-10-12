@@ -91,12 +91,6 @@ enum {
 #define TRANSPORT_REC		'Trec'
 #define TRANSPORT_LOOP		'Tlop'
 
-#define RUN_FILTER			'FXrn'
-#define RUN_FILTER_KEY		'FXky'
-#define EXE_FILTER			'FXex'
-#define CANCEL_FILTER		'FXcl'
-#define RUN_LAST_FILTER		'FXlt'
-
 enum {
 	TOOL_SELECT	= 0,
 	TOOL_DRAW	= 1,

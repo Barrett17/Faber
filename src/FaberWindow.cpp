@@ -373,13 +373,13 @@ FaberWindow::UpdateMenu()
 	BMenuItem *menuItem = NULL;
 
 	Lock();
-	
+	/*
 	if (Prefs.repeat_message) {
 		menu_transform->AddItem(
 			menuItem = new BMenuItem(B_TRANSLATE(Prefs.repeat_tag.String()),
 				new BMessage(RUN_LAST_FILTER), KeyBind.GetKey("REPEAT_ACTION"),
 				KeyBind.GetMod("REPEAT_ACTION")));
-	}
+	}*/
 
 	bool enable = !fFaberView->IsEmpty();
 	bool selection = fFaberView->IsSelected();

@@ -360,7 +360,6 @@ void Shortcut::InstallDefaults(){
 
 	// transform -- when done
 	Install(0,"TRANSFORM_MENU2",	  0, 0,								  0, 0,						SPLITTER		);
-	Install(1,"REPEAT_ACTION",		'R', B_COMMAND_KEY,				  0, 0,							RUN_LAST_FILTER	);
 
 	// add the effects
 	/*int32 filter = 0;
