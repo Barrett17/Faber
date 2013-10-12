@@ -39,8 +39,9 @@ class AmplifierEffect : public FaberEffect
 {
 public:
 							AmplifierEffect(
-								uint32 flags = FABER_REALTIME_EFFECT
-									| FABER_FILTER);
+								uint32 flags = FABER_AUDIO_EFFECT |
+									FABER_REALTIME_EFFECT | FABER_FILTER
+									| FABER_GUI_EFFECT);
 
 	BView*					SettingsPanel();
 

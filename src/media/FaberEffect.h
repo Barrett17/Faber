@@ -21,6 +21,7 @@
 #define _FABER_EFFECT_H_
 
 #include <MenuItem.h>
+#include <ParameterWeb.h>
 
 #include "AudioTrack.h"
 
@@ -28,7 +29,7 @@ enum FaberEffectsKind {
 	FABER_AUDIO_EFFECT,
 	FABER_CONSUMER,
 	FABER_FILTER,
-	FABER_GUI_FILTER,
+	FABER_GUI_EFFECT,
 	FABER_MULTIPASS_EFFECT,
 	FABER_PRODUCER,
 	FABER_REALTIME_EFFECT
@@ -47,6 +48,7 @@ public:
 
 	virtual BView*			SettingsPanel() = 0;
 	BMenuItem*				BuildItem();
+	BParameterWeb*			ParameterWeb();
 
 	int32					Flags() const;
 

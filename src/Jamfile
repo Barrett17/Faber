@@ -8,6 +8,8 @@ SubDirSysHdrs [ FDirName $(TOP) ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 
+SEARCH_SOURCE += [ FDirName $(TOP) src media ] ;
+
 SEARCH_SOURCE += [ FDirName $(TOP) src audio ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio effects ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio node ] ;
@@ -93,7 +95,7 @@ Application Faber :
 	FaberEffect.cpp
 
 	# Audio nodes
-	FaberNode.cpp
+	AudioNode.cpp
 
 	# Effects
 	#SimpleEffects.cpp
