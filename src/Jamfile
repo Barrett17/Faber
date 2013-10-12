@@ -93,6 +93,7 @@ Application Faber :
 
 	EffectsManager.cpp
 	FaberEffect.cpp
+	AudioEffect.cpp
 
 	# Audio nodes
 	AudioNode.cpp
