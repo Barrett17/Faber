@@ -79,10 +79,9 @@ SampleView::SampleView(AudioTrackView* track)
 	fOldRightPointer = -1;
 
 	// need to create background buffers
-	m_resized = false;		
+	fResized = false;		
 
 	if ((fViewSem = create_sem(1, "SampleView Sem")) < 0) {
-//		debugger(CREATE_SEM_FAIL_MSG);
 	}
 
 	Init();
@@ -129,57 +128,6 @@ SampleView::Init()
 void
 SampleView::Pulse()
 {
-	/*if (Pool.sample_type == NONE)	return;
-
-	BRect r = Bounds();
-	r.top += POINTER_BAR_HEIGHT;
-
-	if (!Pool.IsPlaying() && !play_cookie.pause) {
-		if (fOldX != -1) {
-			SetDrawingMode(B_OP_INVERT);
-			StrokeLine( BPoint( fOldX, r.top), BPoint( fOldX, r.bottom));
-			SetDrawingMode(B_OP_COPY);
-			fOldX = -1;
-		}
-		return;
-	}
-	int64 p = 0;
-
-	if (Pool.sample_type != NONE) {
-		if (Pool.IsPlaying()) {
-			p = Pool.last_pointer;
-		} else {
-			p = fOwner->Pointer();
-		}
-	}	
-	if (p!=pointer) {
-		pointer = p;
-		
-		int32 xx = fOwner->End() - fOwner->Start();
-		if (Prefs.follow_playing && !stop_following && pointer < fTrack->Size() - xx/2)
-		{
-			int64 ptr;
-			ptr = p - xx/2;
-			if ( ptr > (fTrack->Size()-xx))	ptr = fTrack->Size()-xx;
-			if ( ptr < 0 )				ptr = 0;
-
-			if ( fOwner->Start() != ptr )
-			{
-				fOwner->Start() = ptr;
-				fOwner->End() = fOwner->Start() + xx;
-			}
-		}	
-
-		// play pointer
-		float x = (pointer-fOwner->Start()) * Bounds().Width() /(fOwner->End() - fOwner->Start());
-		SetDrawingMode(B_OP_INVERT);
-
-		StrokeLine( BPoint( fOldX, r.top), BPoint( fOldX, r.bottom));
-		fOldX = x;
-		StrokeLine( BPoint( x, r.top), BPoint( x, r.bottom));
-
-		SetDrawingMode(B_OP_COPY);
-	}*/
 }
 
 
@@ -190,10 +138,10 @@ SampleView::Draw(BRect rect)
 
 	Looper()->Lock();
 
-	if (fOwner->UpdateDrawCache() && !m_resized)
+	if (fOwner->UpdateDrawCache() && !fResized)
 		CalculateCache();
 
-	if (m_resized) {
+	if (fResized) {
 		//printf("SampleView::Draw fResized == true\n");
 
 		acquire_sem(fViewSem);
@@ -312,7 +260,7 @@ SampleView::Draw(BRect rect)
 	// these are to notify screen changes to update peak-caches or scroll fast
 	fOldLeftPointer = fOwner->Start();
 	fOldRightPointer = fOwner->End();
-	m_resized = false;					//  put here, so all sub-routines can benefit
+	fResized = false;					//  put here, so all sub-routines can benefit
 	fOwner->SetUpdateDrawCache(false);
 	fUpdatePeak = false;				// needed for pencil edit
 
@@ -832,7 +780,7 @@ SampleView::FrameResized(float width, float height)
 	//printf("SampleView::FrameResized\n");
 
 	// re-allocate offscreen bitmap
-	m_resized = true;				
+	fResized = true;				
 
 	// update the sample-view
 	fOwner->SetDirty(true);

@@ -113,7 +113,7 @@ private:
 			bool			draw_selection;
 			bool			drag_border;
 			bool			drag_selection;
-		 	bool			m_resized;
+		 	bool			fResized;
 		 	bool			cache_left_valid;
 		 	bool			cache_right_valid;
 

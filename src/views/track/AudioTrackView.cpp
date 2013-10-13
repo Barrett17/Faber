@@ -261,7 +261,7 @@ AudioTrackView::ZoomIn()
 
 	printf("%lld %lld\n", fStart, fEnd);
 
-	int64 base = fEnd/4;
+	int64 base = fEnd/2;
 
 	fStart += base;
 	fEnd -= base;
@@ -279,7 +279,7 @@ AudioTrackView::ZoomIn()
 void
 AudioTrackView::ZoomOut()
 {
-	int64 base = fEnd/4;
+	int64 base = fEnd/2;
 
 	fStart -= base;
 	fEnd += base;
@@ -310,8 +310,8 @@ AudioTrackView::ZoomSelection()
 	if (!IsSelected())
 		return;
 
-	fStart = fSelectionPointer;
-	fEnd = fPointer;
+	fStart = fPointer;
+	fEnd = fSelectionPointer;
 
 	fSampleView->Invalidate();
 }
