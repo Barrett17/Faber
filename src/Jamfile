@@ -109,6 +109,10 @@ Application Faber :
 	#Reverb.cpp
 	#Delay.cpp
 
+	#Resample.cpp
+	#ZeroCrossings.cpp
+	#Trim.cpp
+
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
 	: Faber.rdef ToolBarIcons.rdef
 ;
