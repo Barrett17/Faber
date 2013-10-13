@@ -526,7 +526,6 @@ SampleView::MouseDown(BPoint p)
 
 	Invalidate();
 
-	WindowsManager::MainWindow()->RedrawWindow();
 	WindowsManager::MainWindow()->UpdateMenu();
 }
 

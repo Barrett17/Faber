@@ -271,17 +271,6 @@ FaberWindow::MessageReceived(BMessage *message)
 
 
 void
-FaberWindow::RedrawWindow()
-{
-	Lock();
-
-	fFaberView->Invalidate();
-
-	Unlock();	
-}
-
-
-void
 FaberWindow::UpdateMenu()
 {
 	BMenuItem *menuItem = NULL;

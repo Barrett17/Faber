@@ -46,9 +46,6 @@ public:
 	// to set the main window. Don't use it.
 	FaberWindow*			IstantiateMainWindow(BRect rect);
 
-	// TODO possible static implementation of FaberWindow::RedrawWindow()
-	// static void			RedrawMainWindow();
-
 	// Extending, it could be good to have methods like those
 	// static void			UpdateMainMenu();
 	// static void			UpdateToolBar();

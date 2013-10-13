@@ -28,10 +28,10 @@ public:
 
 	const char*					EffectToString(int32 index) const;
 
-	BMenuItem*					FilterItemAt(int32 index) const;
 	int32						CountFilterItems() const;
 
-	FaberEffect*				GetEffect(int32 id) const;
+	FaberEffect*				GetEffect(int32 index) const;
+	FaberEffect*				GetEffect(const char* name) const;
 
 	status_t					RunEffect(int32 id, AudioTrack* track,
 									size_t size);

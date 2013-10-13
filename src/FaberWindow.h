@@ -52,7 +52,6 @@ public:
 	virtual void 				MessageReceived(BMessage *message);
 	
 			void 				UpdateRecent();
-			void				RedrawWindow();
 
 			// activate/deactivate menu items
 			void				UpdateMenu();
