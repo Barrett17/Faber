@@ -22,7 +22,6 @@
 
 #include <View.h>
 
-#include "Globals.h"
 #include "PeakView.h"
 
 class IconButton;

@@ -19,7 +19,6 @@
 
 #include "AudioTrack.h"
 
-#include "Globals.h"
 #include "PeakFile.h"
 
 

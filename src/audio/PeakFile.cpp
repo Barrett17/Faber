@@ -30,7 +30,6 @@
 #include <Alert.h>
 
 #include "FaberDefs.h"
-#include "Globals.h"
 #include "WindowsManager.h"
 
 #include <stdlib.h>

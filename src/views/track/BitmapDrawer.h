@@ -30,7 +30,7 @@
 #define _BITMAP_DRAWER_H
 
 #include <Bitmap.h>
-#include "Globals.h"
+
 
 class BitmapDrawer
 {

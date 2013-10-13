@@ -71,12 +71,13 @@ const uint32 FABER_EFFECT_CALL			=	'fecl';
 const uint32 FABER_EFFECT_EXECUTE		=	'feex';
 const uint32 FABER_EFFECT_ABORT			=	'feab';
 
-const uint32 FABER_SET_FREQUENCY		=	'setf';
-const uint32 FABER_RESAMPLE				=	'resm';
-const uint32 FABER_RESAMPLE_DO			=	'resd';
 const uint32 FABER_CLEAR				=	'cler';
 const uint32 FABER_UNSELECT_ALL			=	'unsl';
 const uint32 FABER_COPY_SILENCE			=	'cpsl';
+
+const uint32 FABER_SET_FREQUENCY		=	'setf';
+const uint32 FABER_RESAMPLE				=	'resm';
+const uint32 FABER_RESAMPLE_EXECUTE		=	'resd';
 
 // TODO those will be effects, remove them
 const uint32 FABER_TRIM					=	'trim';

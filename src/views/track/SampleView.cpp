@@ -34,7 +34,6 @@
 #include "AudioTrackView.h"
 #include "FaberDefs.h"
 #include "FaberMath.h"
-#include "Globals.h"
 #include "PeakFile.h"
 #include "BitmapDrawer.h"
 #include "Shortcut.h"
@@ -341,7 +340,7 @@ SampleView::MouseDown(BPoint p)
 
 	// The selection tool handles all select modes
 	switch(Prefs.tool_mode) {
-		case SELECT_TOOL:
+		case FABER_SELECTION_TOOL:
 		{
 			if (clicks == 1) {
 				float middle = (Bounds().Height()-POINTER_BAR_HEIGHT)*0.50+POINTER_BAR_HEIGHT;	// middle
@@ -469,7 +468,7 @@ SampleView::MouseDown(BPoint p)
 			}
 			break;
 		}
-		case DRAW_TOOL:												
+		case FABER_DRAW_TOOL:												
 		{
 			/* Drawing with the Pencil */
 			/*if (Prefs.tool_mode == DRAW_TOOL && clicks == 1) {
@@ -486,7 +485,7 @@ SampleView::MouseDown(BPoint p)
 			break;
 		}
 
-		case PLAY_TOOL:
+		case FABER_PLAY_TOOL:
 		{
 			stop_following = true;
 			fSelected = false;
@@ -570,10 +569,10 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		&& fOwner->IsSelected() && !left_pointer && !right_pointer
 		&& (left_select || right_select);
 
-	if (Prefs.tool_mode == DRAW_TOOL)
+	if (Prefs.tool_mode == FABER_DRAW_TOOL)
 		// pencil mouse cursor 
 		SetViewCursor( MouseIcons::MousePencil());
-	else if (Prefs.tool_mode == SELECT_TOOL) {
+	else if (Prefs.tool_mode == FABER_SELECTION_TOOL) {
 		printf("move\n");
 		// mousecursors for selections
 		if (drag_selection)

@@ -29,11 +29,7 @@
 #ifndef _PEAK_FILE_H
 #define _PEAK_FILE_H
 
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "AudioTrack.h"
-#include "Globals.h"
 
 class CPeakFile
 {

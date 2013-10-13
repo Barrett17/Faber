@@ -19,7 +19,7 @@
 
 #include "Faber.h"
 
-#include "FaberMessages.h"
+#include "FaberDefs.h"
 #include "FaberWindow.h"
 #include "TrackIO.h"
 #include "WindowsManager.h"

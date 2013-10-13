@@ -102,7 +102,7 @@ TracksContainer::MessageReceived(BMessage* message)
 			SelectAll();
 			break;
 		
-		case UNSELECT_ALL:
+		case FABER_UNSELECT_ALL:
 			UnselectAll();
 			break;
 
@@ -110,7 +110,7 @@ TracksContainer::MessageReceived(BMessage* message)
 			//fTrack->Copy();
 			break;
 
-		case COPY_SILENCE:
+		case FABER_COPY_SILENCE:
 			//fTrack->CutAndSilence()
 			break;
 

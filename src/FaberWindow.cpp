@@ -37,7 +37,6 @@
 
 #include "Faber.h"
 #include "FaberDefs.h"
-#include "Globals.h"
 #include "Shortcut.h"
 #include "WindowsManager.h"
 
@@ -99,7 +98,7 @@ FaberWindow::UpdateRecent()
 	BEntry e;
 
 	char name[B_FILE_NAME_LENGTH];
-	
+
 	while(fRecentMenu->ItemAt(0))
 		fRecentMenu->RemoveItem(fRecentMenu->ItemAt(0));
 
@@ -143,11 +142,11 @@ FaberWindow::MessageReceived(BMessage *message)
 	
 		case FABER_OPEN_HOMEPAGE:
 		{
-			const char* homepage = FABER_HOMEPAGE;
+			const char* homepage = FABER_HELP_HOMEPAGE;
 			be_roster->Launch("text/html", 1, const_cast<char**>(&homepage));
 			break;
 		}
-			
+
 		case FABER_PREFERENCES:
 			WindowsManager::Get()->ShowSettings();
 			break;
@@ -210,114 +209,29 @@ FaberWindow::MessageReceived(BMessage *message)
 			panel->Show();
 			break;
 		}
-#if 0
-		case TRANSPORT_PAUSE:
-		{
-			fOutputGate->SetPause(!fToolBar->IsPause());
-			fToolBar->SetPause(!fToolBar->IsPause());
-			break;
-		}
 
-		case TRANSPORT_PLAY:
-		{
-			if (fFaberView->IsEmpty())
-				break;
-
-			fOutputGate->SetPause(false);
-
-			fOutputGate->SetLoop(fToolBar->IsLoop());
-
-			// play until the end
-			//fOutputGate.StartFrom(Pool.pointer*Pool.sample_type);
-			fOutputGate->Start();
-			fToolBar->SetPlay(true);
-			break;
-		}
-
-		case TRANSPORT_STOP:
-		{
-			fOutputGate->Stop();
-			fTracksContainer->Pulse();
-			fToolBar->SetStop(true);
-			break;
-		}
-
-		case TRANSPORT_LOOP:
-			fToolBar->SetLoop(!fToolBar->IsLoop());
-			fOutputGate->SetLoop(fToolBar->IsLoop());
-			break;
-
-		case TRANSPORT_REW:
-		/*	x = Pool.r_pointer - Pool.l_pointer;
-			Pool.pointer -= x/40;
-			if (Pool.pointer <0)
-				Pool.pointer = 0;
-	
-			if (Pool.pointer < Pool.l_pointer) {
-				Pool.l_pointer -= x/10;
-				if (Pool.l_pointer <0)
-					Pool.l_pointer = 0;
-			}
-			Pool.r_pointer = Pool.l_pointer + x;
-			RedrawWindow();*/
-			break;
-	
-		case TRANSPORT_REW_ALL:
-		/*	x = Pool.r_pointer - Pool.l_pointer;
-			Pool.pointer = 0;
-			Pool.l_pointer = 0;
-			Pool.r_pointer = x;
-			
-			RedrawWindow();*/
-			break;
-	
-		case TRANSPORT_FWD:
-		/*	x = Pool.r_pointer - Pool.l_pointer;
-			Pool.pointer += x/40;
-			if (Pool.pointer >Pool.size)
-				Pool.pointer = Pool.size;
-	
-			if (Pool.pointer > Pool.r_pointer) {
-				Pool.r_pointer += x/10;
-				if (Pool.r_pointer >Pool.size)
-					Pool.r_pointer = Pool.size;
-			}
-			Pool.l_pointer = Pool.r_pointer - x;
-			RedrawWindow();*/
-			break;
-	
-		case TRANSPORT_FWD_ALL:
-		/*	x = Pool.r_pointer - Pool.l_pointer;
-			Pool.pointer = Pool.size;
-			Pool.r_pointer = Pool.pointer;
-			Pool.l_pointer = Pool.pointer - x;
-			
-			RedrawWindow();*/
-			break;
-
-#endif
 		case B_SELECT_ALL:
-		case UNSELECT_ALL:
+		case FABER_UNSELECT_ALL:
 
 		case B_COPY:
-		case COPY_SILENCE:
+		case FABER_COPY_SILENCE:
 		case B_CUT:		
 		case B_PASTE:
 		case FABER_DROP_PASTE:
 
-		case UNDO:
+		case FABER_UNDO:
 			fFaberView->Looper()->PostMessage(message);
 			break;
 
-		case SET_FREQUENCY:
+		case FABER_SET_FREQUENCY:
 			WindowsManager::ShowFrequencyWindow();
 			break;
 	
-		case RESAMPLE:
+		case FABER_RESAMPLE:
 			WindowsManager::ShowResampleWindow();
 			break;
 	
-		/*case RESAMPLE_DO:
+		/*case FABER_RESAMPLE_EXECUTE:
 			DoResample();
 			break;*/
 	
@@ -519,10 +433,10 @@ FaberWindow::_BuildMenu()
 	fMainMenuBar->AddItem(fEditMenu);
 
 	fEditMenu->AddItem(mn_undo = new BMenuItem(B_TRANSLATE("Undo"),
-		new BMessage(UNDO), KeyBind.GetKey("UNDO"), KeyBind.GetMod("UNDO")));
+		new BMessage(FABER_UNDO), KeyBind.GetKey("FABER_UNDO"), KeyBind.GetMod("FABER_UNDO")));
 
 	fEditMenu->AddItem(mn_redo = new BMenuItem(B_TRANSLATE("Redo"),
-		new BMessage(REDO), KeyBind.GetKey("REDO"), KeyBind.GetMod("REDO")));
+		new BMessage(FABER_REDO), KeyBind.GetKey("FABER_REDO"), KeyBind.GetMod("FABER_REDO")));
 
 	fEditMenu->AddSeparatorItem();
 
@@ -531,8 +445,8 @@ FaberWindow::_BuildMenu()
 
 	fEditMenu->AddItem(
 		mn_copy_silence = new BMenuItem(B_TRANSLATE("Copy & Silence"),
-		new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"),
-		KeyBind.GetMod("COPY_SILENCE")));
+		new BMessage(FABER_COPY_SILENCE), KeyBind.GetKey("FABER_COPY_SILENCE"),
+		KeyBind.GetMod("FABER_COPY_SILENCE")));
 
 	fEditMenu->AddItem(mn_cut = new BMenuItem(B_TRANSLATE("Cut"),
 		new BMessage(B_CUT), KeyBind.GetKey("CUT"),
@@ -552,25 +466,25 @@ FaberWindow::_BuildMenu()
 		KeyBind.GetMod("SELECT_ALL")));
 
 	fEditMenu->AddItem(mn_unselect = new BMenuItem(B_TRANSLATE("Unselect All"),
-		new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"),
-		KeyBind.GetMod("UNSELECT_ALL")));
+		new BMessage(FABER_UNSELECT_ALL), KeyBind.GetKey("FABER_UNSELECT_ALL"),
+		KeyBind.GetMod("FABER_UNSELECT_ALL")));
 
 	fEditMenu->AddSeparatorItem();
 
 	fEditMenu->AddItem(mn_clear = new BMenuItem(B_TRANSLATE("Clear"),
-		new BMessage(CLEAR), KeyBind.GetKey("CLEAR"),
-		KeyBind.GetMod("CLEAR")));
+		new BMessage(FABER_CLEAR), KeyBind.GetKey("FABER_CLEAR"),
+		KeyBind.GetMod("FABER_CLEAR")));
 
 	fEditMenu->AddItem(mn_trim = new BMenuItem(B_TRANSLATE("Trim"),
-		new BMessage(TRIM), KeyBind.GetKey("TRIM"),
-		KeyBind.GetMod("TRIM")));
+		new BMessage(FABER_TRIM), KeyBind.GetKey("FABER_TRIM"),
+		KeyBind.GetMod("FABER_TRIM")));
 
 	fEditMenu->AddItem(mn_set_freq = new BMenuItem(B_TRANSLATE("Change frequency..."),
-		new BMessage(SET_FREQUENCY), KeyBind.GetKey("SET_FREQ"),
-		KeyBind.GetMod("SET_FREQ")));
+		new BMessage(FABER_SET_FREQUENCY), KeyBind.GetKey("FABER_SET_FREQUENCY"),
+		KeyBind.GetMod("FABER_SET_FREQUENCY")));
 
 	fEditMenu->AddItem(mn_resample = new BMenuItem(B_TRANSLATE("Resample project"),
-		new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
+		new BMessage(FABER_RESAMPLE), KeyBind.GetKey("FABER_RESAMPLE"), KeyBind.GetMod("FABER_RESAMPLE")));
 
 	fTracksMenu = new BMenu(B_TRANSLATE("Tracks"));
 

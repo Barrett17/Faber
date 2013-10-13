@@ -23,7 +23,6 @@
 #include <Application.h>
 
 #include "FaberWindow.h"
-#include "Globals.h"
 
 
 class FaberApp : public BApplication

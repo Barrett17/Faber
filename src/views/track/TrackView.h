@@ -23,7 +23,6 @@
 #include <ObjectList.h>
 #include <GroupView.h>
 
-#include "Globals.h"
 #include "SampleView.h"
 #include "Track.h"
 

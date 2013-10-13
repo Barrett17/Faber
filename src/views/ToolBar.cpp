@@ -23,7 +23,6 @@
 #include <StringView.h>
 
 #include "FaberDefs.h"
-#include "FaberResources.h"
 #include "IconButton.h"
 #include "VolumeSlider.h"
 
@@ -37,24 +36,38 @@ ToolBar::ToolBar()
 
 	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
 
-	fPlayButton = _BuildButton(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAY), kPlayIcon);
-	//fPauseButton = _BuildButton(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE), kPauseIcon);
-	fStopButton = _BuildButton(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), kStopIcon);
-	fLoopButton = _BuildButton(B_TRANSLATE("Loop"), new BMessage(TRANSPORT_LOOP), kLoopIcon);
+	fPlayButton = _BuildButton(B_TRANSLATE("Play"),
+		new BMessage(FABER_TRANSPORT_PLAY), kPlayIcon);
+	//fPauseButton = _BuildButton(B_TRANSLATE("Pause"),
+	//	new BMessage(FABER_TRANSPORT_PAUSE), kPauseIcon);
+	fStopButton = _BuildButton(B_TRANSLATE("Stop"),
+		new BMessage(FABER_TRANSPORT_STOP), kStopIcon);
+	fLoopButton = _BuildButton(B_TRANSLATE("Loop"),
+		new BMessage(FABER_TRANSPORT_LOOP), kLoopIcon);
 
-	fToolButtons[0] = _BuildButton(B_TRANSLATE("Selection Tool"), new BMessage(TOOL_SELECT), kSelectionToolIcon);
-	fToolButtons[1] = _BuildButton(B_TRANSLATE("Drawing Tool"), new BMessage(TOOL_DRAW), kDrawingToolIcon);
-	fToolButtons[2] = _BuildButton(B_TRANSLATE("Playing Tool"), new BMessage(TOOL_PLAY), kPlayingToolIcon);
+	fToolButtons[0] = _BuildButton(B_TRANSLATE("Selection Tool"),
+		new BMessage(FABER_SELECTION_TOOL), kSelectionToolIcon);
+
+	fToolButtons[1] = _BuildButton(B_TRANSLATE("Drawing Tool"),
+		new BMessage(FABER_DRAW_TOOL), kDrawingToolIcon);
+
+	fToolButtons[2] = _BuildButton(B_TRANSLATE("Playing Tool"),
+		new BMessage(FABER_PLAY_TOOL), kPlayingToolIcon);
 
 	BGroupView* transportView = new BGroupView(B_HORIZONTAL);
 	BLayoutBuilder::Group<>(transportView, B_HORIZONTAL, 0)
 			.Add(fStopButton)
 			.Add(fPlayButton)
-			.Add(_BuildButton(B_TRANSLATE("Record"), new BMessage(TRANSPORT_REC), kRecordIcon))
-			.Add(_BuildButton(B_TRANSLATE("Rewind All"), new BMessage(TRANSPORT_REW_ALL), kSeekBackwardAllIcon))
-			.Add(_BuildButton(B_TRANSLATE("Rewind"), new BMessage(TRANSPORT_REW), kSeekBackwardIcon))
-			.Add(_BuildButton(B_TRANSLATE("Forward"), new BMessage(TRANSPORT_FWD), kSeekForwardIcon))
-			.Add(_BuildButton(B_TRANSLATE("Forward All"), new BMessage(TRANSPORT_FWD_ALL), kSeekForwardAllIcon))
+			.Add(_BuildButton(B_TRANSLATE("Record"),
+				new BMessage(FABER_TRANSPORT_REC), kRecordIcon))
+			.Add(_BuildButton(B_TRANSLATE("Rewind All"),
+				new BMessage(FABER_TRANSPORT_REW_ALL), kSeekBackwardAllIcon))
+			.Add(_BuildButton(B_TRANSLATE("Rewind"),
+				new BMessage(FABER_TRANSPORT_REW), kSeekBackwardIcon))
+			.Add(_BuildButton(B_TRANSLATE("Forward"),
+				new BMessage(FABER_TRANSPORT_FWD), kSeekForwardIcon))
+			.Add(_BuildButton(B_TRANSLATE("Forward All"),
+				new BMessage(FABER_TRANSPORT_FWD_ALL), kSeekForwardAllIcon))
 			.Add(fLoopButton)
 		.End();
 
@@ -117,7 +130,7 @@ void
 ToolBar::SetStop(bool stop)
 {
 	if (stop == true) {
-		fPlayButton->SetMessage(new BMessage(TRANSPORT_PLAY));
+		fPlayButton->SetMessage(new BMessage(FABER_TRANSPORT_PLAY));
 		fPlayButton->SetIcon(kPlayIcon);
 		fPlayButton->TrimIcon();
 		fPlayButton->Invalidate();

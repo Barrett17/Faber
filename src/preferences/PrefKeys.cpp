@@ -40,10 +40,9 @@
 #include <Path.h>
 #include <TranslationKit.h>
 #include <TranslationUtils.h>
-#include <stdio.h>
+
 
 #include "FaberDefs.h"
-#include "Globals.h"
 #include "PrefKeys.h"
 #include "Shortcut.h"
 #include "FStringItem.h"

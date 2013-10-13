@@ -34,7 +34,6 @@
 #include <string.h>
 
 #include "FaberDefs.h"
-#include "Globals.h"
 #include "SavePanel.h"
 
 

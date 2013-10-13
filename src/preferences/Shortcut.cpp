@@ -29,10 +29,8 @@
 #include <FindDirectory.h>
 #include <Path.h>
 #include <InterfaceDefs.h>
-#include <stdio.h>
 
-#include "FaberMessages.h"
-#include "Globals.h"
+#include "FaberDefs.h"
 #include "Shortcut.h"
 #include "Settings.h"
 
@@ -47,7 +45,7 @@ Shortcut::Shortcut(){
 
 Shortcut::~Shortcut(){
 	// delete everthing in the list :P
-	Settings prefs = Settings(SETTINGS_DIR"/"KEYBINDINGS_CONF_NAME);
+	Settings prefs = Settings(FABER_SETTINGS_DIR"/"FABER_KEYMAP_CONF);
 	prefs.MakeEmpty();
    
 	key_bind *kb = NULL;
@@ -76,7 +74,7 @@ void Shortcut::Init(){
 	// install defaults
 	InstallDefaults();
 
-	Settings prefs = Settings(SETTINGS_DIR"/"KEYBINDINGS_CONF_NAME);
+	Settings prefs = Settings(FABER_SETTINGS_DIR"/"FABER_KEYMAP_CONF);
 	if(prefs.InitCheck() == B_OK){
 		// Init from prefs file
 		const char *ID = NULL;
@@ -306,31 +304,31 @@ void Shortcut::InstallDefaults(){
 
 	// edit menu
 	Install(0,"EDIT_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
-	Install(1,"UNDO",				'Z', B_COMMAND_KEY,					  0, 0,							UNDO			);
+	Install(1,"FABER_UNDO",				'Z', B_COMMAND_KEY,					  0, 0,							FABER_UNDO			);
 
-	Install(1,"REDO",				'Z', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							REDO			);
+	Install(1,"FABER_REDO",				'Z', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_REDO			);
 
 	Install(1,"COPY",				'C', B_COMMAND_KEY,					  0, 0,							B_COPY			);
-	Install(1,"COPY_SILENCE",		'X', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							COPY_SILENCE	);
+	Install(1,"FABER_COPY_SILENCE",		'X', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_COPY_SILENCE	);
 	Install(1,"CUT",				'X', B_COMMAND_KEY,					  0, 0,							B_CUT			);
 	Install(1,"PASTE",			  	'V', B_COMMAND_KEY,					  0, 0,							B_PASTE			);
 	Install(1,"FABER_PASTE_NEW",			'V', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_PASTE_NEW		);
 
-	Install(1,"CLEAR",				'B', B_COMMAND_KEY,			   B_DELETE, 0,							CLEAR			);
+	Install(1,"FABER_CLEAR",				'B', B_COMMAND_KEY,			   B_DELETE, 0,							FABER_CLEAR			);
 
 //	Install(1,"COPY_TO_STACK",		'C', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							TO_STACK		);
 
 	Install(1,"SELECT_ALL",			'A', B_COMMAND_KEY,					  0, 0,							B_SELECT_ALL	);
-	Install(1,"UNSELECT_ALL",		'U', B_COMMAND_KEY,					  0, 0,							UNSELECT_ALL	);
+	Install(1,"FABER_UNSELECT_ALL",		'U', B_COMMAND_KEY,					  0, 0,							FABER_UNSELECT_ALL	);
 	Install(1,"FABER_ZERO_IN",			  0, 0,								  0, 0,							FABER_ZERO_IN			);
 	Install(1,"FABER_ZERO_OUT",			  0, 0,								  0, 0,							FABER_ZERO_OUT		);
 	Install(1,"FABER_ZERO_LL",			  0, 0,								  0, 0,							FABER_ZERO_LL			);
 	Install(1,"FABER_ZERO_LR",			  0, 0,								  0, 0,							FABER_ZERO_LR			);
 	Install(1,"FABER_ZERO_RL",			  0, 0,								  0, 0,							FABER_ZERO_RL			);
 	Install(1,"FABER_ZERO_RR",			  0, 0,								  0, 0,							FABER_ZERO_RR			);
-	Install(1,"TRIM",				  0, 0,								  0, 0,							TRIM			);
-	Install(1,"SET_FREQ",	  		  0, 0,								  0, 0,							SET_FREQUENCY	);
-	Install(1,"RESAMPLE",	  		  0, 0,								  0, 0,							RESAMPLE		);
+	Install(1,"FABER_TRIM",				  0, 0,								  0, 0,							FABER_TRIM			);
+	Install(1,"FABER_SET_FREQUENCY",	  		  0, 0,								  0, 0,							FABER_SET_FREQUENCY	);
+	Install(1,"FABER_RESAMPLE",	  		  0, 0,								  0, 0,							FABER_RESAMPLE		);
 
 	// help
 	Install(0,"HELP_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
@@ -338,15 +336,15 @@ void Shortcut::InstallDefaults(){
 
 	// The Transporter
 	Install(0,"TRANSPORT",	  		  0, 0,					  0, 0,							SPLITTER		);
-	//Install(0,"TRANSPORT_PLAYS",	' ', B_SHIFT_KEY,		  0, 0,							TRANSPORT_PLAYS		);
-	Install(0,"TRANSPORT_PLAY",		' ', B_CONTROL_KEY,		  0, 0,							TRANSPORT_PLAY		);
-	Install(0,"TRANSPORT_STOP",		  0, 0,					  0, 0,							TRANSPORT_STOP		);
-	Install(0,"TRANSPORT_REW",		  0, 0,					  0, 0,							TRANSPORT_REW		);
-	Install(0,"TRANSPORT_REW_ALL",B_HOME, B_SHIFT_KEY,		  0, 0,							TRANSPORT_REW_ALL	);
-	Install(0,"TRANSPORT_FWD",		  0, 0,					  0, 0,							TRANSPORT_FWD		);
-	Install(0,"TRANSPORT_FWD_ALL",B_END, B_SHIFT_KEY,		  0, 0,							TRANSPORT_FWD_ALL	);
-	Install(0,"TRANSPORT_REC",		  0, 0,					  0, 0,							TRANSPORT_REC		);
-	Install(0,"TRANSPORT_LOOP",		'L', 0,					  0, 0,							TRANSPORT_LOOP	);
+	//Install(0,"FABER_TRANSPORT_PLAYS",	' ', B_SHIFT_KEY,		  0, 0,							FABER_TRANSPORT_PLAYS		);
+	Install(0,"FABER_TRANSPORT_PLAY",		' ', B_CONTROL_KEY,		  0, 0,							FABER_TRANSPORT_PLAY		);
+	Install(0,"FABER_TRANSPORT_STOP",		  0, 0,					  0, 0,							FABER_TRANSPORT_STOP		);
+	Install(0,"FABER_TRANSPORT_REW",		  0, 0,					  0, 0,							FABER_TRANSPORT_REW		);
+	Install(0,"FABER_TRANSPORT_REW_ALL",B_HOME, B_SHIFT_KEY,		  0, 0,							FABER_TRANSPORT_REW_ALL	);
+	Install(0,"FABER_TRANSPORT_FWD",		  0, 0,					  0, 0,							FABER_TRANSPORT_FWD		);
+	Install(0,"FABER_TRANSPORT_FWD_ALL",B_END, B_SHIFT_KEY,		  0, 0,							FABER_TRANSPORT_FWD_ALL	);
+	Install(0,"FABER_TRANSPORT_REC",		  0, 0,					  0, 0,							FABER_TRANSPORT_REC		);
+	Install(0,"FABER_TRANSPORT_LOOP",		'L', 0,					  0, 0,							FABER_TRANSPORT_LOOP	);
 
 	//zoom
 	Install(0,"ZOOM_FUNCTIONS",	 	  0, 0,								  0, 0,							SPLITTER		);
@@ -374,9 +372,9 @@ void Shortcut::InstallDefaults(){
 
 	// The sample-tools
 	Install(0,"SAMPLE_TOOLS",		  0, 0,								  0, 0,						SPLITTER		);
-	Install(0,"TOOL_SELECT",				  0, 0,					'1', 0,							TOOL_SELECT		);
-	Install(0,"TOOL_DRAW",					  0, 0,					'2', 0,							TOOL_DRAW		);
-	Install(0,"TOOL_PLAY",					  0, 0,					'3', 0,							TOOL_PLAY		);
+	Install(0,"FABER_SELECTION_TOOL",				  0, 0,					'1', 0,					FABER_SELECTION_TOOL		);
+	Install(0,"FABER_DRAW_TOOL",					  0, 0,					'2', 0,					FABER_DRAW_TOOL		);
+	Install(0,"FABER_PLAY_TOOL",					  0, 0,					'3', 0,					FABER_PLAY_TOOL		);
 
 //	Install(1,"FILE_MIX",			  0, B_COMMAND_KEY,					  0, 0,											);
 

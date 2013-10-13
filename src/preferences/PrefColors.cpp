@@ -41,7 +41,6 @@
 #include <ControlLook.h>
 
 #include "FaberDefs.h"
-#include "Globals.h"
 #include "PrefColors.h"
 #include "SwatchView.h"
 #include "FStringItem.h"

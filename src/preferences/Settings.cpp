@@ -23,8 +23,6 @@
 #include <FindDirectory.h>
 #include <new>
 
-#include <Globals.h>
-
 #include <stdio.h>
 
 const uint32 kMsgSettings = 'stng';

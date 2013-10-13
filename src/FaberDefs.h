@@ -30,6 +30,12 @@
 
 #include <stdio.h>
 
+#define FABER_MIMETYPE "application/x-vnd.Faber"
+#define FABER_HELP_HOMEPAGE "http://www.versut.com/Faber"
+
+#define FABER_COPYRIGHT "Copyright 2013 Versut\n"
+#define FABER_SECONDARY_COPYRIGHTS "Copyright 2002 Xentronix\n"
+
 // Debug
 
 //#define FABER_DEBUG 0
@@ -42,10 +48,27 @@
 #define catSig "x-vnd.Be.locale.Faber"
 #define catName catSig".catalog"
 
+// Settings
+
+#define FABER_SETTINGS_DIR "Faber"
+#define FABER_SETTINGS_FILE "Faber_Settings"
+#define FABER_KEYMAP_CONF "Keymap_conf"
+
+// UI settings
+
+#define WINDOW_DEFAULT_SIZE_X	800
+#define WINDOW_DEFAULT_SIZE_Y	600
+
+#define WINDOW_MIN_SIZE_X		530
+#define WINDOW_MIN_SIZE_Y		256
+
+#define WINDOW_MAX_SIZE_X		2048
+#define WINDOW_MAX_SIZE_Y		1536
+
 // Enums
 
 enum {
-	FABER_SELECTION_TOOL,
+	FABER_SELECTION_TOOL = 0,
 	FABER_DRAW_TOOL,
 	FABER_PLAY_TOOL,
 	FABER_TEMPORAL_TOOL

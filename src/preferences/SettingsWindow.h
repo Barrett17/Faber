@@ -15,7 +15,6 @@
 #include <View.h>
 
 #include "SettingsView.h"
-#include "Globals.h"
 
 /**
  * Finestra dei settaggi

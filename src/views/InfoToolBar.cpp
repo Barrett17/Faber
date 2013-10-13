@@ -24,8 +24,6 @@
 #include <TextView.h>
 
 #include "FaberDefs.h"
-#include "FaberMessages.h"
-#include "FaberResources.h"
 
 
 InfoToolBar::InfoToolBar()

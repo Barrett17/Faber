@@ -43,7 +43,6 @@
 #include <ControlLook.h>
 
 #include "FaberDefs.h"
-#include "Globals.h"
 #include "PrefGeneral.h"
 #include "SpinControl.h"
 #include "WindowsManager.h"

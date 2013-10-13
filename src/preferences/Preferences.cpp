@@ -32,7 +32,7 @@
 
 #include <stdio.h>
 
-#include "Globals.h"
+#include "FaberDefs.h"
 #include "Preferences.h"
 #include "Settings.h"
 
@@ -54,10 +54,10 @@ void Preferences::Init(){
    
    FactorySettings();
 
-   Settings prefs = Settings(SETTINGS_DIR"/"FABER_CONF_NAME);
+   Settings prefs = Settings(FABER_SETTINGS_DIR"/"FABER_SETTINGS_FILE);
    if (prefs.InitCheck() != B_OK) {
       find_directory(B_USER_SETTINGS_DIRECTORY, &path);
-      path.Append(SETTINGS_DIR);
+      path.Append(FABER_SETTINGS_DIR);
       dir.CreateDirectory(path.Path(),&dir);
    } 
    
@@ -202,7 +202,7 @@ void Preferences::Init(){
 	if(prefs.FindFloat("f_compressor_gain", &filter_compressor_gain) != B_OK)	filter_compressor_gain = 4.0;
 
 	if (prefs.FindInt32("tool_mode", &tool_mode) != B_OK)
-		tool_mode = SELECT_TOOL;
+		tool_mode = FABER_SELECTION_TOOL;
 }
 
 /*******************************************************
@@ -211,7 +211,7 @@ void Preferences::Init(){
 void
 Preferences::Sync()
 {
-	Settings prefs = Settings(SETTINGS_DIR"/"FABER_CONF_NAME);
+	Settings prefs = Settings(FABER_SETTINGS_DIR"/"FABER_SETTINGS_FILE);
 	if (prefs.InitCheck() != B_OK)
 		return;
 

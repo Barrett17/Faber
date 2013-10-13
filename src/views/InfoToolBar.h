@@ -23,7 +23,6 @@
 #include <View.h>
 
 #include "IconButton.h"
-#include "Globals.h"
 
 class BTextView;
 
