@@ -304,8 +304,8 @@ FaberWindow::UpdateMenu()
 	fSaveAsMenu->SetEnabled(enable);
 	mn_save_sel->SetEnabled(enable);
 
-	mn_set_freq->SetEnabled(enable);
-	mn_resample->SetEnabled(enable);
+	//mn_set_freq->SetEnabled(enable);
+	//mn_resample->SetEnabled(enable);
 	mn_select_all->SetEnabled(enable);
 	mn_unselect->SetEnabled(selection);
 	mn_cut->SetEnabled(selection);
@@ -468,12 +468,13 @@ FaberWindow::_BuildMenu()
 		new BMessage(FABER_TRIM), KeyBind.GetKey("FABER_TRIM"),
 		KeyBind.GetMod("FABER_TRIM")));
 
-	fEditMenu->AddItem(mn_set_freq = new BMenuItem(B_TRANSLATE("Change frequency..."),
+	/*fEditMenu->AddItem(mn_set_freq = new BMenuItem(B_TRANSLATE("Change frequency..."),
 		new BMessage(FABER_SET_FREQUENCY), KeyBind.GetKey("FABER_SET_FREQUENCY"),
 		KeyBind.GetMod("FABER_SET_FREQUENCY")));
 
 	fEditMenu->AddItem(mn_resample = new BMenuItem(B_TRANSLATE("Resample project"),
 		new BMessage(FABER_RESAMPLE), KeyBind.GetKey("FABER_RESAMPLE"), KeyBind.GetMod("FABER_RESAMPLE")));
+	*/
 
 	fTracksMenu = new BMenu(B_TRANSLATE("Tracks"));
 
