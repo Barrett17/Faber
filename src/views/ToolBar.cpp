@@ -79,10 +79,12 @@ ToolBar::ToolBar()
 			.AddStrut(10.0f)
 			.Add(transportView)
 			.AddStrut(15.0f)
-			
-			.Add(new BStringView(NULL, "Output", B_WILL_DRAW))
-			.Add(fOutputPeakView)
-			.Add(slider)
+
+			.AddGroup(B_VERTICAL, 0)			
+				.Add(fOutputPeakView)
+				.Add(slider)
+				.AddGlue()
+			.End()
 
 			.AddGlue()
 
@@ -91,7 +93,9 @@ ToolBar::ToolBar()
 			.Add(fToolButtons[1])
 			.Add(fToolButtons[2])
 			.AddStrut(5.0f)
-		.End();
+		.End()
+		.AddStrut(2.0f)
+	.End();
 }
 
 

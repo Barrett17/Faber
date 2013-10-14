@@ -124,9 +124,6 @@ PrefGeneral::PrefGeneral()
 	temp_file = new BTextControl("temp_file", B_TRANSLATE("Temporary directory"),
 		Prefs.temp_dir.String(), new BMessage(SET_TEMP));
 
-	s_free = new SpinControl("s_free", B_TRANSLATE("Minimum diskspace to keep free (Mb)"),
-		new BMessage(SPIN_CHANGED), 10, 10000, Prefs.keep_free, 10);
-
 	const float spacing = be_control_look->DefaultItemSpacing();
 
 	SetLayout(new BGroupLayout(B_HORIZONTAL, spacing));
@@ -142,7 +139,6 @@ PrefGeneral::PrefGeneral()
 			.Add(c_drag_drop, 7)
 			.Add(menu, 8)
 			.Add(temp_file, 9)
-			.Add(s_free, 10)
 			.AddGlue()
 		.End()
 		.SetInsets(spacing, spacing, spacing, spacing)
@@ -170,7 +166,6 @@ PrefGeneral::AttachedToWindow()
 	c_peak->SetTarget(this);
 	c_follow_playing->SetTarget(this);
 	s_peak->SetTarget(this);
-	s_free->SetTarget(this);
 	c_drag_drop->SetTarget(this);
 	temp_file->SetTarget(this);
 	time->SetTargetForItems(this);
@@ -215,10 +210,6 @@ PrefGeneral::MessageReceived(BMessage* msg)
 		// WindowsManager::MainWindow()->RedrawWindow();
 		break;
 
-	case SPIN_CHANGED:
-		Prefs.keep_free = s_free->Value();
-		break;
-	
 	case SET_TIME:
 		msg->FindInt32("time", &i);
 		Prefs.display_time = i;

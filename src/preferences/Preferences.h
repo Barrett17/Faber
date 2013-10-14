@@ -73,7 +73,6 @@ class Preferences{
 
 	float	peak;
 	int32	display_time;
-	int32	keep_free;				// keep free diskspace
 
 	int32	buffer_size;			// media buffer-size
 	int32	cache_size;				// size of the VM cache

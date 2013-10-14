@@ -19,16 +19,24 @@
 
 #include "TimeBar.h"
 
-#include <GroupView.h>
+#include <stdio.h>
+
+rgb_color backgroundColor = {120,120,120};
+rgb_color textColor = {0,0,0};
+
+#define LITTLE_PIN 3.0f
+#define BIG_PIN 7.0f
+
 
 TimeBar::TimeBar()
 	:
-	BGroupView(B_HORIZONTAL)
+	BView("TimeBar", B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE),
+	fSpacing(15),
+	fScale(1)
 {
 	SetExplicitMinSize(BSize(B_SIZE_UNSET, 25));
 	SetExplicitMaxSize(BSize(B_SIZE_UNSET, 25));
 
-	rgb_color backgroundColor = {120,120,120};
 	SetViewColor(backgroundColor);
 }
 
@@ -41,6 +49,69 @@ TimeBar::~TimeBar()
 void
 TimeBar::MessageReceived(BMessage* message)
 {
+	switch(message->what) {
+	
+		default:
+			BView::MessageReceived(message);
+	}
+}
+
+
+void
+TimeBar::Draw(BRect rect)
+{
+	int32 start = (int32)Bounds().left * fScale;
+	int32 end = (int32)Bounds().right * fScale;
+
+	start /= fSpacing;
+	end /= fSpacing;
+
+	int32 countdown = 0;
+	int32 position = 0;
+	int minutes = 0;
+	int seconds = 0;
+
+	char* drawString = new char[20];
+
+	SetDrawingMode(B_OP_OVER);
+	SetHighColor(textColor);
+	StrokeLine(BPoint(Bounds().left, Bounds().bottom-1),
+		BPoint(Bounds().right, Bounds().bottom-1));
+
+	int32 prop = fSpacing / fScale;
+
+	for (int32 index = start; index <= end; index++) {
+		position = index * prop;
+
+		if(countdown > 0) {
+			StrokeLine(BPoint(position, Bounds().bottom - LITTLE_PIN),
+				BPoint(position, Bounds().bottom));
+
+			countdown -= 1;
+		} else {
+			float bottom = Bounds().bottom - BIG_PIN;
+			StrokeLine(BPoint(position, bottom),
+				BPoint(position, Bounds().bottom-2));
+
+			minutes = index / 6;
+			seconds = 10 * (index - minutes * 6);
+
+			if (minutes == 0)
+				sprintf(drawString, "%.2d", seconds);
+			else {
+				sprintf(drawString, "%d:%.2d", minutes, seconds);
+				position -= 10;
+				if (minutes > 9)
+					position -= 6;
+			}
+
+			DrawString(drawString, BPoint(position, bottom - 3));
+
+			countdown = 5;
+		}
+	}
+
+	delete[] drawString;
 }
 
 

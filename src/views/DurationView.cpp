@@ -17,32 +17,24 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _TIME_BAR
-#define _TIME_BAR
+#include "DurationView.h"
 
-#include <View.h>
+#include <StringView.h>
 
 
-class TimeBar : public BView
+DurationView::DurationView()
+	:
+	BGroupView(B_HORIZONTAL)
 {
-public:
-						TimeBar();
-	virtual 			~TimeBar();
+	SetExplicitSize(BSize(150, 25));
 
-	virtual void		MessageReceived(BMessage* message);
-	virtual void		Draw(BRect rect);
+	rgb_color backgroundColor = {120,120,120};
+	rgb_color textColor = { 240, 240, 240 };
+	SetViewColor(backgroundColor);
+	GroupLayout()->AddView(new BStringView("", "Duration:", B_WILL_DRAW));
+}
 
-	void				SetDuration(bigtime_t duration);
-	bigtime_t			Duration();
 
-private:
-	int32				fSpacing;
-	int32				fScale;
-
-	
-
-private:
-
-};
-
-#endif
+DurationView::~DurationView()
+{
+}

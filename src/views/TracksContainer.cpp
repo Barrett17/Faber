@@ -23,8 +23,10 @@
 #include <ScrollView.h>
 
 #include "AudioTrackView.h"
+#include "DurationView.h"
 #include "FaberMessages.h"
 #include "FaberScrollBar.h"
+#include "TimeBar.h"
 #include "TrackView.h"
 #include "WindowsManager.h"
 
@@ -50,22 +52,33 @@ TracksContainer::TracksContainer()
 
 	BScrollView* verticalScrollView = new BScrollView("scrollviewV",
 		fView, B_FOLLOW_NONE, false, true);
+	// This is needed to stop the vertical scrollview to go out of the window
+	verticalScrollView->SetExplicitMinSize(BSize(B_SIZE_UNSET, 200));
 
 	fVerticalScroll = verticalScrollView->ScrollBar(B_VERTICAL);
 	fVerticalScroll->SetRange(0, 0);
 	fVerticalScroll->SetSteps(10, 200);
 
-	// This is needed to stop the vertical scrollview to go out of the window
-	verticalScrollView->SetExplicitMinSize(BSize(B_SIZE_UNSET, 200));
-
 	fHorizontalScroll = new FaberScrollBar("scrollviewH",
 		this, 0, 0, B_HORIZONTAL);
-
 	fHorizontalScroll->SetRange(0,100);
 
+	DurationView* durationView = new DurationView();
+
+	float scrollBarWidth = fVerticalScroll->Bounds().Width();
+
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.AddGroup(B_HORIZONTAL, 0)
+			.Add(durationView)
+			.Add(new TimeBar())
+			.AddStrut(scrollBarWidth/4)
+		.End()
 		.Add(verticalScrollView)
-		.Add(fHorizontalScroll)
+		.AddGroup(B_HORIZONTAL, 0)
+			.AddStrut(150)
+			.Add(fHorizontalScroll)
+			.AddStrut(scrollBarWidth)
+		.End()
 	.End();
 }
 
@@ -142,7 +155,7 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 	float max, min;
 	if (Looper()->Lock()) {
 		fVerticalScroll->GetRange(&min, &max);
-		max += 250;
+		max += 170;
 		fVerticalScroll->SetRange(min, max);
 		Looper()->Unlock();
 	}
@@ -181,7 +194,7 @@ TracksContainer::RemoveTrack(TrackView* track)
 
 	if (Looper()->Lock()) {
 		fVerticalScroll->GetRange(&min, &max);
-		max -= 250;
+		max -= 170;
 		fVerticalScroll->SetRange(min, max);
 
 		Looper()->Unlock();

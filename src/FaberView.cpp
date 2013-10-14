@@ -23,7 +23,6 @@
 #include <StringView.h>
 
 #include "FaberDefs.h"
-#include "TimeBar.h"
 
 
 FaberView::FaberView()
@@ -37,22 +36,12 @@ FaberView::FaberView()
 
 	fInfoToolBar = new InfoToolBar();
 
-	BStringView* durationView = new BStringView(NULL,
-		"Duration: ", B_WILL_DRAW);
-
-	durationView->SetExplicitMinSize(BSize(180, 25));
-	durationView->SetExplicitMaxSize(BSize(180, 25));
-
-	BLayoutBuilder::Group<>(this, B_VERTICAL)
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(fToolBar)
+		.AddStrut(2.0f)
 			.AddGroup(B_VERTICAL, 0)
-					.AddStrut(1.0f)
-			.AddGroup(B_HORIZONTAL)
-				.Add(durationView)
-				.Add(new TimeBar())
+				.Add(fTracksContainer)
 			.End()
-			.Add(fTracksContainer)
-		.End()
 		.Add(fInfoToolBar)
 	.End();
 }

@@ -16,33 +16,3 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef _TIME_BAR
-#define _TIME_BAR
-
-#include <View.h>
-
-
-class TimeBar : public BView
-{
-public:
-						TimeBar();
-	virtual 			~TimeBar();
-
-	virtual void		MessageReceived(BMessage* message);
-	virtual void		Draw(BRect rect);
-
-	void				SetDuration(bigtime_t duration);
-	bigtime_t			Duration();
-
-private:
-	int32				fSpacing;
-	int32				fScale;
-
-	
-
-private:
-
-};
-
-#endif

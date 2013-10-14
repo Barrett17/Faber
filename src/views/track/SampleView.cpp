@@ -43,8 +43,6 @@
 
 #include <stdio.h>
 
-#define POINTER_BAR_HEIGHT	3
-
 
 SampleView::SampleView(AudioTrackView* track)
 	:
@@ -157,26 +155,6 @@ SampleView::Draw(BRect rect)
 		fScreenBits = (rgb_color*)fOffScreen->Bits();
 		fScreenWidth = fOffScreen->Bounds().IntegerWidth()+1;
 
-		// adjust for the top bar
-		fScreenBits += POINTER_BAR_HEIGHT*fScreenWidth;		
-
-		// fill upper with gray bar
-		int32 width = Bounds().IntegerWidth();
-		BitmapDrawer draw(fOffScreen);
-		rgb_color a;
-		for (int32 y=0; y<POINTER_BAR_HEIGHT; y++) {
-			if (y==0)
-				a = (rgb_color) {255,255,255};
-			else if (y==POINTER_BAR_HEIGHT-1)
-				a = (rgb_color) {128,128,128};
-			else
-				a = (rgb_color) {192,192,192};
-
-			for (int32 x=0; x<=width; x++)
-				draw.PlotBGR(x,y,a);
-
-		}
-		
 		release_sem(fViewSem);
 
 		// recalculate caches for resized screen
@@ -190,7 +168,7 @@ SampleView::Draw(BRect rect)
 
 		if (fTrack->IsMono() && cache_left_valid) {
 
-			rect.bottom = Bounds().bottom-POINTER_BAR_HEIGHT;
+			rect.bottom = Bounds().bottom;
 			DrawMono(rect, true, fSelected);
 			rect.bottom = Bounds().bottom;
 
@@ -209,7 +187,7 @@ SampleView::Draw(BRect rect)
 			int32 right = Bounds().IntegerWidth();
 			// need to fix this !
 
-			for (int32 y=POINTER_BAR_HEIGHT; y<=bottom; y++) {
+			for (int32 y=0; y<=bottom; y++) {
 				for (int32 x=0; x<=right; x++)
 					draw.PlotBGR(x,y,a);
 			}
@@ -225,7 +203,6 @@ SampleView::Draw(BRect rect)
 
 	// Draw the pointer
 	BRect r = Bounds();
-	int32 xx = POINTER_BAR_HEIGHT/2 -2;
 
 	if (!fSelected) {
 		float x = (fOwner->Pointer()-fOwner->Start()) * Bounds().Width()
@@ -234,26 +211,26 @@ SampleView::Draw(BRect rect)
 		SetHighColor(Prefs.pointer_color);
 		SetLowColor(Prefs.back_color);
 
-		for (float y = POINTER_BAR_HEIGHT; y<r.bottom; y+=4)
+		for (float y = 0; y<r.bottom; y+=4)
 			StrokeLine( BPoint( x, y), BPoint( x, y));
 
-		StrokeLine( BPoint( x, POINTER_BAR_HEIGHT), BPoint( x, r.bottom));
+		StrokeLine( BPoint( x, 0), BPoint( x, r.bottom));
 	} else {
 		float x = (fOwner->Pointer()-fOwner->Start())
 			* Bounds().Width() /(fOwner->End() - fOwner->Start());
 		SetHighColor(Prefs.pointer_color);
 
-		StrokeLine( BPoint( x, POINTER_BAR_HEIGHT), BPoint( x, r.bottom));
+		StrokeLine( BPoint( x, 0), BPoint( x, r.bottom));
 
 		x = (fOwner->SelectionPointer()-fOwner->Start() +1)
 			* Bounds().Width() /(fOwner->End() - fOwner->Start());
 
-		StrokeLine( BPoint( x, POINTER_BAR_HEIGHT), BPoint( x, r.bottom));
+		StrokeLine( BPoint( x, 0), BPoint( x, r.bottom));
 	}
 	
 	/*if (Pool.IsPlaying()) {				// remove line
 		SetDrawingMode(B_OP_INVERT);
-		StrokeLine( BPoint( fOldX, Bounds().top+POINTER_BAR_HEIGHT), BPoint( fOldX, Bounds().bottom));
+		StrokeLine( BPoint( fOldX, Bounds().top), BPoint( fOldX, Bounds().bottom));
 		SetDrawingMode(B_OP_COPY);
 	}*/
 
@@ -281,17 +258,12 @@ SampleView::MouseDown(BPoint p)
 
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
 
-	if (p.y < POINTER_BAR_HEIGHT) {
-		/* Handle the triangles here */
-		return;
-	}
-
 	// The selection tool handles all select modes
 	switch(Prefs.tool_mode) {
 		case FABER_SELECTION_TOOL:
 		{
 			if (clicks == 1) {
-				float middle = (Bounds().Height()-POINTER_BAR_HEIGHT)*0.50+POINTER_BAR_HEIGHT;	// middle
+				float middle = (Bounds().Height())*0.50;	// middle
 				// calculate position of cursors on screen
 
 				float pointer_x = (fOwner->Pointer()-fOwner->Start())
@@ -483,14 +455,11 @@ void
 SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 {
 	// area where the cursors work for left/right selection
-	float top = (Bounds().Height() - POINTER_BAR_HEIGHT)
-		* 0.20 + POINTER_BAR_HEIGHT;
+	float top = Bounds().Height() * 0.20;
 
-	float bottom = (Bounds().Height() - POINTER_BAR_HEIGHT)
-		* 0.80 + POINTER_BAR_HEIGHT;
+	float bottom = Bounds().Height() * 0.80;
 
-	float middle = (Bounds().Height() - POINTER_BAR_HEIGHT)
-		* 0.50 + POINTER_BAR_HEIGHT;
+	float middle = Bounds().Height() * 0.50;
 
 	// calculate position of cursors on screen
 	float pointer_x = (fOwner->Pointer() - fOwner->Start())
@@ -533,7 +502,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		else {
 			if (drag_area && !drag)
 				SetViewCursor( MouseIcons::MouseMove() );
-			else if (p.y < top && p.y >= POINTER_BAR_HEIGHT)
+			else if (p.y < top)
 				SetViewCursor( MouseIcons::MouseArrowLeft() );
 			else if (p.y > bottom)
 				SetViewCursor( MouseIcons::MouseArrowRight() );
@@ -551,7 +520,6 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		// drag & drop
 		if (fabs(p.x - fStartSelection.x) > 3) {
 			BRect r = Bounds();
-			r.top += POINTER_BAR_HEIGHT;
 			r.left = p.x;
 			r.right = p.x+1;
 				
@@ -603,8 +571,8 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		// normal case just extend the width of the selection triangles
 		int32 zoom_x = 4;
 		if (step==0)
-			zoom_x = (int32)MAX(ceil(Bounds().Width()
-				/ (fOwner->End() - fOwner->Start())),POINTER_BAR_HEIGHT);
+			zoom_x = (int32)ceil(Bounds().Width()
+				/ (fOwner->End() - fOwner->Start()));
 
 		BRect update;
 		if (full_update)
@@ -616,7 +584,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 
 		/*if (Pool.IsPlaying()) {				// remove line
 			SetDrawingMode(B_OP_INVERT);
-			StrokeLine( BPoint( fOldX, Bounds().top+POINTER_BAR_HEIGHT), BPoint( fOldX, Bounds().bottom));
+			StrokeLine( BPoint( fOldX, Bounds().top), BPoint( fOldX, Bounds().bottom));
 			SetDrawingMode(B_OP_COPY);
 		}*/
 
@@ -660,7 +628,6 @@ SampleView::EditPoint(BPoint p)
 {
 	/*// the sampleView area
 	BRect r = Bounds();
-	r.top += POINTER_BAR_HEIGHT;
 
 	if ( p.x < 0 )
 		p.x = 0;
@@ -678,7 +645,7 @@ SampleView::EditPoint(BPoint p)
 	if (fTrack->IsMono()) {
 
 		float amp = r.Height() /2.0;
-		float mid = amp  +POINTER_BAR_HEIGHT;
+		float mid = amp;
 
 		v = (mid - p.y)/amp;
 		if (v < -1.0)	v = -1.0;
@@ -720,8 +687,8 @@ SampleView::EditPoint(BPoint p)
 	// Do some screen updating
 	fUpdatePeak = true;
 
-	int32 zoom_x =  (int32)MAX(ceil(Bounds().Width()
-		/ (fOwner->End() - fOwner->Start())),POINTER_BAR_HEIGHT);
+	int32 zoom_x =  (int32)ceil(Bounds().Width()
+		/ (fOwner->End() - fOwner->Start()));
 
 	if (p.x>fOld.x) {
 		Invalidate(BRect(BPoint(fOld.x-zoom_x*2, 0),
@@ -832,7 +799,6 @@ SampleView::CalculateCache()
 	}
 
 	BRect r = Bounds();
-	r.bottom -= POINTER_BAR_HEIGHT;
 	float amp = (r.IntegerHeight()+1)/2.0;
 	int32 size;
 
@@ -1257,7 +1223,6 @@ SampleView::DrawPart(rgb_color *inBits, rgb_color *outBits,
 void SampleView::DrawStereo(BRect rect)
 {
 	BRect r = rect;
-	r.bottom -= POINTER_BAR_HEIGHT;
 	r.bottom /= 2;
 	if (cache_left_valid)
 		DrawMono(r, true, fSelected);

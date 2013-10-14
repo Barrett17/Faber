@@ -108,8 +108,6 @@ void Preferences::Init(){
    if(prefs.FindInt32("cache_size", &cache_size) != B_OK)
       cache_size = CACHE_SIZE;
 
-   if(prefs.FindInt32("keep_free", &keep_free) != B_OK)
-      keep_free = 500;
    if(prefs.FindInt32("display_time", &display_time) != B_OK)
       display_time = DISPLAY_TIME;
 
@@ -237,7 +235,6 @@ Preferences::Sync()
 
 	prefs.SetInt32("buffer_size",buffer_size);
 	prefs.SetInt32("cache_size",cache_size);
-	prefs.SetInt32("keep_free",keep_free);
 	prefs.SetInt32("display_time",display_time);
 	prefs.SetFloat("peak", peak);
 
@@ -354,8 +351,7 @@ void Preferences::FactorySettings(){
 	play_when_loaded = true;
 	select_all_on_double = true;
 	select_after_paste = true;
-	
-	keep_free = 500;		// keep 500 Mb free disk space
+
 	buffer_size = BUFFER_SIZE;
 	cache_size = CACHE_SIZE;
 	

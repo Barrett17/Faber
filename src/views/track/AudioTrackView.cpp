@@ -34,7 +34,7 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 200
+#define HEIGHT_VAL_REF 180
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
@@ -52,13 +52,13 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	fSampleView = new SampleView(this);
 
-	fSampleView->SetExplicitMinSize(BSize(200, HEIGHT_VAL_REF));
+	fSampleView->SetExplicitMinSize(BSize(150, HEIGHT_VAL_REF));
 	fSampleView->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, HEIGHT_VAL_REF));
 
 	BBox* box = new BBox("box");
 
-	box->SetExplicitMinSize(BSize(200, HEIGHT_VAL_REF));
-	box->SetExplicitMaxSize(BSize(200, HEIGHT_VAL_REF));
+	box->SetExplicitMinSize(BSize(150, HEIGHT_VAL_REF));
+	box->SetExplicitMaxSize(BSize(150, HEIGHT_VAL_REF));
 
 	IconButton* muteButton = new IconButton(NULL, 0, NULL, NULL, this);
 	muteButton->SetToolTip(B_TRANSLATE("Mute Track"));
@@ -77,8 +77,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	soloButton->TrimIcon();
 
 	BString trackName(track->Name());
-	if (trackName.Length() > 27) {
-		trackName.Truncate(24);
+	if (trackName.Length() > 17) {
+		trackName.Truncate(14);
 		trackName.Append("...");
 	}
 
@@ -119,9 +119,16 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	balanceSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	balanceSlider->UseFillColor(true, &fillColor);
 
-	BLayoutBuilder::Group<>(box, B_VERTICAL, 1.0f)
-		.SetInsets(10, 10, 10, 10)
+	BString label;
+	if (fTrack->IsMono())
+		label = "Mono,";
+	else
+		label = "Stereo,";
 
+	label.Append(" 44100Hz");
+
+	BLayoutBuilder::Group<>(box, B_VERTICAL, 0)
+		.SetInsets(10, 10, 10, 10)
 		.AddSplit(B_VERTICAL, 0)
 			.AddGroup(B_HORIZONTAL, 0)
 				.Add(closeButton)
@@ -129,11 +136,16 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 				.Add(toolButton)
 			.End()
 			.AddGroup(B_HORIZONTAL, 0)
-				.Add(peak)
 				.Add(recButton)
 				.Add(muteButton)
 				.Add(soloButton)
+				.Add(peak)
 			.End()
+		.End()
+
+		.AddGroup(B_VERTICAL, 0)
+			.Add(new BStringView("", label))
+			.Add(new BStringView("", "24 bit"))
 		.End()
 
 		.AddGroup(B_HORIZONTAL, 0)
@@ -147,7 +159,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 			.Add(balanceSlider)
 			.Add(new BStringView("", "b+", B_WILL_DRAW))
 		.End()
-
+		.AddGlue()
 	.End();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)

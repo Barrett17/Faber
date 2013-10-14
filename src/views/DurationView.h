@@ -17,32 +17,18 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _TIME_BAR
-#define _TIME_BAR
+#ifndef DURATION_VIEW_H
+#define DURATION_VIEW_H
 
-#include <View.h>
+#include <GroupView.h>
 
-
-class TimeBar : public BView
+class DurationView : public BGroupView
 {
 public:
-						TimeBar();
-	virtual 			~TimeBar();
-
-	virtual void		MessageReceived(BMessage* message);
-	virtual void		Draw(BRect rect);
-
-	void				SetDuration(bigtime_t duration);
-	bigtime_t			Duration();
-
-private:
-	int32				fSpacing;
-	int32				fScale;
-
-	
-
-private:
+								DurationView();
+	virtual 					~DurationView();
 
 };
 
-#endif
+
+#endif // DURATION_VIEW_H
