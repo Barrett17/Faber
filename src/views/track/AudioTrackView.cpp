@@ -34,7 +34,7 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 180
+#define HEIGHT_VAL_REF 200
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
@@ -43,9 +43,9 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	TrackView(name, track, resizingMode),
 	fTrack(track),
 	fDirty(false),
-	fUpdating(false)
+	fUpdateDrawCache(false)
 {
-	fEnd = track->Size();
+	SetEnd(track->Size());
 
 	rgb_color barColor = { 0, 200, 0 };
 	rgb_color fillColor = { 240, 240, 240 };
@@ -106,8 +106,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	volumeSlider->SetToolTip(B_TRANSLATE(
 		"Move vertically to set the track volume."));
 	volumeSlider->SetValue(fTrack->Volume());
-	volumeSlider->SetHashMarkCount(10);
-	volumeSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	volumeSlider->UseFillColor(true, &fillColor);
 
 	VolumeSlider* balanceSlider = new VolumeSlider("balanceSlider",
@@ -115,8 +113,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	balanceSlider->SetToolTip(B_TRANSLATE(
 		"Move vertically to balance the sound."));
 	balanceSlider->SetValue(fTrack->Balance());
-	balanceSlider->SetHashMarkCount(10);
-	balanceSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	balanceSlider->UseFillColor(true, &fillColor);
 
 	BString label;
@@ -267,125 +263,54 @@ AudioTrackView::_BuildMenu()
 
 
 void
+AudioTrackView::UpdateScroll(float newValue, float min, float max)
+{
+	fSampleView->UpdateScroll(newValue, min, max);
+}
+
+
+
+bool
+AudioTrackView::IsSelected() const
+{
+	return fSampleView->IsSelected();
+}
+
+
+void
 AudioTrackView::ZoomIn()
 {
-	printf("AudioTrackView::ZoomIn\n");
-
-	printf("%lld %lld\n", fStart, fEnd);
-
-	int64 base = fEnd/2;
-
-	fStart += base;
-	fEnd -= base;
-
-	if (fStart < 0)
-		fStart = 0;
-
-	if (fEnd > fTrack->Size())
-		fEnd = fTrack->Size();
-
-	fSampleView->Invalidate();
+	fSampleView->ZoomIn();
 }
 
 
 void
 AudioTrackView::ZoomOut()
 {
-	int64 base = fEnd/2;
-
-	fStart -= base;
-	fEnd += base;
-
-	if (fStart < 0)
-		fStart = 0;
-
-	if (fEnd > fTrack->Size())
-		fEnd = fTrack->Size();
-
-	fSampleView->Invalidate();
+	fSampleView->ZoomOut();
 }
 
 
 void
 AudioTrackView::ZoomFull()
 {
-	fStart = 0;
-	fEnd = fTrack->Size();
+	fSampleView->ZoomFull();
 
-	fSampleView->Invalidate();
 }
 
 
 void
 AudioTrackView::ZoomSelection()
 {
-	if (!IsSelected())
-		return;
-
-	fStart = fPointer;
-	fEnd = fSelectionPointer;
-
-	fSampleView->Invalidate();
+	fSampleView->ZoomSelection();
 }
 
 
 void
-AudioTrackView::UpdateScroll(float newValue, float min, float max)
+AudioTrackView::Redraw()
 {
-	if (fUpdating)
-		return;
-
-	fUpdating = true;
-
-	if (fStart == 0 && fEnd == fTrack->Size())
-		return;
-
-	int64 size = fTrack->Size();
-
-	int64 base = fEnd/10;
-
-	if (fOldScroll < newValue) {
-
-	fStart += base;
-	fEnd -= base;
-
-	if (fStart < 0)
-		fStart = 0;
-
-	if (fEnd > fTrack->Size())
-		fEnd = fTrack->Size();
-
-	if (fEnd < fStart)
-		fEnd = fStart;
-
-
-	} else if (fOldScroll > newValue) {
-
-	fStart -= base;
-	fEnd += base;
-
-	if (fStart < 0)
-		fStart = 0;
-
-	if (fEnd > fTrack->Size())
-		fEnd = fTrack->Size();
-
-	if (fEnd < fStart)
-		fEnd = fStart;
+	if (Looper()->Lock()) {
+		fSampleView->Redraw();
+		Looper()->Unlock();
 	}
-
-	printf("%lld %lld\n", fStart, fEnd);
-
-	fOldScroll = newValue;
-
-	fSampleView->Invalidate(); 
-
-	fUpdating = false;
-}
-
-
-bool
-AudioTrackView::IsSelected() const
-{
-
 }

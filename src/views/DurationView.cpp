@@ -24,13 +24,10 @@
 
 DurationView::DurationView()
 	:
-	BGroupView(B_HORIZONTAL)
+	BGroupView(B_HORIZONTAL, 0)
 {
 	SetExplicitSize(BSize(150, 25));
 
-	rgb_color backgroundColor = {120,120,120};
-	rgb_color textColor = { 240, 240, 240 };
-	SetViewColor(backgroundColor);
 	GroupLayout()->AddView(new BStringView("", "Duration:", B_WILL_DRAW));
 }
 

@@ -22,8 +22,10 @@
 #include <LayoutBuilder.h>
 #include <StringView.h>
 
+#include "DurationView.h"
 #include "FaberDefs.h"
 #include "IconButton.h"
+#include "WidgetFrame.h"
 #include "VolumeSlider.h"
 
 
@@ -35,6 +37,7 @@ ToolBar::ToolBar()
 	fOutputPeakView->SetExplicitMaxSize(BSize(150, 20));
 
 	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
+	slider->SetExplicitMinSize(BSize(50, B_SIZE_UNSET));
 
 	fPlayButton = _BuildButton(B_TRANSLATE("Play"),
 		new BMessage(FABER_TRANSPORT_PLAY), kPlayIcon);
@@ -54,8 +57,9 @@ ToolBar::ToolBar()
 	fToolButtons[2] = _BuildButton(B_TRANSLATE("Playing Tool"),
 		new BMessage(FABER_PLAY_TOOL), kPlayingToolIcon);
 
-	BGroupView* transportView = new BGroupView(B_HORIZONTAL);
+	WidgetFrame* transportView = new WidgetFrame(NULL);
 	BLayoutBuilder::Group<>(transportView, B_HORIZONTAL, 0)
+			.AddGlue(0.0f)
 			.Add(fStopButton)
 			.Add(fPlayButton)
 			.Add(_BuildButton(B_TRANSLATE("Record"),
@@ -69,33 +73,41 @@ ToolBar::ToolBar()
 			.Add(_BuildButton(B_TRANSLATE("Forward All"),
 				new BMessage(FABER_TRANSPORT_FWD_ALL), kSeekForwardAllIcon))
 			.Add(fLoopButton)
+			.AddGlue(0.0f)
 		.End();
+	transportView->SetExplicitSize(BSize(270, 40));
 
-	//rgb_color backgroundColor = {120,120,120};
-	//transportView->SetViewColor(backgroundColor);
-
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.AddGroup(B_HORIZONTAL, 0)
-			.AddStrut(10.0f)
-			.Add(transportView)
-			.AddStrut(15.0f)
-
-			.AddGroup(B_VERTICAL, 0)			
-				.Add(fOutputPeakView)
-				.Add(slider)
-				.AddGlue()
-			.End()
-
-			.AddGlue()
-
+	WidgetFrame* toolsView = new WidgetFrame(NULL);
+	BLayoutBuilder::Group<>(toolsView, B_HORIZONTAL, 0)
 			.AddStrut(5.0f)
 			.Add(fToolButtons[0])
 			.Add(fToolButtons[1])
 			.Add(fToolButtons[2])
 			.AddStrut(5.0f)
-		.End()
-		.AddStrut(2.0f)
-	.End();
+		.End();
+	toolsView->SetExplicitSize(BSize(100, 40));
+
+	DurationView* durationView = new DurationView();
+
+	fOutputPeakView->SetExplicitSize(BSize(150, 13));
+
+	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
+			.Add(slider)
+			.AddGlue()
+			.Add(transportView)
+			.AddStrut(15.0f)
+
+			.AddGroup(B_VERTICAL, 0.5f)
+				.Add(fOutputPeakView)
+				.Add(durationView)
+			.End()
+
+			.AddGlue()
+
+			.Add(toolsView)
+			.AddStrut(2.0f)
+		.End();
+
 }
 
 
@@ -204,7 +216,7 @@ ToolBar::SetTool(const uint32 tool)
 IconButton*
 ToolBar::_BuildButton(const char* tip, BMessage* message, int32 resourceID)
 {
-	IconButton* button = new IconButton(NULL, 0, NULL, message, this);
+	IconButton* button = new IconButton(NULL, 0, NULL, message, this, true);
 	// Well those could go into the constructor, but no reason for now.
 	button->SetToolTip(tip);
 	button->SetIcon(resourceID);

@@ -30,7 +30,8 @@ public:
 										   uint32 id,
 										   const char* label = NULL,
 										   BMessage* message = NULL,
-										   BHandler* target = NULL);
+										   BHandler* target = NULL,
+										   bool useTheme = false);
 	virtual						~IconButton();
 
 	// BView interface
@@ -129,6 +130,7 @@ protected:
 			BString				fLabel;
 
 			BHandler*			fTargetCache;
+			bool				fUseFaberTheme;
 };
 
 #endif // ICON_BUTTON_H

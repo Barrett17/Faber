@@ -21,6 +21,7 @@
 #define _FABER_EFFECT_H_
 
 #include <MenuItem.h>
+#include <ObjectList.h>
 #include <ParameterWeb.h>
 
 #include "AudioTrack.h"
@@ -67,5 +68,7 @@ private:
 	uint32					fFlags;
 	const char*				fName;
 };
+
+typedef BObjectList<FaberEffect*> FaberEffectList;
 
 #endif	// _FABER_EFFECT_H_

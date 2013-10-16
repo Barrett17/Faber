@@ -49,11 +49,6 @@ class Preferences{
 	// Non-user set prefs
 	BString lang_name, temp_dir;
 
-	rgb_color	index_back_color, index_left_color, index_mid_color, index_mid_selected_color;
-	rgb_color	index_back_selected_color, index_left_selected_color;
-	rgb_color	index_back_color2, index_left_color2;
-	rgb_color	index_back_selected_color2, index_left_selected_color2;
-
 	rgb_color	back_color, back_selected_color, left_color, right_color, left_selected_color, right_selected_color;
 	rgb_color	grid_color, grid_selected_color, peak_color, peak_selected_color, mid_left_color, mid_right_color;
 	rgb_color	back_color2, back_selected_color2, left_color2, right_color2, left_selected_color2, right_selected_color2;

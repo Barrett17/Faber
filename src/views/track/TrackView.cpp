@@ -19,6 +19,8 @@
 
 #include "TrackView.h"
 
+#include <stdio.h>
+
 
 TrackView::TrackView(const char* name,
 	Track* track, uint32 resizingMode)
@@ -154,6 +156,7 @@ TrackView::Unselect()
 bool
 TrackView::IsSelected() const
 {
+	//return fSampleView->IsSelected();
 	return false;
 }
 
@@ -168,6 +171,7 @@ TrackView::Pointer() const
 int64
 TrackView::SelectionPointer() const
 {
+	//printf("get sel pointer %lld\n", fSelectionPointer);
 	return fSelectionPointer;
 }
 
@@ -175,7 +179,7 @@ TrackView::SelectionPointer() const
 int64
 TrackView::Start() const
 {
-	return 0;
+	return fStart;
 }
 
 

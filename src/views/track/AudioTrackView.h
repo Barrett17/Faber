@@ -67,6 +67,8 @@ public:
 
 			bool			IsSelected() const;
 
+			void			Redraw();
+
 private:
 			BPopUpMenu*		_BuildMenu();
 
@@ -76,9 +78,7 @@ private:
 			bool			fUpdateDrawCache;
 			bool			fDirty;
 
-			float			fOldScroll;
-
-			bool			fUpdating;
+			friend class	SampleView;
 };
 
 #endif

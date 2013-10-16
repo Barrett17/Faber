@@ -36,7 +36,7 @@ using std::nothrow;
 
 // constructor
 IconButton::IconButton(const char* name, uint32 id, const char* label,
-		BMessage* message, BHandler* target)
+		BMessage* message, BHandler* target, bool useTheme)
 	:
 	BView(name, B_WILL_DRAW),
 	  BInvoker(message, target),
@@ -47,7 +47,8 @@ IconButton::IconButton(const char* name, uint32 id, const char* label,
 	  fClickedBitmap(NULL),
 	  fDisabledClickedBitmap(NULL),
 	  fLabel(label),
-	  fTargetCache(target)
+	  fTargetCache(target),
+	  fUseFaberTheme(useTheme)
 {
 	SetLowColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	SetViewColor(B_TRANSPARENT_32_BIT);
@@ -82,6 +83,12 @@ IconButton::AttachedToWindow()
 	}
 	if (background == B_TRANSPARENT_COLOR)
 		background = ui_color(B_PANEL_BACKGROUND_COLOR);
+
+	if (fUseFaberTheme) {
+		//rgb_color backColor = {120,120,120};
+		background = B_TRANSPARENT_COLOR;
+	}
+
 	SetLowColor(background);
 
 	SetTarget(fTargetCache);
@@ -715,6 +722,8 @@ IconButton::SetEnabled(bool enabled)
 	else
 		_ClearFlags(STATE_ENABLED | STATE_TRACKING | STATE_INSIDE);
 }
+
+
 
 // _ConvertToRGB32
 BBitmap*

@@ -16,3 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _WIDGET_FRAME
+#define _WIDGET_FRAME
+
+#include <View.h>
+
+
+class WidgetFrame : public BView
+{
+public:
+						WidgetFrame(BView* view = NULL);
+	virtual 			~WidgetFrame();
+
+	virtual void		Draw(BRect rect);
+};
+
+#endif

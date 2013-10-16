@@ -19,22 +19,24 @@
 
 #include "TracksContainer.h"
 
-#include <LayoutBuilder.h>
+#include <GroupLayoutBuilder.h>
 #include <ScrollView.h>
 
 #include "AudioTrackView.h"
-#include "DurationView.h"
-#include "FaberMessages.h"
+#include "FaberDefs.h"
 #include "FaberScrollBar.h"
 #include "TimeBar.h"
 #include "TrackView.h"
+#include "WidgetFrame.h"
 #include "WindowsManager.h"
 
 
 TracksContainer::TracksContainer()
 	:
-	BGroupView(B_VERTICAL, 7.0f),
-	fTrackViews(false)
+	BGroupView(B_VERTICAL, 0),
+	fTrackViews(false),
+	fStart(0),
+	fEnd(0)
 {
 	// TODO fix color schemes
 	rgb_color backgroundColor = {120,120,120};
@@ -43,7 +45,8 @@ TracksContainer::TracksContainer()
 	fView = new BGroupView(B_VERTICAL, 0);
 	fLayout = new BGroupLayout(B_VERTICAL, 4.0f);
 
-	BLayoutBuilder::Group<>(fView, B_VERTICAL, 0)
+	BGroupLayoutBuilder(fView)
+		.AddStrut(1.0f)
 		.Add(fLayout)
 		.AddGlue()
 	.End();
@@ -61,17 +64,17 @@ TracksContainer::TracksContainer()
 
 	fHorizontalScroll = new FaberScrollBar("scrollviewH",
 		this, 0, 0, B_HORIZONTAL);
-	fHorizontalScroll->SetRange(0,100);
-
-	DurationView* durationView = new DurationView();
+	fHorizontalScroll->SetRange(0,0);
 
 	float scrollBarWidth = fVerticalScroll->Bounds().Width();
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.AddGroup(B_HORIZONTAL, 0)
-			.Add(durationView)
+	WidgetFrame* timeBarLabel = new WidgetFrame(new BStringView("", " Timecode"));
+	timeBarLabel->SetExplicitSize(BSize(150, 10));
+
+	BGroupLayoutBuilder(this)
+		.AddGroup(B_HORIZONTAL, 0.5f)
+			.Add(timeBarLabel)
 			.Add(new TimeBar())
-			.AddStrut(scrollBarWidth/4)
 		.End()
 		.Add(verticalScrollView)
 		.AddGroup(B_HORIZONTAL, 0)
@@ -80,6 +83,8 @@ TracksContainer::TracksContainer()
 			.AddStrut(scrollBarWidth)
 		.End()
 	.End();
+
+	timeBarLabel->SetViewColor(backgroundColor);
 }
 
 
@@ -149,9 +154,6 @@ TracksContainer::MessageReceived(BMessage* message)
 status_t
 TracksContainer::AddTrack(TrackView* track, int32 index)
 {
-	fLayout->AddView(track, index);
-	WindowsManager::MainWindow()->UpdateMenu();
-
 	float max, min;
 	if (Looper()->Lock()) {
 		fVerticalScroll->GetRange(&min, &max);
@@ -160,7 +162,15 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 		Looper()->Unlock();
 	}
 
-	return fTrackViews.AddItem(track, index);
+	AudioTrackView* tr = (AudioTrackView*)track;
+
+	fLayout->AddView(track, index);
+
+	status_t ret = fTrackViews.AddItem(track, index);
+
+	WindowsManager::MainWindow()->UpdateMenu();
+
+	return ret;
 }
 
 
@@ -268,6 +278,17 @@ TracksContainer::ZoomIn()
 		TrackView* track = TrackAt(i);
 		track->ZoomIn();
 	}
+
+	if (Looper()->Lock()) {
+		float max, min;
+		fHorizontalScroll->GetRange(&min, &max);
+		if (max == 0)
+			max = 2;
+
+		max *= 4;
+		fHorizontalScroll->SetRange(min, max);
+		Looper()->Unlock();
+	}
 }
 
 
@@ -314,6 +335,7 @@ TracksContainer::SetDirty(bool dirty)
 void
 TracksContainer::UpdateTracksScroll(float newValue)
 {
+	printf("UpdateScroll\n");
 	float max, min;
 	fVerticalScroll->GetRange(&min, &max);
 

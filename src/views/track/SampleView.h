@@ -59,6 +59,18 @@ public:
 	virtual void			Pulse();
 	virtual void			FrameResized(float width, float height);
 
+			void			ZoomIn();
+			void			ZoomOut();
+			void			ZoomFull();
+			void			ZoomSelection();
+
+			void			UpdateScroll(float newValue,
+								float max, float min);
+
+			bool			IsSelected() const;
+
+			void			Redraw();
+
 			void			EditPoint(BPoint p);
 			void			EditLine(BPoint, BPoint);
 			void			DoDraw(int64 ptr, int32 add, float v);
@@ -73,6 +85,9 @@ private:
 			void 			DrawPart(rgb_color* inBits, rgb_color* outBits,
 								rgb_color col, float* peak_buffer,
 								BRect r, int32 size, int32 size2);
+
+			int32			_CalculateStep();
+			int32			_CalculateProportion();
 
  			BBitmap*		fOffScreen;
 
@@ -124,6 +139,8 @@ private:
 			bool			fUpdatePeak;
 
 			bool			fSelected;
+
+			float			fOldScroll;
 };
 
 #endif

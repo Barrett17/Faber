@@ -43,7 +43,10 @@ Application Faber :
 	InfoToolBar.cpp
 	FaberScrollBar.cpp
 	TimeBar.cpp
+
+	# Widgets
 	DurationView.cpp
+	WidgetFrame.cpp
 
 	# TrackView implementations
 	TrackView.cpp

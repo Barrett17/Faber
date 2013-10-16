@@ -126,18 +126,6 @@ PrefColors::PrefColors()
 	colors[2] = (void*)&Prefs.back_selected_color;
 	colors[3] = (void*)&Prefs.back_selected_color2;
 
-	colors[4] = (void*)&Prefs.index_back_color;
-	colors[5] = (void*)&Prefs.index_back_color2;
-	colors[6] = (void*)&Prefs.index_mid_color;
-	colors[7] = (void*)&Prefs.index_left_color;
-	colors[8] = (void*)&Prefs.index_left_color2;
-	colors[9] = (void*)&Prefs.index_back_selected_color;
-	colors[10] = (void*)&Prefs.index_back_selected_color2;
-	colors[11] = (void*)&Prefs.index_left_selected_color;
-	colors[12] = (void*)&Prefs.index_left_selected_color2;
-	colors[13] = (void*)&Prefs.index_mid_selected_color;
-	colors[14] = (void*)&Prefs.index_pointer_color;
-
 	colors[15] = (void*)&Prefs.left_color;
 	colors[16] = (void*)&Prefs.left_color2;
 	colors[17] = (void*)&Prefs.left_selected_color;

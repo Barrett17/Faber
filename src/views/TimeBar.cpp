@@ -21,9 +21,6 @@
 
 #include <stdio.h>
 
-rgb_color backgroundColor = {120,120,120};
-rgb_color textColor = {0,0,0};
-
 #define LITTLE_PIN 3.0f
 #define BIG_PIN 7.0f
 
@@ -34,6 +31,8 @@ TimeBar::TimeBar()
 	fSpacing(15),
 	fScale(1)
 {
+	rgb_color backgroundColor = {120,120,120};
+
 	SetExplicitMinSize(BSize(B_SIZE_UNSET, 25));
 	SetExplicitMaxSize(BSize(B_SIZE_UNSET, 25));
 
@@ -60,6 +59,7 @@ TimeBar::MessageReceived(BMessage* message)
 void
 TimeBar::Draw(BRect rect)
 {
+	static rgb_color textColor = {0,0,0};
 	int32 start = (int32)Bounds().left * fScale;
 	int32 end = (int32)Bounds().right * fScale;
 

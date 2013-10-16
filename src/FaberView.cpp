@@ -36,14 +36,20 @@ FaberView::FaberView()
 
 	fInfoToolBar = new InfoToolBar();
 
+	rgb_color backgroundColor = {120,120,120};
+
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(fToolBar)
-		.AddStrut(2.0f)
+		.AddStrut(0.0f)
+		.Add(fInfoToolBar)
 			.AddGroup(B_VERTICAL, 0)
 				.Add(fTracksContainer)
 			.End()
-		.Add(fInfoToolBar)
+		.AddStrut(10.0f)
+		.Add(fToolBar)
+		.AddStrut(0.5f)
 	.End();
+
+	fTracksContainer->SetViewColor(backgroundColor);
 }
 
 

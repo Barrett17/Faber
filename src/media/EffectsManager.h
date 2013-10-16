@@ -26,9 +26,17 @@ public:
 								EffectsManager();
 	virtual 					~EffectsManager();
 
+	const char*					EffectToString(FaberEffect* effect) const;
 	const char*					EffectToString(int32 index) const;
 
-	int32						CountFilterItems() const;
+	FaberEffectList&			StandardEffects();
+
+	//FaberEffectList&			RealtimeEffects();
+	//FaberEffectList&			MediaKitEffects();
+
+	FaberEffect*				EffectByName(const char* name);
+
+	int32						CountEffects() const;
 
 	FaberEffect*				GetEffect(int32 index) const;
 	FaberEffect*				GetEffect(const char* name) const;
@@ -40,7 +48,7 @@ public:
 									AudioTrack* track, size_t size);
 private:
 
-	BObjectList<FaberEffect*>	fEffectsList;
+	FaberEffectList				fEffectsList;
 }
 
 #endif	// _EFFECTS_MANAGER_H_

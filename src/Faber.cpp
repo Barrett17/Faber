@@ -96,5 +96,5 @@ FaberApp::RefsReceived(BMessage* message)
 void
 FaberApp::Save(BMessage* message)
 {
-	Track* track = TrackIO::Get()->Save(message);
+	//Track* track = TrackIO::Get()->Save(message);
 }

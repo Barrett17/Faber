@@ -58,8 +58,8 @@ public:
 	void				ZoomOut();
 	void				ZoomFull();
 	void				ZoomSelection();
-	void				ZoomRight();
-	void				ZoomLeft();
+
+	int32				CalcZoomLevel() const;
 
 	void				Pulse();
 
@@ -80,6 +80,9 @@ private:
 
 	BScrollBar*			fVerticalScroll;
 	BScrollBar*			fHorizontalScroll;
+
+	int64				fStart;
+	int64				fEnd;
 };
 
 #endif

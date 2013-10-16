@@ -24,12 +24,13 @@
 #include <TextView.h>
 
 #include "FaberDefs.h"
+#include "WidgetFrame.h"
 
 
 InfoToolBar::InfoToolBar()
 	:
-	BView("InfoToolBar", B_FOLLOW_ALL_SIDES | B_FOLLOW_BOTTOM
-		| B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE | B_PULSE_NEEDED)
+	BView("InfoToolBar", B_FOLLOW_LEFT
+		| B_PULSE_NEEDED)
 {
 	fPointerTextView = new BTextView("view", B_WILL_DRAW);
 
@@ -37,6 +38,8 @@ InfoToolBar::InfoToolBar()
 	fPointerTextView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	BGroupView* zoomView = new BGroupView(B_HORIZONTAL);
+
+
 
 	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL)
 		.Add(_BuildButton(B_TRANSLATE("Zoom in"), 
@@ -56,7 +59,6 @@ InfoToolBar::InfoToolBar()
 	//zoomView->SetViewColor(backgroundColor);
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
-		//.Add(fPointerTextView)
 		.AddGlue()
 		.Add(zoomView)
 		.AddStrut(5.0f)

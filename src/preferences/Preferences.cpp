@@ -121,18 +121,6 @@ void Preferences::Init(){
 		prefs.ReadColor("back_selected_color", &back_selected_color);
 		prefs.ReadColor("back_selected_color2", &back_selected_color2);
 
-		prefs.ReadColor("index_back_color", &index_back_color);
-		prefs.ReadColor("index_back_color2", &index_back_color2);
-		prefs.ReadColor("index_mid_color", &index_mid_color);
-		prefs.ReadColor("index_left_color", &index_left_color);
-		prefs.ReadColor("index_back_selected_color", &index_back_selected_color);
-		prefs.ReadColor("index_left_selected_color", &index_left_selected_color);
-		prefs.ReadColor("index_left_color2", &index_left_color2);
-		prefs.ReadColor("index_back_selected_color2", &index_back_selected_color2);
-		prefs.ReadColor("index_left_selected_color2", &index_left_selected_color2);
-		prefs.ReadColor("index_mid_selected_color", &index_mid_selected_color);
-		prefs.ReadColor("index_pointer_color", &index_pointer_color);
-
 		prefs.ReadColor("left_color", &left_color);
 		prefs.ReadColor("left_selected_color", &left_selected_color);
 		prefs.ReadColor("left_color2", &left_color2);
@@ -242,18 +230,6 @@ Preferences::Sync()
 	prefs.WriteColor("back_selected_color", back_selected_color);
 	prefs.WriteColor("back_color2", back_color2);
 	prefs.WriteColor("back_selected_color2", back_selected_color2);
-
-	prefs.WriteColor("index_back_color", index_back_color);
-	prefs.WriteColor("index_back_color2", index_back_color2);
-	prefs.WriteColor("index_mid_color", index_mid_color);
-	prefs.WriteColor("index_left_color", index_left_color);
-	prefs.WriteColor("index_left_color2", index_left_color2);
-	prefs.WriteColor("index_back_selected_color", index_back_selected_color);
-	prefs.WriteColor("index_back_selected_color2", index_back_selected_color2);
-	prefs.WriteColor("index_left_selected_color", index_left_selected_color);
-	prefs.WriteColor("index_left_selected_color2", index_left_selected_color2);
-	prefs.WriteColor("index_mid_selected_color", index_mid_selected_color);
-	prefs.WriteColor("index_pointer_color", index_pointer_color);
 
 	prefs.WriteColor("left_color", left_color);
 	prefs.WriteColor("left_selected_color", left_selected_color);
@@ -370,18 +346,6 @@ void Preferences::SetColorScheme(int32 i){
 	switch(i){
 	case 1:
 	// GUI Cool Edit
-		index_back_color = (rgb_color){46,93,31};
-		index_back_color2 = (rgb_color){28,200,149};
-		index_back_selected_color = (rgb_color){0, 0, 0};
-		index_back_selected_color2 = (rgb_color){117,136,59};
-
-		index_mid_color = (rgb_color){70,115,46};
-		index_left_selected_color = (rgb_color){227,99,50};
-		index_left_selected_color2 = (rgb_color){133,80,0};
-		index_left_color = (rgb_color){238,107,0};
-		index_left_color2 = (rgb_color){85,0,0};
-		index_mid_selected_color = (rgb_color){80,80,80};
-		index_pointer_color = (rgb_color){255,255,255};
 
 		back_color = 				(rgb_color){119,119,119};
 		back_color2 = 				(rgb_color){0, 0, 0};
@@ -418,17 +382,6 @@ void Preferences::SetColorScheme(int32 i){
 
 	case 2:
 	// GUI Black & White
-		index_back_color = (rgb_color){140, 140, 140};
-		index_back_color2 = (rgb_color){255,255,255};
-		index_mid_color = (rgb_color){128,128,128};
-		index_left_color = (rgb_color){0, 0, 0};
-		index_left_color2 = (rgb_color){255, 255, 255};
-		index_back_selected_color = (rgb_color){40,40,40};
-		index_back_selected_color2 = (rgb_color){220,220,220};
-		index_left_selected_color = (rgb_color){32,32,32};
-		index_left_selected_color2 = (rgb_color){32,32,32};
-		index_mid_selected_color = (rgb_color){255,255,255};
-		index_pointer_color = (rgb_color){0,0,255};
 
 		back_color = 				(rgb_color){140, 140, 140};
 		back_color2 = 				(rgb_color){00, 00, 0};
@@ -465,17 +418,6 @@ void Preferences::SetColorScheme(int32 i){
 
 	case 3:
 	// GUI SoftTones
-		index_back_color = (rgb_color){255, 213, 114};
-		index_back_color2 = (rgb_color){167, 121, 53};
-		index_mid_color = (rgb_color){128,128,128};
-		index_left_color = (rgb_color){69, 32, 0};
-		index_left_color2 = (rgb_color){209, 87, 35};
-		index_back_selected_color = (rgb_color){141,159,177};
-		index_back_selected_color2 = (rgb_color){8,69,115};
-		index_left_selected_color = (rgb_color){3,15,100};
-		index_left_selected_color2 = (rgb_color){6,34,200};
-		index_mid_selected_color = (rgb_color){80,80,80};
-		index_pointer_color = (rgb_color){215,100,74};
 
 		back_color =				(rgb_color){53, 95, 130};
 		back_color2 =				(rgb_color){235, 234, 235};
@@ -512,18 +454,6 @@ void Preferences::SetColorScheme(int32 i){
 
 	case 4:
 	// BeAE Color scheme
-		index_back_color = (rgb_color){255, 249, 221};
-		index_back_color2 = (rgb_color){248, 219, 128};
-		index_mid_color = (rgb_color){196,196,196};
-		index_left_selected_color = (rgb_color){3, 15, 100};
-		index_left_selected_color2 = (rgb_color){6, 34, 200};
-		index_left_color = (rgb_color){90,0,0};
-		index_left_color2 = (rgb_color){180,0,0};
-
-		index_back_selected_color = (rgb_color){0,145,170};
-		index_back_selected_color2 = (rgb_color){0,96,170};
-		index_mid_selected_color = (rgb_color){80,80,80};
-		index_pointer_color = (rgb_color){255,0,0};
 
 		back_color = 				(rgb_color){0,115,157};
 		back_color2 = 				(rgb_color){27,51,65};
@@ -561,18 +491,6 @@ void Preferences::SetColorScheme(int32 i){
 	case 0:
 	default:
 	// Faber Default
-		index_back_color = (rgb_color){250, 232, 171};
-		index_back_color2 = (rgb_color){231, 208, 168};
-		index_mid_color = (rgb_color){255,255,196};
-		index_left_selected_color = (rgb_color){89,88,132};
-		index_left_selected_color2 = (rgb_color){19,87,87};
-		index_left_color = (rgb_color){156,113,122};
-		index_left_color2 = (rgb_color){123,66,95};
-
-		index_back_selected_color = (rgb_color){192,196,208};
-		index_back_selected_color2 = (rgb_color){159,159,172};
-		index_mid_selected_color = (rgb_color){80,80,80};
-		index_pointer_color = (rgb_color){255,0,64};
 
 		back_color =				(rgb_color){150,150,150};
 		back_color2 =				(rgb_color){200, 200, 200};
@@ -580,12 +498,12 @@ void Preferences::SetColorScheme(int32 i){
 		back_selected_color2 =		(rgb_color){246,246,255};
 
 		left_color = 				(rgb_color){55,57,62};
-		left_color2 = 				(rgb_color){140,142,162};
+		left_color2 = 				(rgb_color){60, 60, 60};
 		left_selected_color = 		(rgb_color){0,0,0};
 		left_selected_color2 = 		(rgb_color){78,80,102};
 
 		right_color = 				(rgb_color){55,57,62};
-		right_color2 = 				(rgb_color){140,142,162};
+		right_color2 = 				(rgb_color){60, 60, 60};
 		right_selected_color = 		(rgb_color){0,0,0};
 		right_selected_color2 =		(rgb_color){78,80,102};
 
@@ -599,6 +517,7 @@ void Preferences::SetColorScheme(int32 i){
 		mid_right_color = 			(rgb_color){180, 180, 170};
 		mid_left_selected_color =	(rgb_color){0, 80, 80};
 		mid_right_selected_color = 	(rgb_color){80, 80, 0};
+
 		pointer_color = 			(rgb_color){100,100,100};
 
 		time_back_color = (rgb_color){216,216,216};

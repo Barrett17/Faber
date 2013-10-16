@@ -83,6 +83,8 @@ public:
 	virtual void			ZoomFull() = 0;
 	virtual void			ZoomSelection() = 0;
 
+	virtual void			Redraw() = 0;
+
 protected:
 			Track*			fTrack;
 
