@@ -25,6 +25,7 @@
 
 #include "FaberDefs.h"
 #include "WidgetFrame.h"
+#include "VolumeSlider.h"
 
 
 InfoToolBar::InfoToolBar()
@@ -37,11 +38,13 @@ InfoToolBar::InfoToolBar()
 	fPointerTextView->SetExplicitMaxSize(BSize(1500, 20));
 	fPointerTextView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	BGroupView* zoomView = new BGroupView(B_HORIZONTAL);
+	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
+	slider->SetExplicitMaxSize(BSize(150, B_SIZE_UNSET));
 
+	WidgetFrame* zoomView = new WidgetFrame();
 
-
-	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL)
+	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL, 0.5f)
+		.AddStrut(7.0f)
 		.Add(_BuildButton(B_TRANSLATE("Zoom in"), 
 			new BMessage(FABER_ZOOM_IN), kZoomInIcon))
 
@@ -53,15 +56,19 @@ InfoToolBar::InfoToolBar()
 
 		.Add(_BuildButton(B_TRANSLATE("Zoom full wave"),
 			new BMessage(FABER_ZOOM_FULL), kZoomFullWaveIcon))
+		.AddStrut(7.0f)
 	.End();
+
+	slider->SetExplicitSize(BSize(130, 40));
 
 	//rgb_color backgroundColor = {120,120,120};
 	//zoomView->SetViewColor(backgroundColor);
 
-	BLayoutBuilder::Group<>(this, B_HORIZONTAL)
+	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
+		.Add(slider)
 		.AddGlue()
 		.Add(zoomView)
-		.AddStrut(5.0f)
+		//.AddStrut(5.0f)
 	.End();
 }
 
@@ -92,7 +99,7 @@ InfoToolBar::Pulse()
 IconButton*
 InfoToolBar::_BuildButton(const char* tip, BMessage* message, int32 resourceID)
 {
-	IconButton* button = new IconButton(NULL, 0, NULL, message, this);
+	IconButton* button = new IconButton(NULL, 0, NULL, message, this, true);
 	// Well those could go into the constructor, but no reason for now.
 	button->SetToolTip(tip);
 	button->SetIcon(resourceID);

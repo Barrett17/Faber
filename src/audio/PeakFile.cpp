@@ -331,6 +331,7 @@ void CPeakFile::StereoBuffer(float *out, float *out_r, int32 start, int32 end, f
 			to *= 2;
 
 			min = max = min_r = max_r = 0;
+
 			for (int32 i=index; i<=to; i+=2){
 				if (p[i]>max)		max = p[i];
 				if (p[i]<min)		min = p[i];

@@ -590,7 +590,7 @@ SampleView::EditPoint(BPoint p)
 	}
 
 	// Do some screen updating
-	fUpdatePeak = true;
+	//fUpdatePeak = true;
 
 	int32 zoom_x =  (int32)ceil(_CalculateStep());
 
@@ -1157,7 +1157,7 @@ SampleView::Redraw()
 
 	// update the draw cache
 	fOwner->SetUpdateDrawCache(true);	
-	//fUpdatePeak = true;
+
 	Invalidate();
 }
 
@@ -1171,45 +1171,57 @@ SampleView::IsSelected() const
 void
 SampleView::UpdateScroll(float newValue, float min, float max)
 {
+	if (Looper()->Lock()) {
 	if (fOwner->fStart <= 0 && fOwner->fEnd >= fTrack->Size())
 		return;
 
 	int64 size = fTrack->Size();
 	int32 scroll = fOwner->fEnd - fOwner->fStart;
+	int64 start = fOwner->fStart;
+	int64 end = fOwner->fEnd;
 
 	if (fOldScroll > newValue) {
-		fOwner->fStart -= scroll/2;
+		start -= scroll/2;
 
-		if (fOwner->fStart < 0)
-			fOwner->fStart = 0;
+		if (start < 0)
+			start = 0;
 
-		fOwner->fEnd = fOwner->fStart + scroll;
+		end = start + scroll;
 	} else if (fOldScroll < newValue) {
-		fOwner->fStart += scroll/2;
+		start += scroll/2;
 
-		if (fOwner->fStart > size - scroll)
-			fOwner->fStart = size-scroll;
+		if (start > size - scroll)
+			start = size - scroll;
 
-		fOwner->fEnd = fOwner->fStart + scroll;
+		end = start + scroll;
 	}
 
-	printf("%lld %lld\n", fOwner->fStart, fOwner->fEnd);
+	printf("%lld %lld\n", start, end);
 
+	if (start > end)
+		return;
+
+	fOwner->fStart = start;
+	fOwner->fEnd = end;
 	fOldScroll = newValue;
 
-	if (Looper()->Lock()) {
-		Invalidate(); 
-		Looper()->Unlock();
+
+	Looper()->Unlock();
 	}
+	Invalidate(); 
 }
 
 
 void
 SampleView::ZoomIn()
 {
+	if (Looper()->Lock()) {
 	int32 zoom = fOwner->fEnd - fOwner->fStart;
 
 	printf("end start %lld %lld\n", fOwner->fEnd, fOwner->fStart);
+
+	int64 start = fOwner->fStart;
+	int64 end = fOwner->fEnd;
 
 	if (zoom < Bounds().Width()/64)
 		return;
@@ -1218,21 +1230,29 @@ SampleView::ZoomIn()
 	if (zoom < 1)
 		zoom = 1;
 
-	fOwner->fStart = fOwner->fStart + zoom/2;
-	if (fOwner->fStart<0)
-		fOwner->fStart = 0;
+	start = start + zoom/2;
+	if (start<0)
+		start = 0;
 
-	fOwner->fEnd = fOwner->fStart + zoom;
-	if (fOwner->fEnd > fTrack->Size()){
-		fOwner->fEnd = fTrack->Size();
-		fOwner->fStart = fOwner->fEnd - zoom;
-		if (fOwner->fStart < 0)
-			fOwner->fStart = 0;
+	end = start + zoom;
+	if (end > fTrack->Size()){
+		end = fTrack->Size();
+		start = end - zoom;
+		if (start < 0)
+			start = 0;
 	}
+
+	if (end < start) {
+		printf("error\n");
+		return;
+	}
+
+	fOwner->fStart = start;
+	fOwner->fEnd = end;
 
 	printf("%lld %lld\n", fOwner->fStart, fOwner->fEnd);
 
-	if (Looper()->Lock()) {
+
 		Invalidate(); 
 		Looper()->Unlock();
 	}

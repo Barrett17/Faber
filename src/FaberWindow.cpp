@@ -67,7 +67,7 @@ FaberWindow::FaberWindow(BRect frame)
 
 	fFaberView = new FaberView();
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL)
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(_BuildMenu())
 		.Add(fFaberView)
 	.End();

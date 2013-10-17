@@ -26,7 +26,6 @@
 #include "FaberDefs.h"
 #include "IconButton.h"
 #include "WidgetFrame.h"
-#include "VolumeSlider.h"
 
 
 ToolBar::ToolBar()
@@ -35,9 +34,6 @@ ToolBar::ToolBar()
 {
 	fOutputPeakView = new PeakView("OutputPeakView", true, false);
 	fOutputPeakView->SetExplicitMaxSize(BSize(150, 20));
-
-	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
-	slider->SetExplicitMinSize(BSize(50, B_SIZE_UNSET));
 
 	fPlayButton = _BuildButton(B_TRANSLATE("Play"),
 		new BMessage(FABER_TRANSPORT_PLAY), kPlayIcon);
@@ -92,7 +88,6 @@ ToolBar::ToolBar()
 	fOutputPeakView->SetExplicitSize(BSize(150, 13));
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
-			.Add(slider)
 			.AddGlue()
 			.Add(transportView)
 			.AddStrut(15.0f)
