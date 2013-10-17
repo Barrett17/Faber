@@ -20,21 +20,23 @@
 #ifndef _EFFECTS_MANAGER_H_
 #define _EFFECTS_MANAGER_H_
 
-public class EffectsManager
+#include "FaberEffect.h"
+
+
+class EffectsManager
 {
 public:
 								EffectsManager();
 	virtual 					~EffectsManager();
 
-	const char*					EffectToString(FaberEffect* effect) const;
 	const char*					EffectToString(int32 index) const;
 
 	FaberEffectList&			StandardEffects();
 
-	//FaberEffectList&			RealtimeEffects();
-	//FaberEffectList&			MediaKitEffects();
+	FaberEffectList&			RealtimeEffects();
+	FaberEffectList&			MediaKitEffects();
 
-	FaberEffect*				EffectByName(const char* name);
+	FaberEffectList&			EffectsByFlag(int32 flag);
 
 	int32						CountEffects() const;
 
@@ -49,6 +51,6 @@ public:
 private:
 
 	FaberEffectList				fEffectsList;
-}
+};
 
 #endif	// _EFFECTS_MANAGER_H_

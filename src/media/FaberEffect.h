@@ -28,6 +28,7 @@
 
 enum FaberEffectsKind {
 	FABER_AUDIO_EFFECT,
+	FABER_BUILTIN_EFFECT,
 	FABER_CONSUMER,
 	FABER_FILTER,
 	FABER_GUI_EFFECT,
@@ -69,6 +70,6 @@ private:
 	const char*				fName;
 };
 
-typedef BObjectList<FaberEffect*> FaberEffectList;
+typedef BObjectList<FaberEffect> FaberEffectList;
 
 #endif	// _FABER_EFFECT_H_

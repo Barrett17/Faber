@@ -16,3 +16,95 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "EffectsManager.h"
+
+#include <String.h>
+
+
+EffectsManager::EffectsManager()
+	:
+	fEffectsList(true)
+{
+}
+
+
+EffectsManager::~EffectsManager()
+{
+
+}
+
+
+const char*
+EffectsManager::EffectToString(int32 index) const
+{
+	return fEffectsList.ItemAt(index)->Name();
+}
+
+
+FaberEffectList&
+EffectsManager::StandardEffects()
+{
+	return EffectsByFlag(FABER_BUILTIN_EFFECT);
+}
+
+
+FaberEffectList&
+EffectsManager::MediaKitEffects()
+{
+	return EffectsByFlag(FABER_BUILTIN_EFFECT);
+}
+
+
+FaberEffectList&
+EffectsManager::RealtimeEffects()
+{
+	return EffectsByFlag(FABER_BUILTIN_EFFECT);
+}
+
+
+
+FaberEffectList&
+EffectsManager::EffectsByFlag(int32 flag)
+{
+}
+
+
+int32
+EffectsManager::CountEffects() const
+{
+	return fEffectsList.CountItems();
+}
+
+
+FaberEffect*
+EffectsManager::GetEffect(int32 index) const
+{
+	return fEffectsList.ItemAt(index);
+}
+
+
+FaberEffect*
+EffectsManager::GetEffect(const char* name) const
+{
+	for (int32 i = 0; i < CountEffects(); i++) {
+		FaberEffect* effect = GetEffect(i);
+		BString str(effect->Name());
+		if (str.Compare(name) == 0)
+			return effect;
+	}
+	return NULL;
+}
+
+
+status_t
+EffectsManager::RunEffect(int32 id, AudioTrack* track, size_t size)
+{
+
+}
+
+
+status_t
+EffectsManager::RunEffect(FaberEffect* effect, AudioTrack* track, size_t size)
+{
+}
