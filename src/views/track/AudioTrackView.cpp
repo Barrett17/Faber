@@ -45,7 +45,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fDirty(false),
 	fUpdateDrawCache(false)
 {
-	SetEnd(track->Size());
+	fEnd = track->Size();
 
 	rgb_color barColor = { 0, 200, 0 };
 	rgb_color fillColor = { 240, 240, 240 };
@@ -137,11 +137,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 				.Add(soloButton)
 				.Add(peak)
 			.End()
-		.End()
-
-		.AddGroup(B_VERTICAL, 0)
-			.Add(new BStringView("", label))
-			.Add(new BStringView("", "24 bit"))
 		.End()
 
 		.AddGroup(B_HORIZONTAL, 0)
@@ -303,14 +298,4 @@ void
 AudioTrackView::ZoomSelection()
 {
 	fSampleView->ZoomSelection();
-}
-
-
-void
-AudioTrackView::Redraw()
-{
-	if (Looper()->Lock()) {
-		fSampleView->Redraw();
-		Looper()->Unlock();
-	}
 }

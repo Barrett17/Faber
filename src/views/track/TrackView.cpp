@@ -195,24 +195,3 @@ TrackView::SetPointer(int64 pointer)
 {
 	fPointer = pointer;
 }
-
-
-void
-TrackView::SetSelectionPointer(int64 pointer)
-{
-	fSelectionPointer = pointer;
-}
-
-
-void
-TrackView::SetStart(int64 start)
-{
-	fStart = start;
-}
-
-
-void
-TrackView::SetEnd(int64 end)
-{
-	fEnd = end;
-}

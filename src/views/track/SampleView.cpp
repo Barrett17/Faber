@@ -653,7 +653,7 @@ SampleView::FrameResized(float width, float height)
 	fOwner->SetDirty(true);
 
 	// update the draw cache
-	fOwner->SetUpdateDrawCache(true);	
+	fOwner->SetUpdateDrawCache(true);
 	Invalidate();
 }
 
@@ -1144,21 +1144,6 @@ void SampleView::EditLine(BPoint pa, BPoint pb)
 			EditPoint(pos);
 		}
 	}
-}
-
-
-void
-SampleView::Redraw()
-{
-	//printf("SampleView::FrameResized\n");
-
-	// update the sample-view
-	fOwner->SetDirty(true);
-
-	// update the draw cache
-	fOwner->SetUpdateDrawCache(true);	
-
-	Invalidate();
 }
 
 

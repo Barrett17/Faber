@@ -26,6 +26,9 @@ EffectsManager::EffectsManager()
 	:
 	fEffectsList(true)
 {
+	for (int32 i = 0; gStandardAudioEffects[i].effect != NULL; i++) {
+		fEffectsList.AddItem(gStandardAudioEffects[i].effect);
+	}
 }
 
 
@@ -47,21 +50,6 @@ EffectsManager::StandardEffects()
 {
 	return EffectsByFlag(FABER_BUILTIN_EFFECT);
 }
-
-
-FaberEffectList&
-EffectsManager::MediaKitEffects()
-{
-	return EffectsByFlag(FABER_BUILTIN_EFFECT);
-}
-
-
-FaberEffectList&
-EffectsManager::RealtimeEffects()
-{
-	return EffectsByFlag(FABER_BUILTIN_EFFECT);
-}
-
 
 
 FaberEffectList&

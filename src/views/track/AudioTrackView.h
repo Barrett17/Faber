@@ -67,8 +67,6 @@ public:
 
 			bool			IsSelected() const;
 
-			void			Redraw();
-
 private:
 			BPopUpMenu*		_BuildMenu();
 

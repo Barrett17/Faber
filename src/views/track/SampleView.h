@@ -69,8 +69,6 @@ public:
 
 			bool			IsSelected() const;
 
-			void			Redraw();
-
 			void			EditPoint(BPoint p);
 			void			EditLine(BPoint, BPoint);
 			void			DoDraw(int64 ptr, int32 add, float v);

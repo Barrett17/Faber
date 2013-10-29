@@ -49,13 +49,9 @@ public:
 			int64			End() const;
 
 			void			SetPointer(int64 pointer);
-			void			SetSelectionPointer(int64 pointer);
 
 			int64			Pointer() const;
 			int64			SelectionPointer() const;
-
-			void			SetStart(int64 start);
-			void			SetEnd(int64 end);
 
 	virtual const BString&	Name() const;
 	virtual void 			SetName(const char* name);
@@ -82,8 +78,6 @@ public:
 	virtual void			ZoomOut() = 0;
 	virtual void			ZoomFull() = 0;
 	virtual void			ZoomSelection() = 0;
-
-	virtual void			Redraw() = 0;
 
 protected:
 			Track*			fTrack;

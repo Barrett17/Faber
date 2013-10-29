@@ -17,34 +17,25 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _EFFECTS_MANAGER_H_
-#define _EFFECTS_MANAGER_H_
+#ifndef AUDIO_EFFECTS_H
+#define AUDIO_EFFECTS_H
 
-#include "AudioEffects.h"
 #include "FaberEffect.h"
 
+// effects headers
+#include "Amplifier.h"
+#include "BassBoost.h"
 
-class EffectsManager
-{
-public:
-								EffectsManager();
-	virtual 					~EffectsManager();
 
-	const char*					EffectToString(int32 index) const;
-	FaberEffectList&			StandardEffects();
-	FaberEffectList&			EffectsByFlag(int32 flag);
-
-	int32						CountEffects() const;
-	FaberEffect*				GetEffect(int32 index) const;
-	FaberEffect*				GetEffect(const char* name) const;
-
-	status_t					RunEffect(int32 id, AudioTrack* track,
-									size_t size);
-	status_t					RunEffect(FaberEffect* effect,
-									AudioTrack* track, size_t size);
-private:
-
-	FaberEffectList				fEffectsList;
+typedef struct StandardAudioEffect {
+	FaberEffect* effect;
 };
 
-#endif	// _EFFECTS_MANAGER_H_
+static StandardAudioEffect gStandardAudioEffects[] = {
+
+	{ new AmplifierEffect() },
+	{ new BassBoostEffect() },
+	{ NULL }
+};
+
+#endif // AUDIO_EFFECTS_H
