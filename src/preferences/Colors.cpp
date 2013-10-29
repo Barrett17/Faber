@@ -41,7 +41,7 @@
 #include <ControlLook.h>
 
 #include "FaberDefs.h"
-#include "PrefColors.h"
+#include "Colors.h"
 #include "SwatchView.h"
 #include "FStringItem.h"
 #include "WindowsManager.h"

@@ -78,10 +78,10 @@ Application Faber :
 	SettingsView.cpp
 	Settings.cpp
 	Preferences.cpp
-	PrefGeneral.cpp
+	General.cpp
 	Shortcut.cpp
-	PrefKeys.cpp
-	PrefColors.cpp
+	Keymap.cpp
+	Colors.cpp
 	SwatchView.cpp
 
 	# Common

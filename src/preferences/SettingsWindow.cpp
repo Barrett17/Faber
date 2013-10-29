@@ -26,12 +26,6 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/*
- * Copyright 2013 Dario Casalinuovo
- * Copyright 2011 Davide Gessa
- * All rights reserved. Distributed under the terms of the MIT License.
- */
-
 #include "SettingsWindow.h"
 
 #include <Alert.h>

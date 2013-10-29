@@ -21,9 +21,9 @@
 #include <SpaceLayoutItem.h>
 
 #include "FaberDefs.h"
-#include "PrefGeneral.h"
-#include "PrefKeys.h"
-#include "PrefColors.h"
+#include "General.h"
+#include "Keymap.h"
+#include "Colors.h"
 #include "StringItem.h"
 
 

@@ -43,7 +43,7 @@
 
 
 #include "FaberDefs.h"
-#include "PrefKeys.h"
+#include "Keymap.h"
 #include "Shortcut.h"
 #include "FStringItem.h"
 
