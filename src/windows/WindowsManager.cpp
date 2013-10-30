@@ -20,11 +20,32 @@
 #include "WindowsManager.h"
 
 #include "AboutWindow.h"
+#include "FaberDefs.h"
 #include "FreqWindow.h"
 #include "ResampleWindow.h"
 
 
 WindowsManager*	WindowsManager::fInstance = NULL;
+
+const char* kCopyrights[] = {
+	"2002 Xentronix",
+	"\n",
+	NULL
+};
+
+const char* kAuthors[] = {
+	"Dario Casalinuovo",
+	NULL
+};
+
+const char* kThanks[] = {
+	"The Haiku Project",
+	"The BeOS creators",
+	"Frans van Nispen",
+	"Libwalter devs",
+	"Davide Gessa",
+	NULL
+};
 
 
 WindowsManager::WindowsManager()
@@ -122,7 +143,15 @@ WindowsManager::GetSettingsWindow()
 void
 WindowsManager::ShowAbout()
 {
-	BAboutWindow* box = new BAboutWindow("Faber 1.0 Alpha1", "Faber");
+	BAboutWindow* box = new BAboutWindow("Faber", "Faber");
+
+	box->AddDescription(FABER_DESCRIPTION);
+	box->AddCopyright(2012, FABER_COPYRIGHT, kCopyrights);
+	box->SetVersion(FABER_VERSION);
+	box->AddAuthors(kAuthors);
+	box->AddSpecialThanks(kThanks);
+	box->AddExtraInfo(FABER_HELP_HOMEPAGE);
+
 	box->Show();
 	box->MoveTo(_CalculateWindowPoint());
 }
@@ -203,7 +232,7 @@ WindowsManager::IsWindowValid(BWindow* window)
 BPoint
 WindowsManager::_CalculateWindowPoint()
 {
-	BRect frame = Get()->MainWindow()->Frame();
+	BRect frame = Get()->fMainWindow->Frame();
 	return BPoint((frame.left + frame.right) / 2,
 		(frame.top + frame.bottom) / 2);
 }

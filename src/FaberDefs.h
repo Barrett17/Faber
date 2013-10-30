@@ -33,9 +33,10 @@
 
 #define FABER_MIMETYPE "application/x-vnd.Faber"
 #define FABER_HELP_HOMEPAGE "http://www.versut.com/Faber"
+#define FABER_DESCRIPTION "Faber is a multitrack audio editor for Haiku."
+#define FABER_VERSION "R1 Alpha1"
 
-#define FABER_COPYRIGHT "Copyright 2013 Versut\n"
-#define FABER_SECONDARY_COPYRIGHTS "Copyright 2002 Xentronix\n"
+#define FABER_COPYRIGHT "Versut\n"
 
 // Debug
 
@@ -53,7 +54,7 @@
 
 #define FABER_SETTINGS_DIR "Faber"
 #define FABER_SETTINGS_FILE "Faber_Settings"
-#define FABER_KEYMAP_CONF "Keymap_conf"
+#define FABER_KEYMAP_CONF "Keymap_Conf"
 
 // UI settings
 

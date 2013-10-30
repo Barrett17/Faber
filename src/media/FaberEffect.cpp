@@ -48,22 +48,12 @@ FaberEffect::BuildItem()
 }
 
 
-
 int32
 FaberEffect::Flags() const
 {
 	return fFlags;
 }
 
-
-/*
-status_t
-FaberEffect::FilterTrack(AudioTrack* track,
-	int64 start, size_t size)
-{
-
-}
-*/
 
 status_t
 FaberEffect::FlattenSettings(BMessage* message)

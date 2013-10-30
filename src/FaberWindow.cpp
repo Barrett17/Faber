@@ -40,6 +40,7 @@
 #include "Shortcut.h"
 #include "WindowsManager.h"
 
+
 FaberWindow::FaberWindow(BRect frame)
 	:
 	BWindow(frame, "Faber" , B_TITLED_WINDOW, B_ASYNCHRONOUS_CONTROLS),
@@ -64,6 +65,8 @@ FaberWindow::FaberWindow(BRect frame)
 	fOutputGate = new AudioGate();
 	fOutputGate->Init();
 	fOutputGate->InitNode();
+
+	fEffectsManager = new EffectsManager();
 
 	fFaberView = new FaberView();
 
@@ -276,18 +279,11 @@ FaberWindow::UpdateMenu()
 	BMenuItem *menuItem = NULL;
 
 	Lock();
-	/*
-	if (Prefs.repeat_message) {
-		menu_transform->AddItem(
-			menuItem = new BMenuItem(B_TRANSLATE(Prefs.repeat_tag.String()),
-				new BMessage(RUN_LAST_FILTER), KeyBind.GetKey("REPEAT_ACTION"),
-				KeyBind.GetMod("REPEAT_ACTION")));
-	}*/
 
 	bool enable = !fFaberView->IsEmpty();
 	bool selection = fFaberView->IsSelected();
 
-	menu_transform->SetEnabled(enable);
+	fEffectsMenu->SetEnabled(enable);
 
 	menu_generate->SetEnabled(false);
 
@@ -483,9 +479,9 @@ FaberWindow::_BuildMenu()
 	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("New Track"),
 		new BMessage(FABER_NEW_EMPTY_TRACK), KeyBind.GetKey(""), KeyBind.GetMod("")));
 
-	menu_transform = new BMenu(B_TRANSLATE("Effects"));
+	fEffectsMenu = new BMenu(B_TRANSLATE("Effects"));
 
-	fMainMenuBar->AddItem(menu_transform);
+	fMainMenuBar->AddItem(fEffectsMenu);
 
 	menu_zero = new BMenu(B_TRANSLATE("Zero Crossings"));
 
@@ -507,8 +503,10 @@ FaberWindow::_BuildMenu()
 	menu_zero->AddItem(new BMenuItem(B_TRANSLATE("Right to Right"), new BMessage(FABER_ZERO_RR),
 		KeyBind.GetKey("FABER_ZERO_RR"), KeyBind.GetMod("FABER_ZERO_RR")));
 
-	menu_transform->AddItem(menu_zero);
+	fEffectsMenu->AddItem(menu_zero);
 
+	_BuildGenerateMenu(fEffectsMenu);
+ 
 	menu_generate = new BMenu(B_TRANSLATE("Generate"));
 
 	fMainMenuBar->AddItem(menu_generate);
@@ -528,4 +526,14 @@ FaberWindow::_BuildMenu()
 
 	SetKeyMenuBar(NULL);
 	return fMainMenuBar;
+}
+
+
+void
+FaberWindow::_BuildGenerateMenu(BMenu* menu)
+{
+	for (int i = 0; i < fEffectsManager->CountEffects(); i++) {
+		BMenuItem* item = fEffectsManager->GetEffect(i)->BuildItem();
+		menu->AddItem(item);
+	}
 }
