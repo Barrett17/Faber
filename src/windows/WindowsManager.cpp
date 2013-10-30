@@ -19,6 +19,7 @@
 
 #include "WindowsManager.h"
 
+#include "AboutWindow.h"
 #include "FreqWindow.h"
 #include "ResampleWindow.h"
 
@@ -121,10 +122,9 @@ WindowsManager::GetSettingsWindow()
 void
 WindowsManager::ShowAbout()
 {
-	/*BPoint point = _CalculateWindowPoint();
-
-	AboutBox* box = new AboutBox();
-	*/
+	BAboutWindow* box = new BAboutWindow("Faber 1.0 Alpha1", "Faber");
+	box->Show();
+	box->MoveTo(_CalculateWindowPoint());
 }
 
 
@@ -168,7 +168,9 @@ WindowsManager::ShowFrequencyWindow()
 
 void WindowsManager::StartProgress(const char *label, int32 max)
 {
+	fProgress->MoveTo(_CalculateWindowPoint());
 	fProgress->StartProgress(label, max);
+
 }
 
 

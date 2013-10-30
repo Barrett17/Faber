@@ -77,6 +77,8 @@ Application Faber :
 	BitmapDrawer.cpp
 	ToolButton.cpp
 	Spinner.cpp
+	Divider.cpp
+	SplitterView.cpp
 
 	# Settings
 	SettingsWindow.cpp
