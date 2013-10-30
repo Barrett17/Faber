@@ -54,15 +54,15 @@ public:
 
 	int32					Flags() const;
 
-	status_t				FilterTrack(AudioTrack* track,
-								int64 start, size_t size);
+	virtual status_t		FilterTrack(AudioTrack* track,
+								int64 start, size_t size) = 0;
 
 	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
 
 	status_t				FlattenSettings(BMessage* message);
 	status_t				UnflattenSettings(BMessage* message);
 
-	//int32					Pass() const;
+	//int32					CurrentPass() const;
 	//void					SetPass(int32 pass);
 
 private:

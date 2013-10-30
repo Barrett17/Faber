@@ -30,3 +30,11 @@ AudioEffect::AudioEffect(const char* name, uint32 flags)
 AudioEffect::~AudioEffect()
 {
 }
+
+
+status_t
+AudioEffect::FilterTrack(AudioTrack* track,
+	int64 start, size_t size)
+{
+
+}

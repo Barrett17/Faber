@@ -28,6 +28,9 @@ class AudioEffect : public FaberEffect
 public:
 							AudioEffect(const char* name, uint32 flags);
 	virtual 				~AudioEffect();
+
+	virtual status_t		FilterTrack(AudioTrack* track,
+								int64 start, size_t size);
 };
 
 #endif

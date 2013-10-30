@@ -60,6 +60,10 @@ Application Faber :
 	ProgressWindow.cpp
 	SavePanel.cpp
 	OpenPanel.cpp
+	AboutWindow.cpp
+	InputRequest.cpp
+	InputRequestView.cpp
+	ScreenInfo.cpp
 
 	# Gui Widgets
 	SeekSlider.cpp
@@ -72,6 +76,7 @@ Application Faber :
 	IconButton.cpp
 	BitmapDrawer.cpp
 	ToolButton.cpp
+	Spinner.cpp
 
 	# Settings
 	SettingsWindow.cpp
