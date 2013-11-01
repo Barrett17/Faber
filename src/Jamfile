@@ -69,7 +69,6 @@ Application Faber :
 	# Gui Widgets
 	SpinSlider.cpp
 	PeakView.cpp
-	SpinButton.cpp
 	VolumeSlider.cpp
 	FStringItem.cpp
 	IconButton.cpp
