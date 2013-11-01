@@ -504,7 +504,7 @@ FaberWindow::_BuildMenu()
 
 	fEffectsMenu->AddItem(menu_zero);
  
-	menu_generate =  MenuManager::Get()->BuildGenerateMenu();
+	menu_generate = MenuManager::Get()->BuildGenerateMenu();
 
 	fMainMenuBar->AddItem(menu_generate);
 
