@@ -67,8 +67,6 @@ Application Faber :
 	ScreenInfo.cpp
 
 	# Gui Widgets
-	SeekSlider.cpp
-	SpinControl.cpp
 	SpinSlider.cpp
 	PeakView.cpp
 	SpinButton.cpp

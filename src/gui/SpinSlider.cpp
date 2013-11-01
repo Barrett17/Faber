@@ -17,7 +17,9 @@ SpinSlider::SpinSlider(const char* name, const char* label,
 	:
 	BView(name, B_FOLLOW_ALL)
 {
-	fSlider = new SeekSlider(name, message, minValue, maxValue);
+	fSlider = new VolumeSlider(name, minValue,
+		maxValue, maxValue/2, message);
+
 	SetLabel(label);
 	_Init(minValue, maxValue);
 }
@@ -36,9 +38,10 @@ void SpinSlider::MessageReceived(BMessage* msg)
 		// This is a custom message sent from seekslider
 		// to make the spincontrol updated. Feel free to replace it
 		// with something better.
-		case CUSTOM_INVOKED:
+		/*case CUSTOM_INVOKED:
 			SetValue(fSlider->Value());
-		break;
+		break;*/
+
 		case MSG_SPIN_CHANGED:
 			if (fSpinControl) 
 				SetValue(fSpinControl->Value());
@@ -57,11 +60,13 @@ SpinSlider::_Init(int32 minValue, int32 maxValue)
 	fSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	fSlider->SetHashMarkCount(10);
 
-	fSpinControl = new SpinControl("SpinControl",
-		NULL, new BMessage(MSG_SPIN_CHANGED),
-		minValue, maxValue, fSlider->Value(), 1);
+	fSpinControl = new Spinner(BRect(50, 50, 0, 0), "SpinControl",
+		NULL, new BMessage(MSG_SPIN_CHANGED));
 
-	fSpinControl->ResizeToPreferred();
+	fSpinControl->SetRange(minValue, maxValue);
+
+	fSpinControl->SetValue(fSlider->Value());
+
 	SetLayout(new BGroupLayout(B_HORIZONTAL));
 	AddChild(BGroupLayoutBuilder(B_HORIZONTAL)
 		.AddGroup(B_HORIZONTAL)

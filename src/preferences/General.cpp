@@ -44,7 +44,7 @@
 
 #include "FaberDefs.h"
 #include "General.h"
-#include "SpinControl.h"
+#include "Spinner.h"
 #include "WindowsManager.h"
 
 #include <stdio.h>
@@ -75,8 +75,11 @@ PrefGeneral::PrefGeneral()
 	if (Prefs.show_peak)
 		c_peak->SetValue(B_CONTROL_ON);
 
-	s_peak = new SpinControl("Peaklevel", B_TRANSLATE("Peak level %"),
-		new BMessage(PEAK_LEVEL), 1, 100, Prefs.peak*100, 2);
+	s_peak = new Spinner(BRect(25,25, 0,0), "Peaklevel", B_TRANSLATE("Peak level %"),
+		new BMessage(PEAK_LEVEL));
+	
+	s_peak->SetRange(1, 100);
+	s_peak->SetValue(Prefs.peak*100);
 
 	//s_peak->SetDivider(r.Width()*.4);
 

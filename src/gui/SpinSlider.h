@@ -5,8 +5,8 @@
 #ifndef SPIN_SLIDER_H
 #define SPIN_SLIDER_H
 
-#include "SeekSlider.h"
-#include "SpinControl.h"
+#include "VolumeSlider.h"
+#include "Spinner.h"
 
 
 class SpinSlider : public BView {
@@ -25,12 +25,12 @@ public:
 	virtual void				SetLabel(const char* label);
 	virtual float				Value() const;
 	virtual void				SetValue(float value);
-			SeekSlider*			Slider() { return fSlider; }
+			VolumeSlider*			Slider() { return fSlider; }
 
 private:
 			void				_Init(int32 minValue, int32 maxValue);
-			SpinControl*		fSpinControl;
-			SeekSlider*			fSlider;
+			Spinner*			fSpinControl;
+			VolumeSlider*		fSlider;
 };
 
 

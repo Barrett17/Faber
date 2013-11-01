@@ -33,7 +33,7 @@
 #include <AppKit.h>
 #include <InterfaceKit.h>
 #include <String.h>
-#include "SpinControl.h"
+#include "Spinner.h"
 #include "SpinSlider.h"
 
 #define QUIT			'quit'
@@ -52,7 +52,7 @@ private:
 	float m_frequency;
 	BView *view;
 	BListView *list, *resolution;
-	SpinControl *text, *left, *right, *bits;
+	Spinner *text, *left, *right, *bits;
 	BRadioButton *mono, *stereo;
 };
 #endif
