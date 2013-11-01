@@ -38,6 +38,7 @@
 #include "Faber.h"
 #include "FaberDefs.h"
 #include "Shortcut.h"
+#include "MenuManager.h"
 #include "WindowsManager.h"
 
 
@@ -65,8 +66,6 @@ FaberWindow::FaberWindow(BRect frame)
 	fOutputGate = new AudioGate();
 	fOutputGate->Init();
 	fOutputGate->InitNode();
-
-	fEffectsManager = new EffectsManager();
 
 	fFaberView = new FaberView();
 
@@ -479,7 +478,7 @@ FaberWindow::_BuildMenu()
 	fTracksMenu->AddItem(new BMenuItem(B_TRANSLATE("New Track"),
 		new BMessage(FABER_NEW_EMPTY_TRACK), KeyBind.GetKey(""), KeyBind.GetMod("")));
 
-	fEffectsMenu = new BMenu(B_TRANSLATE("Effects"));
+	fEffectsMenu = MenuManager::Get()->BuildEffectsMenu();
 
 	fMainMenuBar->AddItem(fEffectsMenu);
 
@@ -504,10 +503,8 @@ FaberWindow::_BuildMenu()
 		KeyBind.GetKey("FABER_ZERO_RR"), KeyBind.GetMod("FABER_ZERO_RR")));
 
 	fEffectsMenu->AddItem(menu_zero);
-
-	_BuildGenerateMenu(fEffectsMenu);
  
-	menu_generate = new BMenu(B_TRANSLATE("Generate"));
+	menu_generate =  MenuManager::Get()->BuildGenerateMenu();
 
 	fMainMenuBar->AddItem(menu_generate);
 
@@ -526,14 +523,4 @@ FaberWindow::_BuildMenu()
 
 	SetKeyMenuBar(NULL);
 	return fMainMenuBar;
-}
-
-
-void
-FaberWindow::_BuildGenerateMenu(BMenu* menu)
-{
-	for (int i = 0; i < fEffectsManager->CountEffects(); i++) {
-		BMenuItem* item = fEffectsManager->GetEffect(i)->BuildItem();
-		menu->AddItem(item);
-	}
 }

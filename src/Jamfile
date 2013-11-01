@@ -55,6 +55,7 @@ Application Faber :
 
 	# Managers
 	WindowsManager.cpp
+	MenuManager.cpp
 
 	# Various windows
 	ProgressWindow.cpp

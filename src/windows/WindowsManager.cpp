@@ -44,6 +44,7 @@ const char* kThanks[] = {
 	"Frans van Nispen",
 	"Libwalter devs",
 	"Davide Gessa",
+	"Probably some other person i forgot to mention (let me know!).",
 	NULL
 };
 

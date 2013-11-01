@@ -20,17 +20,14 @@
 #include "AudioTrackView.h"
 
 #include <Box.h>
-#include <Button.h>
 #include <LayoutBuilder.h>
 #include <PopUpMenu.h>
 #include <StringView.h>
 
 #include "FaberDefs.h"
-#include "FaberMessages.h"
-#include "FaberResources.h"
 #include "IconButton.h"
+#include "MenuManager.h"
 #include "PeakView.h"
-#include "Shortcut.h"
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
@@ -87,7 +84,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	toolButton->SetIcon(kMuteIcon);
 
 	// Track menu
-	BPopUpMenu* trackMenu = _BuildMenu();
+	BPopUpMenu* trackMenu = MenuManager::Get()->BuildTrackContextualMenu();
 	toolButton->SetMenu(trackMenu);
 
 	trackMenu->SetTargetForItems(this);
@@ -207,53 +204,6 @@ bool
 AudioTrackView::Dirty() const
 {
 	return fDirty;
-}
-
-
-BPopUpMenu*
-AudioTrackView::_BuildMenu()
-{
-	BPopUpMenu* trackMenu = new BPopUpMenu("TrackMenu");
-
-	trackMenu->AddItem(new BMenuItem("Set Name...",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Mono",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Stereo (right)",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Stereo (left)",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Select All",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Create two mono tracks",
-		NULL));
-	trackMenu->AddItem(new BMenuItem("Separate stereo track",
-		NULL));
-	trackMenu->AddItem(new BMenuItem("Merge adiacent track",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."),
-		new BMessage(FABER_INSERT), KeyBind.GetKey("FILE_INSERT"),
-		KeyBind.GetMod("FILE_INSERT")));
-
-	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."),
-		new BMessage(FABER_APPEND), KeyBind.GetKey("FILE_APPEND"),
-		KeyBind.GetMod("FILE_APPEND")));
-
-	return trackMenu;
 }
 
 

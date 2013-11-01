@@ -30,6 +30,8 @@ public:
 								EffectsManager();
 	virtual 					~EffectsManager();
 
+	static EffectsManager*		Get();
+
 	const char*					EffectToString(int32 index) const;
 	FaberEffectList&			StandardEffects();
 	FaberEffectList&			EffectsByFlag(int32 flag);
@@ -43,6 +45,7 @@ public:
 	status_t					RunEffect(FaberEffect* effect,
 									AudioTrack* track, size_t size);
 private:
+	static EffectsManager*		fInstance;
 
 	FaberEffectList				fEffectsList;
 };

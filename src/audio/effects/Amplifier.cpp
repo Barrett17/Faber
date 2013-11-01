@@ -36,7 +36,7 @@
 
 AmplifierEffect::AmplifierEffect(uint32 flags)
 	:
-	AudioEffect(B_TRANSLATE("Amplifier"), flags)
+	AudioEffect(B_TRANSLATE("Amplifier"), flags | FABER_FILTER)
 {
 
 }

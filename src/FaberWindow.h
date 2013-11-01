@@ -37,7 +37,6 @@
 #include <Window.h>
 
 #include "AudioGate.h"
-#include "EffectsManager.h"
 #include "FaberView.h"
 
 class BMenu;
@@ -67,7 +66,6 @@ public:
 
 private:
 			BMenuBar*			_BuildMenu();
-			void				_BuildGenerateMenu(BMenu* menu);
 
 			FaberView*			fFaberView;
 
@@ -75,7 +73,6 @@ private:
 			BMenu*				fRecentMenu;
 
 			AudioGate*			fOutputGate;
-			EffectsManager*		fEffectsManager;
 
 			bool				fSaveSelection;
 

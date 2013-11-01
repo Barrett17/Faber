@@ -16,3 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef _MENUMANAGER_H_
+#define _MENUMANAGER_H_
+
+#include <Menu.h>
+#include <PopUpMenu.h>
+
+class MenuManager
+{
+public:
+
+	static MenuManager*		Get();
+
+	BMenu*					BuildFileMenu();
+	BMenu*					BuildEditMenu();
+	BMenu*					BuildTracksMenu();
+	BMenu*					BuildEffectsMenu();
+	BMenu*					BuildGenerateMenu();
+	BMenu*					BuildHelpMenu();
+
+	BPopUpMenu*				BuildTrackContextualMenu();
+
+	void					UpdateMenus();
+
+private:
+	static MenuManager*		fInstance;
+};
+
+#endif	// _MENUMANAGER_H_

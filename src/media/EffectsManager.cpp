@@ -21,6 +21,18 @@
 
 #include <String.h>
 
+EffectsManager* EffectsManager::fInstance = NULL;
+
+
+EffectsManager*
+EffectsManager::Get()
+{
+	if (fInstance == NULL)
+		fInstance = new EffectsManager();
+
+	return fInstance;	
+}
+
 
 EffectsManager::EffectsManager()
 	:

@@ -22,7 +22,7 @@
 
 AudioEffect::AudioEffect(const char* name, uint32 flags)
 	:
-	FaberEffect(name, flags & FABER_AUDIO_EFFECT)
+	FaberEffect(name, flags | FABER_AUDIO_EFFECT)
 {
 }
 

@@ -68,7 +68,6 @@ public:
 			bool			IsSelected() const;
 
 private:
-			BPopUpMenu*		_BuildMenu();
 
 			SampleView*		fSampleView;
 			AudioTrack*		fTrack;
