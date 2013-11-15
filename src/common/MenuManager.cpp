@@ -20,11 +20,10 @@
 #include "MenuManager.h"
 
 #include <MenuItem.h>
+#include <ObjectList.h>
 
 #include "EffectsManager.h"
 #include "FaberEffect.h"
-#include "FaberDefs.h"
-#include "Shortcut.h"
 
 MenuManager* MenuManager::fInstance = NULL;
 
@@ -39,24 +38,52 @@ MenuManager::Get()
 }
 
 
+MenuManager::MenuManager()
+{
+	fKeyBind = *FaberShortcut::Get();
+}
+
+
+MenuManager::~MenuManager()
+{
+
+}
+
+
+BMenuBar*
+MenuManager::BuildMainMenuBar()
+{
+	BMenuBar* menuBar = new BMenuBar("MainMenuBar");
+
+	menuBar->AddItem(BuildFileMenu());
+	menuBar->AddItem(BuildEditMenu());
+	menuBar->AddItem(BuildTracksMenu());
+	menuBar->AddItem(BuildEffectsMenu());
+	menuBar->AddItem(BuildGenerateMenu());
+	menuBar->AddItem(BuildHelpMenu());
+
+	return menuBar;
+}
+
+
 BMenu*
 MenuManager::BuildFileMenu()
 {
-
+	return _BuildMenu(kFileMenu, B_TRANSLATE("File"));
 }
 
 
 BMenu*
 MenuManager::BuildEditMenu()
 {
-
+	return _BuildMenu(kEditMenu, B_TRANSLATE("Edit"));
 }
 
 
 BMenu*
 MenuManager::BuildTracksMenu()
 {
-
+	return _BuildMenu(kTracksMenu, B_TRANSLATE("Tracks"));
 }
 
 
@@ -95,7 +122,7 @@ MenuManager::BuildGenerateMenu()
 BMenu*
 MenuManager::BuildHelpMenu()
 {
-
+	return _BuildMenu(kHelpMenu, "Help");
 }
 
 
@@ -132,15 +159,60 @@ MenuManager::BuildTrackContextualMenu()
 	trackMenu->AddItem(new BMenuItem("Merge adiacent track",
 		NULL));
 
-	trackMenu->AddItem(new BSeparatorItem());
+	/*trackMenu->AddItem(new BSeparatorItem());
 
 	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."),
-		new BMessage(FABER_INSERT), KeyBind.GetKey("FILE_INSERT"),
-		KeyBind.GetMod("FILE_INSERT")));
+		new BMessage(FABER_INSERT), fKeyBind.GetKey("FILE_INSERT"),
+		fKeyBind.GetMod("FILE_INSERT")));
 
 	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."),
-		new BMessage(FABER_APPEND), KeyBind.GetKey("FILE_APPEND"),
-		KeyBind.GetMod("FILE_APPEND")));
+		new BMessage(FABER_APPEND), fKeyBind.GetKey("FILE_APPEND"),
+		fKeyBind.GetMod("FILE_APPEND")));*/
 
 	return trackMenu;
+}
+
+
+void
+MenuManager::UpdateMenu()
+{
+}
+
+
+BMenu*
+MenuManager::_BuildMenu(KeyBind* bind, const char* name)
+{
+	// The first item describe the menu
+	BMenu* menu = new BMenu(bind[0].label);
+	BObjectList<BMenu> menuList(false);
+	menuList.AddItem(menu);
+
+	for (int i = 1; bind[i].code != FABER_EOF; i++) {
+
+		menu = menuList.ItemAt(menuList.CountItems()-1);
+
+		if (bind[i].code == FABER_ITEM_START) {
+			BMenu* subMenu = new BMenu(bind[i].label);
+			menu->AddItem(subMenu);
+			menuList.AddItem(subMenu);
+		}  else if (bind[i].code == FABER_ITEM_END) {
+			if (menuList.CountItems() > 1)
+				menuList.RemoveItemAt(menuList.CountItems()-1);
+		} else {
+			printf("%s\n", bind[i].label);
+			menu->AddItem(_BuildMenuItem(bind[i].code, bind[i].label));
+		}
+	}
+	return menuList.ItemAt(0);
+}
+
+
+BMenuItem*
+MenuManager::_BuildMenuItem(uint32 code, const char* label)
+{
+	if (code == FABER_SPLITTER)
+		return new BSeparatorItem();
+	else
+		return new BMenuItem(label, new BMessage(code),
+			fKeyBind.GetKey(code), fKeyBind.GetMod(code));
 }

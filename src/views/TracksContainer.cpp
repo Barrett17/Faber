@@ -28,7 +28,6 @@
 #include "TimeBar.h"
 #include "TrackView.h"
 #include "WidgetFrame.h"
-#include "WindowsManager.h"
 
 
 TracksContainer::TracksContainer()
@@ -168,7 +167,7 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 
 	status_t ret = fTrackViews.AddItem(track, index);
 
-	WindowsManager::MainWindow()->UpdateMenu();
+	MenuManager::UpdateMenu();
 
 	return ret;
 }

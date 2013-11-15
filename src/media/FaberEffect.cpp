@@ -19,6 +19,8 @@
 
 #include "FaberEffect.h"
 
+#include "FaberDefs.h"
+
 
 FaberEffect::FaberEffect(const char* name, uint32 flags)
 	:
@@ -44,7 +46,10 @@ FaberEffect::Name() const
 BMenuItem*
 FaberEffect::BuildItem()
 {
-	return new BMenuItem(Name(), NULL, 0, 0);
+	BMessage* mess = new BMessage(FABER_EFFECT_CALL);
+	mess->AddPointer("effect", this);
+
+	return new BMenuItem(Name(), mess, 0, 0);
 }
 
 

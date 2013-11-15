@@ -25,29 +25,24 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include "Compressor.h"
 
-#include <Window.h>
-#include <View.h>
-#include <InterfaceKit.h>
 #include <LayoutBuilder.h>
+#include <View.h>
 
 #include "FaberDefs.h"
-#include "Globals.h"
-#include "RealtimeFilter.h"
-#include "CompressorFilter.h"
 
-/*******************************************************
-*   
-*******************************************************/
-CompressorFilter::CompressorFilter(bool b) : RealtimeFilter(B_TRANSLATE("COMPRESSOR"), b)
+
+CompressorEffect::CompressorEffect(uint32 flags)
+	:
+	AudioEffect(B_TRANSLATE("Compressor"), flags)
 {
 
 }
 
-/*******************************************************
-*   
-*******************************************************/
-BView *CompressorFilter::ConfigView()
+
+BView*
+CompressorEffect::SettingsPanel()
 {
 	BRect r(0,0,200,280);
 
@@ -57,29 +52,31 @@ BView *CompressorFilter::ConfigView()
 	rms = new BCheckBox("calcrms", B_TRANSLATE("Calculate in RMS"),
 		new BMessage(CONTROL_CHANGED));
 
-	rms->SetValue(Prefs.filter_compressor_rms);
+	//rms->SetValue(Prefs.filter_compressor_rms);
 
 	attac = new SpinSlider("attacktime", B_TRANSLATE("Attack Time (ms)"),
 		new BMessage(CONTROL_CHANGED), 0, 1000);
 
-	attac->SetValue(Prefs.filter_compressor_attac * 1000);
+	//attac->SetValue(Prefs.filter_compressor_attac * 1000);
 
 	decay = new SpinSlider("decay", B_TRANSLATE("Decay time (ms)"),
 		new BMessage(CONTROL_CHANGED), 0, 1000);
 
-	decay->SetValue(Prefs.filter_compressor_decay * 1000);
+	//decay->SetValue(Prefs.filter_compressor_decay * 1000);
 
 	treshold = new SpinSlider("threshold", B_TRANSLATE("Threshold (dB)"),
 		new BMessage(CONTROL_CHANGED), -60, 18);
 
-	treshold->SetValue(Prefs.filter_compressor_treshold);
+	//treshold->SetValue(Prefs.filter_compressor_treshold);
 
 	ratio = new SpinSlider("ratio", B_TRANSLATE("Ratio"),
 		new BMessage(CONTROL_CHANGED), 1, 100);
-	ratio->SetValue(Prefs.filter_compressor_ratio);
+
+	//ratio->SetValue(Prefs.filter_compressor_ratio);
 
 	gain = new SpinSlider("gain", B_TRANSLATE("Gain (dB)"), new BMessage(CONTROL_CHANGED), 0, 24);
-	gain->SetValue(Prefs.filter_compressor_gain);
+
+	//gain->SetValue(Prefs.filter_compressor_gain);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL, 5)
 		.Add(rms, 0)
@@ -93,9 +90,11 @@ BView *CompressorFilter::ConfigView()
 	return view;
 }
 
-void CompressorFilter::UpdateValues()
+
+status_t
+CompressorEffect::FlattenSettings(BMessage* message)
 {
-	Prefs.filter_compressor_rms = rms->Value();
+	/*Prefs.filter_compressor_rms = rms->Value();
 	Prefs.filter_compressor_attac = attac->Value()/1000.0;
 	Prefs.filter_compressor_decay = decay->Value()/1000.0;
 	Prefs.filter_compressor_treshold = treshold->Value();
@@ -103,18 +102,24 @@ void CompressorFilter::UpdateValues()
 	Prefs.filter_compressor_gain = gain->Value();
 
 	for (int32 i=0; i<buffer_size; i++)
-		delay_buffer[i] = 0;
+		delay_buffer[i] = 0;*/
 }
 
-/*******************************************************
-*   Init & exit
-*******************************************************/
-bool CompressorFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
+
+status_t
+CompressorEffect::UnflattenSettings(BMessage* message)
 {
-	RealtimeFilter::InitFilter(f, c, pass, size);
+
+}
+
+
+bool
+CompressorEffect::InitFilter(float f, int32 c, int32 pass, int32 size)
+{
+	/*RealtimeFilter::InitFilter(f, c, pass, size);
 
 	buffer_size = (int32)(m_frequency +.5) * m_channels;
-	
+
 	delay_buffer = new float[ buffer_size ];
 	for (int32 i=0; i<buffer_size; i++)	
 		delay_buffer[i] = 0.0;
@@ -125,20 +130,21 @@ bool CompressorFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 	mMultR = 1.0;
 	pBuffer = 0;
 
-	return true;
+	return true;*/
 }
 
-void CompressorFilter::DeAllocate()
+
+void
+CompressorEffect::DeAllocate()
 {
 	delete[] delay_buffer;
 }
 
-/*******************************************************
-*   
-*******************************************************/
-void CompressorFilter::FilterBuffer(float *buffer, size_t size)
+
+void
+CompressorEffect::FilterBuffer(float *buffer, size_t size)
 {
-	mDecayMult = exp(log(0.1)/(Prefs.filter_compressor_decay*m_frequency));
+	/*mDecayMult = exp(log(0.1)/(Prefs.filter_compressor_decay*m_frequency));
 	mThreshold = pow(10.0, Prefs.filter_compressor_treshold/10);
 	mGain = pow(10.0, Prefs.filter_compressor_gain/10);
 	mInvRatio = 1.0 - 1.0 / Prefs.filter_compressor_ratio;
@@ -211,5 +217,5 @@ void CompressorFilter::FilterBuffer(float *buffer, size_t size)
 
 			buffer[i] *= mMultL;
 		}
-	}
+	}*/
 }

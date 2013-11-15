@@ -30,8 +30,7 @@
 
 InfoToolBar::InfoToolBar()
 	:
-	BView("InfoToolBar", B_FOLLOW_LEFT
-		| B_PULSE_NEEDED)
+	BView("InfoToolBar", B_WILL_DRAW)
 {
 	fPointerTextView = new BTextView("view", B_WILL_DRAW);
 
@@ -61,14 +60,10 @@ InfoToolBar::InfoToolBar()
 
 	slider->SetExplicitSize(BSize(130, 40));
 
-	//rgb_color backgroundColor = {120,120,120};
-	//zoomView->SetViewColor(backgroundColor);
-
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(slider)
 		.AddGlue()
 		.Add(zoomView)
-		//.AddStrut(5.0f)
 	.End();
 }
 

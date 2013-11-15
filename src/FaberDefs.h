@@ -26,7 +26,10 @@
 
 #include "FaberMessages.h"
 #include "FaberResources.h"
+#include "MenuManager.h"
 #include "Preferences.h"
+#include "Shortcut.h"
+#include "WindowsManager.h"
 
 #include <stdio.h>
 
@@ -36,7 +39,7 @@
 #define FABER_DESCRIPTION "Faber is a multitrack audio editor for Haiku."
 #define FABER_VERSION "R1 Alpha1"
 
-#define FABER_COPYRIGHT "Versut\n"
+#define FABER_COPYRIGHT "Versut. \n   All Rights reserved.\n"
 
 // Debug
 

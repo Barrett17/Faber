@@ -17,27 +17,21 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUDIO_EFFECTS_H
-#define AUDIO_EFFECTS_H
+#ifndef EFFECT_WINDOW_H
+#define EFFECT_WINDOW_H
+
+#include <Window.h>
 
 #include "FaberEffect.h"
 
-// effects headers
-#include "Amplifier.h"
-#include "BassBoost.h"
-#include "Compressor.h"
+class EffectWindow : public BWindow
+{
+public:
+	EffectWindow(FaberEffect* effect);
 
+	virtual void MessageReceived(BMessage*);
 
-typedef struct StandardAudioEffect {
-	FaberEffect* effect;
+	FaberEffect* fEffect;
 };
 
-static StandardAudioEffect gStandardAudioEffects[] = {
-
-	{ new AmplifierEffect() },
-	{ new BassBoostEffect() },
-	{ new CompressorEffect() },
-	{ NULL }
-};
-
-#endif // AUDIO_EFFECTS_H
+#endif

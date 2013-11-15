@@ -26,20 +26,33 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef COMPRESS_FILTER_H
-#define COMPRESS_FILTER_H
+#ifndef COMPRESSOR_EFFECT_H
+#define COMPRESSOR_EFFECT_H
 
-class CompressorFilter : public RealtimeFilter {
-  public:
-	CompressorFilter(bool r = true);
-	virtual bool InitFilter(float f, int32 channels = 2, int32 pass = 0, int32 size = 0);
-	virtual void DeAllocate();
-	virtual void FilterBuffer(float *, size_t);
-	virtual void UpdateValues();
+#include <CheckBox.h>
 
-	virtual BView *ConfigView();
+#include "AudioEffect.h"
+#include "SpinSlider.h"
+
+
+class CompressorEffect : public AudioEffect
+{
+public:
+	CompressorEffect(uint32 flags = FABER_REALTIME_EFFECT
+		| FABER_FILTER | FABER_GUI_EFFECT);
+
+	virtual bool InitFilter(float f, int32 channels = 2,
+		int32 pass = 0, int32 size = 0);
+
+	virtual void				DeAllocate();
+	virtual void 				FilterBuffer(float *, size_t);
+
+			status_t			FlattenSettings(BMessage* message);
+			status_t			UnflattenSettings(BMessage* message);
+
+	virtual BView*				SettingsPanel();
    
-  private:
+private:
 	float *delay_buffer;
 	float mRMSSumL, mMultL, mDecayMult;
 	float mRMSSumR, mMultR;

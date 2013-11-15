@@ -16,3 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+class ProjectManager {
+public:
+			bool				HasChanged() const;
+			bool				HasRedo() const;
+			bool				HasUndo() const;
+
+			status_t			SaveProject(BMessage* msg);
+			status_t			LoadProject(BMessage* msg);
+
+			status_t			LoadTrack(BMessage* msg);
+			status_t			SaveTrack(BMessage* msg);
+
+			void				Undo();
+			void				Redo();
+
+			// CurrentClipboard();
+			// void EmptyClipboard();
+
+};

@@ -26,11 +26,13 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <View.h>
+#include "BassBoost.h"
+
 #include <LayoutBuilder.h>
+#include <StringView.h>
+#include <View.h>
 
 #include "FaberDefs.h"
-#include "BassBoost.h"
 
 
 BassBoostEffect::BassBoostEffect(uint32 flags)
@@ -49,16 +51,20 @@ BassBoostEffect::SettingsPanel()
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	freq = new SpinSlider("frequency", B_TRANSLATE("Frequency (Hz)"),
+	freq = new SpinSlider("frequency", NULL,
 		new BMessage(CONTROL_CHANGED), 1, 1000);
-	freq->SetValue(Prefs.filter_bassboost_frequency);
 
-	boost = new SpinSlider("frequency", B_TRANSLATE("Boost (dB)"),
+	//freq->SetValue(Prefs.filter_bassboost_frequency);
+
+	boost = new SpinSlider("frequency", NULL,
 		new BMessage(CONTROL_CHANGED), 0, 24);
-	boost->SetValue(Prefs.filter_bassboost_boost);
 
-	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
+//	boost->SetValue(Prefs.filter_bassboost_boost);
+
+	BLayoutBuilder::Group<>(view, B_VERTICAL, 0)
+		.Add(new BStringView("",  B_TRANSLATE("Frequency (Hz)")))
 		.Add(freq, 0)
+		.Add(new BStringView("",  B_TRANSLATE("Boost (dB)")))
 		.Add(boost, 1)
 	.End();
 

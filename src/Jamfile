@@ -57,7 +57,7 @@ Application Faber :
 	WindowsManager.cpp
 	MenuManager.cpp
 
-	# Various windows
+	# Various windows and related code
 	ProgressWindow.cpp
 	SavePanel.cpp
 	OpenPanel.cpp
@@ -65,6 +65,7 @@ Application Faber :
 	InputRequest.cpp
 	InputRequestView.cpp
 	ScreenInfo.cpp
+	EffectWindow.cpp
 
 	# Gui Widgets
 	SpinSlider.cpp
@@ -88,6 +89,7 @@ Application Faber :
 	Keymap.cpp
 	Colors.cpp
 	SwatchView.cpp
+	DefaultKeymap.cpp
 
 	# Common
 	PeakFile.cpp
@@ -112,7 +114,7 @@ Application Faber :
 	Amplifier.cpp
 	BassBoost.cpp
 	#Limiter.cpp
-	#Compressor.cpp
+	Compressor.cpp
 	#Normalize.cpp
 	#Room.cpp
 	#Reverb.cpp

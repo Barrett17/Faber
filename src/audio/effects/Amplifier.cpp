@@ -50,12 +50,13 @@ AmplifierEffect::SettingsPanel()
 	BView* view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	SpinSlider* slider = new SpinSlider("level", B_TRANSLATE("Level (%)"),
+	SpinSlider* slider = new SpinSlider("level", NULL,
 		new BMessage(CONTROL_CHANGED), 1, 300);
 
-	slider->SetValue(Prefs.filter_amplifier_value);
+	//slider->SetValue(Prefs.filter_amplifier_value);
 
-	BLayoutBuilder::Group<>(view, B_VERTICAL)
+	BLayoutBuilder::Group<>(view, B_VERTICAL, 0.5)
+		.Add(new BStringView("", B_TRANSLATE("Level (%)")))
 		.Add(slider)
 	.End();
 
@@ -79,7 +80,7 @@ AmplifierEffect::UnflattenSettings(BMessage* msg)
 void
 AmplifierEffect::FilterBuffer(float* buffer, size_t size)
 {
-	float amp = Prefs.filter_amplifier_value/100.0;
+	/*float amp = Prefs.filter_amplifier_value/100.0;
 	float tmp;
 
 	for (size_t i=0; i<size; i++) {
@@ -91,5 +92,5 @@ AmplifierEffect::FilterBuffer(float* buffer, size_t size)
 			tmp = -1.0;
 
 		*buffer++ = tmp;
-	}
+	}*/
 }

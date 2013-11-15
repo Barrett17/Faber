@@ -29,7 +29,6 @@ WindowsManager*	WindowsManager::fInstance = NULL;
 
 const char* kCopyrights[] = {
 	"2002 Xentronix",
-	"\n",
 	NULL
 };
 
@@ -39,12 +38,10 @@ const char* kAuthors[] = {
 };
 
 const char* kThanks[] = {
-	"The Haiku Project",
-	"The BeOS creators",
 	"Frans van Nispen",
 	"Libwalter devs",
 	"Davide Gessa",
-	"Probably some other person i forgot to mention (let me know!).",
+	"Stephan Aßmus",
 	NULL
 };
 

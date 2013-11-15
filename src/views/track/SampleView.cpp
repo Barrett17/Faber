@@ -357,7 +357,7 @@ SampleView::MouseDown(BPoint p)
 
 	Invalidate();
 
-	WindowsManager::MainWindow()->UpdateMenu();
+	MenuManager::UpdateMenu();
 }
 
 
@@ -520,7 +520,7 @@ SampleView::MouseUp(BPoint p)
 	drag_border = false;
 	fOld.Set(-1,-1);
 
-	WindowsManager::MainWindow()->UpdateMenu();
+	MenuManager::UpdateMenu();
 }
 
 

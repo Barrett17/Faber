@@ -1,111 +1,76 @@
 /*
-   	Copyright (c) 2003, Xentronix
-	Author: Frans van Nispen (frans@xentronix.com)
-	All rights reserved.
-	
-	Redistribution and use in source and binary forms, with or without modification,
-	are permitted provided that the following conditions are met:
-	
-	Redistributions of source code must retain the above copyright notice, this list
-	of conditions and the following disclaimer. Redistributions in binary form must
-	reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution. 
-	
-	Neither the name of Xentronix nor the names of its contributors may be used
-	to endorse or promote products derived from this software without specific prior
-	written permission. 
-	
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-	SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    Copyright 2013 Dario Casalinuovo. All rights reserved.
+
+    This file is part of Faber.
+
+    Faber is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Faber is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SHORTCUT_H
-#define SHORTCUT_H
+#ifndef FABER_SHORTCUT_H
+#define FABER_SHORTCUT_H
 
-#include <AppKit.h>
-#include <map>
-#include <string.h>
+#include <ObjectList.h>
+#include <SupportDefs.h>
 
-#define SPLITTER			'sltr'	// used to separate key-bind catagories
 
-struct key_bind{
-	const char *ID;		// lookup ID (TAG that can be converted by Language.get()
-	char key;			// the key
-	int32 mod;			// its modifyers
-	char keyAlt;		// the 2nd key
-	int32 modAlt;		// its 2nd modifyers
-	uint32 message;		// Message to be posted to the window
-	bool menuItem;		// is a menu item ??? Has to have B_COMMAND_KEY
+class KeyBind {
+public:
+	bool			isMenuItem;
+	const char*		label;
+	char			key;
+	int32			mod;
+	char			altKey;
+	int32			altMod;
+	uint32			code;
 };
 
-class Shortcut{
-  public:
-	Shortcut();
-	~Shortcut();
-   
-	// called by system
-	void Init();
-   
-	// request the ID for a binding
-	char *GetID(int32 i) const;
-	char *GetID(char key, int32 mod) const;
-	
-	// number of bindings
-	int32 CountBindings() const;
+class FaberShortcut {
+public:
+							FaberShortcut();
+							~FaberShortcut();
 
-	// Gets the key that linked to this
-	// spesifier. If no match then 0 is
-	// returned
-	char GetKey(const char *ID);
-	char GetKeyAlt(const char *ID);
-	
-	// returns wether it is a menu item
-	bool IsMenuItem(const char *ID);
-   
-	// Gets the mod that is linked to this
-	// spesifier. if no match then 0 is
-	// returned
-	int32 GetMod(const char *ID);
-	int32 GetModAlt(const char *ID);
-   
-	// Gets the message 'what' that is linked to this
-	// spesifier. if no match then 0 is
-	// returned
-	uint32 GetMessage(const char *ID);
-	uint32 GetMessage(char key, int32 mod);
+	static FaberShortcut* 	Get();
 
-	// checks to see if a key is installed
-	// although this is not needed as install
-	// auto checks this for you.
-	bool IsInstalled(const char *ID);
-   
-	// Installs a new Spesifier with a pritty name
-	// if that spesifier alreay exists it does 
-	// nothing.
-	void Install(bool menu, const char *ID, char key, int32 mod, char keyAlt, int32 modAlt, uint32 message);
-	
-	void InstallDefaults();
-   
-  private:
-	key_bind* FindKB(const char *ID);
+	KeyBind*				FindKeyBind(uint32 code);
 
-	BList kbind;
-	key_bind *lastkb;
+	const char*				GetLabel(uint32 code);
+	const char*				GetLabel(int32 index);
+
+	char					GetKey(uint32 code);
+	char					GetMod(uint32 code);
+
+	char					GetKeyAlt(uint32 code);
+	char					GetModAlt(uint32 code);
+
+	uint32					GetCode(int32 index);
+	uint32					GetCode(char key, int32 mod);
+
+	uint32					GetMessage(int32 key, int32 mod);
+
+	bool					IsMenuItem(uint32 code);
+	int32					CountKeys();
+
+	void					CreateDefaultKeys();
+
+	void					AddKeyBind(KeyBind* bind);
+
+private:
+	void					_CopyObj(KeyBind* bind, KeyBind* from);
+
+	static FaberShortcut*	fInstance;
+
+	BObjectList<KeyBind>	fBinds;
 };
-extern Shortcut KeyBind; // Included so you don't have too
+
 #endif
-
-
-
-
-
-
-
-

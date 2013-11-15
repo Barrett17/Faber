@@ -99,12 +99,12 @@ FaberView::IsEmpty() const
 	return fTracksContainer->CountTracks() == 0;
 }
 
-
+/*
 bool
 FaberView::IsSelected()
 {
 	
-}
+}*/
 
 
 status_t

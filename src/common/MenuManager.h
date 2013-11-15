@@ -21,15 +21,26 @@
 #define _MENUMANAGER_H_
 
 #include <Menu.h>
+#include <MenuBar.h>
 #include <PopUpMenu.h>
+
+#include "DefaultKeymap.h"
+#include "FaberDefs.h"
+#include "Shortcut.h"
+
 
 class MenuManager
 {
 public:
+							MenuManager();
+							~MenuManager();
 
 	static MenuManager*		Get();
 
+	BMenuBar*				BuildMainMenuBar();
+
 	BMenu*					BuildFileMenu();
+	BMenu*					BuildRecentMenu();
 	BMenu*					BuildEditMenu();
 	BMenu*					BuildTracksMenu();
 	BMenu*					BuildEffectsMenu();
@@ -38,10 +49,14 @@ public:
 
 	BPopUpMenu*				BuildTrackContextualMenu();
 
-	void					UpdateMenus();
+	static void				UpdateMenu();
 
 private:
+	BMenu*					_BuildMenu(KeyBind* bind, const char* name);
+	BMenuItem*				_BuildMenuItem(uint32 code, const char* label);
+
 	static MenuManager*		fInstance;
+	FaberShortcut			fKeyBind;
 };
 
 #endif	// _MENUMANAGER_H_

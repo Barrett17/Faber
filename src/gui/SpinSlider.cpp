@@ -4,8 +4,8 @@
  */
 #include "SpinSlider.h"
 
-#include <GroupLayoutBuilder.h>
 #include <ControlLook.h>
+#include <LayoutBuilder.h>
 
 #include <stdio.h>
 
@@ -15,12 +15,14 @@
 SpinSlider::SpinSlider(const char* name, const char* label,
 	BMessage* message, int32 minValue, int32 maxValue)
 	:
-	BView(name, B_FOLLOW_ALL)
+	BView(name, B_FOLLOW_LEFT)
 {
 	fSlider = new VolumeSlider(name, minValue,
 		maxValue, maxValue/2, message);
 
-	SetLabel(label);
+	if (label != NULL)
+		SetLabel(label);
+
 	_Init(minValue, maxValue);
 }
 
@@ -60,20 +62,18 @@ SpinSlider::_Init(int32 minValue, int32 maxValue)
 	fSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
 	fSlider->SetHashMarkCount(10);
 
-	fSpinControl = new Spinner(BRect(50, 50, 0, 0), "SpinControl",
-		NULL, new BMessage(MSG_SPIN_CHANGED));
+	fSpinControl = new Spinner(BRect(10, 10, 0, 0), "SpinControl",
+		NULL, new BMessage(MSG_SPIN_CHANGED), B_FOLLOW_TOP);
 
 	fSpinControl->SetRange(minValue, maxValue);
 
 	fSpinControl->SetValue(fSlider->Value());
+	fSpinControl->SetExplicitMaxSize(BSize(50, 50));
 
-	SetLayout(new BGroupLayout(B_HORIZONTAL));
-	AddChild(BGroupLayoutBuilder(B_HORIZONTAL)
-		.AddGroup(B_HORIZONTAL)
-			.Add(fSlider)
-		.End()
-		.Add(fSpinControl)
-	);
+	BLayoutBuilder::Grid<>(this, 0.5)
+		.Add(fSlider, 0, 0)
+		.Add(fSpinControl, 2, 0)
+	.End();
 }
 
 

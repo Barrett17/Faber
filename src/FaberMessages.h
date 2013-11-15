@@ -34,7 +34,7 @@ const uint32 FABER_REMOVE_TRACK			=	'Frtk';
 
 const uint32 FABER_FILE_OPEN			=	'open';
 
-const uint32 FABER_SAVE_SELECTION		=	'svsl';
+const uint32 FABER_EXPORT_SELECTION		=	'svsl';
 
 const uint32 FABER_INSERT				=	'insr';
 const uint32 FABER_APPEND				=	'appn';
@@ -87,6 +87,12 @@ const uint32 FABER_ZERO_LL				=	'zrll';
 const uint32 FABER_ZERO_LR				=	'zrlr';
 const uint32 FABER_ZERO_RL				=	'zrlr';
 const uint32 FABER_ZERO_RR				=	'zrrr';
+
+// Menu definitions
+const uint32 FABER_ITEM_START			=	'fits';
+const uint32 FABER_ITEM_END				=	'fite';
+const uint32 FABER_EOF					=	'feof';
+const uint32 FABER_SPLITTER				=	'spli';
 
 
 #endif

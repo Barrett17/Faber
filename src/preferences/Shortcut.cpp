@@ -1,381 +1,189 @@
 /*
-   	Copyright (c) 2003, Xentronix
-	Author: Frans van Nispen (frans@xentronix.com)
-	All rights reserved.
-	
-	Redistribution and use in source and binary forms, with or without modification,
-	are permitted provided that the following conditions are met:
-	
-	Redistributions of source code must retain the above copyright notice, this list
-	of conditions and the following disclaimer. Redistributions in binary form must
-	reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution. 
-	
-	Neither the name of Xentronix nor the names of its contributors may be used
-	to endorse or promote products derived from this software without specific prior
-	written permission. 
-	
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-	SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    Copyright 2013 Dario Casalinuovo. All rights reserved.
+
+    This file is part of Faber.
+
+    Faber is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Faber is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <FindDirectory.h>
-#include <Path.h>
-#include <InterfaceDefs.h>
-
-#include "FaberDefs.h"
 #include "Shortcut.h"
-#include "Settings.h"
+
+#include "DefaultKeymap.h"
+
+FaberShortcut* FaberShortcut::fInstance = NULL;
+
+// TODO using HashMap we can go from an O(n) execution time to O(log n)
 
 
-// our Global def
-Shortcut KeyBind;
+FaberShortcut*
+FaberShortcut::Get()
+{
+	if (fInstance == NULL)
+		fInstance = new FaberShortcut();
 
-Shortcut::Shortcut(){
-   lastkb = NULL;
+	return fInstance;	
 }
 
 
-Shortcut::~Shortcut(){
-	// delete everthing in the list :P
-	Settings prefs = Settings(FABER_SETTINGS_DIR"/"FABER_KEYMAP_CONF);
-	prefs.MakeEmpty();
-   
-	key_bind *kb = NULL;
-   
-	for(int32 i = 0; i < kbind.CountItems();i++){
-		//kb = (key_bind*)kbind.RemoveItem(i);
-		kb = (key_bind*)kbind.ItemAt(i);
-		if(kb){
-			prefs.AddString("IkbID",kb->ID);
-			prefs.AddInt32("IkbKey",(int32)kb->key);
-			prefs.AddInt32("IkbMod",kb->mod);
-			prefs.AddInt32("IkbKeyAlt",(int32)kb->keyAlt);
-			prefs.AddInt32("IkbModAlt",kb->modAlt);
-			prefs.AddInt32("IkbMessage",kb->message);
-			prefs.AddBool("IkbMenu",kb->menuItem);
-			// FREE THE 2 STRINGS HERE !!! lable and ID ??
-			delete kb;
-		}
+FaberShortcut::FaberShortcut()
+	:
+	fBinds(true)
+{
+	CreateDefaultKeys();
+}
+
+
+FaberShortcut::~FaberShortcut()
+{
+
+}
+
+
+KeyBind*
+FaberShortcut::FindKeyBind(uint32 code)
+{
+	for (int i = 0; i < CountKeys(); i++) {
+		KeyBind* bind = fBinds.ItemAt(i);
+		if (bind->code == code)
+			return bind;
 	}
-}
-
-
-void Shortcut::Init(){
-	lastkb = NULL;
-
-	// install defaults
-	InstallDefaults();
-
-	Settings prefs = Settings(FABER_SETTINGS_DIR"/"FABER_KEYMAP_CONF);
-	if(prefs.InitCheck() == B_OK){
-		// Init from prefs file
-		const char *ID = NULL;
-		int32 key, keyAlt;
-		int32 mod, modAlt;
-		uint32 message;
-		bool menuItem;
-		int32 i = 0;
-		while(prefs.FindString("IkbID",i,&ID) == B_OK){
-			if(prefs.FindInt32("IkbKey",i,&key) != B_OK)			key = 0;
-			if(prefs.FindInt32("IkbMod",i,&mod) != B_OK)					mod = 0;
-			if(prefs.FindInt32("IkbKeyAlt",i,&keyAlt) != B_OK)		keyAlt = 0;
-			if(prefs.FindInt32("IkbModAlt",i,&modAlt) != B_OK)				modAlt = 0;
-			if(prefs.FindInt32("IkbMessage",i,(int32*)&message) != B_OK)	message = 0;
-			if(prefs.FindBool("IkbMenu",i,&menuItem) != B_OK)				menuItem = 0;
-
-			char *I = new char[strlen(ID)+1]; strcpy(I,ID);
-			KeyBind.Install(menuItem, I, key, mod, keyAlt, modAlt, message);
-			i++;
-		}
-	}
-}
-
-
-/*******************************************************
-*   Get the keys
-*******************************************************/
-char Shortcut::GetKey(const char *ID){
-	key_bind* kb = NULL;
-	kb = FindKB(ID);
-	if(kb)	return kb->key;
-
-	return 0;
-}
-   
-char Shortcut::GetKeyAlt(const char *ID){
-	key_bind* kb = NULL;
-	kb = FindKB(ID);
-	if(kb)	return kb->keyAlt;
-
-	return 0;
-}
-
-
-/*******************************************************
-*   Get the ID
-*******************************************************/
-char *Shortcut::GetID(int32 i) const{
-	key_bind* kb = NULL;
-	if (i < kbind.CountItems()){
-		kb = (key_bind*)kbind.ItemAt(i);
-		if(kb){
-			char *ID = new char[strlen(kb->ID)+1]; strcpy(ID,kb->ID);
-			return ID;
-		}
-	}
-
 	return NULL;
 }
 
-char *Shortcut::GetID(char key, int32 mod) const{
-	key_bind* kb = NULL;
-	int32 i = 0;
-	
-	mod = mod & (B_SHIFT_KEY | B_CONTROL_KEY | B_COMMAND_KEY | B_OPTION_KEY);		// mask left / right stuff
-	while (i != kbind.CountItems()){
-		kb = (key_bind*)kbind.ItemAt(i);
-		if(kb){
-			if (((kb->key == key) && (kb->mod == mod)) ||
-				((kb->keyAlt == key) && (kb->modAlt == mod))){
-				char *ID = new char[strlen(kb->ID)+1]; strcpy(ID,kb->ID);
-				return ID;
-			}
-		}
-		i++;
-	}
 
-	return NULL;
+const char*
+FaberShortcut::GetLabel(uint32 code)
+{
+	KeyBind* bind = FindKeyBind(code);
+	return bind->label;
 }
 
-/*******************************************************
-*   Get the number of Bindings
-*******************************************************/
-int32 Shortcut::CountBindings() const{
-	return kbind.CountItems();
+
+const char*
+FaberShortcut::GetLabel(int32 index)
+{
+	return fBinds.ItemAt(index)->label;
 }
 
-/*******************************************************
-*   Is a menuItem ?
-*******************************************************/
-bool Shortcut::IsMenuItem(const char *ID){
-	key_bind* kb = NULL;
-	kb = FindKB(ID);
-	if(kb)	return kb->menuItem;
 
-	return false;
+char
+FaberShortcut::GetKey(uint32 code)
+{
+	KeyBind* bind = FindKeyBind(code);
+	return bind->key;
 }
 
-/*******************************************************
-*   Get the modifiers
-*******************************************************/
-int32 Shortcut::GetMod(const char *ID){
-	key_bind* kb = NULL;
-	kb = FindKB(ID);
-	if(kb)	return kb->mod;
 
-	return 0;
+char
+FaberShortcut::GetMod(uint32 code)
+{
+	KeyBind* bind = FindKeyBind(code);
+	return bind->mod;
 }
 
-int32 Shortcut::GetModAlt(const char *ID){
-	key_bind* kb = NULL;
-	kb = FindKB(ID);
-	if(kb)	return kb->modAlt;
 
-	return 0;
+char
+FaberShortcut::GetKeyAlt(uint32 code)
+{
+	KeyBind* bind = FindKeyBind(code);
+	return bind->altKey;
 }
 
-/*******************************************************
-*   Get the message
-*******************************************************/
-uint32 Shortcut::GetMessage(const char *ID){
-	key_bind* kb = NULL;
-	kb = FindKB(ID);
-	if(kb)	return kb->message;
 
-	return 0;
+char
+FaberShortcut::GetModAlt(uint32 code)
+{
+	KeyBind* bind = FindKeyBind(code);
+	return bind->altMod;
 }
 
-uint32 Shortcut::GetMessage(char key, int32 mod){
-	key_bind* kb = NULL;
-	int32 i = 0;
-	
-	mod = mod & (B_SHIFT_KEY | B_CONTROL_KEY | B_COMMAND_KEY | B_OPTION_KEY);		// mask left / right stuff
-	while (i != kbind.CountItems()){
-		kb = (key_bind*)kbind.ItemAt(i);
-		if(kb){
-//				printf("%s\t  %c  %x  %c  %x  : %c  %x\n", kb->ID, kb->key, kb->mod, kb->keyAlt, kb->modAlt, key, mod);
-			if (((kb->key == key) && (kb->mod == mod)) ||
-				((kb->keyAlt == key) && (kb->modAlt == mod))){
-				return kb->message;
-			}
-		}
-		i++;
-	}
 
-	return 0;
+uint32
+FaberShortcut::GetCode(int32 index)
+{
+	return fBinds.ItemAt(index)->code;
 }
 
-/*******************************************************
-*   
-*******************************************************/
-void Shortcut::Install(bool menu, const char *ID, char key, int32 mod, char keyAlt, int32 modAlt, uint32 message){
-	key_bind* kb = NULL;
-	kb = FindKB(ID);
-	if(kb == NULL){
-		// do install
-		key_bind *kb = new key_bind;
-		kb->ID = ID;
-		kb->key = key;
-		kb->mod = mod;
-		kb->keyAlt = keyAlt;
-		kb->modAlt = modAlt;
-		kb->message = message;
-		kb->menuItem = menu;
-		kbind.AddItem(kb);
-	}else{
-//		printf("%s\t  %c  %x  %c  %x\n", ID, key, mod, keyAlt, modAlt);
-		// replace the item
-		kb->key = key;
-		kb->mod = mod;
-		kb->keyAlt = keyAlt;
-		kb->modAlt = modAlt;
-		kb->message = message;
-		kb->menuItem = menu;
-	}
+
+uint32
+FaberShortcut::GetCode(char key, int32 mod)
+{
+
 }
 
-/*******************************************************
-*   
-*******************************************************/
-bool Shortcut::IsInstalled(const char *ID){
-	if(FindKB(ID))	return true;
 
-	return false;
+uint32
+FaberShortcut::GetMessage(int32 key, int32 mod)
+{
+
 }
 
-/*******************************************************
-*   
-*******************************************************/
-key_bind* Shortcut::FindKB(const char *ID){
-	if(lastkb){
-		if(strcmp(lastkb->ID,ID) == 0)	return lastkb;
-	}
-	key_bind *kb = NULL;
-	for(int32 i = 0;i < kbind.CountItems();i++){
-		kb = (key_bind*)kbind.ItemAt(i);
-		if(kb){
-			if(strcmp(kb->ID,ID) == 0){
-				// match
-				lastkb = kb;
-				return kb;
-			}
+
+int32
+FaberShortcut::CountKeys()
+{
+	return fBinds.CountItems();
+}
+
+
+bool
+FaberShortcut::IsMenuItem(uint32 code)
+{
+	KeyBind* bind = FindKeyBind(code);
+	return bind->isMenuItem;
+}
+
+
+void
+FaberShortcut::CreateDefaultKeys()
+{
+	for (int i = 0; kDefaultKeymap[i] != NULL; i++) {
+		KeyBind* items = kDefaultKeymap[i]; 
+		for (int j = 0;  items[j].code != FABER_EOF; j++) {
+			KeyBind* bind = new KeyBind();
+
+			if (bind->code == FABER_SPLITTER)
+				continue;
+
+			_CopyObj(bind, &items[j]);
+			fBinds.AddItem(bind);
 		}
 	}
-	lastkb = NULL;
-	return NULL;
 }
 
-/*******************************************************
-*	Default Shortcuts
-*	F1 - F12	14 - 25
-*******************************************************/
-void Shortcut::InstallDefaults(){
 
-	// The FileMenu
-	Install(0,"FILE_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
-	Install(1,"FABER_NEW_PROJECT",			'N', B_COMMAND_KEY,					  0, 0,					FABER_NEW_PROJECT			);
-	Install(1,"FABER_FILE_OPEN",			'O', B_COMMAND_KEY,					'O', 0,					FABER_FILE_OPEN			);
-	Install(1,"FILE_INSERT",   	    'I', B_COMMAND_KEY,			   B_INSERT, B_SHIFT_KEY,				FABER_INSERT			);
-	Install(1,"FILE_APPEND",		  0, 0,								  0, 0,							FABER_APPEND			);
-	//Install(1,"FILE_MIX",			'M', B_COMMAND_KEY,					  0, 0,							OPEN_MIX		);
-	Install(1,"FABER_SAVE_PROJECT",			'S', B_COMMAND_KEY,					  0, 0,							FABER_SAVE_PROJECT			);
-	Install(1,"FABER_EXPORT_PROJECT",		'S', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_EXPORT_PROJECT			);
-	Install(1,"FABER_SAVE_SELECTION",'S', B_COMMAND_KEY | B_CONTROL_KEY,	'S', B_SHIFT_KEY,				FABER_SAVE_SELECTION	);
-	Install(1,"FABER_PREFERENCES",		'P', B_COMMAND_KEY,					'P', B_SHIFT_KEY,				FABER_PREFERENCES		);
-	Install(1,"FILE_QUIT",			'Q', B_COMMAND_KEY,					  0, 0,							B_QUIT_REQUESTED);
+void
+FaberShortcut::AddKeyBind(KeyBind* keybind)
+{
+	KeyBind* bind = FindKeyBind(keybind->code);
+	if (bind != NULL) {
+		fBinds.RemoveItem(bind);	
+		delete bind;
+	}
 
-	// edit menu
-	Install(0,"EDIT_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
-	Install(1,"FABER_UNDO",				'Z', B_COMMAND_KEY,					  0, 0,							FABER_UNDO			);
+	fBinds.AddItem(keybind);
+}
 
-	Install(1,"FABER_REDO",				'Z', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_REDO			);
 
-	Install(1,"COPY",				'C', B_COMMAND_KEY,					  0, 0,							B_COPY			);
-	Install(1,"FABER_COPY_SILENCE",		'X', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_COPY_SILENCE	);
-	Install(1,"CUT",				'X', B_COMMAND_KEY,					  0, 0,							B_CUT			);
-	Install(1,"PASTE",			  	'V', B_COMMAND_KEY,					  0, 0,							B_PASTE			);
-	Install(1,"FABER_PASTE_NEW",			'V', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							FABER_PASTE_NEW		);
-
-	Install(1,"FABER_CLEAR",				'B', B_COMMAND_KEY,			   B_DELETE, 0,							FABER_CLEAR			);
-
-//	Install(1,"COPY_TO_STACK",		'C', B_COMMAND_KEY | B_SHIFT_KEY,	  0, 0,							TO_STACK		);
-
-	Install(1,"SELECT_ALL",			'A', B_COMMAND_KEY,					  0, 0,							B_SELECT_ALL	);
-	Install(1,"FABER_UNSELECT_ALL",		'U', B_COMMAND_KEY,					  0, 0,							FABER_UNSELECT_ALL	);
-	Install(1,"FABER_ZERO_IN",			  0, 0,								  0, 0,							FABER_ZERO_IN			);
-	Install(1,"FABER_ZERO_OUT",			  0, 0,								  0, 0,							FABER_ZERO_OUT		);
-	Install(1,"FABER_ZERO_LL",			  0, 0,								  0, 0,							FABER_ZERO_LL			);
-	Install(1,"FABER_ZERO_LR",			  0, 0,								  0, 0,							FABER_ZERO_LR			);
-	Install(1,"FABER_ZERO_RL",			  0, 0,								  0, 0,							FABER_ZERO_RL			);
-	Install(1,"FABER_ZERO_RR",			  0, 0,								  0, 0,							FABER_ZERO_RR			);
-	Install(1,"FABER_TRIM",				  0, 0,								  0, 0,							FABER_TRIM			);
-	Install(1,"FABER_SET_FREQUENCY",	  		  0, 0,								  0, 0,							FABER_SET_FREQUENCY	);
-	Install(1,"FABER_RESAMPLE",	  		  0, 0,								  0, 0,							FABER_RESAMPLE		);
-
-	// help
-	Install(0,"HELP_MENU2",	  		  0, 0,								  0, 0,							SPLITTER		);
-	Install(1,"FABER_ABOUT",			      0, 0,								  0, 0,							FABER_ABOUT			);
-
-	// The Transporter
-	Install(0,"TRANSPORT",	  		  0, 0,					  0, 0,							SPLITTER		);
-	//Install(0,"FABER_TRANSPORT_PLAYS",	' ', B_SHIFT_KEY,		  0, 0,							FABER_TRANSPORT_PLAYS		);
-	Install(0,"FABER_TRANSPORT_PLAY",		' ', B_CONTROL_KEY,		  0, 0,							FABER_TRANSPORT_PLAY		);
-	Install(0,"FABER_TRANSPORT_STOP",		  0, 0,					  0, 0,							FABER_TRANSPORT_STOP		);
-	Install(0,"FABER_TRANSPORT_REW",		  0, 0,					  0, 0,							FABER_TRANSPORT_REW		);
-	Install(0,"FABER_TRANSPORT_REW_ALL",B_HOME, B_SHIFT_KEY,		  0, 0,							FABER_TRANSPORT_REW_ALL	);
-	Install(0,"FABER_TRANSPORT_FWD",		  0, 0,					  0, 0,							FABER_TRANSPORT_FWD		);
-	Install(0,"FABER_TRANSPORT_FWD_ALL",B_END, B_SHIFT_KEY,		  0, 0,							FABER_TRANSPORT_FWD_ALL	);
-	Install(0,"FABER_TRANSPORT_REC",		  0, 0,					  0, 0,							FABER_TRANSPORT_REC		);
-	Install(0,"FABER_TRANSPORT_LOOP",		'L', 0,					  0, 0,							FABER_TRANSPORT_LOOP	);
-
-	//zoom
-	Install(0,"ZOOM_FUNCTIONS",	 	  0, 0,								  0, 0,							SPLITTER		);
-	Install(0,"FABER_ZOOM_IN",			  B_UP_ARROW, 0,				0,0,				FABER_ZOOM_IN				);
-	Install(0,"FABER_ZOOM_OUT",		  	  B_DOWN_ARROW, 0,				0,0,				FABER_ZOOM_OUT			);
-	Install(0,"FABER_ZOOM_FULL",		  	  B_UP_ARROW, B_SHIFT_KEY,		0,0,				FABER_ZOOM_FULL			);
-	Install(0,"FABER_ZOOM_SELECTION",	  	  B_DOWN_ARROW, B_SHIFT_KEY,	0,0,				FABER_ZOOM_SELECTION		);
-
-	//channel selection
-	Install(0,"CHANNELS",			  0, 0,					  0, 0,							SPLITTER		);
-
-	// transform -- when done
-	Install(0,"TRANSFORM_MENU2",	  0, 0,								  0, 0,						SPLITTER		);
-
-	// add the effects
-	/*int32 filter = 0;
-	while(__FilterList[filter].name != NULL)
-	{
-		Install(1,__FilterList[filter].name,0, 0,						  0, 0,						RUN_FILTER		);
-		filter++;
-	}*/
-
-	// analyze menu
-	Install(0,"ANALYZE_MENU2",		  0, 0,							  0, 0,							SPLITTER		);
-
-	// The sample-tools
-	Install(0,"SAMPLE_TOOLS",		  0, 0,								  0, 0,						SPLITTER		);
-	Install(0,"FABER_SELECTION_TOOL",				  0, 0,					'1', 0,					FABER_SELECTION_TOOL		);
-	Install(0,"FABER_DRAW_TOOL",					  0, 0,					'2', 0,					FABER_DRAW_TOOL		);
-	Install(0,"FABER_PLAY_TOOL",					  0, 0,					'3', 0,					FABER_PLAY_TOOL		);
-
-//	Install(1,"FILE_MIX",			  0, B_COMMAND_KEY,					  0, 0,											);
-
+void
+FaberShortcut::_CopyObj(KeyBind* bind, KeyBind* from)
+{
+	bind->isMenuItem = from->isMenuItem;
+	bind->label = from->label;
+	bind->key = from->key;
+	bind->mod = from->mod;
+	bind->altMod = from->altMod;
+	bind->altKey = from->altKey;
+	bind->code = from->code;
 }

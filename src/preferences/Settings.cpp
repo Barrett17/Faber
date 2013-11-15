@@ -73,7 +73,6 @@ Settings::InitCheck() const
 status_t
 Settings::OpenSettings()
 {
-	printf("open\n");
 	fError = fSettingsFile->InitCheck();
 
 	if (fError < B_OK) {
@@ -114,7 +113,6 @@ Settings::DeleteSettings()
 status_t
 Settings::FlattenSettings()
 {
-	printf("flatten\n");
 	_CheckSettings();
 
 	//PrintToStream();

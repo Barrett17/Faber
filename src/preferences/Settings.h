@@ -42,8 +42,6 @@ virtual					~Settings();
 		
 		status_t		RemoveSetting(const char* name);
 
-
-
 private:
 		status_t		OpenSettings();
 		status_t		FlattenSettings();

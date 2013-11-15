@@ -25,29 +25,29 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 /*
  * Copyright 2013 Dario Casalinuovo
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
-
 #ifndef PREF_KEYS_H
-#define PREF_3_H
+#define PREF_KEYS_H
 
-#include <Application.h>
-#include <AppKit.h>
-#include <InterfaceKit.h>
+#include <View.h>
 
-class PrefKeys : public BView {
-  public:
-	PrefKeys();
-	~PrefKeys();
-	virtual void AttachedToWindow();
-	virtual void MessageReceived(BMessage*);
-	virtual void Pulse();	// used as callback
-  private:
-	BOutlineListView *list;
-	int32 m_index;
+
+class PrefKeys : public BView
+{
+public:
+									PrefKeys();
+									~PrefKeys();
+	virtual void					AttachedToWindow();
+	virtual void					MessageReceived(BMessage*);
+	virtual void					Pulse();
+
+private:
+			BOutlineListView*		list;
+			int32					m_index;
 };
+
 #endif
