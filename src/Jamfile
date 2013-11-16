@@ -83,11 +83,11 @@ Application Faber :
 	SettingsWindow.cpp
 	SettingsView.cpp
 	Settings.cpp
-	Preferences.cpp
+	FaberPreferences.cpp
 	General.cpp
 	Shortcut.cpp
 	Keymap.cpp
-	Colors.cpp
+	ColorScheme.cpp
 	SwatchView.cpp
 	DefaultKeymap.cpp
 

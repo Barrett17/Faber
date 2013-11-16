@@ -87,8 +87,8 @@ ProgressWindow::StartProgress(const char *label, int32 max)
 		fBar->SetMaxValue(max);
 
 		ResizeTo(300,40);
-		MoveTo( Prefs.frame.Width()/2 -150 + Prefs.frame.left,
-				Prefs.frame.Height()/2 -15 + Prefs.frame.top);
+		//MoveTo( Prefs.frame.Width()/2 -150 + Prefs.frame.left,
+		//		Prefs.frame.Height()/2 -15 + Prefs.frame.top);
 
 		if (IsHidden())
 			Show();

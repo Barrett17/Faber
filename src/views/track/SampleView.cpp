@@ -132,7 +132,7 @@ SampleView::Pulse()
 void
 SampleView::Draw(BRect rect)
 {
-	//printf("SampleView::Draw\n");
+/*	//printf("SampleView::Draw\n");
 
 	Looper()->Lock();
 
@@ -236,13 +236,13 @@ SampleView::Draw(BRect rect)
 	// needed for pencil edit
 	fUpdatePeak = false;				
 
-	Looper()->Unlock();
+	Looper()->Unlock();*/
 }
 
 
 void
 SampleView::MouseDown(BPoint p)
-{
+{/*
 	if (fTrack->Size() == 0)
 		return;
 
@@ -347,7 +347,7 @@ SampleView::MouseDown(BPoint p)
 				fOld = p;
 				EditPoint( p );
 				edit = true;
-			}	*/
+			}	
 			break;
 		}
 
@@ -357,14 +357,14 @@ SampleView::MouseDown(BPoint p)
 
 	Invalidate();
 
-	MenuManager::UpdateMenu();
+	MenuManager::UpdateMenu();*/
 }
 
 
 
 void
 SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
-{
+{/*
 	// area where the cursors work for left/right selection
 	float top = Bounds().Height() * 0.20;
 
@@ -433,10 +433,10 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 			r.left = p.x;
 			r.right = p.x+1;
 				
-			/*if (modifiers() & B_COMMAND_KEY)
-				ClipBoard.Cut(true);
-			else
-				ClipBoard.Copy();*/
+			//if (modifiers() & B_COMMAND_KEY)
+			//	ClipBoard.Cut(true);
+			//else
+			//	ClipBoard.Copy();
 
 			BMessage msg(FABER_DROP_PASTE);
 			DragMessage(&msg, r);
@@ -496,7 +496,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 	} else if (edit) {
 		EditLine( fOld, p );
 		fOld = p;
-	}
+	}*/
 }
 
 
@@ -663,7 +663,7 @@ SampleView::FrameResized(float width, float height)
 void
 SampleView::CalculateCache()
 {
-	if (fTrack->Size() == 0)
+	/*if (fTrack->Size() == 0)
 		return;
 
 	acquire_sem(fViewSem);
@@ -843,7 +843,7 @@ SampleView::CalculateCache()
 		}
 		cache_right_valid = true;
 	}
-	release_sem(fViewSem);
+	release_sem(fViewSem);*/
 }
 
 
@@ -851,7 +851,7 @@ SampleView::CalculateCache()
 void
 SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 {
-	acquire_sem(fViewSem);
+	/*acquire_sem(fViewSem);
 
 	// Update the peak-cache if needed
 	if (fUpdatePeak || fOldLeftPointer != fOwner->fStart
@@ -973,7 +973,7 @@ SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 				peak_buffer, r, size, size2);
 		}
 	}
-	release_sem(fViewSem);
+	release_sem(fViewSem);*/
 }
 
 

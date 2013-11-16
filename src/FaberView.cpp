@@ -30,7 +30,7 @@ FaberView::FaberView()
 	BGroupView(B_VERTICAL, 0)
 {
 	fToolBar = new ToolBar();
-	fToolBar->SetTool(Prefs.tool_mode);
+	//fToolBar->SetTool(Prefs.tool_mode);
 
 	fTracksContainer = new TracksContainer();
 

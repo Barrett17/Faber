@@ -27,6 +27,7 @@
 */
 #include "PeakFile.h"
 
+#include <Application.h>
 #include <Alert.h>
 
 #include "FaberDefs.h"
