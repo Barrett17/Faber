@@ -31,6 +31,8 @@ FaberWindow::FaberWindow(BRect rect)
 {
 	fFaberView = new FaberView();
 
+	fCommandsHandler = new CommandsHandler();
+
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(MenuManager::Get()->BuildMainMenuBar())
 		.Add(fFaberView)
@@ -55,7 +57,12 @@ FaberWindow::QuitRequested()
 void
 FaberWindow::MessageReceived(BMessage* message)
 {
-
+	switch (message->what)
+	{
+		//fCommandsHandler->PostMessage(message);
+		//default:
+		//	BWindow::MessageReceived(message);
+	}
 }
 
 

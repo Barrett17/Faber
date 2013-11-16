@@ -36,11 +36,11 @@
 #include <View.h>
 
 
-class PrefKeys : public BView
+class KeymapView : public BView
 {
 public:
-									PrefKeys();
-									~PrefKeys();
+									KeymapView();
+									~KeymapView();
 	virtual void					AttachedToWindow();
 	virtual void					MessageReceived(BMessage*);
 	virtual void					Pulse();

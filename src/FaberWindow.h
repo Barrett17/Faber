@@ -21,6 +21,7 @@
 
 #include <Window.h>
 
+#include "CommandsHandler.h"
 #include "FaberView.h"
 
 
@@ -37,7 +38,7 @@ public:
 
 private:
 			FaberView*			fFaberView;
-
+			CommandsHandler*	fCommandsHandler;
 };
 
 #endif

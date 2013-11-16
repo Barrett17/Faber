@@ -42,7 +42,7 @@ public:
 			bool				IsEmpty() const;
 
 			bool 				HasChanged();
-			void				Pulse();
+
 			status_t 			AddTrack(Track* track);
 private:
 			TracksContainer*	fTracksContainer;

@@ -119,13 +119,3 @@ FaberView::HasChanged()
 {
 	return fTracksContainer->HasChanged();
 }
-
-
-
-void
-FaberView::Pulse()
-{
-	fInfoToolBar->Pulse();
-	fToolBar->Pulse();
-	fTracksContainer->Pulse();
-}

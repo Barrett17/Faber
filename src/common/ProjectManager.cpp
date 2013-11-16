@@ -17,30 +17,5 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Message.h>
-#include <SupportDefs.h>
+#include "ProjectManager.h"
 
-
-class ProjectManager {
-public:
-			static ProjectManager*		Get();
-
-			bool						HasChanged() const;
-			bool						HasRedo() const;
-			bool						HasUndo() const;
-
-			status_t					SaveProject(BMessage* message);
-			status_t					LoadProject(BMessage* message);
-
-			status_t					LoadTrack(BMessage* message);
-			status_t					SaveTrack(BMessage* message);
-
-			void						Undo();
-			void						Redo();
-
-			// CurrentClipboard();
-			// void EmptyClipboard();
-private:
-			static ProjectManager*		fInstance;
-
-};

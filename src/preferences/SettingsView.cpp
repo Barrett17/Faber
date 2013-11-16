@@ -19,8 +19,29 @@
 
 #include "SettingsView.h"
 
+#include <GroupLayoutBuilder.h>
+#include <TabView.h>
+
+#include "FaberDefs.h"
+#include "Keymap.h"
+
+
 SettingsView::SettingsView()
+	:
+	BGroupView(B_HORIZONTAL, B_FOLLOW_LEFT)
 {
+	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+
+	BTabView* tabView = new BTabView("");
+
+	BTab* tab = new BTab();
+
+	tabView->AddTab(new KeymapView(), tab);
+	tab->SetLabel(B_TRANSLATE("Color layout"));
+
+	BGroupLayoutBuilder(this)
+		.Add(tabView)
+	.End();
 
 }
 
@@ -34,5 +55,9 @@ SettingsView::~SettingsView()
 void
 SettingsView::MessageReceived(BMessage* message)
 {
-
+	switch(message->what)
+	{
+		default:
+			BView::MessageReceived(message);
+	}
 }

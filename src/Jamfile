@@ -38,13 +38,17 @@ Application Faber :
 	FaberWindow.cpp
 	FaberView.cpp
 
+	CommandsHandler.cpp
+	ProjectManager.cpp
+	WindowsManager.cpp
+	MenuManager.cpp
+
+	# Widgets
 	TracksContainer.cpp
 	ToolBar.cpp
 	InfoToolBar.cpp
 	FaberScrollBar.cpp
 	TimeBar.cpp
-
-	# Widgets
 	DurationView.cpp
 	WidgetFrame.cpp
 
@@ -52,10 +56,6 @@ Application Faber :
 	TrackView.cpp
 	AudioTrackView.cpp
 	SampleView.cpp
-
-	# Managers
-	WindowsManager.cpp
-	MenuManager.cpp
 
 	# Various windows and related code
 	ProgressWindow.cpp

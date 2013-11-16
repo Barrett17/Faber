@@ -624,7 +624,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 *   Setup the main view. Add in all the niffty components
 *   we have made and get things rolling
 *******************************************************/
-PrefKeys::PrefKeys()
+KeymapView::KeymapView()
 	:
 	BView(BRect(0,0,490,380), "Prefs keys", B_FOLLOW_ALL, B_WILL_DRAW)
 {
@@ -671,13 +671,13 @@ PrefKeys::PrefKeys()
 }
 
 
-PrefKeys::~PrefKeys()
+KeymapView::~KeymapView()
 {
 }
 
 
 void
-PrefKeys::AttachedToWindow()
+KeymapView::AttachedToWindow()
 {
 	list->SetTarget(this);
 //	list->SetSelectionMessage(new BMessage(SELECT));
@@ -686,7 +686,7 @@ PrefKeys::AttachedToWindow()
 
 
 void
-PrefKeys::Pulse()
+KeymapView::Pulse()
 {
 	BListItem *item = NULL;
 	if (m_index<0) {
@@ -731,7 +731,7 @@ PrefKeys::Pulse()
 
 
 void
-PrefKeys::MessageReceived(BMessage *msg)
+KeymapView::MessageReceived(BMessage *msg)
 {
 	char s[255];
 	int32 code, index;
