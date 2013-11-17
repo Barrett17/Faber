@@ -19,6 +19,7 @@
 
 #include "FaberWindow.h"
 
+#include <Application.h>
 #include <LayoutBuilder.h>
 
 #include "FaberView.h"
@@ -48,6 +49,7 @@ FaberWindow::~FaberWindow()
 bool
 FaberWindow::QuitRequested()
 {
+	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }
 
@@ -55,7 +57,6 @@ FaberWindow::QuitRequested()
 void
 FaberWindow::MessageReceived(BMessage* message)
 {
-	message->PrintToStream();
 	switch (message->what)
 	{
 		default:

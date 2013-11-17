@@ -95,7 +95,6 @@ Application Faber :
 	DefaultKeymap.cpp
 
 	Engine.cpp
-	Behavior.cpp
 	Interface.cpp
 	Keymap.cpp
 	ColorScheme.cpp

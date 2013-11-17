@@ -19,6 +19,9 @@
 
 #include "CommandsLooper.h"
 
+#include <Application.h>
+#include <Roster.h>
+
 #include "FaberDefs.h"
 
 CommandsLooper* CommandsLooper::fInstance = NULL;
@@ -72,9 +75,121 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 			WindowsManager::ShowAbout();	
 		break;
 
+		case FABER_OPEN_HOMEPAGE:
+		{
+			const char* homepage = FABER_HELP_HOMEPAGE;
+			be_roster->Launch("text/html", 1,
+				const_cast<char**>(&homepage));
+
+			break;
+		}
+
+		case FABER_EXPORT_PROJECT:
+		{
+		
+			break;
+		}
+
+		case FABER_NEW_PROJECT:
+		{
+			app_info info;
+			be_app->GetAppInfo(&info);
+			be_roster->Launch(info.signature);
+			break;
+		}
+
+		case FABER_SAVE_PROJECT:
+		{
+		
+			break;
+		}
+
+		case FABER_NEW_EMPTY_TRACK:
+		{
+		
+			break;
+		}
+
+		case FABER_REMOVE_TRACK:
+		{
+		
+			break;
+		}
+
+		case FABER_FILE_OPEN:
+		{
+		
+			break;
+		}
+
+		case FABER_EXPORT_SELECTION:
+		{
+		
+			break;
+		}
+
+		case FABER_INSERT:
+		{
+		
+			break;
+		}
+
+		case FABER_APPEND:
+		{
+		
+			break;
+		}
+
+		case FABER_UNDO:
+		{
+		
+			break;
+		}
+
+		case FABER_REDO:
+		{
+		
+			break;
+		}
+
+		case FABER_PASTE_NEW:
+		{
+		
+			break;
+		}
+
+		case FABER_DROP_PASTE:
+		{
+		
+			break;
+		}
+
 		case FABER_SETTINGS:
 			WindowsManager::Get()->ShowSettings();
 		break;
+
+
+
+		case FABER_EFFECT_CALL:
+		{
+			//FaberEffect* effect;
+			//message->FindPointer("effect", (void**)&effect);
+			//WindowsManager::EffectWindow(effect);
+			break;
+		}
+
+		case FABER_EFFECT_EXECUTE:
+		{
+		
+			break;
+		}
+
+		case FABER_EFFECT_ABORT:
+		{
+
+			break;
+		}
+
 
 	}
 }

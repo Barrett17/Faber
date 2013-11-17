@@ -28,7 +28,7 @@ SettingsWindow::SettingsWindow()
 	:
 	BWindow(BRect(100, 100, 500, 600),
 		"Settings",
-		B_TITLED_WINDOW, NULL)
+		B_TITLED_WINDOW, B_NOT_RESIZABLE | B_NOT_MINIMIZABLE)
 {
 	SettingsView* settingsView = new SettingsView();
 

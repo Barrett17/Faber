@@ -45,7 +45,7 @@
 
 #define SELECT		'selK'
 
-FaberShortcut gKeyBind = *FaberShortcut::Get();
+FaberShortcut* gKeyBind = FaberShortcut::Get();
 
 static const char* _KeyLabel(char in)
 {
@@ -520,21 +520,21 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v)
 	r.left = r.right+8;
 	r.right = Bounds().right-8;
 
-	uint32 code = gKeyBind.GetCode(index);
-	view->AddChild(new BStringView(r, NULL, B_TRANSLATE(gKeyBind.GetLabel(code))));
+	uint32 code = gKeyBind->GetCode(index);
+	view->AddChild(new BStringView(r, NULL, B_TRANSLATE(gKeyBind->GetLabel(code))));
 	
 	// request the installed message
-	key = gKeyBind.GetKey(code);
-	key2 = gKeyBind.GetKeyAlt(code);
-	mod = gKeyBind.GetMod(code);
-	mod2 = gKeyBind.GetModAlt(code);
+	key = gKeyBind->GetKey(code);
+	key2 = gKeyBind->GetKeyAlt(code);
+	mod = gKeyBind->GetMod(code);
+	mod2 = gKeyBind->GetModAlt(code);
 	message = code;
-	menu = gKeyBind.IsMenuItem(code);
+	menu = gKeyBind->IsMenuItem(code);
 
 	r.OffsetBy(0,30);
 	r.left = 8;
 	float x = 8 + MAX( be_plain_font->StringWidth(B_TRANSLATE("Primary")),
-		be_plain_font->StringWidth(B_TRANSLATE("ALTERNATE")));
+		be_plain_font->StringWidth(B_TRANSLATE("Alternate")));
 	
 	r.right = Bounds().right -96;
 
@@ -582,18 +582,19 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 {
 	switch(msg->what) {
 		case SET:
-		{/*
-			KeyBind* key = new KeyBind();
+		{
+			/*KeyBind* key = new KeyBind();
 	
 			key->key = control1->GetKey();
 			key->mod = control1->GetMod();
 			key->altKey = control2->GetKey();
 			key->altMod = control2->GetMod();
-			key->label = gKeyBind.GetLabel(index);
-			key->message->code = message;
+			key->label = gKeyBind->GetLabel(index);
+			key->message.what = message.what;
+			key->message.code = message.code;
 			key->isMenuItem = menu;
 	
-			gKeyBind.AddKeyBind(key);
+			gKeyBind->AddKeyBind(key);
 	
 			if (parent->LockLooper()) {
 				parent->Pulse();
@@ -625,7 +626,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 *******************************************************/
 KeymapView::KeymapView()
 	:
-	BView(BRect(0,0,490,380), "Prefs keys", B_FOLLOW_ALL, B_WILL_DRAW)
+	BView(BRect(0,0,300,100), "Prefs keys", B_FOLLOW_ALL, B_WILL_DRAW)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
@@ -640,8 +641,8 @@ KeymapView::KeymapView()
 
 	BListItem *item = NULL;
 
-	for (int32 i=0; i<gKeyBind.CountKeys(); i++) {
-		uint32 code = gKeyBind.GetCode(i);
+	for (int32 i=0; i<gKeyBind->CountKeys(); i++) {
+		uint32 code = gKeyBind->GetCode(i);
 		if (code == FABER_SPLITTER || code == FABER_ITEM_END)
 			continue;
 
@@ -650,12 +651,12 @@ KeymapView::KeymapView()
 				list->Collapse(item);
 
 			list->AddItem(
-				item = new KeyItem(gKeyBind.GetLabel(i), 0, 0, 0, 0, -1));
+				item = new KeyItem(gKeyBind->GetLabel(i), 0, 0, 0, 0, -1));
 		} else {
-			list->AddUnder(new KeyItem(gKeyBind.GetLabel(i),
-				gKeyBind.GetKey(code),
-				gKeyBind.GetMod(code), gKeyBind.GetKeyAlt(code),
-				gKeyBind.GetModAlt(code), i), item);
+			list->AddUnder(new KeyItem(gKeyBind->GetLabel(i),
+				gKeyBind->GetKey(code),
+				gKeyBind->GetMod(code), gKeyBind->GetKeyAlt(code),
+				gKeyBind->GetModAlt(code), i), item);
 		}
 	}
 
@@ -692,20 +693,20 @@ KeymapView::Pulse()
 		while (item = list->RemoveItem((int32)0))
 			delete item;
 
-		for (int32 i=0; i<gKeyBind.CountKeys(); i++) {
-			uint32 code = gKeyBind.GetCode(i);
+		for (int32 i=0; i<gKeyBind->CountKeys(); i++) {
+			uint32 code = gKeyBind->GetCode(i);
 
 			if (code == FABER_ITEM_START) {
 				if (item)
 					list->Collapse(item);
 
 				list->AddItem(item = new KeyItem(
-					gKeyBind.GetLabel(code), 0, 0, 0, 0, -1));
+					gKeyBind->GetLabel(code), 0, 0, 0, 0, -1));
 			} else {
-				list->AddUnder(new KeyItem(gKeyBind.GetLabel(code),
-				gKeyBind.GetKey(code),
-					gKeyBind.GetMod(code), gKeyBind.GetKeyAlt(code),
-					gKeyBind.GetModAlt(code), i), item);
+				list->AddUnder(new KeyItem(gKeyBind->GetLabel(code),
+				gKeyBind->GetKey(code),
+					gKeyBind->GetMod(code), gKeyBind->GetKeyAlt(code),
+					gKeyBind->GetModAlt(code), i), item);
 			}
 		}
 		if (item)
@@ -716,10 +717,10 @@ KeymapView::Pulse()
 			// needed to convert the outline numbers, they are inverted !
 			uint32 code = ((KeyItem*)item)->GetCode();			
 			if (code > 0) {
-				((KeyItem*)item)->SetKey( gKeyBind.GetKey(code));
-				((KeyItem*)item)->SetKeyAlt( gKeyBind.GetKeyAlt(code));
-				((KeyItem*)item)->SetMod( gKeyBind.GetMod(code));
-				((KeyItem*)item)->SetModAlt( gKeyBind.GetModAlt(code));
+				((KeyItem*)item)->SetKey( gKeyBind->GetKey(code));
+				((KeyItem*)item)->SetKeyAlt( gKeyBind->GetKeyAlt(code));
+				((KeyItem*)item)->SetMod( gKeyBind->GetMod(code));
+				((KeyItem*)item)->SetModAlt( gKeyBind->GetModAlt(code));
 			}
 		}
 	}
@@ -752,7 +753,7 @@ KeymapView::MessageReceived(BMessage *msg)
 				// needed to convert the outline numbers, they are inverted !
 				code = ((KeyItem*)it)->GetCode();
 				if (code > 0) {
-					sprintf(s, "item: %s", gKeyBind.GetLabel(code));
+					sprintf(s, "item: %s", gKeyBind->GetLabel(code));
 					p.x =  (screen.Frame().left+screen.Frame().right)/2;
 					p.y =  (screen.Frame().top+screen.Frame().bottom)/2;
 					m_index = index;

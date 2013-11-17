@@ -19,9 +19,9 @@
 
 #include "SettingsView.h"
 
+#include <Button.h>
 #include <GroupLayoutBuilder.h>
 
-#include "Behavior.h"
 #include "ColorScheme.h"
 #include "Engine.h"
 #include "FaberDefs.h"
@@ -31,20 +31,23 @@
 
 SettingsView::SettingsView()
 	:
-	BGroupView(B_HORIZONTAL, B_FOLLOW_LEFT)
+	BGroupView(B_VERTICAL, 0)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	fTabView = new BTabView("");
 
 	_AddTab(new EngineView(), B_TRANSLATE("Engine"));
-	_AddTab(new BehaviorView(), B_TRANSLATE("Behavior"));
 	_AddTab(new InterfaceView(), B_TRANSLATE("Interface"));
 	_AddTab(new KeymapView(), B_TRANSLATE("Keymap"));
 	_AddTab(new ColorSchemeView(), B_TRANSLATE("Color Scheme"));
 
 	BGroupLayoutBuilder(this)
 		.Add(fTabView)
+		.AddGroup(B_HORIZONTAL)
+			.Add(new BButton(B_TRANSLATE("Ok"), new BMessage(FABER_APPLY)))
+			.Add(new BButton(B_TRANSLATE("Revert"), new BMessage(FABER_REVERT)))
+		.End()
 	.End();
 
 }

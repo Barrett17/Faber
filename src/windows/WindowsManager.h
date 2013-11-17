@@ -50,6 +50,7 @@ public:
 	// static void			UpdateMainMenu();
 	// static void			UpdateToolBar();
 	// static void			UpdateInfoToolBar();
+
 	// static void			MessageToMainWin(const uint32 msg);
 	// static void			MessageToMainWin(BMessage* msg);
 

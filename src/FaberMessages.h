@@ -117,6 +117,7 @@ const uint32 FABER_COPY					=	B_COPY;
 const uint32 FABER_CUT					=	B_CUT;
 const uint32 FABER_PASTE				=	B_PASTE;
 const uint32 FABER_SELECT_ALL			=	B_SELECT_ALL;
+const uint32 FABER_UNSELECT_ALL			=	'unsl';
 
 const uint32 FABER_TRANSPORT_REW		=	'trew';
 const uint32 FABER_TRANSPORT_REW_ALL	=	'trwa';
@@ -142,7 +143,6 @@ const uint32 FABER_EFFECT_ABORT			=	'feab';
 
 const uint32 FABER_CLEAR				=	'cler';
 
-const uint32 FABER_UNSELECT_ALL			=	'unsl';
 const uint32 FABER_COPY_SILENCE			=	'cpsl';
 
 const uint32 FABER_SET_FREQUENCY		=	'setf';
@@ -181,5 +181,7 @@ const ItemMessage FABER_ITEM_END			=	'fite';
 const ItemMessage FABER_EOF					=	'feof';
 const ItemMessage FABER_SPLITTER			=	'spli';
 
+const uint32 FABER_APPLY					=	'fbaP';
+const uint32 FABER_REVERT					=	'fbrv';
 
 #endif
