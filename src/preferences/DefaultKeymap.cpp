@@ -20,6 +20,8 @@ KeyBind kFileMenu[] {
 
 	{ 1,"Quit",                'Q', B_COMMAND_KEY,                   0, 0,                      GeneralMessage(FABER_QUIT_REQUESTED) },
 
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };
 
@@ -67,6 +69,8 @@ KeyBind kEditMenu[] {
 
 	{ 1,"Settings...",      'P', B_COMMAND_KEY,                 'P', B_SHIFT_KEY,            GeneralMessage(FABER_SETTINGS) },
 
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };
 
@@ -80,6 +84,8 @@ KeyBind kTracksMenu[] {
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
 
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };
 
@@ -88,6 +94,8 @@ KeyBind kHelpMenu[] {
 
     { 1,"Homepage",                  0, 0,                           0, 0,                      GeneralMessage(FABER_OPEN_HOMEPAGE) },
     { 1,"About",                  0, 0,                           0, 0,                         GeneralMessage(FABER_ABOUT) },
+
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };
@@ -104,6 +112,8 @@ KeyBind kPlayButtons[] {
     { 0,"Record",         0, 0,               0, 0,                                             GeneralMessage(FABER_TRANSPORT_REC) },
     { 0,"Loop",     'L', 0,                   0, 0,                                             GeneralMessage(FABER_TRANSPORT_LOOP) },
 
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };
 
@@ -115,6 +125,8 @@ KeyBind kZoomBar[] {
     { 0,"Zoom Full",                  B_UP_ARROW, B_SHIFT_KEY,      0,0,                       GeneralMessage(FABER_ZOOM_FULL) },
     { 0,"Zoom to Selection",          B_DOWN_ARROW, B_SHIFT_KEY,    0,0,                       GeneralMessage(FABER_ZOOM_SELECTION) },
 
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };
 
@@ -124,6 +136,8 @@ KeyBind kToolsBar[] {
     { 0,"Selection Tool",                 0, 0,                 '1', 0,                        GeneralMessage(FABER_SELECTION_TOOL) },
     { 0,"Draw tool",                      0, 0,                 '2', 0,                        GeneralMessage(FABER_DRAW_TOOL) },
     { 0,"Play tool",                      0, 0,                 '3', 0,                        GeneralMessage(FABER_PLAY_TOOL) },
+
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };

@@ -32,6 +32,7 @@
  */
 
 #include <LayoutBuilder.h>
+#include <ObjectList.h>
 #include <InterfaceKit.h>
 #include <StorageKit.h>
 #include <String.h>
@@ -583,15 +584,14 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 	switch(msg->what) {
 		case SET:
 		{
-			/*KeyBind* key = new KeyBind();
+			KeyBind* key = new KeyBind();
 	
 			key->key = control1->GetKey();
 			key->mod = control1->GetMod();
 			key->altKey = control2->GetKey();
 			key->altMod = control2->GetMod();
 			key->label = gKeyBind->GetLabel(index);
-			key->message.what = message.what;
-			key->message.code = message.code;
+			key->message = GeneralMessage(message);
 			key->isMenuItem = menu;
 	
 			gKeyBind->AddKeyBind(key);
@@ -600,7 +600,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 				parent->Pulse();
 				parent->UnlockLooper();
 			}
-			Quit();*/
+			Quit();
 			break;
 		}
 
@@ -639,29 +639,41 @@ KeymapView::KeymapView()
 	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	sv->MakeFocus(false);
 
-	BListItem *item = NULL;
+	BObjectList<BListItem> items(false);
 
 	for (int32 i=0; i<gKeyBind->CountKeys(); i++) {
 		uint32 code = gKeyBind->GetCode(i);
-		if (code == FABER_SPLITTER || code == FABER_ITEM_END)
+		if (code == FABER_SPLITTER)
 			continue;
 
-		if (code == FABER_ITEM_START) {
-			if (item)
-				list->Collapse(item);
+		BListItem* item = items.ItemAt(items.CountItems()-1);
 
-			list->AddItem(
-				item = new KeyItem(gKeyBind->GetLabel(i), 0, 0, 0, 0, -1));
-		} else {
+		if (code == FABER_ITEM_END || code == FABER_EOF) {
+			//if (item != NULL) {
+				list->Collapse(item);
+				items.RemoveItemAt(items.CountItems()-1);
+			//}
+
+			continue;
+		}
+
+		if (code == FABER_ITEM_START) {
+
+			BListItem* newItem = new KeyItem(gKeyBind->GetLabel(i), 0, 0, 0, 0, -1);
+			if (items.CountItems() > 0) {
+				list->AddUnder(newItem, item);
+			} else {	
+				list->AddItem(newItem);
+			}
+			items.AddItem(newItem);
+
+		} else if (item != NULL) {
 			list->AddUnder(new KeyItem(gKeyBind->GetLabel(i),
 				gKeyBind->GetKey(code),
 				gKeyBind->GetMod(code), gKeyBind->GetKeyAlt(code),
 				gKeyBind->GetModAlt(code), i), item);
 		}
 	}
-
-	if (item)
-		list->Collapse(item);
 
 	m_index = -1;
 
@@ -680,53 +692,7 @@ void
 KeymapView::AttachedToWindow()
 {
 	list->SetTarget(this);
-//	list->SetSelectionMessage(new BMessage(SELECT));
 	list->SetInvocationMessage(new BMessage(SELECT));
-}
-
-
-void
-KeymapView::Pulse()
-{
-	BListItem *item = NULL;
-	if (m_index<0) {
-		while (item = list->RemoveItem((int32)0))
-			delete item;
-
-		for (int32 i=0; i<gKeyBind->CountKeys(); i++) {
-			uint32 code = gKeyBind->GetCode(i);
-
-			if (code == FABER_ITEM_START) {
-				if (item)
-					list->Collapse(item);
-
-				list->AddItem(item = new KeyItem(
-					gKeyBind->GetLabel(code), 0, 0, 0, 0, -1));
-			} else {
-				list->AddUnder(new KeyItem(gKeyBind->GetLabel(code),
-				gKeyBind->GetKey(code),
-					gKeyBind->GetMod(code), gKeyBind->GetKeyAlt(code),
-					gKeyBind->GetModAlt(code), i), item);
-			}
-		}
-		if (item)
-			list->Collapse(item);
-	} else {
-		item = list->FullListItemAt(m_index);
-		if (item) {
-			// needed to convert the outline numbers, they are inverted !
-			uint32 code = ((KeyItem*)item)->GetCode();			
-			if (code > 0) {
-				((KeyItem*)item)->SetKey( gKeyBind->GetKey(code));
-				((KeyItem*)item)->SetKeyAlt( gKeyBind->GetKeyAlt(code));
-				((KeyItem*)item)->SetMod( gKeyBind->GetMod(code));
-				((KeyItem*)item)->SetModAlt( gKeyBind->GetModAlt(code));
-			}
-		}
-	}
-
-	m_index = -1;
-	list->Invalidate();
 }
 
 

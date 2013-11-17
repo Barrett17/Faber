@@ -168,7 +168,17 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 			WindowsManager::Get()->ShowSettings();
 		break;
 
+		case FABER_COPY:
+		{
+		
+			break;
+		}
 
+		case FABER_CUT:
+		{
+		
+			break;
+		}
 
 		case FABER_EFFECT_CALL:
 		{

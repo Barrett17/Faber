@@ -43,7 +43,6 @@ public:
 									~KeymapView();
 	virtual void					AttachedToWindow();
 	virtual void					MessageReceived(BMessage*);
-	virtual void					Pulse();
 
 private:
 			BOutlineListView*		list;
