@@ -17,55 +17,65 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberWindow.h"
+#include "CommandsLooper.h"
 
-#include <LayoutBuilder.h>
+#include "FaberDefs.h"
 
-#include "FaberView.h"
-#include "MenuManager.h"
+CommandsLooper* CommandsLooper::fInstance = NULL;
 
 
-FaberWindow::FaberWindow(BRect rect)
+CommandsLooper*
+CommandsLooper::Get()
+{
+	if (fInstance == NULL)
+		fInstance = new CommandsLooper();
+
+	return fInstance;	
+}
+
+
+CommandsLooper::CommandsLooper()
 	:
-	BWindow(rect, "Faber" , B_TITLED_WINDOW, 0)
+	BLooper("Commands Looper")
 {
-	fFaberView = new FaberView();
-
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(MenuManager::Get()->BuildMainMenuBar())
-		.Add(fFaberView)
-	.End();
-
-}
-
-
-FaberWindow::~FaberWindow()
-{
-
-}
-
-
-bool
-FaberWindow::QuitRequested()
-{
-	return true;
+	Run();
 }
 
 
 void
-FaberWindow::MessageReceived(BMessage* message)
+CommandsLooper::MessageReceived(BMessage* message)
 {
 	message->PrintToStream();
+
 	switch (message->what)
 	{
+		case FABER_GENERAL_MESSAGE:
+			_GeneralMessage(message);
+		break;
+
 		default:
-			BWindow::MessageReceived(message);
+			BLooper::MessageReceived(message);
+	}
+
+}
+
+
+void
+CommandsLooper::_GeneralMessage(BMessage* message)
+{
+	uint32 faber_what = 0;
+	message->FindUInt32(FABER_WHAT, &faber_what);
+
+	switch (faber_what)
+	{
+		case FABER_ABOUT:
+			WindowsManager::ShowAbout();	
+		break;
+
+		case FABER_SETTINGS:
+			WindowsManager::Get()->ShowSettings();
+		break;
+
 	}
 }
 
-
-FaberView*
-FaberWindow::MainView() const
-{
-	return fFaberView;
-}

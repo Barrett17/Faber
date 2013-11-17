@@ -90,7 +90,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	trackMenu->SetTargetForItems(this);
 
 	IconButton* closeButton = new IconButton(NULL, 0, NULL,
-		FABER_REMOVE_TRACK, this);
+		GeneralMessage(FABER_REMOVE_TRACK), this);
 
 	closeButton->SetToolTip(B_TRANSLATE("Close"));
 	closeButton->SetIcon(kCloseTrackIcon);

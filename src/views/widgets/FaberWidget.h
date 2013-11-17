@@ -17,58 +17,26 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberEffect.h"
+#ifndef FABER_WIDGET
+#define FABER_WIDGET
 
-#include "FaberDefs.h"
+#include <GroupView.h>
+
+#include "IconButton.h"
 
 
-FaberEffect::FaberEffect(const char* name, uint32 flags)
-	:
-	fName(name),
-	fFlags(flags)
+class FaberWidget : public BGroupView
 {
-}
+public:
+							FaberWidget(
+								orientation orientation = B_HORIZONTAL);
+	virtual 				~FaberWidget();
+	virtual void			MessageReceived(BMessage* message);
 
+protected:
+			IconButton*		BuildButton(const char* tip, BMessage* message,
+								int32 resourceID);
 
-FaberEffect::~FaberEffect()
-{
-}
+};
 
-
-
-const char*
-FaberEffect::Name() const
-{
-	return fName;
-}
-
-
-BMenuItem*
-FaberEffect::BuildItem()
-{
-	BMessage* mess = GeneralMessage(FABER_EFFECT_CALL);
-	mess->AddPointer("effect", this);
-
-	return new BMenuItem(Name(), mess, 0, 0);
-}
-
-
-int32
-FaberEffect::Flags() const
-{
-	return fFlags;
-}
-
-
-status_t
-FaberEffect::FlattenSettings(BMessage* message)
-{
-
-}
-
-
-status_t
-FaberEffect::UnflattenSettings(BMessage* message)
-{
-
-}
+#endif

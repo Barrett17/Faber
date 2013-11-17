@@ -17,15 +17,46 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef COMMANDS_HANDLER_H
-#define COMMANDS_HANDLER_H
+#ifndef TRANSPORT_WIDGET
+#define TRANSPORT_WIDGET
 
-#include <Handler.h>
+#include <GroupView.h>
 
-class CommandsHandler : public BHandler {
+#include "FaberWidget.h"
+#include "IconButton.h"
+
+
+class TransportWidget : public FaberWidget
+{
 public:
-								
+							TransportWidget();
+	virtual 				~TransportWidget();
+
+			// Various methods for controlling
+			// the toolbar behavior
+			void			SetPlay(bool play);
+			bool			IsPlay() const;
+
+			void			SetStop(bool stop);
+			bool			IsStop() const;
+
+			void			SetPause(bool pause);
+			bool			IsPause() const;
+
+			// Unimplemented right now
+			//void			SetRec(bool rec);
+			//bool			IsRec() const;
+
+			void			SetLoop(bool loop);
+			bool			IsLoop() const;
+
 private:
+
+			IconButton*		fPlayButton;
+			IconButton*		fStopButton;
+			IconButton*		fLoopButton;
+
+			bool			fPlaying;
 
 };
 

@@ -42,6 +42,8 @@ MenuManager::MenuManager()
 {
 	fKeyBind = FaberShortcut::Get();
 	fKeyBind->CreateDefaultKeys();
+
+	fCommandsLooper = CommandsLooper::Get();
 }
 
 
@@ -96,8 +98,11 @@ MenuManager::BuildEffectsMenu()
 
 	for (int i = 0; i < effectsManager->CountEffects(); i++) {
 		FaberEffect* effect = effectsManager->GetEffect(i);
-		if (effect->Flags() & FABER_FILTER)
-			menu->AddItem(effect->BuildItem());
+		if (effect->Flags() & FABER_FILTER) {
+			BMenuItem* item = effect->BuildItem();
+			item->SetTarget(fCommandsLooper);
+			menu->AddItem(item);
+		}
 	}
 
 	return menu;
@@ -112,8 +117,11 @@ MenuManager::BuildGenerateMenu()
 
 	for (int i = 0; i < effectsManager->CountEffects(); i++) {
 		FaberEffect* effect = effectsManager->GetEffect(i);
-		if (effect->Flags() & FABER_PRODUCER)
-			menu->AddItem(effect->BuildItem());
+		if (effect->Flags() & FABER_PRODUCER) {
+			BMenuItem* item = effect->BuildItem();
+			item->SetTarget(fCommandsLooper);
+			menu->AddItem(item);
+		}
 	}
 
 	return menu;
@@ -200,8 +208,10 @@ MenuManager::_BuildMenu(KeyBind* bind, const char* name)
 			if (menuList.CountItems() > 1)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
 		} else {
-			printf("%s %d\n", bind[i].label, bind[i].message.code);
-			menu->AddItem(_BuildMenuItem(bind[i].message, bind[i].label));
+			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
+			item->SetTarget(fCommandsLooper);
+
+			menu->AddItem(item);
 		}
 	}
 	return menuList.ItemAt(0);

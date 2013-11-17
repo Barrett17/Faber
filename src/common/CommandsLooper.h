@@ -17,5 +17,22 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CommandsHandler.h"
+#ifndef COMMANDS_LOOPER_H
+#define COMMANDS_LOOPER_H
 
+#include <Looper.h>
+
+class CommandsLooper : public BLooper {
+public:
+										CommandsLooper();
+
+			static CommandsLooper* 		Get();
+
+	virtual void						MessageReceived(BMessage* message);					
+private:
+			void						_GeneralMessage(BMessage* message);
+
+			static CommandsLooper*		fInstance;
+};
+
+#endif

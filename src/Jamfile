@@ -16,6 +16,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src audio nodes ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src views widgets ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows mixer ] ;
@@ -38,17 +39,22 @@ Application Faber :
 	FaberWindow.cpp
 	FaberView.cpp
 
-	CommandsHandler.cpp
+	CommandsLooper.cpp
 	ProjectManager.cpp
 	WindowsManager.cpp
 	MenuManager.cpp
 
-	# Widgets
 	TracksContainer.cpp
 	ToolBar.cpp
 	InfoToolBar.cpp
 	FaberScrollBar.cpp
 	TimeBar.cpp
+
+	# Widgets
+	FaberWidget.cpp
+	TransportWidget.cpp
+	ZoomWidget.cpp
+	ToolsWidget.cpp
 	DurationView.cpp
 	WidgetFrame.cpp
 

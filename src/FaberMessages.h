@@ -22,8 +22,6 @@
 
 #define FABER_WHAT "faber_what?"
 
-#include <stdio.h>
-
 class FaberMessage {
 public:
 
@@ -41,8 +39,8 @@ public:
 
 	BMessage* ToMessage() const
 	{
-		BMessage* ret = new BMessage(code);
-		ret->AddUInt32(FABER_WHAT, what);
+		BMessage* ret = new BMessage(what);
+		ret->AddUInt32(FABER_WHAT, code);
 		return ret;
 	}
 
@@ -87,103 +85,84 @@ public:
 					FaberMessage(FABER_GENERAL_MESSAGE, code) {};
 };
 
-const GeneralMessage FABER_ABOUT				= 	'abou';
+const uint32 FABER_ABOUT				= 	'abou';
 
-const GeneralMessage FABER_OPEN_HOMEPAGE		=	'hmpg';
+const uint32 FABER_OPEN_HOMEPAGE		=	'hmpg';
 
-const GeneralMessage FABER_EXPORT_PROJECT   	=	'fepj';
-const GeneralMessage FABER_NEW_PROJECT			=	'fnew';
-const GeneralMessage FABER_SAVE_PROJECT			=	'save';
+const uint32 FABER_EXPORT_PROJECT   	=	'fepj';
+const uint32 FABER_NEW_PROJECT			=	'fnew';
+const uint32 FABER_SAVE_PROJECT			=	'save';
 
-const GeneralMessage FABER_NEW_EMPTY_TRACK		=   'FNEt';
-const GeneralMessage FABER_REMOVE_TRACK			=	'Frtk';
+const uint32 FABER_NEW_EMPTY_TRACK		=   'FNEt';
+const uint32 FABER_REMOVE_TRACK			=	'Frtk';
 
-const GeneralMessage FABER_FILE_OPEN			=	'open';
+const uint32 FABER_FILE_OPEN			=	'open';
 
-const GeneralMessage FABER_EXPORT_SELECTION		=	'svsl';
+const uint32 FABER_EXPORT_SELECTION		=	'svsl';
 
-const GeneralMessage FABER_INSERT				=	'insr';
-const GeneralMessage FABER_APPEND				=	'appn';
+const uint32 FABER_INSERT				=	'insr';
+const uint32 FABER_APPEND				=	'appn';
 
-const GeneralMessage FABER_UNDO					=	'undo';
-const GeneralMessage FABER_REDO					=	'redo';
+const uint32 FABER_UNDO					=	'undo';
+const uint32 FABER_REDO					=	'redo';
 
-const GeneralMessage FABER_PASTE_NEW			=	'pnnw';
-const GeneralMessage FABER_DROP_PASTE			=	'drps';
+const uint32 FABER_PASTE_NEW			=	'pnnw';
+const uint32 FABER_DROP_PASTE			=	'drps';
 
-const GeneralMessage FABER_PREFERENCES			=	'prfs';
+const uint32 FABER_SETTINGS				=	'stng';
 
-const GeneralMessage FABER_QUIT_REQUESTED		=	B_QUIT_REQUESTED;
+const uint32 FABER_QUIT_REQUESTED		=	B_QUIT_REQUESTED;
 
-const GeneralMessage FABER_COPY					=	B_COPY;
-const GeneralMessage FABER_CUT					=	B_CUT;
-const GeneralMessage FABER_PASTE				=	B_PASTE;
-const GeneralMessage FABER_SELECT_ALL			=	B_SELECT_ALL;
+const uint32 FABER_COPY					=	B_COPY;
+const uint32 FABER_CUT					=	B_CUT;
+const uint32 FABER_PASTE				=	B_PASTE;
+const uint32 FABER_SELECT_ALL			=	B_SELECT_ALL;
 
-// Transport
-
-const uint32 FABER_TRANSPORT_MESSAGE	=	'TRMS';
-
-class TransportMessage : public FaberMessage {
-public:
-				TransportMessage(uint32 code)
-					:
-					FaberMessage(FABER_TRANSPORT_MESSAGE, code) {};
-};
-
-const TransportMessage FABER_TRANSPORT_REW		=	'trew';
-const TransportMessage FABER_TRANSPORT_REW_ALL	=	'trwa';
-const TransportMessage FABER_TRANSPORT_FWD		=	'trwd';
-const TransportMessage FABER_TRANSPORT_FWD_ALL	=	'trfa';
-const TransportMessage FABER_TRANSPORT_PLAY		=	'trly';
-const TransportMessage FABER_TRANSPORT_STOP		=	'trtp';
-const TransportMessage FABER_TRANSPORT_REC		=	'trec';
-const TransportMessage FABER_TRANSPORT_LOOP		=	'trop';
+const uint32 FABER_TRANSPORT_REW		=	'trew';
+const uint32 FABER_TRANSPORT_REW_ALL	=	'trwa';
+const uint32 FABER_TRANSPORT_FWD		=	'trwd';
+const uint32 FABER_TRANSPORT_FWD_ALL	=	'trfa';
+const uint32 FABER_TRANSPORT_PLAY		=	'trly';
+const uint32 FABER_TRANSPORT_STOP		=	'trtp';
+const uint32 FABER_TRANSPORT_REC		=	'trec';
+const uint32 FABER_TRANSPORT_LOOP		=	'trop';
 
 // Zoom
 
-const uint32 FABER_TRACK_MESSAGE		=	'FTRM';
-
-class TrackMessage : public FaberMessage {
-public:
-				TrackMessage(uint32 code)
-					:
-					FaberMessage(FABER_TRACK_MESSAGE, code) {};
-};
-
-const TrackMessage FABER_ZOOM_IN				=	'zooi';
-const TrackMessage FABER_ZOOM_OUT				=	'zoot';
-const TrackMessage FABER_ZOOM_FULL			=	'zofl';
-const TrackMessage FABER_ZOOM_SELECTION		=	'zosl';
+const uint32 FABER_ZOOM_IN				=	'zooi';
+const uint32 FABER_ZOOM_OUT				=	'zoot';
+const uint32 FABER_ZOOM_FULL			=	'zofl';
+const uint32 FABER_ZOOM_SELECTION		=	'zosl';
 
 // Effects and audio manipulation
 
-const TrackMessage FABER_EFFECT_CALL			=	'fecl';
-const TrackMessage FABER_EFFECT_EXECUTE		=	'feex';
-const TrackMessage FABER_EFFECT_ABORT			=	'feab';
+const uint32 FABER_EFFECT_CALL			=	'fecl';
+const uint32 FABER_EFFECT_EXECUTE		=	'feex';
+const uint32 FABER_EFFECT_ABORT			=	'feab';
 
-const TrackMessage FABER_CLEAR				=	'cler';
+const uint32 FABER_CLEAR				=	'cler';
 
-const TrackMessage FABER_UNSELECT_ALL			=	'unsl';
-const TrackMessage FABER_COPY_SILENCE			=	'cpsl';
+const uint32 FABER_UNSELECT_ALL			=	'unsl';
+const uint32 FABER_COPY_SILENCE			=	'cpsl';
 
-const TrackMessage FABER_SET_FREQUENCY		=	'setf';
-const TrackMessage FABER_RESAMPLE				=	'resm';
-const TrackMessage FABER_RESAMPLE_EXECUTE		=	'resd';
+const uint32 FABER_SET_FREQUENCY		=	'setf';
+const uint32 FABER_RESAMPLE				=	'resm';
+const uint32 FABER_RESAMPLE_EXECUTE		=	'resd';
 
-const TrackMessage FABER_SELECTION_TOOL			=	'fstl';
-const TrackMessage FABER_DRAW_TOOL				=	'fdwt';
-const TrackMessage FABER_PLAY_TOOL				=	'fplt';
-const TrackMessage FABER_TEMPORAL_TOOL			= 	'ftmt';
+const uint32 FABER_SELECTION_TOOL		=	'fstl';
+const uint32 FABER_DRAW_TOOL			=	'fdwt';
+const uint32 FABER_PLAY_TOOL			=	'fplt';
+const uint32 FABER_TEMPORAL_TOOL		= 	'ftmt';
+const uint32 FABER_TRIM					=	'trim';
 
 // TODO those will be effects, remove them
-const TrackMessage FABER_TRIM					=	'trim';
-const TrackMessage FABER_ZERO_IN				=	'zrin';
-const TrackMessage FABER_ZERO_OUT				=	'zrot';
-const TrackMessage FABER_ZERO_LL				=	'zrll';
-const TrackMessage FABER_ZERO_LR				=	'zrlr';
-const TrackMessage FABER_ZERO_RL				=	'zrlr';
-const TrackMessage FABER_ZERO_RR				=	'zrrr';
+
+const uint32 FABER_ZERO_IN				=	'zrin';
+const uint32 FABER_ZERO_OUT				=	'zrot';
+const uint32 FABER_ZERO_LL				=	'zrll';
+const uint32 FABER_ZERO_LR				=	'zrlr';
+const uint32 FABER_ZERO_RL				=	'zrlr';
+const uint32 FABER_ZERO_RR				=	'zrrr';
 
 // Other defs
 

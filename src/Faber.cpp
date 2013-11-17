@@ -50,12 +50,12 @@ FaberApp::FaberApp()
 bool
 FaberApp::QuitRequested()
 {
-	if (fFaberWindow) {
+	/*if (fFaberWindow) {
 		if (fFaberWindow->Lock() && fFaberWindow->QuitRequested()) {
 			fFaberWindow->Quit();
 			return true;
 		}
-	}
+	}*/
 	return true;
 }
 

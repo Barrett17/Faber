@@ -17,56 +17,41 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ToolBar.h"
+#include "ZoomWidget.h"
+
+#include "FaberDefs.h"
+#include "WidgetFrame.h"
 
 #include <LayoutBuilder.h>
-#include <StringView.h>
-
-#include "DurationView.h"
-#include "FaberDefs.h"
-#include "IconButton.h"
 
 
-ToolBar::ToolBar()
+ZoomWidget::ZoomWidget()
 	:
-	BView("ToolBar", B_HORIZONTAL)
+	FaberWidget(B_HORIZONTAL)
 {
-	fOutputPeakView = new PeakView("OutputPeakView", true, false);
-	fOutputPeakView->SetExplicitMaxSize(BSize(150, 20));
+	WidgetFrame* zoomView = new WidgetFrame();
 
-	DurationView* durationView = new DurationView();
+	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL, 0.5f)
+		.AddStrut(7.0f)
+		.Add(BuildButton(B_TRANSLATE("Zoom in"), 
+			GeneralMessage(FABER_ZOOM_IN), kZoomInIcon))
 
-	fOutputPeakView->SetExplicitSize(BSize(150, 13));
+		.Add(BuildButton(B_TRANSLATE("Zoom out"),
+			GeneralMessage(FABER_ZOOM_OUT), kZoomOutIcon))
 
+		.Add(BuildButton(B_TRANSLATE("Zoom to selection"),
+			GeneralMessage(FABER_ZOOM_SELECTION), kZoomToSelectionIcon))
 
-	fTransportWidget = new TransportWidget();
-	fToolsWidget = new ToolsWidget();
+		.Add(BuildButton(B_TRANSLATE("Zoom full wave"),
+			GeneralMessage(FABER_ZOOM_FULL), kZoomFullWaveIcon))
+		.AddStrut(7.0f)
+	.End();
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
-			.AddGlue()
-			.Add(fTransportWidget)
-			.AddStrut(15.0f)
-
-			.AddGroup(B_VERTICAL, 0.5f)
-				.Add(fOutputPeakView)
-				.Add(durationView)
-			.End()
-
-			.AddGlue()
-
-			.Add(fToolsWidget)
-			.AddStrut(2.0f)
-		.End();
-
+		.Add(zoomView);
 }
 
 
-ToolBar::~ToolBar()
-{
-}
-
-
-void
-ToolBar::Update()
+ZoomWidget::~ZoomWidget()
 {
 }

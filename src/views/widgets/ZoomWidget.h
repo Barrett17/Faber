@@ -17,58 +17,47 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberEffect.h"
+#ifndef ZOOM_WIDGET
+#define ZOOM_WIDGET
 
-#include "FaberDefs.h"
+#include <GroupView.h>
+
+#include "FaberWidget.h"
+#include "IconButton.h"
 
 
-FaberEffect::FaberEffect(const char* name, uint32 flags)
-	:
-	fName(name),
-	fFlags(flags)
+class ZoomWidget : public FaberWidget
 {
-}
+public:
+							ZoomWidget();
+	virtual 				~ZoomWidget();
 
+			// Various methods for controlling
+			// the toolbar behavior
+			void			SetPlay(bool play);
+			bool			IsPlay() const;
 
-FaberEffect::~FaberEffect()
-{
-}
+			void			SetStop(bool stop);
+			bool			IsStop() const;
 
+			void			SetPause(bool pause);
+			bool			IsPause() const;
 
+			// Unimplemented right now
+			//void			SetRec(bool rec);
+			//bool			IsRec() const;
 
-const char*
-FaberEffect::Name() const
-{
-	return fName;
-}
+			void			SetLoop(bool loop);
+			bool			IsLoop() const;
 
+private:
 
-BMenuItem*
-FaberEffect::BuildItem()
-{
-	BMessage* mess = GeneralMessage(FABER_EFFECT_CALL);
-	mess->AddPointer("effect", this);
+			IconButton*		fPlayButton;
+			IconButton*		fStopButton;
+			IconButton*		fLoopButton;
 
-	return new BMenuItem(Name(), mess, 0, 0);
-}
+			bool			fPlaying;
 
+};
 
-int32
-FaberEffect::Flags() const
-{
-	return fFlags;
-}
-
-
-status_t
-FaberEffect::FlattenSettings(BMessage* message)
-{
-
-}
-
-
-status_t
-FaberEffect::UnflattenSettings(BMessage* message)
-{
-
-}
+#endif

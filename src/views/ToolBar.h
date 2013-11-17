@@ -23,6 +23,8 @@
 #include <View.h>
 
 #include "PeakView.h"
+#include "ToolsWidget.h"
+#include "TransportWidget.h"
 
 class IconButton;
 
@@ -30,44 +32,16 @@ class IconButton;
 class ToolBar: public BView
 {
 public:
-							ToolBar();
-	virtual 				~ToolBar();
+								ToolBar();
+	virtual 					~ToolBar();
 
-			void			Update();
-
-
-			// Various methods for controlling
-			// the toolbar behavior
-			void			SetPlay(bool play);
-			bool			IsPlay() const;
-
-			void			SetStop(bool stop);
-			bool			IsStop() const;
-
-			void			SetPause(bool pause);
-			bool			IsPause() const;
-
-			// Unimplemented right now
-			//void			SetRec(bool rec);
-			//bool			IsRec() const;
-
-			void			SetLoop(bool loop);
-			bool			IsLoop() const;
-
-			void			SetTool(const uint32 index);
+			void				Update();
 
 private:
-			IconButton*		_BuildButton(const char* tip, BMessage* message,
-								int32 resourceID);
-
-			PeakView*		fOutputPeakView;
-
-			IconButton*		fPlayButton;
-			IconButton*		fStopButton;
-			IconButton*		fLoopButton;
-
-			IconButton*		fToolButtons[3];
-			bool			fPlaying;
+			PeakView*			fOutputPeakView;
+			TransportWidget*	fTransportWidget;
+			ToolsWidget*		fToolsWidget;
+			
 };
 
 #endif

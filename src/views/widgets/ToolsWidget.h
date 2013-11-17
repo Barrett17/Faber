@@ -17,58 +17,26 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberEffect.h"
+#ifndef TOOLS_WIDGET
+#define TOOLS_WIDGET
 
-#include "FaberDefs.h"
+#include <GroupView.h>
+
+#include "FaberWidget.h"
+#include "IconButton.h"
 
 
-FaberEffect::FaberEffect(const char* name, uint32 flags)
-	:
-	fName(name),
-	fFlags(flags)
+class ToolsWidget : public FaberWidget
 {
-}
+public:
+							ToolsWidget();
+	virtual 				~ToolsWidget();
 
+			void			SetTool(const uint32 index);
 
-FaberEffect::~FaberEffect()
-{
-}
+private:
+			IconButton*		fToolButtons[3];
 
+};
 
-
-const char*
-FaberEffect::Name() const
-{
-	return fName;
-}
-
-
-BMenuItem*
-FaberEffect::BuildItem()
-{
-	BMessage* mess = GeneralMessage(FABER_EFFECT_CALL);
-	mess->AddPointer("effect", this);
-
-	return new BMenuItem(Name(), mess, 0, 0);
-}
-
-
-int32
-FaberEffect::Flags() const
-{
-	return fFlags;
-}
-
-
-status_t
-FaberEffect::FlattenSettings(BMessage* message)
-{
-
-}
-
-
-status_t
-FaberEffect::UnflattenSettings(BMessage* message)
-{
-
-}
+#endif

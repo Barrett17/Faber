@@ -17,58 +17,47 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberEffect.h"
+#include "FaberWidget.h"
 
+#include "CommandsLooper.h"
 #include "FaberDefs.h"
 
 
-FaberEffect::FaberEffect(const char* name, uint32 flags)
+FaberWidget::FaberWidget(orientation orientation)
 	:
-	fName(name),
-	fFlags(flags)
+	BGroupView(orientation)
 {
 }
 
 
-FaberEffect::~FaberEffect()
+FaberWidget::~FaberWidget()
 {
 }
 
 
-
-const char*
-FaberEffect::Name() const
+void
+FaberWidget::MessageReceived(BMessage* message)
 {
-	return fName;
+	switch (message->what)
+	{
+		case FABER_GENERAL_MESSAGE:
+			CommandsLooper::Get()->PostMessage(message);
+		break;
+
+		default:
+			BGroupView::MessageReceived(message);
+	}
 }
 
 
-BMenuItem*
-FaberEffect::BuildItem()
+IconButton*
+FaberWidget::BuildButton(const char* tip, BMessage* message, int32 resourceID)
 {
-	BMessage* mess = GeneralMessage(FABER_EFFECT_CALL);
-	mess->AddPointer("effect", this);
+	IconButton* button = new IconButton(NULL, 0, NULL, message, this, true);
+	// Well those could go into the constructor, but no reason for now.
+	button->SetToolTip(tip);
+	button->SetIcon(resourceID);
+	button->TrimIcon();
 
-	return new BMenuItem(Name(), mess, 0, 0);
-}
-
-
-int32
-FaberEffect::Flags() const
-{
-	return fFlags;
-}
-
-
-status_t
-FaberEffect::FlattenSettings(BMessage* message)
-{
-
-}
-
-
-status_t
-FaberEffect::UnflattenSettings(BMessage* message)
-{
-
+	return button;
 }

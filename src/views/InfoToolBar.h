@@ -33,13 +33,8 @@ public:
 							InfoToolBar();
 	virtual 				~InfoToolBar();
 
-	void					Pulse();
 private:
-			IconButton*		_BuildButton(const char* tip, BMessage* message,
-								int32 resourceID);
-
 			BTextView*		fPointerTextView;
-			int64			pointer;
 };
 
 #endif

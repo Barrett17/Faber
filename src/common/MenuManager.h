@@ -24,6 +24,7 @@
 #include <MenuBar.h>
 #include <PopUpMenu.h>
 
+#include "CommandsLooper.h"
 #include "DefaultKeymap.h"
 #include "FaberDefs.h"
 
@@ -56,6 +57,7 @@ private:
 
 	static MenuManager*		fInstance;
 	FaberShortcut*			fKeyBind;
+	CommandsLooper*			fCommandsLooper;
 };
 
 #endif	// _MENUMANAGER_H_
