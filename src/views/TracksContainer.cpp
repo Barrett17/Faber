@@ -103,7 +103,7 @@ TracksContainer::Pulse()
 void
 TracksContainer::MessageReceived(BMessage* message)
 {
-	switch (message->what)
+	/*switch (message->what)
 	{
 		case FABER_NEW_EMPTY_TRACK:
 			AddTrack(new AudioTrack());
@@ -146,7 +146,7 @@ TracksContainer::MessageReceived(BMessage* message)
 		default:
 			BView::MessageReceived(message);
 
-	}
+	}*/
 }
 
 

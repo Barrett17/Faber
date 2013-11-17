@@ -18,3 +18,26 @@
 */
 #include "ColorScheme.h"
 
+ColorSchemeView::ColorSchemeView()
+	:
+	BGroupView(B_HORIZONTAL, B_FOLLOW_LEFT)
+{
+
+}
+
+
+ColorSchemeView::~ColorSchemeView()
+{
+
+}
+
+
+void
+ColorSchemeView::MessageReceived(BMessage* message)
+{
+	switch(message->what)
+	{
+		default:
+			BGroupView::MessageReceived(message);
+	}
+}

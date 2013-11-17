@@ -23,7 +23,7 @@
 
 #include <GroupView.h>
 
-class ColorSchemeView : public BView {
+class ColorSchemeView : public BGroupView {
 public:
 								ColorSchemeView();
 	virtual 					~ColorSchemeView();

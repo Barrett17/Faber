@@ -26,7 +26,6 @@
 
 #include "DefaultKeymap.h"
 #include "FaberDefs.h"
-#include "Shortcut.h"
 
 
 class MenuManager
@@ -53,10 +52,10 @@ public:
 
 private:
 	BMenu*					_BuildMenu(KeyBind* bind, const char* name);
-	BMenuItem*				_BuildMenuItem(uint32 code, const char* label);
+	BMenuItem*				_BuildMenuItem(FaberMessage message, const char* label);
 
 	static MenuManager*		fInstance;
-	FaberShortcut			fKeyBind;
+	FaberShortcut*			fKeyBind;
 };
 
 #endif	// _MENUMANAGER_H_

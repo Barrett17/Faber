@@ -40,7 +40,8 @@ MenuManager::Get()
 
 MenuManager::MenuManager()
 {
-	fKeyBind = *FaberShortcut::Get();
+	fKeyBind = FaberShortcut::Get();
+	fKeyBind->CreateDefaultKeys();
 }
 
 
@@ -162,12 +163,12 @@ MenuManager::BuildTrackContextualMenu()
 	/*trackMenu->AddItem(new BSeparatorItem());
 
 	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."),
-		new BMessage(FABER_INSERT), fKeyBind.GetKey("FILE_INSERT"),
-		fKeyBind.GetMod("FILE_INSERT")));
+		new BMessage(FABER_INSERT), fKeyBind->GetKey("FILE_INSERT"),
+		fKeyBind->GetMod("FILE_INSERT")));
 
 	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."),
-		new BMessage(FABER_APPEND), fKeyBind.GetKey("FILE_APPEND"),
-		fKeyBind.GetMod("FILE_APPEND")));*/
+		new BMessage(FABER_APPEND), fKeyBind->GetKey("FILE_APPEND"),
+		fKeyBind->GetMod("FILE_APPEND")));*/
 
 	return trackMenu;
 }
@@ -187,20 +188,20 @@ MenuManager::_BuildMenu(KeyBind* bind, const char* name)
 	BObjectList<BMenu> menuList(false);
 	menuList.AddItem(menu);
 
-	for (int i = 1; bind[i].code != FABER_EOF; i++) {
+	for (int i = 1; bind[i].message != FABER_EOF; i++) {
 
 		menu = menuList.ItemAt(menuList.CountItems()-1);
 
-		if (bind[i].code == FABER_ITEM_START) {
+		if (bind[i].message == FABER_ITEM_START) {
 			BMenu* subMenu = new BMenu(bind[i].label);
 			menu->AddItem(subMenu);
 			menuList.AddItem(subMenu);
-		}  else if (bind[i].code == FABER_ITEM_END) {
+		}  else if (bind[i].message == FABER_ITEM_END) {
 			if (menuList.CountItems() > 1)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
 		} else {
-			printf("%s\n", bind[i].label);
-			menu->AddItem(_BuildMenuItem(bind[i].code, bind[i].label));
+			printf("%s %d\n", bind[i].label, bind[i].message.code);
+			menu->AddItem(_BuildMenuItem(bind[i].message, bind[i].label));
 		}
 	}
 	return menuList.ItemAt(0);
@@ -208,11 +209,11 @@ MenuManager::_BuildMenu(KeyBind* bind, const char* name)
 
 
 BMenuItem*
-MenuManager::_BuildMenuItem(uint32 code, const char* label)
+MenuManager::_BuildMenuItem(FaberMessage message, const char* label)
 {
-	if (code == FABER_SPLITTER)
+	if (message == FABER_SPLITTER)
 		return new BSeparatorItem();
 	else
-		return new BMenuItem(label, new BMessage(code),
-			fKeyBind.GetKey(code), fKeyBind.GetMod(code));
+		return new BMenuItem(label, message,
+			fKeyBind->GetKey(message), fKeyBind->GetMod(message));
 }

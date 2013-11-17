@@ -16,58 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef _BEHAVIOR_H
+#define _BEHAVIOR_H
 
-#include "FaberWindow.h"
+#include <GroupView.h>
 
-#include <LayoutBuilder.h>
-
-#include "FaberView.h"
-#include "MenuManager.h"
-
-
-FaberWindow::FaberWindow(BRect rect)
-	:
-	BWindow(rect, "Faber" , B_TITLED_WINDOW, 0)
+class BehaviorView: public BGroupView
 {
-	fFaberView = new FaberView();
+public:
+								BehaviorView();
+	virtual 					~BehaviorView();
 
-	fCommandsHandler = new CommandsHandler();
+			void				MessageReceived(BMessage* message);
+						
+private:
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(MenuManager::Get()->BuildMainMenuBar())
-		.Add(fFaberView)
-	.End();
+};
 
-}
-
-
-FaberWindow::~FaberWindow()
-{
-
-}
-
-
-bool
-FaberWindow::QuitRequested()
-{
-	return true;
-}
-
-
-void
-FaberWindow::MessageReceived(BMessage* message)
-{
-	switch (message->what)
-	{
-		//fCommandsHandler->PostMessage(message);
-		//default:
-		//	BWindow::MessageReceived(message);
-	}
-}
-
-
-FaberView*
-FaberWindow::MainView() const
-{
-	return fFaberView;
-}
+#endif

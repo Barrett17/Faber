@@ -84,12 +84,16 @@ Application Faber :
 	SettingsView.cpp
 	Settings.cpp
 	FaberPreferences.cpp
-	General.cpp
-	Shortcut.cpp
+	FaberShortcut.cpp
+
+	DefaultKeymap.cpp
+
+	Engine.cpp
+	Behavior.cpp
+	Interface.cpp
 	Keymap.cpp
 	ColorScheme.cpp
 	SwatchView.cpp
-	DefaultKeymap.cpp
 
 	# Common
 	PeakFile.cpp

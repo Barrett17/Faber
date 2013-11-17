@@ -36,9 +36,6 @@
 #include "FaberMath.h"
 #include "PeakFile.h"
 #include "BitmapDrawer.h"
-#include "Shortcut.h"
-//#include "MyClipBoard.h"
-#include "WindowsManager.h"
 #include "MouseIcons.h"
 
 #include <stdio.h>

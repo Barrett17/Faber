@@ -16,5 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "General.h"
+#ifndef _ENGINE_H
+#define _ENGINE_H
 
+#include <GroupView.h>
+
+class EngineView: public BGroupView
+{
+public:
+								EngineView();
+	virtual 					~EngineView();
+
+			void				MessageReceived(BMessage* message);
+						
+private:
+
+};
+
+#endif

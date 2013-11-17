@@ -16,16 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef GENERAL_H
-#define GENERAL_H
+#ifndef _INTERFACE_H
+#define _INTERFACE_H
 
 #include <GroupView.h>
 
-class GeneralView: public BGroupView
+class InterfaceView: public BGroupView
 {
 public:
-								GeneralView();
-	virtual 					~GeneralView();
+								InterfaceView();
+	virtual 					~InterfaceView();
 
 			void				MessageReceived(BMessage* message);
 						

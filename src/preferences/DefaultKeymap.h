@@ -4,7 +4,6 @@
 #include <InterfaceDefs.h>
 
 #include "FaberDefs.h"
-#include "Shortcut.h"
 
 extern KeyBind kFileMenu[];
 extern KeyBind kEditMenu[];

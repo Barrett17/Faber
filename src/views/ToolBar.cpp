@@ -36,22 +36,22 @@ ToolBar::ToolBar()
 	fOutputPeakView->SetExplicitMaxSize(BSize(150, 20));
 
 	fPlayButton = _BuildButton(B_TRANSLATE("Play"),
-		new BMessage(FABER_TRANSPORT_PLAY), kPlayIcon);
+		FABER_TRANSPORT_PLAY, kPlayIcon);
 	//fPauseButton = _BuildButton(B_TRANSLATE("Pause"),
 	//	new BMessage(FABER_TRANSPORT_PAUSE), kPauseIcon);
 	fStopButton = _BuildButton(B_TRANSLATE("Stop"),
-		new BMessage(FABER_TRANSPORT_STOP), kStopIcon);
+		FABER_TRANSPORT_STOP, kStopIcon);
 	fLoopButton = _BuildButton(B_TRANSLATE("Loop"),
-		new BMessage(FABER_TRANSPORT_LOOP), kLoopIcon);
+		FABER_TRANSPORT_LOOP, kLoopIcon);
 
 	fToolButtons[0] = _BuildButton(B_TRANSLATE("Selection Tool"),
-		new BMessage(FABER_SELECTION_TOOL), kSelectionToolIcon);
+		FABER_SELECTION_TOOL, kSelectionToolIcon);
 
 	fToolButtons[1] = _BuildButton(B_TRANSLATE("Drawing Tool"),
-		new BMessage(FABER_DRAW_TOOL), kDrawingToolIcon);
+		FABER_DRAW_TOOL, kDrawingToolIcon);
 
 	fToolButtons[2] = _BuildButton(B_TRANSLATE("Playing Tool"),
-		new BMessage(FABER_PLAY_TOOL), kPlayingToolIcon);
+		FABER_PLAY_TOOL, kPlayingToolIcon);
 
 	WidgetFrame* transportView = new WidgetFrame(NULL);
 	BLayoutBuilder::Group<>(transportView, B_HORIZONTAL, 0)
@@ -59,15 +59,15 @@ ToolBar::ToolBar()
 			.Add(fStopButton)
 			.Add(fPlayButton)
 			.Add(_BuildButton(B_TRANSLATE("Record"),
-				new BMessage(FABER_TRANSPORT_REC), kRecordIcon))
+				FABER_TRANSPORT_REC, kRecordIcon))
 			.Add(_BuildButton(B_TRANSLATE("Rewind All"),
-				new BMessage(FABER_TRANSPORT_REW_ALL), kSeekBackwardAllIcon))
+				FABER_TRANSPORT_REW_ALL, kSeekBackwardAllIcon))
 			.Add(_BuildButton(B_TRANSLATE("Rewind"),
-				new BMessage(FABER_TRANSPORT_REW), kSeekBackwardIcon))
+				FABER_TRANSPORT_REW, kSeekBackwardIcon))
 			.Add(_BuildButton(B_TRANSLATE("Forward"),
-				new BMessage(FABER_TRANSPORT_FWD), kSeekForwardIcon))
+				FABER_TRANSPORT_FWD, kSeekForwardIcon))
 			.Add(_BuildButton(B_TRANSLATE("Forward All"),
-				new BMessage(FABER_TRANSPORT_FWD_ALL), kSeekForwardAllIcon))
+				FABER_TRANSPORT_FWD_ALL, kSeekForwardAllIcon))
 			.Add(fLoopButton)
 			.AddGlue(0.0f)
 		.End();
@@ -141,7 +141,7 @@ void
 ToolBar::SetStop(bool stop)
 {
 	if (stop == true) {
-		fPlayButton->SetMessage(new BMessage(FABER_TRANSPORT_PLAY));
+		fPlayButton->SetMessage(FABER_TRANSPORT_PLAY);
 		fPlayButton->SetIcon(kPlayIcon);
 		fPlayButton->TrimIcon();
 		fPlayButton->Invalidate();

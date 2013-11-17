@@ -62,7 +62,7 @@ void
 FaberView::MessageReceived(BMessage* message)
 {
 
-	switch (message->what)
+	/*switch (message->what)
 	{
 		case FABER_ZOOM_IN:
 			fTracksContainer->ZoomIn();
@@ -82,7 +82,7 @@ FaberView::MessageReceived(BMessage* message)
 
 		default:
 			BGroupView::MessageReceived(message);
-	}
+	}*/
 }
 
 

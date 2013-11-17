@@ -45,16 +45,16 @@ InfoToolBar::InfoToolBar()
 	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL, 0.5f)
 		.AddStrut(7.0f)
 		.Add(_BuildButton(B_TRANSLATE("Zoom in"), 
-			new BMessage(FABER_ZOOM_IN), kZoomInIcon))
+			FABER_ZOOM_IN, kZoomInIcon))
 
 		.Add(_BuildButton(B_TRANSLATE("Zoom out"),
-			new BMessage(FABER_ZOOM_OUT), kZoomOutIcon))
+			FABER_ZOOM_OUT, kZoomOutIcon))
 
 		.Add(_BuildButton(B_TRANSLATE("Zoom to selection"),
-			new BMessage(FABER_ZOOM_SELECTION), kZoomToSelectionIcon))
+			FABER_ZOOM_SELECTION, kZoomToSelectionIcon))
 
 		.Add(_BuildButton(B_TRANSLATE("Zoom full wave"),
-			new BMessage(FABER_ZOOM_FULL), kZoomFullWaveIcon))
+			FABER_ZOOM_FULL, kZoomFullWaveIcon))
 		.AddStrut(7.0f)
 	.End();
 

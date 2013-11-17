@@ -23,6 +23,8 @@
 #include <ObjectList.h>
 #include <SupportDefs.h>
 
+#include "FaberShortcut.h"
+
 
 class KeyBind {
 public:
@@ -32,7 +34,7 @@ public:
 	int32			mod;
 	char			altKey;
 	int32			altMod;
-	uint32			code;
+	FaberMessage	message;
 };
 
 class FaberShortcut {
@@ -54,9 +56,6 @@ public:
 	char					GetModAlt(uint32 code);
 
 	uint32					GetCode(int32 index);
-	uint32					GetCode(char key, int32 mod);
-
-	uint32					GetMessage(int32 key, int32 mod);
 
 	bool					IsMenuItem(uint32 code);
 	int32					CountKeys();

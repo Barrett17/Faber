@@ -20,9 +20,12 @@
 #include "SettingsView.h"
 
 #include <GroupLayoutBuilder.h>
-#include <TabView.h>
 
+#include "Behavior.h"
+#include "ColorScheme.h"
+#include "Engine.h"
 #include "FaberDefs.h"
+#include "Interface.h"
 #include "Keymap.h"
 
 
@@ -32,15 +35,16 @@ SettingsView::SettingsView()
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	BTabView* tabView = new BTabView("");
+	fTabView = new BTabView("");
 
-	BTab* tab = new BTab();
-
-	tabView->AddTab(new KeymapView(), tab);
-	tab->SetLabel(B_TRANSLATE("Color layout"));
+	_AddTab(new EngineView(), B_TRANSLATE("Engine"));
+	_AddTab(new BehaviorView(), B_TRANSLATE("Behavior"));
+	_AddTab(new InterfaceView(), B_TRANSLATE("Interface"));
+	_AddTab(new KeymapView(), B_TRANSLATE("Keymap"));
+	_AddTab(new ColorSchemeView(), B_TRANSLATE("Color Scheme"));
 
 	BGroupLayoutBuilder(this)
-		.Add(tabView)
+		.Add(fTabView)
 	.End();
 
 }
@@ -58,6 +62,16 @@ SettingsView::MessageReceived(BMessage* message)
 	switch(message->what)
 	{
 		default:
-			BView::MessageReceived(message);
+			BGroupView::MessageReceived(message);
 	}
+}
+
+
+void
+SettingsView::_AddTab(BView* view, const char* label)
+{
+	BTab* tab = new BTab();
+
+	fTabView->AddTab(view, tab);
+	tab->SetLabel(label);
 }

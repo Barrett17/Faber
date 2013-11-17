@@ -27,8 +27,8 @@
 #include "FaberMessages.h"
 #include "FaberPreferences.h"
 #include "FaberResources.h"
+#include "FaberShortcut.h"
 #include "MenuManager.h"
-#include "Shortcut.h"
 #include "WindowsManager.h"
 
 #include <stdio.h>
@@ -69,15 +69,5 @@
 
 #define WINDOW_MAX_SIZE_X		2048
 #define WINDOW_MAX_SIZE_Y		1536
-
-// Enums
-
-enum {
-	FABER_SELECTION_TOOL = 0,
-	FABER_DRAW_TOOL,
-	FABER_PLAY_TOOL,
-	FABER_TEMPORAL_TOOL
-};
-
 
 #endif

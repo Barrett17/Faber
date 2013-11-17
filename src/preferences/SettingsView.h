@@ -22,6 +22,8 @@
 #include <SupportDefs.h>
 
 #include <GroupView.h>
+#include <TabView.h>
+
 
 class SettingsView : public BGroupView
 {
@@ -32,6 +34,8 @@ public:
 			void				MessageReceived(BMessage* message);
 						
 private:
+			void				_AddTab(BView* view, const char* label);
+			BTabView*			fTabView;
 
 };
 

@@ -65,10 +65,10 @@ FaberApp::MessageReceived(BMessage* message)
 {
 	switch (message->what)
 	{
-		case FABER_DROP_PASTE:
+		/*case FABER_DROP_PASTE:
 		case B_PASTE:
 			fFaberWindow->PostMessage(message);
-		break;
+		break;*/
 
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:

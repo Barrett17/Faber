@@ -41,7 +41,6 @@
 
 #include "FaberDefs.h"
 #include "Keymap.h"
-#include "Shortcut.h"
 #include "FStringItem.h"
 
 #define SELECT		'selK'
@@ -583,7 +582,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 {
 	switch(msg->what) {
 		case SET:
-		{
+		{/*
 			KeyBind* key = new KeyBind();
 	
 			key->key = control1->GetKey();
@@ -591,7 +590,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 			key->altKey = control2->GetKey();
 			key->altMod = control2->GetMod();
 			key->label = gKeyBind.GetLabel(index);
-			key->code = message;
+			key->message->code = message;
 			key->isMenuItem = menu;
 	
 			gKeyBind.AddKeyBind(key);
@@ -600,7 +599,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 				parent->Pulse();
 				parent->UnlockLooper();
 			}
-			Quit();
+			Quit();*/
 			break;
 		}
 

@@ -18,7 +18,7 @@ KeyBind kFileMenu[] {
  
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1,"Quit",                'Q', B_COMMAND_KEY,                   0, 0,                      B_QUIT_REQUESTED },
+	{ 1,"Quit",                'Q', B_COMMAND_KEY,                   0, 0,                      FABER_QUIT_REQUESTED },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_EOF }
 };
@@ -31,15 +31,15 @@ KeyBind kEditMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1,"Copy",             'C', B_COMMAND_KEY,                   0, 0,                         B_COPY },
+	{ 1,"Copy",             'C', B_COMMAND_KEY,                   0, 0,                         FABER_COPY },
 	{ 1,"Copy & Silence",       'X', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,                     FABER_COPY_SILENCE },
-	{ 1,"Cut",              'X', B_COMMAND_KEY,                   0, 0,                         B_CUT },
-	{ 1,"Paste",                'V', B_COMMAND_KEY,                   0, 0,                     B_PASTE },
+	{ 1,"Cut",              'X', B_COMMAND_KEY,                   0, 0,                         FABER_CUT },
+	{ 1,"Paste",                'V', B_COMMAND_KEY,                   0, 0,                     FABER_PASTE },
 	{ 1,"Paste to new project",         'V', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,             FABER_PASTE_NEW },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1,"Select All",         'A', B_COMMAND_KEY,                   0, 0,                       B_SELECT_ALL },
+	{ 1,"Select All",         'A', B_COMMAND_KEY,                   0, 0,                       FABER_SELECT_ALL },
 	{ 1,"Unselect All",       'U', B_COMMAND_KEY,                   0, 0,                       FABER_UNSELECT_ALL },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
