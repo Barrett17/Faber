@@ -19,10 +19,10 @@
 
 #include "WindowsManager.h"
 
+#include <Application.h>
+
 #include "AboutWindow.h"
 #include "FaberDefs.h"
-#include "FreqWindow.h"
-#include "ResampleWindow.h"
 
 
 WindowsManager*	WindowsManager::fInstance = NULL;
@@ -168,24 +168,6 @@ WindowsManager::GetSavePanel()
 		Get()->fSavePanel = new SavePanel(be_app);	
 
 	return Get()->fSavePanel;
-}
-
-
-void
-WindowsManager::ShowResampleWindow()
-{
-	/*BPoint point = _CalculateWindowPoint();
-
-	(new ResampleWindow(point));*/
-}
-
-
-void
-WindowsManager::ShowFrequencyWindow()
-{
-	/*BPoint point = _CalculateWindowPoint();
-
-	(new FreqWindow(point));*/
 }
 
 

@@ -70,10 +70,6 @@ public:
 	static OpenPanel*		GetOpenPanel();
 	static SavePanel*		GetSavePanel();
 
-	// App tool windows
-	static void				ShowResampleWindow();
-	static void				ShowFrequencyWindow();
-
 	// Progress window methods
 	void					ProgressUpdate(int32 delta);
 	void					StartProgress(const char *label,
