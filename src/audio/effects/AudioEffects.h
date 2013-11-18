@@ -26,6 +26,7 @@
 #include "Amplifier.h"
 #include "BassBoost.h"
 #include "Compressor.h"
+#include "Delay.h"
 
 
 typedef struct StandardAudioEffect {
@@ -37,6 +38,7 @@ static StandardAudioEffect gStandardAudioEffects[] = {
 	{ new AmplifierEffect() },
 	{ new BassBoostEffect() },
 	{ new CompressorEffect() },
+	{ new DelayEffect() },
 	{ NULL }
 };
 

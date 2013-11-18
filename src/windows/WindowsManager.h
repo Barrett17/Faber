@@ -22,6 +22,7 @@
 
 #include <Messenger.h>
 
+#include "FaberEffect.h"
 #include "FaberWindow.h"
 #include "OpenPanel.h"
 #include "ProgressWindow.h"
@@ -41,10 +42,6 @@ public:
 	static BMessenger*		MainWinMessenger();
 
 	static FaberWindow*		MainWindow();
-
-	// This is used only by the BApplication
-	// to set the main window. Don't use it.
-	FaberWindow*			IstantiateMainWindow(BRect rect);
 
 	// Extending, it could be good to have methods like those
 	// static void			UpdateMainMenu();

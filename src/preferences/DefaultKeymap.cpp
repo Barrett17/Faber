@@ -62,7 +62,7 @@ KeyBind kEditMenu[] {
 	//{ 1,"Set frequency",      0, 0,                               0, 0,                         FABER_SET_FREQUENCY) },
 	//{ 1,"Resample",           0, 0,                               0, 0,                         FABER_RESAMPLE) },
 
-    { 1,"Trim",               0, 0,                               0, 0,                         GeneralMessage(FABER_TRIM) },
+    { 1,"Trim",               'T', B_COMMAND_KEY,                   0, 0,                         GeneralMessage(FABER_TRIM) },
 	{ 1,"Clear",              'B', B_COMMAND_KEY,            B_DELETE, 0,                       GeneralMessage(FABER_CLEAR) },
 
 	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },

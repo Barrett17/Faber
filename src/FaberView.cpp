@@ -61,28 +61,11 @@ FaberView::~FaberView()
 void
 FaberView::MessageReceived(BMessage* message)
 {
-
-	/*switch (message->what)
+	switch (message->what)
 	{
-		case FABER_ZOOM_IN:
-			fTracksContainer->ZoomIn();
-			break;
-	
-		case FABER_ZOOM_OUT:
-			fTracksContainer->ZoomOut();
-			break;
-	
-		case FABER_ZOOM_FULL:
-			fTracksContainer->ZoomFull();
-			break;
-
-		case FABER_ZOOM_SELECTION:
-			fTracksContainer->ZoomSelection();
-			break;
-
 		default:
 			BGroupView::MessageReceived(message);
-	}*/
+	}
 }
 
 
@@ -93,22 +76,8 @@ FaberView::Container() const
 }
 
 
-bool
-FaberView::IsEmpty() const
-{
-	return fTracksContainer->CountTracks() == 0;
-}
-
-
 status_t
 FaberView::AddTrack(Track* track)
 {
 	return fTracksContainer->AddTrack(track);
-}
-
-
-bool
-FaberView::HasChanged()
-{
-	return fTracksContainer->HasChanged();
 }

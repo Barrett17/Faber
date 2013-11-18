@@ -25,35 +25,36 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#include <Window.h>
 #include <View.h>
-#include <InterfaceKit.h>
 #include <LayoutBuilder.h>
 
 #include "FaberDefs.h"
-#include "SeekSlider.h"
-#include "Globals.h"
-#include "RealtimeFilter.h"
-#include "DelayFilter.h"
-
-#include <stdlib.h>
-#include <stdio.h>
+#include "SpinSlider.h"
+#include "Delay.h"
 
 
-/*******************************************************
-*   
-*******************************************************/
-DelayWindow::DelayWindow(bool b)
+DelayEffect::DelayEffect(uint32 flags)
 	:
-	RealtimeFilter(B_TRANSLATE("Delay..."), b)
+	AudioEffect(B_TRANSLATE("Delay"), flags | FABER_FILTER)
 {
+	/*buffer_size = (int32)m_frequency * m_channels;
+	
+	delay_buffer = new float[ buffer_size ];
+	for (int32 i=0; i<buffer_size; i++)	
+		delay_buffer[i] = 0.0;
+
+	pBuffer = buffer_size-m_channels;*/
 }
 
 
-/*******************************************************
-*   
-*******************************************************/
-BView *DelayWindow::ConfigView()
+DelayEffect::~DelayEffect()
+{
+	delete[] delay_buffer;
+}
+
+
+BView*
+DelayEffect::SettingsPanel()
 {
 	BRect r(0,0,200,100);
 	BView *view = new BView(r, "delayview", B_FOLLOW_ALL, B_WILL_DRAW);
@@ -61,11 +62,13 @@ BView *DelayWindow::ConfigView()
 
 	delay = new SpinSlider("delay", B_TRANSLATE("Delay (ms)"),
 		new BMessage(CONTROL_CHANGED), 1, 500);
-	delay->SetValue(Prefs.filter_delay_delay * 1000);
+
+//	delay->SetValue(Prefs.filter_delay_delay * 1000);
 
 	gain = new SpinSlider("gain", B_TRANSLATE("Gain %"),
 		new BMessage(CONTROL_CHANGED), 1, 200);
-	gain->SetValue(Prefs.filter_delay_gain * 100);
+
+//	gain->SetValue(Prefs.filter_delay_gain * 100);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
 		.Add(delay, 0)
@@ -76,50 +79,22 @@ BView *DelayWindow::ConfigView()
 }
 
 
-void DelayWindow::UpdateValues()
+status_t
+DelayEffect::FlattenSettings(BMessage* msg)
 {
-	printf("update values\n");
+/*
 	Prefs.filter_delay_delay = delay->Value()/1000.0;
 	Prefs.filter_delay_gain = gain->Value()/100.0;
 
 	for (int32 i=0; i<buffer_size; i++)
-		delay_buffer[i] = 0;
-}
-
-
-/*******************************************************
-*   Init & exit
-*******************************************************/
-bool
-DelayWindow::InitFilter(float f, int32 c, int32 pass, int32 size)
-{
-	RealtimeFilter::InitFilter(f, c, pass, size);
-
-	buffer_size = (int32)m_frequency * m_channels;
-	
-	delay_buffer = new float[ buffer_size ];
-	for (int32 i=0; i<buffer_size; i++)	
-		delay_buffer[i] = 0.0;
-
-	pBuffer = buffer_size-m_channels;
-	return true;
+		delay_buffer[i] = 0;*/
 }
 
 
 void
-DelayWindow::DeAllocate()
+DelayEffect::FilterBuffer(float *buffer, size_t size)
 {
-	delete[] delay_buffer;
-}
-
-
-/*******************************************************
-*   
-*******************************************************/
-void
-DelayWindow::FilterBuffer(float *buffer, size_t size)
-{
-	float left = 0, right = 0;
+	/*float left = 0, right = 0;
 	int32 delay = (int32)(m_frequency*Prefs.filter_delay_delay*m_channels);
 
 	if (m_channels == 2){
@@ -147,5 +122,5 @@ DelayWindow::FilterBuffer(float *buffer, size_t size)
 
 			pBuffer ++;
 		}
-	}
+	}*/
 }

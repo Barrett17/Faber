@@ -22,6 +22,7 @@
 #include <Application.h>
 #include <Roster.h>
 
+#include "EffectWindow.h"
 #include "FaberDefs.h"
 
 CommandsLooper* CommandsLooper::fInstance = NULL;
@@ -104,61 +105,7 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 			break;
 		}
 
-		case FABER_NEW_EMPTY_TRACK:
-		{
-		
-			break;
-		}
-
-		case FABER_REMOVE_TRACK:
-		{
-		
-			break;
-		}
-
 		case FABER_FILE_OPEN:
-		{
-		
-			break;
-		}
-
-		case FABER_EXPORT_SELECTION:
-		{
-		
-			break;
-		}
-
-		case FABER_INSERT:
-		{
-		
-			break;
-		}
-
-		case FABER_APPEND:
-		{
-		
-			break;
-		}
-
-		case FABER_UNDO:
-		{
-		
-			break;
-		}
-
-		case FABER_REDO:
-		{
-		
-			break;
-		}
-
-		case FABER_PASTE_NEW:
-		{
-		
-			break;
-		}
-
-		case FABER_DROP_PASTE:
 		{
 		
 			break;
@@ -168,23 +115,12 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 			WindowsManager::Get()->ShowSettings();
 		break;
 
-		case FABER_COPY:
-		{
-		
-			break;
-		}
-
-		case FABER_CUT:
-		{
-		
-			break;
-		}
-
 		case FABER_EFFECT_CALL:
 		{
-			//FaberEffect* effect;
-			//message->FindPointer("effect", (void**)&effect);
-			//WindowsManager::EffectWindow(effect);
+			FaberEffect* effect;
+			message->FindPointer("effect", (void**)&effect);
+			EffectWindow* win = new EffectWindow(effect);
+			win->Show();
 			break;
 		}
 

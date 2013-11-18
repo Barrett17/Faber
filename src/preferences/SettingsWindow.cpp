@@ -44,6 +44,14 @@ SettingsWindow::~SettingsWindow()
 }
 
 
+bool
+SettingsWindow::QuitRequested()
+{
+	Hide();
+	return false;
+}
+
+
 void
 SettingsWindow::MessageReceived(BMessage* message)
 {

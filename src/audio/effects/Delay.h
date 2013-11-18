@@ -26,26 +26,33 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef DELAY_FILTER_H
-#define DELAY_FILTER_H
+#ifndef DELAY_EFFECT_H
+#define DELAY_EFFECT_H
 
-class SeekSlider;
+#include "AudioEffect.h"
 
-class DelayWindow : public RealtimeFilter {
-  public:
-	DelayWindow(bool r = true);
-	virtual bool InitFilter(float f, int32 channels = 2, int32 pass = 0, int32 size = 0);
-	virtual void DeAllocate();
-	virtual void FilterBuffer(float *, size_t);
-	virtual void UpdateValues();
 
-	virtual BView *ConfigView();
+class DelayEffect : public AudioEffect
+{
+public:
+							DelayEffect(uint32 flags = FABER_REALTIME_EFFECT
+									| FABER_FILTER | FABER_GUI_EFFECT);
+
+	virtual 				~DelayEffect();
+
+	BView*					SettingsPanel();
+
+	void					FilterBuffer(float* buffer, size_t size);
+
+	status_t				FlattenSettings(BMessage* message);
+	status_t				UnflattenSettings(BMessage* message);
    
-  private:
-	float *delay_buffer;
-	int32 buffer_size, pBuffer;
-	SpinSlider *delay;
-	SpinSlider* gain;
+private:
+	float*					delay_buffer;
+	int32 					buffer_size;
+	int32					pBuffer;
+	SpinSlider*				delay;
+	SpinSlider*				gain;
 };
 
 #endif

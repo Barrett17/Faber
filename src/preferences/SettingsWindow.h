@@ -28,6 +28,7 @@ public:
 							SettingsWindow();
 	virtual					~SettingsWindow();
 
+	virtual bool			QuitRequested();
 	virtual void			MessageReceived(BMessage* message);
 
 };

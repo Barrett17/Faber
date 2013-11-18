@@ -85,18 +85,20 @@ public:
 					FaberMessage(FABER_GENERAL_MESSAGE, code) {};
 };
 
+const uint32 FABER_SELECTION_TOOL		=	'fstl';
+const uint32 FABER_DRAW_TOOL			=	'fdwt';
+const uint32 FABER_PLAY_TOOL			=	'fplt';
+const uint32 FABER_TEMPORAL_TOOL		= 	'ftmt';
+
 const uint32 FABER_ABOUT				= 	'abou';
-
 const uint32 FABER_OPEN_HOMEPAGE		=	'hmpg';
+const uint32 FABER_SETTINGS				=	'stng';
+const uint32 FABER_QUIT_REQUESTED		=	B_QUIT_REQUESTED;
 
+const uint32 FABER_FILE_OPEN			=	'open';
 const uint32 FABER_EXPORT_PROJECT   	=	'fepj';
 const uint32 FABER_NEW_PROJECT			=	'fnew';
 const uint32 FABER_SAVE_PROJECT			=	'save';
-
-const uint32 FABER_NEW_EMPTY_TRACK		=   'FNEt';
-const uint32 FABER_REMOVE_TRACK			=	'Frtk';
-
-const uint32 FABER_FILE_OPEN			=	'open';
 
 const uint32 FABER_EXPORT_SELECTION		=	'svsl';
 
@@ -106,18 +108,48 @@ const uint32 FABER_APPEND				=	'appn';
 const uint32 FABER_UNDO					=	'undo';
 const uint32 FABER_REDO					=	'redo';
 
+
+
+const uint32 FABER_NEW_EMPTY_TRACK		=   'FNEt';
+const uint32 FABER_REMOVE_TRACK			=	'Frtk';
+
+
+
 const uint32 FABER_PASTE_NEW			=	'pnnw';
 const uint32 FABER_DROP_PASTE			=	'drps';
-
-const uint32 FABER_SETTINGS				=	'stng';
-
-const uint32 FABER_QUIT_REQUESTED		=	B_QUIT_REQUESTED;
 
 const uint32 FABER_COPY					=	B_COPY;
 const uint32 FABER_CUT					=	B_CUT;
 const uint32 FABER_PASTE				=	B_PASTE;
 const uint32 FABER_SELECT_ALL			=	B_SELECT_ALL;
 const uint32 FABER_UNSELECT_ALL			=	'unsl';
+
+// Effects and audio manipulation
+
+const uint32 FABER_EFFECT_CALL			=	'fecl';
+const uint32 FABER_EFFECT_EXECUTE		=	'feex';
+const uint32 FABER_EFFECT_ABORT			=	'feab';
+
+const uint32 FABER_CLEAR				=	'cler';
+
+const uint32 FABER_COPY_SILENCE			=	'cpsl';
+
+const uint32 FABER_SET_FREQUENCY		=	'setf';
+const uint32 FABER_RESAMPLE				=	'resm';
+const uint32 FABER_RESAMPLE_EXECUTE		=	'resd';
+
+const uint32 FABER_TRIM					=	'trim';
+
+// TODO those will be effects, remove them
+
+const uint32 FABER_ZERO_IN				=	'zrin';
+const uint32 FABER_ZERO_OUT				=	'zrot';
+const uint32 FABER_ZERO_LL				=	'zrll';
+const uint32 FABER_ZERO_LR				=	'zrlr';
+const uint32 FABER_ZERO_RL				=	'zrlr';
+const uint32 FABER_ZERO_RR				=	'zrrr';
+
+// Transport
 
 const uint32 FABER_TRANSPORT_REW		=	'trew';
 const uint32 FABER_TRANSPORT_REW_ALL	=	'trwa';
@@ -134,35 +166,6 @@ const uint32 FABER_ZOOM_IN				=	'zooi';
 const uint32 FABER_ZOOM_OUT				=	'zoot';
 const uint32 FABER_ZOOM_FULL			=	'zofl';
 const uint32 FABER_ZOOM_SELECTION		=	'zosl';
-
-// Effects and audio manipulation
-
-const uint32 FABER_EFFECT_CALL			=	'fecl';
-const uint32 FABER_EFFECT_EXECUTE		=	'feex';
-const uint32 FABER_EFFECT_ABORT			=	'feab';
-
-const uint32 FABER_CLEAR				=	'cler';
-
-const uint32 FABER_COPY_SILENCE			=	'cpsl';
-
-const uint32 FABER_SET_FREQUENCY		=	'setf';
-const uint32 FABER_RESAMPLE				=	'resm';
-const uint32 FABER_RESAMPLE_EXECUTE		=	'resd';
-
-const uint32 FABER_SELECTION_TOOL		=	'fstl';
-const uint32 FABER_DRAW_TOOL			=	'fdwt';
-const uint32 FABER_PLAY_TOOL			=	'fplt';
-const uint32 FABER_TEMPORAL_TOOL		= 	'ftmt';
-const uint32 FABER_TRIM					=	'trim';
-
-// TODO those will be effects, remove them
-
-const uint32 FABER_ZERO_IN				=	'zrin';
-const uint32 FABER_ZERO_OUT				=	'zrot';
-const uint32 FABER_ZERO_LL				=	'zrll';
-const uint32 FABER_ZERO_LR				=	'zrlr';
-const uint32 FABER_ZERO_RL				=	'zrlr';
-const uint32 FABER_ZERO_RR				=	'zrrr';
 
 // Other defs
 

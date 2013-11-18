@@ -40,9 +40,7 @@ FaberApp::FaberApp()
 	:
 	BApplication(FABER_MIMETYPE)
 {
-	BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
-
-	fFaberWindow = WindowsManager::Get()->IstantiateMainWindow(rect);
+	fFaberWindow = WindowsManager::MainWindow();
 	fFaberWindow->Show();
 }
 
@@ -65,10 +63,10 @@ FaberApp::MessageReceived(BMessage* message)
 {
 	switch (message->what)
 	{
-		/*case FABER_DROP_PASTE:
+		case FABER_DROP_PASTE:
 		case B_PASTE:
-			fFaberWindow->PostMessage(message);
-		break;*/
+			CommandsLooper::Get()->PostMessage(message);
+		break;
 
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:

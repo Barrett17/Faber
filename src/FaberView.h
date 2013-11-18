@@ -39,10 +39,6 @@ public:
 
 			TracksContainer*	Container() const;
 
-			bool				IsEmpty() const;
-
-			bool 				HasChanged();
-
 			status_t 			AddTrack(Track* track);
 private:
 			TracksContainer*	fTracksContainer;

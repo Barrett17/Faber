@@ -44,7 +44,7 @@ CompressorEffect::CompressorEffect(uint32 flags)
 BView*
 CompressorEffect::SettingsPanel()
 {
-	BRect r(0,0,200,280);
+	BRect r(0,0,280,280);
 
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));

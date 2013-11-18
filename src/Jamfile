@@ -127,7 +127,7 @@ Application Faber :
 	#Normalize.cpp
 	#Room.cpp
 	#Reverb.cpp
-	#Delay.cpp
+	Delay.cpp
 
 	#Resample.cpp
 	#ZeroCrossings.cpp

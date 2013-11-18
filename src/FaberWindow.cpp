@@ -59,6 +59,11 @@ FaberWindow::MessageReceived(BMessage* message)
 {
 	switch (message->what)
 	{
+		case B_SIMPLE_DATA:
+		case B_MIME_DATA:
+			be_app->PostMessage(message);
+			break;
+
 		default:
 			BWindow::MessageReceived(message);
 	}

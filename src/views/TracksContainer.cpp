@@ -143,6 +143,22 @@ TracksContainer::MessageReceived(BMessage* message)
 			//fTrack->DropPaste();
 			break;
 
+		case FABER_ZOOM_IN:
+			fTracksContainer->ZoomIn();
+			break;
+	
+		case FABER_ZOOM_OUT:
+			fTracksContainer->ZoomOut();
+			break;
+	
+		case FABER_ZOOM_FULL:
+			fTracksContainer->ZoomFull();
+			break;
+
+		case FABER_ZOOM_SELECTION:
+			fTracksContainer->ZoomSelection();
+			break;
+
 		default:
 			BView::MessageReceived(message);
 

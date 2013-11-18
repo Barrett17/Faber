@@ -50,7 +50,8 @@ WindowsManager::WindowsManager()
 	:
 	fSavePanel(NULL),
 	fOpenPanel(NULL),
-	fSettingsWindow(NULL)
+	fSettingsWindow(NULL),
+	fMainWindow(NULL)
 {
 	fProgress = new ProgressWindow(BRect(0, 0, 300, 40));
 }
@@ -96,17 +97,12 @@ WindowsManager::MainWinMessenger()
 
 
 FaberWindow*
-WindowsManager::IstantiateMainWindow(BRect rect)
-{
-	fMainWindow = new FaberWindow(rect);
-	return fMainWindow;
-}
-
-
-
-FaberWindow*
 WindowsManager::MainWindow()
 {
+	if (Get()->fMainWindow == NULL) {
+		BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
+		Get()->fMainWindow = new FaberWindow(rect);
+	}
 	return Get()->fMainWindow;
 }
 
@@ -193,7 +189,8 @@ WindowsManager::ShowFrequencyWindow()
 }
 
 
-void WindowsManager::StartProgress(const char *label, int32 max)
+void
+WindowsManager::StartProgress(const char *label, int32 max)
 {
 	fProgress->MoveTo(_CalculateWindowPoint());
 	fProgress->StartProgress(label, max);
@@ -201,19 +198,22 @@ void WindowsManager::StartProgress(const char *label, int32 max)
 }
 
 
-void WindowsManager::ProgressUpdate(int32 delta)
+void
+WindowsManager::ProgressUpdate(int32 delta)
 {
 	fProgress->SetProgress(delta);
 }
 
 
-void WindowsManager::SetProgressName(const char *name)
+void
+WindowsManager::SetProgressName(const char *name)
 {
 	fProgress->SetProgressName(name);
 }
 
 
-void WindowsManager::HideProgress()
+void
+WindowsManager::HideProgress()
 {
 	fProgress->HideProgress();
 }
