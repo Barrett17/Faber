@@ -167,7 +167,8 @@ WindowsManager::GetSavePanel()
 {
 	if (Get()->fSavePanel == NULL) {
 		Get()->fSavePanel = new BFilePanel(B_SAVE_PANEL, new BMessenger(be_app),
-		NULL, false, new BMessage(FABER_SAVE_PROJECT));	
+		NULL, false, new BMessage(FABER_SAVE_PROJECT));
+		Get()->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save Project"));
 	}
 
 	return Get()->fSavePanel;

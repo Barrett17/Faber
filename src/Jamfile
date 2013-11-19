@@ -16,6 +16,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src audio nodes ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src views track old_render ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views widgets ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
