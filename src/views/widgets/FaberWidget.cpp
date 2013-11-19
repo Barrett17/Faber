@@ -19,7 +19,6 @@
 
 #include "FaberWidget.h"
 
-#include "CommandsLooper.h"
 #include "FaberDefs.h"
 
 
@@ -40,10 +39,6 @@ FaberWidget::MessageReceived(BMessage* message)
 {
 	switch (message->what)
 	{
-		case FABER_GENERAL_MESSAGE:
-			CommandsLooper::Get()->PostMessage(message);
-		break;
-
 		default:
 			BGroupView::MessageReceived(message);
 	}

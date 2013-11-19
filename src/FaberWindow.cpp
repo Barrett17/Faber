@@ -22,6 +22,7 @@
 #include <Application.h>
 #include <LayoutBuilder.h>
 
+#include "CommandsServer.h"
 #include "FaberView.h"
 #include "MenuManager.h"
 
@@ -31,6 +32,8 @@ FaberWindow::FaberWindow(BRect rect)
 	BWindow(rect, "Faber" , B_TITLED_WINDOW, 0)
 {
 	fFaberView = new FaberView();
+
+	AddFilter(CommandsServer::Get());
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(MenuManager::Get()->BuildMainMenuBar())
@@ -62,10 +65,6 @@ FaberWindow::MessageReceived(BMessage* message)
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:
 			be_app->PostMessage(message);
-			break;
-
-		case FABER_GENERAL_MESSAGE:
-			fFaberView->MessageReceived(message);
 			break;
 
 		default:

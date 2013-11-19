@@ -33,7 +33,6 @@ InfoToolBar::InfoToolBar()
 	BView("InfoToolBar", B_WILL_DRAW)
 {
 	fPointerTextView = new BTextView("view", B_WILL_DRAW);
-
 	fPointerTextView->SetExplicitMaxSize(BSize(1500, 20));
 	fPointerTextView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 

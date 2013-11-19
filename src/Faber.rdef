@@ -12,7 +12,7 @@ resource app_version {
 	internal = 0,
 
 	short_info = "Faber",
-	long_info = "Faber Audio Editor, v1.0 Alpha1 Copyright (c) 2009 - 2013 Versut"
+	long_info = "Faber v1.0 Alpha1 - Copyright (c) 2012 - 2013 Versut"
 };
 
 

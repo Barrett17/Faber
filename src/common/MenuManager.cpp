@@ -42,8 +42,6 @@ MenuManager::MenuManager()
 {
 	fKeyBind = FaberShortcut::Get();
 	fKeyBind->CreateDefaultKeys();
-
-	fCommandsLooper = CommandsLooper::Get();
 }
 
 
@@ -100,7 +98,6 @@ MenuManager::BuildEffectsMenu()
 		FaberEffect* effect = effectsManager->GetEffect(i);
 		if (effect->Flags() & FABER_FILTER) {
 			BMenuItem* item = effect->BuildItem();
-			item->SetTarget(fCommandsLooper);
 			menu->AddItem(item);
 		}
 	}
@@ -119,7 +116,6 @@ MenuManager::BuildGenerateMenu()
 		FaberEffect* effect = effectsManager->GetEffect(i);
 		if (effect->Flags() & FABER_PRODUCER) {
 			BMenuItem* item = effect->BuildItem();
-			item->SetTarget(fCommandsLooper);
 			menu->AddItem(item);
 		}
 	}
@@ -138,7 +134,7 @@ MenuManager::BuildHelpMenu()
 BPopUpMenu*
 MenuManager::BuildTrackContextualMenu()
 {
-	return _BuildPopUpMenu(kTrackContextualMenu, false);
+	return _BuildPopUpMenu(kTrackContextualMenu);
 }
 
 
@@ -149,7 +145,7 @@ MenuManager::UpdateMenu()
 
 
 BMenu*
-MenuManager::_BuildMenu(KeyBind* bind, bool setTarget)
+MenuManager::_BuildMenu(KeyBind* bind)
 {
 	// The first item describe the menu
 	BMenu* menu = new BMenu(bind[0].label);
@@ -169,8 +165,6 @@ MenuManager::_BuildMenu(KeyBind* bind, bool setTarget)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
 		} else {
 			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
-			if (setTarget)
-				item->SetTarget(fCommandsLooper);
 
 			menu->AddItem(item);
 		}
@@ -180,7 +174,7 @@ MenuManager::_BuildMenu(KeyBind* bind, bool setTarget)
 
 
 BPopUpMenu*
-MenuManager::_BuildPopUpMenu(KeyBind* bind, bool setTarget)
+MenuManager::_BuildPopUpMenu(KeyBind* bind)
 {
 	// The first item describe the menu
 	BPopUpMenu* menu = new BPopUpMenu(bind[0].label);
@@ -200,9 +194,6 @@ MenuManager::_BuildPopUpMenu(KeyBind* bind, bool setTarget)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
 		} else {
 			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
-			if (setTarget)
-				item->SetTarget(fCommandsLooper);
-
 			menu->AddItem(item);
 		}
 	}

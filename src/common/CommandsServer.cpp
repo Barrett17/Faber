@@ -17,7 +17,7 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CommandsLooper.h"
+#include "CommandsServer.h"
 
 #include <Application.h>
 #include <Roster.h>
@@ -25,46 +25,42 @@
 #include "EffectWindow.h"
 #include "FaberDefs.h"
 
-CommandsLooper* CommandsLooper::fInstance = NULL;
+CommandsServer* CommandsServer::fInstance = NULL;
 
 
-CommandsLooper*
-CommandsLooper::Get()
+CommandsServer*
+CommandsServer::Get()
 {
 	if (fInstance == NULL)
-		fInstance = new CommandsLooper();
+		fInstance = new CommandsServer();
 
 	return fInstance;	
 }
 
 
-CommandsLooper::CommandsLooper()
+CommandsServer::CommandsServer()
 	:
-	BLooper("Commands Looper")
+	BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE)
 {
-	Run();
 }
 
 
-void
-CommandsLooper::MessageReceived(BMessage* message)
+filter_result
+CommandsServer::Filter(BMessage* message, BHandler **target)
 {
-
+	message->PrintToStream();
 	switch (message->what)
 	{
 		case FABER_GENERAL_MESSAGE:
 			_GeneralMessage(message);
 		break;
-
-		default:
-			BLooper::MessageReceived(message);
 	}
 
 }
 
 
 void
-CommandsLooper::_GeneralMessage(BMessage* message)
+CommandsServer::_GeneralMessage(BMessage* message)
 {
 	uint32 faber_what = 0;
 	message->FindUInt32(FABER_WHAT, &faber_what);
@@ -152,10 +148,6 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 
 			break;
 		}
-
-		default:
-			be_app->PostMessage(message);
-			break;
 
 	}
 }

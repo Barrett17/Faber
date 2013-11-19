@@ -24,7 +24,6 @@
 #include <MenuBar.h>
 #include <PopUpMenu.h>
 
-#include "CommandsLooper.h"
 #include "DefaultKeymap.h"
 #include "FaberDefs.h"
 
@@ -52,13 +51,12 @@ public:
 	static void				UpdateMenu();
 
 private:
-	BMenu*					_BuildMenu(KeyBind* bind, bool setTarget = true);
-	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind, bool setTarget = true);
+	BMenu*					_BuildMenu(KeyBind* bind);
+	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind);
 	BMenuItem*				_BuildMenuItem(FaberMessage message, const char* label);
 
 	static MenuManager*		fInstance;
 	FaberShortcut*			fKeyBind;
-	CommandsLooper*			fCommandsLooper;
 };
 
 #endif	// _MENUMANAGER_H_

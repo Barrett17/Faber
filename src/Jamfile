@@ -40,7 +40,7 @@ Application Faber :
 	FaberWindow.cpp
 	FaberView.cpp
 
-	CommandsLooper.cpp
+	CommandsServer.cpp
 	ProjectManager.cpp
 	WindowsManager.cpp
 	MenuManager.cpp

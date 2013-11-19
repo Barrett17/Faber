@@ -17,25 +17,26 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef COMMANDS_LOOPER_H
-#define COMMANDS_LOOPER_H
+#ifndef COMMANDS_SERVER_H
+#define COMMANDS_SERVER_H
 
-#include <Looper.h>
+#include <MessageFilter.h>
 
 #include "FaberView.h"
 
 
-class CommandsLooper : public BLooper {
+class CommandsServer : public BMessageFilter {
 public:
-										CommandsLooper();
+										CommandsServer();
 
-			static CommandsLooper* 		Get();
+			static CommandsServer* 		Get();
 
-	virtual void						MessageReceived(BMessage* message);					
+	virtual	filter_result				Filter(BMessage* message,
+											BHandler** target);				
 private:
 			void						_GeneralMessage(BMessage* message);
 
-			static CommandsLooper*		fInstance;
+			static CommandsServer*		fInstance;
 			FaberView*					fFaberView;
 };
 
