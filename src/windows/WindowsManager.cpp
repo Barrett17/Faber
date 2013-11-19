@@ -51,7 +51,8 @@ WindowsManager::WindowsManager()
 	fSavePanel(NULL),
 	fOpenPanel(NULL),
 	fSettingsWindow(NULL),
-	fMainWindow(NULL)
+	fMainWindow(NULL),
+	fExportWindow(NULL)
 {
 	fProgress = new ProgressWindow(BRect(0, 0, 300, 40));
 }
@@ -161,13 +162,26 @@ WindowsManager::GetOpenPanel()
 }
 
 
-SavePanel*
+BFilePanel*
 WindowsManager::GetSavePanel()
 {
-	if (Get()->fSavePanel == NULL)
-		Get()->fSavePanel = new SavePanel(be_app);	
+	if (Get()->fSavePanel == NULL) {
+		Get()->fSavePanel = new BFilePanel(B_SAVE_PANEL, new BMessenger(be_app),
+		NULL, false, new BMessage(FABER_SAVE_PROJECT));	
+	}
 
 	return Get()->fSavePanel;
+}
+
+
+ExportWindow*
+WindowsManager::GetExportPanel()
+{
+	if (Get()->fExportWindow == NULL) {
+		Get()->fExportWindow = new ExportWindow();
+	}
+
+	return Get()->fExportWindow;
 }
 
 

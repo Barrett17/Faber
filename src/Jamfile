@@ -65,7 +65,7 @@ Application Faber :
 
 	# Various windows and related code
 	ProgressWindow.cpp
-	SavePanel.cpp
+	ExportWindow.cpp
 	OpenPanel.cpp
 	AboutWindow.cpp
 	InputRequest.cpp

@@ -17,39 +17,19 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <Message.h>
-#include <String.h>
-#include <SupportDefs.h>
+#ifndef EXPORT_WINDOW_H
+#define EXPORT_WINDOW_H
 
+#include <Window.h>
 
-class ProjectManager {
+#include "FaberEffect.h"
+
+class ExportWindow : public BWindow
+{
 public:
-										ProjectManager();
-	virtual								~ProjectManager();
+	ExportWindow();
 
-			static ProjectManager*		Get();
-
-			bool						HasChanged() const;
-			bool						HasRedo() const;
-			bool						HasUndo() const;
-
-			status_t					SaveProject(BMessage* message);
-			status_t					LoadProject(BMessage* message);
-
-			status_t					LoadTrack(BMessage* message);
-			status_t					SaveTrack(BMessage* message);
-
-			void						Undo();
-			void						Redo();
-
-			BString&					Name() const;
-			void						SetName(const char* name);
-
-			//							CurrentClipboard();
-			//void						EmptyClipboard();
-private:
-			static ProjectManager*		fInstance;
-
-			BString						fName;
-
+	virtual void MessageReceived(BMessage*);
 };
+
+#endif

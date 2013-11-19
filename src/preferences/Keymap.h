@@ -33,6 +33,7 @@
 #ifndef PREF_KEYS_H
 #define PREF_KEYS_H
 
+#include <OutlineListView.h>
 #include <View.h>
 
 

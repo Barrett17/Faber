@@ -93,36 +93,35 @@ const uint32 FABER_TEMPORAL_TOOL		= 	'ftmt';
 const uint32 FABER_ABOUT				= 	'abou';
 const uint32 FABER_OPEN_HOMEPAGE		=	'hmpg';
 const uint32 FABER_SETTINGS				=	'stng';
-const uint32 FABER_QUIT_REQUESTED		=	B_QUIT_REQUESTED;
 
 const uint32 FABER_FILE_OPEN			=	'open';
+
 const uint32 FABER_EXPORT_PROJECT   	=	'fepj';
+
 const uint32 FABER_NEW_PROJECT			=	'fnew';
 const uint32 FABER_SAVE_PROJECT			=	'save';
-
-const uint32 FABER_EXPORT_SELECTION		=	'svsl';
-
-const uint32 FABER_INSERT				=	'insr';
-const uint32 FABER_APPEND				=	'appn';
+const uint32 FABER_SAVE_AS_PROJECT		=	'svas';
 
 const uint32 FABER_UNDO					=	'undo';
 const uint32 FABER_REDO					=	'redo';
 
 
+const uint32 FABER_NEW_MONO_TRACK		=   'FNmt';
+const uint32 FABER_NEW_STEREO_TRACK		=   'FNst';
 
-const uint32 FABER_NEW_EMPTY_TRACK		=   'FNEt';
 const uint32 FABER_REMOVE_TRACK			=	'Frtk';
-
-
 
 const uint32 FABER_PASTE_NEW			=	'pnnw';
 const uint32 FABER_DROP_PASTE			=	'drps';
 
 const uint32 FABER_COPY					=	B_COPY;
+const uint32 FABER_COPY_SILENCE			=	'cpsl';
 const uint32 FABER_CUT					=	B_CUT;
 const uint32 FABER_PASTE				=	B_PASTE;
 const uint32 FABER_SELECT_ALL			=	B_SELECT_ALL;
 const uint32 FABER_UNSELECT_ALL			=	'unsl';
+const uint32 FABER_CLEAR				=	'cler';
+const uint32 FABER_TRIM					=	'trim';
 
 // Effects and audio manipulation
 
@@ -130,15 +129,7 @@ const uint32 FABER_EFFECT_CALL			=	'fecl';
 const uint32 FABER_EFFECT_EXECUTE		=	'feex';
 const uint32 FABER_EFFECT_ABORT			=	'feab';
 
-const uint32 FABER_CLEAR				=	'cler';
-
-const uint32 FABER_COPY_SILENCE			=	'cpsl';
-
 const uint32 FABER_SET_FREQUENCY		=	'setf';
-const uint32 FABER_RESAMPLE				=	'resm';
-const uint32 FABER_RESAMPLE_EXECUTE		=	'resd';
-
-const uint32 FABER_TRIM					=	'trim';
 
 // TODO those will be effects, remove them
 

@@ -257,7 +257,7 @@ Track*
 TrackIO::Save(BMessage *message)
 {
 	// Grab the stuff we know is there .. or should be :P
-
+#if 0
 	entry_ref dir_ref, file_ref;
 	const char *name;
 	BFile newFile;
@@ -437,4 +437,5 @@ TrackIO::Save(BMessage *message)
 		fFaberWindow->PostMessage(OPEN);*/
 
 	fSaveMode = 0;
+#endif
 }

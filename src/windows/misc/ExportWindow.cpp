@@ -17,65 +17,30 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberWindow.h"
+#include "ExportWindow.h"
 
-#include <Application.h>
+#include <Box.h>
+#include <Button.h>
 #include <LayoutBuilder.h>
 
-#include "FaberView.h"
-#include "MenuManager.h"
 
-
-FaberWindow::FaberWindow(BRect rect)
+ExportWindow::ExportWindow()
 	:
-	BWindow(rect, "Faber" , B_TITLED_WINDOW, 0)
-{
-	fFaberView = new FaberView();
-
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(MenuManager::Get()->BuildMainMenuBar())
-		.Add(fFaberView)
-	.End();
-
-}
-
-
-FaberWindow::~FaberWindow()
+	BWindow(BRect(50, 50, 250, 100), "Faber" , B_TITLED_WINDOW,
+		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE)
 {
 
-}
-
-
-bool
-FaberWindow::QuitRequested()
-{
-	be_app->PostMessage(B_QUIT_REQUESTED);
-	return true;
 }
 
 
 void
-FaberWindow::MessageReceived(BMessage* message)
+ExportWindow::MessageReceived(BMessage *message)
 {
 	switch (message->what)
 	{
-		case B_SIMPLE_DATA:
-		case B_MIME_DATA:
-			be_app->PostMessage(message);
-			break;
-
-		case FABER_GENERAL_MESSAGE:
-			fFaberView->MessageReceived(message);
-			break;
-
+	
 		default:
 			BWindow::MessageReceived(message);
 	}
-}
-
-
-FaberView*
-FaberWindow::MainView() const
-{
-	return fFaberView;
+	
 }

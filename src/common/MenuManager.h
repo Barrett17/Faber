@@ -33,7 +33,7 @@ class MenuManager
 {
 public:
 							MenuManager();
-							~MenuManager();
+	virtual					~MenuManager();
 
 	static MenuManager*		Get();
 
@@ -52,7 +52,8 @@ public:
 	static void				UpdateMenu();
 
 private:
-	BMenu*					_BuildMenu(KeyBind* bind, const char* name);
+	BMenu*					_BuildMenu(KeyBind* bind, bool setTarget = true);
+	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind, bool setTarget = true);
 	BMenuItem*				_BuildMenuItem(FaberMessage message, const char* label);
 
 	static MenuManager*		fInstance;

@@ -63,6 +63,10 @@ FaberView::MessageReceived(BMessage* message)
 {
 	switch (message->what)
 	{
+		case FABER_GENERAL_MESSAGE:
+			fTracksContainer->MessageReceived(message);
+		break;
+
 		default:
 			BGroupView::MessageReceived(message);
 	}

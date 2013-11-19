@@ -3,22 +3,26 @@
 KeyBind kFileMenu[] {
 	{ 0, "File", 0, 0, 0, 0, ItemMessage(FABER_ITEM_START) },
 	{ 1,"New Project",         'N', B_COMMAND_KEY,                   0, 0,                      GeneralMessage(FABER_NEW_PROJECT) },
-	{ 1,"Open...",             'O', B_COMMAND_KEY,                 'O', 0,                      GeneralMessage(FABER_FILE_OPEN) },
-	{ 1,"Save...",             'S', B_COMMAND_KEY,                   0, 0,                      GeneralMessage(FABER_SAVE_PROJECT) },
 
 	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
 
-	{ 1,"Export Project...",           'S', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,              GeneralMessage(FABER_EXPORT_PROJECT) },
-	{ 1,"Export Selection...",   'S', B_COMMAND_KEY | B_CONTROL_KEY, 'S', B_SHIFT_KEY,          GeneralMessage(FABER_EXPORT_SELECTION) },
+	{ 1,"Open",             'O', B_COMMAND_KEY,                 'O', 0,                      GeneralMessage(FABER_FILE_OPEN) },
+	{ 1,"Save",             'S', B_COMMAND_KEY,                   0, 0,                      	GeneralMessage(FABER_SAVE_PROJECT) },
+	{ 1,"Save As",             'S', B_COMMAND_KEY | B_SHIFT_KEY,  0, 0,                      GeneralMessage(FABER_SAVE_AS_PROJECT) },
 
 	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
 
-	{ 1,"Insert",              'I', B_COMMAND_KEY,            B_INSERT, B_SHIFT_KEY,            GeneralMessage(FABER_INSERT) },
-	{ 1,"Append",              0, 0,                                 0, 0,                      GeneralMessage(FABER_APPEND) },
- 
+	{ 0, "Recents", 0, 0, 0, 0, ItemMessage(FABER_ITEM_START) },
+
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
 	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
 
-	{ 1,"Quit",                'Q', B_COMMAND_KEY,                   0, 0,                      GeneralMessage(FABER_QUIT_REQUESTED) },
+	{ 1,"Export Project",           'E', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,              GeneralMessage(FABER_EXPORT_PROJECT) },
+
+	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
+
+	{ 1,"Quit",                'Q', B_COMMAND_KEY,                   0, 0,                      ItemMessage(B_QUIT_REQUESTED) },
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
 
@@ -37,7 +41,7 @@ KeyBind kEditMenu[] {
 	{ 1,"Copy & Silence",       'X', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,                     GeneralMessage(FABER_COPY_SILENCE) },
 	{ 1,"Cut",              'X', B_COMMAND_KEY,                   0, 0,                         GeneralMessage(FABER_CUT) },
 	{ 1,"Paste",                'V', B_COMMAND_KEY,                   0, 0,                     GeneralMessage(FABER_PASTE) },
-	{ 1,"Paste to new project",         'V', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,             GeneralMessage(FABER_PASTE_NEW) },
+	//{ 1,"Paste to new project",         'V', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,             GeneralMessage(FABER_PASTE_NEW) },
 
 	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
 
@@ -59,15 +63,14 @@ KeyBind kEditMenu[] {
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
 
-	//{ 1,"Set frequency",      0, 0,                               0, 0,                         FABER_SET_FREQUENCY) },
-	//{ 1,"Resample",           0, 0,                               0, 0,                         FABER_RESAMPLE) },
+	//{ 1,"Set frequency",      0, 0,                               0, 0,                       FABER_SET_FREQUENCY) },
 
-    { 1,"Trim",               'T', B_COMMAND_KEY,                   0, 0,                         GeneralMessage(FABER_TRIM) },
+    { 1,"Trim",               'T', B_COMMAND_KEY,                   0, 0,                       GeneralMessage(FABER_TRIM) },
 	{ 1,"Clear",              'B', B_COMMAND_KEY,            B_DELETE, 0,                       GeneralMessage(FABER_CLEAR) },
 
 	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
 
-	{ 1,"Settings...",      'P', B_COMMAND_KEY,                 'P', B_SHIFT_KEY,            GeneralMessage(FABER_SETTINGS) },
+	{ 1,"Settings",      'P', B_COMMAND_KEY,                 'P', B_SHIFT_KEY,              GeneralMessage(FABER_SETTINGS) },
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
 
@@ -75,14 +78,27 @@ KeyBind kEditMenu[] {
 };
 
 KeyBind kTracksMenu[] {
-	{ 0, "Track", 0, 0, 0, 0, ItemMessage(FABER_ITEM_START) },
+	{ 0, "Tracks", 0, 0, 0, 0, ItemMessage(FABER_ITEM_START) },
 
-    { 1,"New Track",                  0, 0,                           0, 0,                     GeneralMessage(FABER_ITEM_START) },
+    { 1, "New Track",                  0, 0,                           0, 0,                     GeneralMessage(FABER_ITEM_START) },
 
-    { 1,"New Mono Track",             0, 0,                           0, 0,                     GeneralMessage(FABER_NEW_EMPTY_TRACK) },
-    { 1,"New Stereo Track",           0, 0,                           0, 0,                     GeneralMessage(FABER_NEW_EMPTY_TRACK) },
+    { 1, "Mono Track",             0, 0,                           0, 0,                     GeneralMessage(FABER_NEW_MONO_TRACK) },
+    { 1, "Stereo Track",           0, 0,                           0, 0,                     GeneralMessage(FABER_NEW_STEREO_TRACK) },
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
+    { 1,"Reorder Tracks",                  0, 0,                           0, 0,                GeneralMessage(FABER_ITEM_START) },
+
+    { 1,"By Name",             0, 0,                           0, 0,                            GeneralMessage(0) },
+    { 1,"By Duration",           0, 0,                           0, 0,                          GeneralMessage(0) },
+    { 1,"By Type",           0, 0,                           0, 0,                              GeneralMessage(0) },
+
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
+	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
+
+    { 1,"Mute All",             0, 0,                           0, 0,                           GeneralMessage(0) },
+    { 1,"Unmute All",             0, 0,                           0, 0,                           GeneralMessage(0) },
 
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
 
@@ -142,6 +158,34 @@ KeyBind kToolsBar[] {
 	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
 };
 
+KeyBind kTrackContextualMenu[] {
+	{ 0, "TrackMenu", 0, 0, 0, 0, ItemMessage(FABER_ITEM_START) },
+
+    { 1,"Set Name...",                  0, 0,                           0, 0,                     GeneralMessage(0) },
+    { 1,"Get Informations",                  0, 0,                           0, 0,                GeneralMessage(0) },
+
+	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
+
+    { 1,"Mono",             0, 0,                           0, 0,                     GeneralMessage(0) },
+    { 1,"Stereo (left)",           0, 0,                           0, 0,                     GeneralMessage(0) },
+    { 1,"Stereo (right)",           0, 0,                           0, 0,                     GeneralMessage(0) },
+
+	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
+
+    { 1,"Select All",           0, 0,                           0, 0,                     GeneralMessage(0) },
+    { 1,"Unselect All",           0, 0,                           0, 0,                     GeneralMessage(0) },
+
+	{ 0, "", 0, 0, 0, 0, ItemMessage(FABER_SPLITTER) },
+
+    { 1,"Create two mono tracks",           0, 0,                           0, 0,                     GeneralMessage(0) },
+    { 1,"Separate channels",           0, 0,                           0, 0,                     GeneralMessage(0) },
+    { 1,"Merge channels",           0, 0,                           0, 0,                     GeneralMessage(0) },
+
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_ITEM_END) },
+
+	{ 0, NULL, 0, 0, 0, 0, ItemMessage(FABER_EOF) }
+};
+
 KeyBind* kDefaultKeymap[] {
 	kFileMenu,
 	kEditMenu,
@@ -150,5 +194,6 @@ KeyBind* kDefaultKeymap[] {
 	kPlayButtons,
 	kToolsBar,
 	kZoomBar,
+	kTrackContextualMenu,
 	NULL
 };

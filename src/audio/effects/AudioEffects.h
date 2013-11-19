@@ -29,7 +29,7 @@
 #include "Delay.h"
 
 
-typedef struct StandardAudioEffect {
+struct StandardAudioEffect {
 	FaberEffect* effect;
 };
 

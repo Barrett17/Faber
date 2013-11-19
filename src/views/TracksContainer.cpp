@@ -103,11 +103,34 @@ TracksContainer::Pulse()
 void
 TracksContainer::MessageReceived(BMessage* message)
 {
-	/*switch (message->what)
+	message->PrintToStream();
+
+	uint32 faber_what = 0;
+	message->FindUInt32(FABER_WHAT, &faber_what);
+
+	switch (faber_what)
 	{
-		case FABER_NEW_EMPTY_TRACK:
-			AddTrack(new AudioTrack());
+		case FABER_NEW_MONO_TRACK:
+		{
+			AudioTrack* track = new AudioTrack();
+			media_format format = track->Format();
+			format.u.raw_audio.channel_count = 1;
+			track->SetFormat(format);
+			AddTrack(track);
+
 			break;
+		}
+
+		case FABER_NEW_STEREO_TRACK:
+		{
+			AudioTrack* track = new AudioTrack();
+			media_format format = track->Format();
+			format.u.raw_audio.channel_count = 2;
+			track->SetFormat(format);
+			AddTrack(track);
+
+			break;
+		}
 
 		case FABER_REMOVE_TRACK:
 			//int32 id = message->FindInt32("track_id");
@@ -144,25 +167,25 @@ TracksContainer::MessageReceived(BMessage* message)
 			break;
 
 		case FABER_ZOOM_IN:
-			fTracksContainer->ZoomIn();
+			ZoomIn();
 			break;
 	
 		case FABER_ZOOM_OUT:
-			fTracksContainer->ZoomOut();
+			ZoomOut();
 			break;
 	
 		case FABER_ZOOM_FULL:
-			fTracksContainer->ZoomFull();
+			ZoomFull();
 			break;
 
 		case FABER_ZOOM_SELECTION:
-			fTracksContainer->ZoomSelection();
+			ZoomSelection();
 			break;
 
 		default:
-			BView::MessageReceived(message);
+			BGroupView::MessageReceived(message);
 
-	}*/
+	}
 }
 
 

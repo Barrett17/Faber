@@ -72,21 +72,21 @@ MenuManager::BuildMainMenuBar()
 BMenu*
 MenuManager::BuildFileMenu()
 {
-	return _BuildMenu(kFileMenu, B_TRANSLATE("File"));
+	return _BuildMenu(kFileMenu);
 }
 
 
 BMenu*
 MenuManager::BuildEditMenu()
 {
-	return _BuildMenu(kEditMenu, B_TRANSLATE("Edit"));
+	return _BuildMenu(kEditMenu);
 }
 
 
 BMenu*
 MenuManager::BuildTracksMenu()
 {
-	return _BuildMenu(kTracksMenu, B_TRANSLATE("Tracks"));
+	return _BuildMenu(kTracksMenu);
 }
 
 
@@ -131,54 +131,14 @@ MenuManager::BuildGenerateMenu()
 BMenu*
 MenuManager::BuildHelpMenu()
 {
-	return _BuildMenu(kHelpMenu, "Help");
+	return _BuildMenu(kHelpMenu);
 }
 
 
 BPopUpMenu*
 MenuManager::BuildTrackContextualMenu()
 {
-	BPopUpMenu* trackMenu = new BPopUpMenu("TrackMenu");
-
-	trackMenu->AddItem(new BMenuItem("Set Name...",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Mono",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Stereo (right)",
-		NULL));
-
-	trackMenu->AddItem(new BMenuItem("Stereo (left)",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Select All",
-		NULL));
-
-	trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem("Create two mono tracks",
-		NULL));
-	trackMenu->AddItem(new BMenuItem("Separate stereo track",
-		NULL));
-	trackMenu->AddItem(new BMenuItem("Merge adiacent track",
-		NULL));
-
-	/*trackMenu->AddItem(new BSeparatorItem());
-
-	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Insert..."),
-		new BMessage(FABER_INSERT), fKeyBind->GetKey("FILE_INSERT"),
-		fKeyBind->GetMod("FILE_INSERT")));
-
-	trackMenu->AddItem(new BMenuItem(B_TRANSLATE("Append..."),
-		new BMessage(FABER_APPEND), fKeyBind->GetKey("FILE_APPEND"),
-		fKeyBind->GetMod("FILE_APPEND")));*/
-
-	return trackMenu;
+	return _BuildPopUpMenu(kTrackContextualMenu, false);
 }
 
 
@@ -189,7 +149,7 @@ MenuManager::UpdateMenu()
 
 
 BMenu*
-MenuManager::_BuildMenu(KeyBind* bind, const char* name)
+MenuManager::_BuildMenu(KeyBind* bind, bool setTarget)
 {
 	// The first item describe the menu
 	BMenu* menu = new BMenu(bind[0].label);
@@ -209,7 +169,39 @@ MenuManager::_BuildMenu(KeyBind* bind, const char* name)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
 		} else {
 			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
-			item->SetTarget(fCommandsLooper);
+			if (setTarget)
+				item->SetTarget(fCommandsLooper);
+
+			menu->AddItem(item);
+		}
+	}
+	return menuList.ItemAt(0);
+}
+
+
+BPopUpMenu*
+MenuManager::_BuildPopUpMenu(KeyBind* bind, bool setTarget)
+{
+	// The first item describe the menu
+	BPopUpMenu* menu = new BPopUpMenu(bind[0].label);
+	BObjectList<BPopUpMenu> menuList(false);
+	menuList.AddItem(menu);
+
+	for (int i = 1; bind[i].message != FABER_EOF; i++) {
+
+		menu = menuList.ItemAt(menuList.CountItems()-1);
+
+		if (bind[i].message == FABER_ITEM_START) {
+			BPopUpMenu* subMenu = new BPopUpMenu(bind[i].label);
+			menu->AddItem(subMenu);
+			menuList.AddItem(subMenu);
+		}  else if (bind[i].message == FABER_ITEM_END) {
+			if (menuList.CountItems() > 1)
+				menuList.RemoveItemAt(menuList.CountItems()-1);
+		} else {
+			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
+			if (setTarget)
+				item->SetTarget(fCommandsLooper);
 
 			menu->AddItem(item);
 		}

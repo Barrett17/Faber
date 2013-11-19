@@ -40,6 +40,39 @@
 
 #include <stdio.h>
 
+rgb_color back_color =(rgb_color){150,150,150};
+rgb_color back_color2 =(rgb_color){200, 200, 200};
+rgb_color back_selected_color =(rgb_color){193,197,206};
+rgb_color back_selected_color2 =(rgb_color){246,246,255};
+
+rgb_color left_color = (rgb_color){55,57,62};
+rgb_color left_color2 = (rgb_color){60, 60, 60};
+rgb_color left_selected_color = (rgb_color){0,0,0};
+rgb_color left_selected_color2 = (rgb_color){78,80,102};
+
+rgb_color right_color = (rgb_color){55,57,62};
+rgb_color right_color2 = (rgb_color){60, 60, 60};
+rgb_color right_selected_color = (rgb_color){0,0,0};
+rgb_color right_selected_color2 =(rgb_color){78,80,102};
+
+rgb_color grid_color = (rgb_color){223,224,235};
+rgb_color grid_selected_color = (rgb_color){177,177,186};
+
+rgb_color peak_color = (rgb_color){230,231,235};
+rgb_color peak_selected_color = (rgb_color){183,187,201};
+
+rgb_color mid_left_color = 	(rgb_color){91, 175, 180};
+rgb_color mid_right_color = 	(rgb_color){180, 180, 170};
+rgb_color mid_left_selected_color =	(rgb_color){0, 80, 80};
+rgb_color mid_right_selected_color = 	(rgb_color){80, 80, 0};
+
+rgb_color pointer_color = 	(rgb_color){100,100,100};
+
+rgb_color time_back_color = (rgb_color){216,216,216};
+rgb_color time_marks_color = (rgb_color){150,150,150};
+rgb_color time_small_marks_color = (rgb_color){180,180,180};
+rgb_color time_text_color = (rgb_color){118,119,114};
+
 
 SampleView::SampleView(AudioTrackView* track)
 	:
@@ -129,7 +162,7 @@ SampleView::Pulse()
 void
 SampleView::Draw(BRect rect)
 {
-/*	//printf("SampleView::Draw\n");
+	//printf("SampleView::Draw\n");
 
 	Looper()->Lock();
 
@@ -172,7 +205,7 @@ SampleView::Draw(BRect rect)
 
 			BitmapDrawer draw(fOffScreen);
 
-			rgb_color a = Prefs.back_color;
+			rgb_color a = back_color;
 			uint8 t = a.red;
 			a.red = a.blue;
 			a.blue = t;
@@ -202,8 +235,8 @@ SampleView::Draw(BRect rect)
 		float x = (fOwner->fPointer-fOwner->fStart) * Bounds().Width()
 			/ (fOwner->fEnd - fOwner->fStart);
 
-		SetHighColor(Prefs.pointer_color);
-		SetLowColor(Prefs.back_color);
+		SetHighColor(pointer_color);
+		SetLowColor(back_color);
 
 		for (float y = 0; y<r.bottom; y+=4)
 			StrokeLine( BPoint( x, y), BPoint( x, y));
@@ -212,7 +245,8 @@ SampleView::Draw(BRect rect)
 	} else {
 		float x = (fOwner->fPointer-fOwner->fStart)
 			* Bounds().Width() /(fOwner->fEnd - fOwner->fStart);
-		SetHighColor(Prefs.pointer_color);
+
+		SetHighColor(pointer_color);
 
 		StrokeLine(BPoint(x, 0), BPoint(x, r.bottom));
 
@@ -233,13 +267,13 @@ SampleView::Draw(BRect rect)
 	// needed for pencil edit
 	fUpdatePeak = false;				
 
-	Looper()->Unlock();*/
+	Looper()->Unlock();
 }
 
 
 void
 SampleView::MouseDown(BPoint p)
-{/*
+{
 	if (fTrack->Size() == 0)
 		return;
 
@@ -250,10 +284,10 @@ SampleView::MouseDown(BPoint p)
 
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
 
-	// The selection tool handles all select modes
+	/*// The selection tool handles all select modes
 	switch(Prefs.tool_mode) {
 		case FABER_SELECTION_TOOL:
-		{
+		{*/
 			if (clicks == 1) {
 				// calculate position of cursors on screen
 				float pointer_x = (fOwner->fPointer-fOwner->fStart)
@@ -325,16 +359,16 @@ SampleView::MouseDown(BPoint p)
 					fOld = p;
 					fStartSelection = p;
 				}
-			} else if (clicks == 2 && Prefs.select_all_on_double) {
+			} else if (clicks == 2 /*&& Prefs.select_all_on_double*/) {
 				// The double-click selection 
 				fOwner->SelectAll();
 			}
-			break;
+		/*	break;
 		}
 		case FABER_DRAW_TOOL:												
 		{
-			/* Drawing with the Pencil */
-			/*if (Prefs.tool_mode == DRAW_TOOL && clicks == 1) {
+			// Drawing with the Pencil 
+			if (Prefs.tool_mode == DRAW_TOOL && clicks == 1) {
 				// save undo data
 				//Hist.Save(H_REPLACE, fOwner->fStart, fOwner->fEnd);
 				WindowsManager::MainWindow()->UpdateMenu();
@@ -350,18 +384,18 @@ SampleView::MouseDown(BPoint p)
 
 		default:
 			break;
-	}
+	}*/
 
 	Invalidate();
 
-	MenuManager::UpdateMenu();*/
+	MenuManager::UpdateMenu();
 }
 
 
 
 void
 SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
-{/*
+{
 	// area where the cursors work for left/right selection
 	float top = Bounds().Height() * 0.20;
 
@@ -393,7 +427,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 		&& fOwner->IsSelected() && !left_pointer && !right_pointer
 		&& (left_select || right_select);
 
-	if (Prefs.tool_mode == FABER_DRAW_TOOL)
+	/*if (Prefs.tool_mode == FABER_DRAW_TOOL)
 		// pencil mouse cursor 
 		SetViewCursor( MouseIcons::MousePencil());
 	else if (Prefs.tool_mode == FABER_SELECTION_TOOL) {
@@ -416,14 +450,14 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 			else
 				SetViewCursor(MouseIcons::MouseArrow());
 		}
-	} else
+	} else*/
 		SetViewCursor(B_CURSOR_SYSTEM_DEFAULT);
 
 	// Handle the mouse-move events
 	// decide which part would be selected
 	bool full_update = false;
 
-	if (Prefs.drag_drop && drag_selection) {
+	if (/*Prefs.drag_drop &&*/ drag_selection) {
 		// drag & drop
 		if (fabs(p.x - fStartSelection.x) > 3) {
 			BRect r = Bounds();
@@ -493,7 +527,7 @@ SampleView::MouseMoved(BPoint p, uint32 button, const BMessage *msg)
 	} else if (edit) {
 		EditLine( fOld, p );
 		fOld = p;
-	}*/
+	}
 }
 
 
@@ -660,7 +694,7 @@ SampleView::FrameResized(float width, float height)
 void
 SampleView::CalculateCache()
 {
-	/*if (fTrack->Size() == 0)
+	if (fTrack->Size() == 0)
 		return;
 
 	acquire_sem(fViewSem);
@@ -711,7 +745,7 @@ SampleView::CalculateCache()
 
 	height_div = conv[height_div/2];
 
-	int32 peak = (int32)(r.top + amp*(1.0f - Prefs.peak));
+	int32 peak = (int32)(r.top + amp*(1.0f /*- Prefs.peak*/));
 
 	// size of cache
 	BRect rect(0, 0, size, size);
@@ -726,14 +760,14 @@ SampleView::CalculateCache()
 	BitmapDrawer draw_left(fLeftCache);
 	BitmapDrawer draw_fLeftSelected(fLeftSelected);
 
-	rgb_color back2 = Prefs.back_color;				// background top
-	rgb_color back1 = Prefs.back_color2;			// background middle
-	rgb_color back2s = Prefs.back_selected_color;	// background top selected
-	rgb_color back1s = Prefs.back_selected_color2;	// background middle selected
-	rgb_color fore2s = Prefs.left_selected_color;	// foreground top
-	rgb_color fore1s = Prefs.left_selected_color2;	// foreground middle
-	rgb_color fore2 = Prefs.left_color;				// foreground top selected
-	rgb_color fore1 = Prefs.left_color2;			// foreground middle selected
+	rgb_color back2 = back_color;				// background top
+	rgb_color back1 = back_color2;			// background middle
+	rgb_color back2s = back_selected_color;	// background top selected
+	rgb_color back1s = back_selected_color2;	// background middle selected
+	rgb_color fore2s = left_selected_color;	// foreground top
+	rgb_color fore1s = left_selected_color2;	// foreground middle
+	rgb_color fore2 = left_color;				// foreground top selected
+	rgb_color fore1 = left_color2;			// foreground middle selected
 
 	rgb_color gridColor = {120,120,120};
 
@@ -745,17 +779,17 @@ SampleView::CalculateCache()
 		uint8 alpha = y*255/size;
 		if (y==size) {
 			// middle
-			a = Prefs.mid_left_color;
-			b = Prefs.mid_left_selected_color;
-		} else if (Prefs.show_grid && y == (int)grid_y && y != size-1) {
+			a = mid_left_color;
+			b = mid_left_selected_color;
+		} else if (/*Prefs.show_grid && */y == (int)grid_y && y != size-1) {
 			// horizontal grid
-			a = Prefs.grid_color;
-			b = Prefs.grid_selected_color;
+			a = grid_color;
+			b = grid_selected_color;
 			grid_y += r.Height()/height_div;
-		} else if (y == peak && Prefs.show_peak) {
+		} else if (y == peak /*&& Prefs.show_peak*/) {
 			// peak lines
-			a = Prefs.peak_color;
-			b = Prefs.peak_selected_color;
+			a = peak_color;
+			b = peak_selected_color;
 		} else {
 			a = back2;
 			b = back1;
@@ -791,10 +825,10 @@ SampleView::CalculateCache()
 		BitmapDrawer draw_right(fRightCache);
 		BitmapDrawer draw_fRightSelected(fRightSelected);
 
-		rgb_color fore2s = Prefs.right_selected_color;	// foreground top
-		rgb_color fore1s = Prefs.right_selected_color2;	// foreground middle
-		rgb_color fore2 = Prefs.right_color;			// foreground top selected
-		rgb_color fore1 = Prefs.right_color2;			// foreground middle selected
+		rgb_color fore2s = right_selected_color;	// foreground top
+		rgb_color fore1s = right_selected_color2;	// foreground middle
+		rgb_color fore2 = right_color;			// foreground top selected
+		rgb_color fore1 = right_color2;			// foreground middle selected
 
 		float grid_y = 0;
 		// draw the background
@@ -805,17 +839,17 @@ SampleView::CalculateCache()
 			uint8 alpha = y*255/size;
 			if (y==size) {
 				// middle
-				a = Prefs.mid_right_color;
-				b = Prefs.mid_right_selected_color;
-			} else if (Prefs.show_grid && y == (int)grid_y && y != size-1) {
+				a = mid_right_color;
+				b = mid_right_selected_color;
+			} else if (/*Prefs.show_grid &&*/ y == (int)grid_y && y != size-1) {
 				// horizontal grid
-				a = Prefs.grid_color;
-				b = Prefs.grid_selected_color;
+				a = grid_color;
+				b = grid_selected_color;
 				grid_y += r.Height()/height_div;
-			} else if (y == peak && Prefs.show_peak) {
+			} else if (y == peak /*&& Prefs.show_peak*/) {
 				// peak lines
-				a = Prefs.peak_color;
-				b = Prefs.peak_selected_color;
+				a = peak_color;
+				b = peak_selected_color;
 			} else {
 			a = back2;
 			b = back1;
@@ -840,7 +874,7 @@ SampleView::CalculateCache()
 		}
 		cache_right_valid = true;
 	}
-	release_sem(fViewSem);*/
+	release_sem(fViewSem);
 }
 
 
@@ -848,7 +882,7 @@ SampleView::CalculateCache()
 void
 SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 {
-	/*acquire_sem(fViewSem);
+	acquire_sem(fViewSem);
 
 	// Update the peak-cache if needed
 	if (fUpdatePeak || fOldLeftPointer != fOwner->fStart
@@ -884,16 +918,16 @@ SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 		outBits = fScreenBits;
 		inBits = fLeftBits;
 		inSelectedBits = fLeftSelectedBits;
-		col = Prefs.left_color2;
-		colS = Prefs.left_selected_color2;
+		col = left_color2;
+		colS = left_selected_color2;
 		peak_buffer = fLeftPeakBuffer;
 	} else {
 		// fill pointers for right channel
 		outBits = fScreenBits + size*2 * fScreenWidth;
 		inBits = fRightBits;
 		inSelectedBits = fRightSelectedBits;
-		col = Prefs.right_color2;
-		colS = Prefs.right_selected_color2;
+		col = right_color2;
+		colS = right_selected_color2;
 		peak_buffer = fRightPeakBuffer;
 	}
 
@@ -970,7 +1004,7 @@ SampleView::DrawMono(BRect rect, bool left, bool draw_selection)
 				peak_buffer, r, size, size2);
 		}
 	}
-	release_sem(fViewSem);*/
+	release_sem(fViewSem);
 }
 
 

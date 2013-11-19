@@ -65,7 +65,8 @@ FaberApp::MessageReceived(BMessage* message)
 	{
 		case FABER_DROP_PASTE:
 		case B_PASTE:
-			CommandsLooper::Get()->PostMessage(message);
+		case FABER_GENERAL_MESSAGE:
+			fFaberWindow->PostMessage(message);
 		break;
 
 		case B_SIMPLE_DATA:

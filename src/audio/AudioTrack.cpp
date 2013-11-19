@@ -23,6 +23,8 @@
 
 
 AudioTrack::AudioTrack()
+	:
+	Track()
 {
 	fPeak = new CPeakFile(this);
 }

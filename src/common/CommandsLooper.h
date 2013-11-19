@@ -22,6 +22,9 @@
 
 #include <Looper.h>
 
+#include "FaberView.h"
+
+
 class CommandsLooper : public BLooper {
 public:
 										CommandsLooper();
@@ -33,6 +36,7 @@ private:
 			void						_GeneralMessage(BMessage* message);
 
 			static CommandsLooper*		fInstance;
+			FaberView*					fFaberView;
 };
 
 #endif

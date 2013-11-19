@@ -20,13 +20,14 @@
 #ifndef WINDOWS_MANAGER
 #define WINDOWS_MANAGER
 
+#include <FilePanel.h>
 #include <Messenger.h>
 
+#include "ExportWindow.h"
 #include "FaberEffect.h"
 #include "FaberWindow.h"
 #include "OpenPanel.h"
 #include "ProgressWindow.h"
-#include "SavePanel.h"
 #include "SettingsWindow.h"
 
 
@@ -68,7 +69,8 @@ public:
 
 	// App panels
 	static OpenPanel*		GetOpenPanel();
-	static SavePanel*		GetSavePanel();
+	static BFilePanel*		GetSavePanel();
+	static ExportWindow*	GetExportPanel();
 
 	// Progress window methods
 	void					ProgressUpdate(int32 delta);
@@ -91,7 +93,8 @@ private:
 	ProgressWindow*			fProgress;
 
 	OpenPanel*				fOpenPanel;
-	SavePanel*				fSavePanel;
+	BFilePanel*				fSavePanel;
+	ExportWindow*			fExportWindow;
 };
 
 #endif

@@ -49,7 +49,6 @@ CommandsLooper::CommandsLooper()
 void
 CommandsLooper::MessageReceived(BMessage* message)
 {
-	message->PrintToStream();
 
 	switch (message->what)
 	{
@@ -85,9 +84,19 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 			break;
 		}
 
+		case FABER_SETTINGS:
+			WindowsManager::Get()->ShowSettings();
+		break;
+
+		case FABER_FILE_OPEN:
+		{
+			WindowsManager::GetOpenPanel()->Show();
+			break;
+		}
+
 		case FABER_EXPORT_PROJECT:
 		{
-		
+			WindowsManager::GetExportPanel()->Show();
 			break;
 		}
 
@@ -101,19 +110,27 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 
 		case FABER_SAVE_PROJECT:
 		{
-		
+			WindowsManager::GetSavePanel()->Show();
 			break;
 		}
 
-		case FABER_FILE_OPEN:
+		case FABER_SAVE_AS_PROJECT:
 		{
-		
+			WindowsManager::GetSavePanel()->Show();
 			break;
 		}
 
-		case FABER_SETTINGS:
-			WindowsManager::Get()->ShowSettings();
-		break;
+		case FABER_UNDO:
+		{
+
+			break;
+		}
+
+		case FABER_REDO:
+		{
+
+			break;
+		}
 
 		case FABER_EFFECT_CALL:
 		{
@@ -136,6 +153,9 @@ CommandsLooper::_GeneralMessage(BMessage* message)
 			break;
 		}
 
+		default:
+			be_app->PostMessage(message);
+			break;
 
 	}
 }
