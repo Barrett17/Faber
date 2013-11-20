@@ -20,6 +20,7 @@
 #ifndef EXPORT_WINDOW_H
 #define EXPORT_WINDOW_H
 
+#include <Box.h>
 #include <Window.h>
 
 #include "FaberEffect.h"
@@ -27,9 +28,12 @@
 class ExportWindow : public BWindow
 {
 public:
-	ExportWindow();
+						ExportWindow();
 
-	virtual void MessageReceived(BMessage*);
+	virtual void		MessageReceived(BMessage*);
+
+	BBox*				_CreateTracksBox();
+	BBox*				_CreateOutputBox();
 };
 
 #endif

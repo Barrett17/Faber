@@ -177,5 +177,6 @@ const ItemMessage FABER_SPLITTER			=	'spli';
 
 const uint32 FABER_APPLY					=	'fbaP';
 const uint32 FABER_REVERT					=	'fbrv';
+const uint32 FABER_CANCEL					=	'fbcn';
 
 #endif

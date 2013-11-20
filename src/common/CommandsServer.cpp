@@ -48,14 +48,18 @@ CommandsServer::CommandsServer()
 filter_result
 CommandsServer::Filter(BMessage* message, BHandler **target)
 {
+	filter_result result = B_DISPATCH_MESSAGE;
+
 	message->PrintToStream();
 	switch (message->what)
 	{
 		case FABER_GENERAL_MESSAGE:
 			_GeneralMessage(message);
+			result = B_SKIP_MESSAGE;
 		break;
 	}
 
+	return result;
 }
 
 

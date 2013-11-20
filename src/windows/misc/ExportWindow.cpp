@@ -23,13 +23,42 @@
 #include <Button.h>
 #include <LayoutBuilder.h>
 
+#include "FaberDefs.h"
+
 
 ExportWindow::ExportWindow()
 	:
-	BWindow(BRect(50, 50, 250, 100), "Faber" , B_TITLED_WINDOW,
+	BWindow(BRect(100, 100, 500, 500), "Faber" , B_TITLED_WINDOW,
 		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE)
 {
+	SetTitle(B_TRANSLATE("Export Project"));
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(_CreateTracksBox())
+		.Add(_CreateOutputBox())
+		.AddGroup(B_HORIZONTAL)
+			.Add(new BButton(B_TRANSLATE("Export"), GeneralMessage(FABER_EXPORT_PROJECT)))
+			.Add(new BButton(B_TRANSLATE("Cancel"), GeneralMessage(FABER_CANCEL)))
+		.End()
+	.End();
+}
 
+
+BBox*
+ExportWindow::_CreateTracksBox()
+{
+	BBox* box = new BBox("Tracks");
+
+	return box;
+}
+
+
+BBox*
+ExportWindow::_CreateOutputBox()
+{
+	BBox* box = new BBox("Tracks");
+
+
+	return box;
 }
 
 
