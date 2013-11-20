@@ -21,13 +21,15 @@
 #include <String.h>
 #include <SupportDefs.h>
 
+#include "Singleton.h"
 
-class ProjectManager {
+
+class ProjectManager : public Singleton<ProjectManager> {
 public:
 										ProjectManager();
 	virtual								~ProjectManager();
 
-			static ProjectManager*		Get();
+			//static ProjectManager*		Get();
 
 			bool						HasChanged() const;
 			bool						HasRedo() const;
@@ -48,7 +50,7 @@ public:
 			//							CurrentClipboard();
 			//void						EmptyClipboard();
 private:
-			static ProjectManager*		fInstance;
+			//static ProjectManager*		fInstance;
 
 			BString						fName;
 

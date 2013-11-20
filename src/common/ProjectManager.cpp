@@ -19,3 +19,89 @@
 
 #include "ProjectManager.h"
 
+//ProjectManager* ProjectManager::fInstance = NULL;
+
+
+/*ProjectManager*
+ProjectManager::Get()
+{
+	if (fInstance == NULL)
+		fInstance = new ProjectManager();
+
+	return fInstance;	
+}*/
+
+ProjectManager::ProjectManager()
+{
+}
+
+
+ProjectManager::~ProjectManager()
+{
+}
+
+
+bool
+ProjectManager::HasChanged() const
+{
+}
+
+
+bool
+ProjectManager::HasRedo() const
+{
+}
+
+
+bool
+ProjectManager::HasUndo() const
+{
+}
+
+
+status_t
+ProjectManager::SaveProject(BMessage* message)
+{
+}
+
+
+status_t
+ProjectManager::LoadProject(BMessage* message)
+{
+}
+
+
+status_t
+ProjectManager::LoadTrack(BMessage* message)
+{
+}
+
+
+status_t
+ProjectManager::SaveTrack(BMessage* message)
+{
+}
+
+
+void
+ProjectManager::Undo()
+{
+}
+
+
+void
+ProjectManager::Redo()
+{
+}
+
+
+BString&
+ProjectManager::Name() const
+{
+}
+
+
+void
+ProjectManager::SetName(const char* name)
+{
+}

@@ -60,6 +60,7 @@ Application Faber :
 	WidgetFrame.cpp
 
 	# TrackView implementations
+	PeakFile.cpp
 	TrackView.cpp
 	AudioTrackView.cpp
 	SampleView.cpp
@@ -102,7 +103,7 @@ Application Faber :
 	SwatchView.cpp
 
 	# Common
-	PeakFile.cpp
+	Singleton.cpp
 	TrackIO.cpp
 	MouseIcons.cpp
 
