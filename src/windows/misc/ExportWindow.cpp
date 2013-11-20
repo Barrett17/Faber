@@ -22,8 +22,11 @@
 #include <Box.h>
 #include <Button.h>
 #include <LayoutBuilder.h>
+#include <OutlineListView.h>
+#include <ScrollView.h>
 
 #include "FaberDefs.h"
+#include <VolumeSlider.h>
 
 
 ExportWindow::ExportWindow()
@@ -32,9 +35,16 @@ ExportWindow::ExportWindow()
 		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE)
 {
 	SetTitle(B_TRANSLATE("Export Project"));
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(_CreateTracksBox())
-		.Add(_CreateOutputBox())
+
+	BBox* sessionBox = new BBox(B_FANCY_BORDER, _CreateSessionBox());
+	sessionBox->SetLabel("Current Session");
+
+	BBox* optionsBox = new BBox(B_FANCY_BORDER, _CreateOptionsBox());
+	optionsBox->SetLabel("Options");
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 5.0f)
+		.Add(optionsBox)
+		.Add(sessionBox)
 		.AddGroup(B_HORIZONTAL)
 			.Add(new BButton(B_TRANSLATE("Export"), GeneralMessage(FABER_EXPORT_PROJECT)))
 			.Add(new BButton(B_TRANSLATE("Cancel"), GeneralMessage(FABER_CANCEL)))
@@ -43,22 +53,45 @@ ExportWindow::ExportWindow()
 }
 
 
-BBox*
-ExportWindow::_CreateTracksBox()
+BView*
+ExportWindow::_CreateSessionBox()
 {
-	BBox* box = new BBox("Tracks");
+	BView* view = new BView("", B_WILL_DRAW);
 
-	return box;
+	BOutlineListView* listView = new BOutlineListView("Tracks list");
+	listView->SetExplicitSize(BSize(300, 200));
+
+	BScrollView* scrollView = new BScrollView("scroll", listView,
+		B_FOLLOW_ALL_SIDES, false, true, B_PLAIN_BORDER);
+
+	BLayoutBuilder::Group<>(view, B_HORIZONTAL)
+		.Add(scrollView)
+		.AddGlue()
+	.End();
+
+	return view;
 }
 
 
-BBox*
-ExportWindow::_CreateOutputBox()
+BView*
+ExportWindow::_CreateOptionsBox()
 {
-	BBox* box = new BBox("Tracks");
+	BView* view = new BView("", B_WILL_DRAW);
 
+	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
+	slider->SetExplicitSize(BSize(200, 40));
 
-	return box;
+	BLayoutBuilder::Group<>(view, B_VERTICAL)
+		.AddGroup(B_HORIZONTAL)
+			.Add(new BButton("Browse", NULL))
+			.Add(new BStringView("", "path", B_WILL_DRAW))
+			.AddGlue()
+		.End()
+		
+		.Add(slider)
+	.End();
+
+	return view;
 }
 
 

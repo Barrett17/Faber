@@ -50,7 +50,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 {
 	filter_result result = B_DISPATCH_MESSAGE;
 
-	message->PrintToStream();
 	switch (message->what)
 	{
 		case FABER_GENERAL_MESSAGE:
@@ -68,6 +67,8 @@ CommandsServer::_GeneralMessage(BMessage* message)
 {
 	uint32 faber_what = 0;
 	message->FindUInt32(FABER_WHAT, &faber_what);
+
+	message->PrintToStream();
 
 	switch (faber_what)
 	{

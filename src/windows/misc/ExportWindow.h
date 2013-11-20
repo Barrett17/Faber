@@ -32,8 +32,8 @@ public:
 
 	virtual void		MessageReceived(BMessage*);
 
-	BBox*				_CreateTracksBox();
-	BBox*				_CreateOutputBox();
+	BView*				_CreateSessionBox();
+	BView*				_CreateOptionsBox();
 };
 
 #endif
