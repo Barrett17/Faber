@@ -32,7 +32,9 @@ public:
 
 			return fInstance;	
 		}	
-protected:
+//protected:
+		Singleton() {};
+
 		static T* fInstance;
 };
 

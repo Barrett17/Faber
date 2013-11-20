@@ -19,17 +19,17 @@
 
 #include "ProjectManager.h"
 
-//ProjectManager* ProjectManager::fInstance = NULL;
+ProjectManager* ProjectManager::fInstance = NULL;
 
 
-/*ProjectManager*
+ProjectManager*
 ProjectManager::Get()
 {
 	if (fInstance == NULL)
 		fInstance = new ProjectManager();
 
 	return fInstance;	
-}*/
+}
 
 ProjectManager::ProjectManager()
 {
