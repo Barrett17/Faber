@@ -71,8 +71,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	soloButton->TrimIcon();
 
 	BString trackName(track->Name());
-	if (trackName.Length() > 17) {
-		trackName.Truncate(14);
+	if (trackName.Length() > 15) {
+		trackName.Truncate(12);
 		trackName.Append("...");
 	}
 

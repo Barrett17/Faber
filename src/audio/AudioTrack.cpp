@@ -19,6 +19,7 @@
 
 #include "AudioTrack.h"
 
+#include "FaberDefs.h"
 #include "PeakFile.h"
 
 
@@ -26,6 +27,7 @@ AudioTrack::AudioTrack()
 	:
 	Track()
 {
+	SetName(B_TRANSLATE("Empty Audio Track"));
 	fPeak = new CPeakFile(this);
 }
 

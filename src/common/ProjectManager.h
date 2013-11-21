@@ -33,6 +33,8 @@ public:
 			bool						HasRedo() const;
 			bool						HasUndo() const;
 
+			bool						WasSaved() const;
+
 			status_t					SaveProject(BMessage* message);
 			status_t					LoadProject(BMessage* message);
 
@@ -42,7 +44,7 @@ public:
 			void						Undo();
 			void						Redo();
 
-			BString&					Name() const;
+			BString					Name() const;
 			void						SetName(const char* name);
 
 			//							CurrentClipboard();
@@ -52,4 +54,5 @@ private:
 
 			BString						fName;
 
+			bool						fWasSaved;
 };

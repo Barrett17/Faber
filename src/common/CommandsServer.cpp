@@ -25,6 +25,7 @@
 #include "EffectWindow.h"
 #include "FaberDefs.h"
 
+
 CommandsServer* CommandsServer::fInstance = NULL;
 
 
@@ -42,6 +43,7 @@ CommandsServer::CommandsServer()
 	:
 	BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE)
 {
+	fProjectManager = ProjectManager::Get();
 }
 
 
@@ -78,6 +80,7 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 
 		case FABER_FILE_OPEN:
 		{
+			
 			WindowsManager::GetOpenPanel()->Show();
 
 			skip = true;
@@ -104,17 +107,26 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 
 		case FABER_SAVE_PROJECT:
 		{
-			WindowsManager::GetSavePanel()->Show();
-
 			skip = true;
+
+			if (!fProjectManager->WasSaved()) {
+				WindowsManager::GetSavePanel()->Show();
+				break;
+			}
+
+			if (fProjectManager->HasChanged()) {
+				
+			}
+
 			break;
 		}
 
 		case FABER_SAVE_AS_PROJECT:
-		{
+		{	
+			skip = true;
+
 			WindowsManager::GetSavePanel()->Show();
 
-			skip = true;
 			break;
 		}
 

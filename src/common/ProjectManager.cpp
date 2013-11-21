@@ -32,6 +32,8 @@ ProjectManager::Get()
 }
 
 ProjectManager::ProjectManager()
+	:
+	fWasSaved(false)
 {
 }
 
@@ -44,18 +46,28 @@ ProjectManager::~ProjectManager()
 bool
 ProjectManager::HasChanged() const
 {
+	//return fHistory->HasChanged();
 }
 
 
 bool
 ProjectManager::HasRedo() const
 {
+	//return fHistory->HasRedo();
 }
 
 
 bool
 ProjectManager::HasUndo() const
 {
+	//return fHistory->HasUndo();
+}
+
+
+bool
+ProjectManager::WasSaved() const
+{
+	return fWasSaved;
 }
 
 
@@ -86,22 +98,26 @@ ProjectManager::SaveTrack(BMessage* message)
 void
 ProjectManager::Undo()
 {
+	//return fHistory->Undo();
 }
 
 
 void
 ProjectManager::Redo()
 {
+	//return fHistory->Redo();
 }
 
 
-BString&
+BString
 ProjectManager::Name() const
 {
+	return fName;
 }
 
 
 void
 ProjectManager::SetName(const char* name)
 {
+	fName = BString(name);
 }

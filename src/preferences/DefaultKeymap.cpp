@@ -37,15 +37,15 @@ KeyBind kEditMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1,"Copy",             'C', B_COMMAND_KEY,                   0, 0,                         FABER_COPY },
+	{ 1,"Copy",             'C', B_COMMAND_KEY,                   0, 0,                         B_COPY },
 	{ 1,"Copy & Silence",       'X', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,                     FABER_COPY_SILENCE },
-	{ 1,"Cut",              'X', B_COMMAND_KEY,                   0, 0,                         FABER_CUT },
-	{ 1,"Paste",                'V', B_COMMAND_KEY,                   0, 0,                     FABER_PASTE },
+	{ 1,"Cut",              'X', B_COMMAND_KEY,                   0, 0,                         B_CUT },
+	{ 1,"Paste",                'V', B_COMMAND_KEY,                   0, 0,                     B_PASTE },
 	//{ 1,"Paste to new project",         'V', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,             FABER_PASTE_NEW },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1,"Select All",         'A', B_COMMAND_KEY,                   0, 0,                       FABER_SELECT_ALL },
+	{ 1,"Select All",         'A', B_COMMAND_KEY,                   0, 0,                       B_SELECT_ALL },
 	{ 1,"Unselect All",       'U', B_COMMAND_KEY,                   0, 0,                       FABER_UNSELECT_ALL },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
@@ -82,23 +82,23 @@ KeyBind kTracksMenu[] {
 
     { 1, "New Track",                  0, 0,                           0, 0,                     FABER_ITEM_START },
 
-    { 1, "Mono Track",             0, 0,                           0, 0,                     FABER_NEW_MONO_TRACK },
-    { 1, "Stereo Track",           0, 0,                           0, 0,                     FABER_NEW_STEREO_TRACK },
+    { 1, "Audio Track",             0, 0,                           0, 0,                     FABER_NEW_AUDIO_TRACK },
+    { 1, "Label Track",           0, 0,                           0, 0,                     FABER_NEW_LABEL_TRACK },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
     { 1,"Reorder Tracks",                  0, 0,                           0, 0,                FABER_ITEM_START },
 
-    { 1,"By Name",             0, 0,                           0, 0,                            0 },
-    { 1,"By Duration",           0, 0,                           0, 0,                          0 },
-    { 1,"By Type",           0, 0,                           0, 0,                              0 },
+    { 1,"By Name",             0, 0,                           0, 0,                            FABER_SORT_BY_NAME },
+    { 1,"By Duration",           0, 0,                           0, 0,                          FABER_SORT_BY_DURATION },
+   // { 1,"By Type",           0, 0,                           0, 0,                            FABER_SORT_BY_TYPE },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-    { 1,"Mute All",             0, 0,                           0, 0,                           0 },
-    { 1,"Unmute All",             0, 0,                           0, 0,                           0 },
+    { 1,"Mute All",             0, 0,                           0, 0,                           FABER_MUTE_ALL },
+    { 1,"Unmute All",             0, 0,                           0, 0,                         FABER_UNMUTE_ALL },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 

@@ -23,6 +23,7 @@
 #include <StringView.h>
 
 #include "FaberDefs.h"
+#include "MenuManager.h"
 
 
 FaberView::FaberView()
@@ -39,6 +40,7 @@ FaberView::FaberView()
 	rgb_color backgroundColor = {120,120,120};
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(MenuManager::Get()->BuildMainMenuBar())
 		.Add(fToolBar)
 		.AddStrut(0.0f)
 			.AddGroup(B_VERTICAL, 0)
@@ -61,6 +63,7 @@ FaberView::~FaberView()
 void
 FaberView::MessageReceived(BMessage* message)
 {
+	//message->PrintToStream();
 	switch (message->what)
 	{
 		//case FABER_GENERAL_MESSAGE:

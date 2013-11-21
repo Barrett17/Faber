@@ -90,22 +90,25 @@ const uint32 FABER_UNDO					=	'undo';
 const uint32 FABER_REDO					=	'redo';
 
 
-const uint32 FABER_NEW_MONO_TRACK		=   'FNmt';
-const uint32 FABER_NEW_STEREO_TRACK		=   'FNst';
+const uint32 FABER_NEW_AUDIO_TRACK		=   'FNat';
+const uint32 FABER_NEW_LABEL_TRACK		=   'FNlt';
 
 const uint32 FABER_REMOVE_TRACK			=	'Frtk';
 
 const uint32 FABER_PASTE_NEW			=	'pnnw';
 const uint32 FABER_DROP_PASTE			=	'drps';
 
-const uint32 FABER_COPY					=	B_COPY;
 const uint32 FABER_COPY_SILENCE			=	'cpsl';
-const uint32 FABER_CUT					=	B_CUT;
-const uint32 FABER_PASTE				=	B_PASTE;
-const uint32 FABER_SELECT_ALL			=	B_SELECT_ALL;
+
 const uint32 FABER_UNSELECT_ALL			=	'unsl';
 const uint32 FABER_CLEAR				=	'cler';
 const uint32 FABER_TRIM					=	'trim';
+
+const uint32 FABER_MUTE_ALL				=	'mtal';
+const uint32 FABER_UNMUTE_ALL			=	'umal';
+
+const uint32 FABER_SORT_BY_NAME			=	'srbn';
+const uint32 FABER_SORT_BY_DURATION		=	'srbd';
 
 // Effects and audio manipulation
 

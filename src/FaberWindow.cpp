@@ -23,8 +23,8 @@
 #include <LayoutBuilder.h>
 
 #include "CommandsServer.h"
+#include "FaberDefs.h"
 #include "FaberView.h"
-#include "MenuManager.h"
 
 
 FaberWindow::FaberWindow(BRect rect)
@@ -36,7 +36,6 @@ FaberWindow::FaberWindow(BRect rect)
 	AddFilter(CommandsServer::Get());
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(MenuManager::Get()->BuildMainMenuBar())
 		.Add(fFaberView)
 	.End();
 
@@ -60,12 +59,36 @@ FaberWindow::QuitRequested()
 void
 FaberWindow::MessageReceived(BMessage* message)
 {
+	//message->PrintToStream();
 	switch (message->what)
 	{
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:
 			be_app->PostMessage(message);
 			break;
+
+		case FABER_NEW_AUDIO_TRACK:
+		case FABER_NEW_LABEL_TRACK:
+		case FABER_REMOVE_TRACK:
+		case FABER_MUTE_ALL:
+		case FABER_UNMUTE_ALL:
+		case FABER_SORT_BY_DURATION:
+		case FABER_SORT_BY_NAME:
+		case B_SELECT_ALL:
+		case FABER_UNSELECT_ALL:
+		case B_COPY:
+		case FABER_COPY_SILENCE:
+		case B_CUT:
+		case B_PASTE:
+		case FABER_DROP_PASTE:
+		case FABER_ZOOM_IN:
+		case FABER_ZOOM_OUT:
+		case FABER_ZOOM_FULL:
+		case FABER_ZOOM_SELECTION:
+		{
+			BMessenger mess(fFaberView->Container());
+			mess.SendMessage(message);
+		}
 
 		default:
 			BWindow::MessageReceived(message);

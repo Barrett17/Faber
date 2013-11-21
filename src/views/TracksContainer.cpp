@@ -106,24 +106,18 @@ TracksContainer::MessageReceived(BMessage* message)
 
 	switch (message->what)
 	{
-		case FABER_NEW_MONO_TRACK:
+		case FABER_NEW_AUDIO_TRACK:
 		{
 			AudioTrack* track = new AudioTrack();
-			media_format format = track->Format();
-			format.u.raw_audio.channel_count = 1;
-			track->SetFormat(format);
 			AddTrack(track);
 
 			break;
 		}
 
-		case FABER_NEW_STEREO_TRACK:
+		case FABER_NEW_LABEL_TRACK:
 		{
-			AudioTrack* track = new AudioTrack();
-			media_format format = track->Format();
-			format.u.raw_audio.channel_count = 2;
-			track->SetFormat(format);
-			AddTrack(track);
+			//LabelTrack* track = new LabelTrack();
+			//AddTrack(track);
 
 			break;
 		}
@@ -132,6 +126,24 @@ TracksContainer::MessageReceived(BMessage* message)
 			//int32 id = message->FindInt32("track_id");
 			// Track* track = TrackByID(id);
 			// RemoveTrack(track);
+			break;
+
+		case FABER_MUTE_ALL:
+
+			break;
+
+		case FABER_UNMUTE_ALL:
+
+			break;
+
+
+		case FABER_SORT_BY_NAME:
+
+			break;
+
+
+		case FABER_SORT_BY_DURATION:
+
 			break;
 
 		case B_SELECT_ALL:

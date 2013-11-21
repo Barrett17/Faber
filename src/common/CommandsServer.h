@@ -23,6 +23,7 @@
 #include <MessageFilter.h>
 
 #include "FaberView.h"
+#include "ProjectManager.h"
 
 
 class CommandsServer : public BMessageFilter {
@@ -37,6 +38,8 @@ private:
 
 			static CommandsServer*		fInstance;
 			FaberView*					fFaberView;
+			ProjectManager*				fProjectManager;
+			
 };
 
 #endif
