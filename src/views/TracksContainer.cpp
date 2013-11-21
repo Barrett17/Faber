@@ -39,7 +39,6 @@ TracksContainer::TracksContainer()
 {
 	// TODO fix color schemes
 	rgb_color backgroundColor = {120,120,120};
-	rgb_color whiteBackgroundColor = { 240, 240, 240 };
 
 	fView = new BGroupView(B_VERTICAL, 0);
 	fLayout = new BGroupLayout(B_VERTICAL, 4.0f);
@@ -105,10 +104,7 @@ TracksContainer::MessageReceived(BMessage* message)
 {
 	message->PrintToStream();
 
-	uint32 faber_what = 0;
-	message->FindUInt32(FABER_WHAT, &faber_what);
-
-	switch (faber_what)
+	switch (message->what)
 	{
 		case FABER_NEW_MONO_TRACK:
 		{

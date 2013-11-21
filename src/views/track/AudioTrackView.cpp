@@ -44,9 +44,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 {
 	fEnd = track->Size();
 
-	rgb_color barColor = { 0, 200, 0 };
-	rgb_color fillColor = { 240, 240, 240 };
-
 	fSampleView = new SampleView(this);
 
 	fSampleView->SetExplicitMinSize(BSize(150, HEIGHT_VAL_REF));
@@ -90,7 +87,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	trackMenu->SetTargetForItems(this);
 
 	IconButton* closeButton = new IconButton(NULL, 0, NULL,
-		GeneralMessage(FABER_REMOVE_TRACK), this);
+		MessageBuilder(FABER_REMOVE_TRACK), this);
 
 	closeButton->SetToolTip(B_TRANSLATE("Close"));
 	closeButton->SetIcon(kCloseTrackIcon);
@@ -104,14 +101,12 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	volumeSlider->SetToolTip(B_TRANSLATE(
 		"Move vertically to set the track volume."));
 	volumeSlider->SetValue(fTrack->Volume());
-	volumeSlider->UseFillColor(true, &fillColor);
 
 	VolumeSlider* balanceSlider = new VolumeSlider("balanceSlider",
 		0, 10, 7, NULL);
 	balanceSlider->SetToolTip(B_TRANSLATE(
 		"Move vertically to balance the sound."));
 	balanceSlider->SetValue(fTrack->Balance());
-	balanceSlider->UseFillColor(true, &fillColor);
 
 	BString label;
 	if (fTrack->IsMono())

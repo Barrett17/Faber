@@ -34,7 +34,6 @@ public:
 	virtual	filter_result				Filter(BMessage* message,
 											BHandler** target);				
 private:
-			void						_GeneralMessage(BMessage* message);
 
 			static CommandsServer*		fInstance;
 			FaberView*					fFaberView;

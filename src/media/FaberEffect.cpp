@@ -46,7 +46,7 @@ FaberEffect::Name() const
 BMenuItem*
 FaberEffect::BuildItem()
 {
-	BMessage* mess = GeneralMessage(FABER_EFFECT_CALL);
+	BMessage* mess = MessageBuilder(FABER_EFFECT_CALL);
 	mess->AddPointer("effect", this);
 
 	return new BMenuItem(Name(), mess, 0, 0);

@@ -15,8 +15,8 @@
 #define KNOB_EMBEDDED 1
 #define ROUND_KNOB 1
 
-static const rgb_color kGreen = (rgb_color){ 116, 224, 0, 255 };
-
+//static const rgb_color kBarColor = { 0, 200, 0 };
+static const rgb_color kFillColor = { 240, 240, 240 };
 
 // constructor
 VolumeSlider::VolumeSlider(const char* name, int32 minValue, int32 maxValue,
@@ -29,7 +29,7 @@ VolumeSlider::VolumeSlider(const char* name, int32 minValue, int32 maxValue,
 	fSnapping(false)
 {
 	SetModificationMessage(message);
-	UseFillColor(true, &kGreen);
+	UseFillColor(true, &kFillColor);
 	SetBarThickness(PreferredBarThickness());
 }
 
@@ -228,7 +228,7 @@ VolumeSlider::SetMuted(bool mute)
 
 	fMuted = mute;
 
-	rgb_color fillColor = kGreen;
+	rgb_color fillColor = kFillColor;
 	if (fMuted) {
 		fillColor = tint_color(ui_color(B_PANEL_BACKGROUND_COLOR),
 			B_DARKEN_2_TINT);

@@ -202,11 +202,11 @@ MenuManager::_BuildPopUpMenu(KeyBind* bind)
 
 
 BMenuItem*
-MenuManager::_BuildMenuItem(FaberMessage message, const char* label)
+MenuManager::_BuildMenuItem(uint32 message, const char* label)
 {
 	if (message == FABER_SPLITTER)
 		return new BSeparatorItem();
 	else
-		return new BMenuItem(label, message,
+		return new BMenuItem(label, MessageBuilder(message),
 			fKeyBind->GetKey(message), fKeyBind->GetMod(message));
 }

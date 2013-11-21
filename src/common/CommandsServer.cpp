@@ -49,31 +49,15 @@ filter_result
 CommandsServer::Filter(BMessage* message, BHandler **target)
 {
 	filter_result result = B_DISPATCH_MESSAGE;
+	bool skip = false;
 
+	//message->PrintToStream();
 	switch (message->what)
 	{
-		case FABER_GENERAL_MESSAGE:
-			_GeneralMessage(message);
-			result = B_SKIP_MESSAGE;
-		break;
-	}
-
-	return result;
-}
-
-
-void
-CommandsServer::_GeneralMessage(BMessage* message)
-{
-	uint32 faber_what = 0;
-	message->FindUInt32(FABER_WHAT, &faber_what);
-
-	message->PrintToStream();
-
-	switch (faber_what)
-	{
+		
 		case FABER_ABOUT:
-			WindowsManager::ShowAbout();	
+			WindowsManager::ShowAbout();
+			skip = true;
 		break;
 
 		case FABER_OPEN_HOMEPAGE:
@@ -82,22 +66,29 @@ CommandsServer::_GeneralMessage(BMessage* message)
 			be_roster->Launch("text/html", 1,
 				const_cast<char**>(&homepage));
 
+			skip = true;
 			break;
 		}
 
 		case FABER_SETTINGS:
 			WindowsManager::Get()->ShowSettings();
+
+			skip = true;
 		break;
 
 		case FABER_FILE_OPEN:
 		{
 			WindowsManager::GetOpenPanel()->Show();
+
+			skip = true;
 			break;
 		}
 
 		case FABER_EXPORT_PROJECT:
 		{
 			WindowsManager::GetExportPanel()->Show();
+
+			skip = true;
 			break;
 		}
 
@@ -106,18 +97,24 @@ CommandsServer::_GeneralMessage(BMessage* message)
 			app_info info;
 			be_app->GetAppInfo(&info);
 			be_roster->Launch(info.signature);
+
+			skip = true;
 			break;
 		}
 
 		case FABER_SAVE_PROJECT:
 		{
 			WindowsManager::GetSavePanel()->Show();
+
+			skip = true;
 			break;
 		}
 
 		case FABER_SAVE_AS_PROJECT:
 		{
 			WindowsManager::GetSavePanel()->Show();
+
+			skip = true;
 			break;
 		}
 
@@ -139,21 +136,32 @@ CommandsServer::_GeneralMessage(BMessage* message)
 			message->FindPointer("effect", (void**)&effect);
 			EffectWindow* win = new EffectWindow(effect);
 			win->Show();
+
+			skip = true;
 			break;
 		}
 
 		case FABER_EFFECT_EXECUTE:
 		{
-		
+
+			skip = true;		
 			break;
 		}
 
 		case FABER_EFFECT_ABORT:
 		{
 
+			skip = true;
 			break;
 		}
 
 	}
+
+	if (skip == true)
+		result = B_SKIP_MESSAGE;
+
+	return result;
 }
+
+
 

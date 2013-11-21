@@ -53,7 +53,7 @@ public:
 private:
 	BMenu*					_BuildMenu(KeyBind* bind);
 	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind);
-	BMenuItem*				_BuildMenuItem(FaberMessage message, const char* label);
+	BMenuItem*				_BuildMenuItem(uint32 message, const char* label);
 
 	static MenuManager*		fInstance;
 	FaberShortcut*			fKeyBind;

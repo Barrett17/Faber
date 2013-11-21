@@ -34,7 +34,7 @@ public:
 	int32			mod;
 	char			altKey;
 	int32			altMod;
-	FaberMessage	message;
+	uint32			message;
 };
 
 class FaberShortcut {

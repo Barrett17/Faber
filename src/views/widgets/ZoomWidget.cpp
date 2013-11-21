@@ -34,16 +34,16 @@ ZoomWidget::ZoomWidget()
 	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL, 0.5f)
 		.AddStrut(7.0f)
 		.Add(BuildButton(B_TRANSLATE("Zoom in"), 
-			GeneralMessage(FABER_ZOOM_IN), kZoomInIcon))
+			MessageBuilder(FABER_ZOOM_IN), kZoomInIcon))
 
 		.Add(BuildButton(B_TRANSLATE("Zoom out"),
-			GeneralMessage(FABER_ZOOM_OUT), kZoomOutIcon))
+			MessageBuilder(FABER_ZOOM_OUT), kZoomOutIcon))
 
 		.Add(BuildButton(B_TRANSLATE("Zoom to selection"),
-			GeneralMessage(FABER_ZOOM_SELECTION), kZoomToSelectionIcon))
+			MessageBuilder(FABER_ZOOM_SELECTION), kZoomToSelectionIcon))
 
 		.Add(BuildButton(B_TRANSLATE("Zoom full wave"),
-			GeneralMessage(FABER_ZOOM_FULL), kZoomFullWaveIcon))
+			MessageBuilder(FABER_ZOOM_FULL), kZoomFullWaveIcon))
 		.AddStrut(7.0f)
 	.End();
 

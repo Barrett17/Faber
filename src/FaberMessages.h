@@ -20,28 +20,22 @@
 #ifndef FABER_MESSAGES_H
 #define FABER_MESSAGES_H
 
-#define FABER_WHAT "faber_what?"
-
-class FaberMessage {
+class MessageBuilder {
 public:
 
-	FaberMessage()
+	MessageBuilder()
 	{
 		this->code = 0;
-		this->what = 0;
 	}
 
-	FaberMessage(uint32 what, uint32 code)
+	MessageBuilder(uint32 what)
 	{
-		this->code = code;
-		this->what = what;
+		this->code = what;
 	}
 
 	BMessage* ToMessage() const
 	{
-		BMessage* ret = new BMessage(what);
-		ret->AddUInt32(FABER_WHAT, code);
-		return ret;
+		return new BMessage(code);
 	}
 
 	operator BMessage* () const
@@ -54,7 +48,7 @@ public:
     	return this->code;
 	}
 
-	bool operator!=(const FaberMessage& from)
+	bool operator!=(const MessageBuilder& from)
   	{
 		if (this->code != from.code)
 			return true;
@@ -62,7 +56,7 @@ public:
 		return false;
 	}
 
-	bool operator==(const FaberMessage& from)
+	bool operator==(const MessageBuilder& from)
   	{
 		if (this->code == from.code)
 			return true;
@@ -71,19 +65,9 @@ public:
 	}
 
 	uint32 code;
-	uint32 what;
 };
 
 // GUI
-
-const uint32 FABER_GENERAL_MESSAGE = 'FAGM';
-
-class GeneralMessage : public FaberMessage {
-public:
-				GeneralMessage(uint32 code)
-					:
-					FaberMessage(FABER_GENERAL_MESSAGE, code) {};
-};
 
 const uint32 FABER_SELECTION_TOOL		=	'fstl';
 const uint32 FABER_DRAW_TOOL			=	'fdwt';
@@ -158,25 +142,14 @@ const uint32 FABER_ZOOM_OUT				=	'zoot';
 const uint32 FABER_ZOOM_FULL			=	'zofl';
 const uint32 FABER_ZOOM_SELECTION		=	'zosl';
 
-// Other defs
-
-const uint32 FABER_ITEM_MESSAGE		=	'FITM';
-
-class ItemMessage : public FaberMessage {
-public:
-				ItemMessage(uint32 code)
-					:
-					FaberMessage(FABER_ITEM_MESSAGE, code) {};
-};
-
 // Menu definitions
-const ItemMessage FABER_ITEM_START			=	'fits';
-const ItemMessage FABER_ITEM_END			=	'fite';
-const ItemMessage FABER_EOF					=	'feof';
-const ItemMessage FABER_SPLITTER			=	'spli';
+const uint32 FABER_ITEM_START			=	'fits';
+const uint32 FABER_ITEM_END				=	'fite';
+const uint32 FABER_EOF					=	'feof';
+const uint32 FABER_SPLITTER				=	'spli';
 
-const uint32 FABER_APPLY					=	'fbaP';
-const uint32 FABER_REVERT					=	'fbrv';
-const uint32 FABER_CANCEL					=	'fbcn';
+const uint32 FABER_APPLY				=	'fbaP';
+const uint32 FABER_REVERT				=	'fbrv';
+const uint32 FABER_CANCEL				=	'fbcn';
 
 #endif

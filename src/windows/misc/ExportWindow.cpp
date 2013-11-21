@@ -46,8 +46,8 @@ ExportWindow::ExportWindow()
 		.Add(optionsBox)
 		.Add(sessionBox)
 		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton(B_TRANSLATE("Export"), GeneralMessage(FABER_EXPORT_PROJECT)))
-			.Add(new BButton(B_TRANSLATE("Cancel"), GeneralMessage(FABER_CANCEL)))
+			.Add(new BButton(B_TRANSLATE("Export"), MessageBuilder(FABER_EXPORT_PROJECT)))
+			.Add(new BButton(B_TRANSLATE("Cancel"), MessageBuilder(FABER_CANCEL)))
 		.End()
 	.End();
 }

@@ -32,31 +32,31 @@ TransportWidget::TransportWidget()
 	WidgetFrame* transportView = new WidgetFrame(NULL);
 
 	fPlayButton = BuildButton(B_TRANSLATE("Play"),
-		GeneralMessage(FABER_TRANSPORT_PLAY), kPlayIcon);
+		MessageBuilder(FABER_TRANSPORT_PLAY), kPlayIcon);
 
 	//fPauseButton = _BuildButton(B_TRANSLATE("Pause"),
 	//	new BMessage(FABER_TRANSPORT_PAUSE), kPauseIcon);
 
 	fStopButton = BuildButton(B_TRANSLATE("Stop"),
-		GeneralMessage(FABER_TRANSPORT_STOP), kStopIcon);
+		MessageBuilder(FABER_TRANSPORT_STOP), kStopIcon);
 
 	fLoopButton = BuildButton(B_TRANSLATE("Loop"),
-		GeneralMessage(FABER_TRANSPORT_LOOP), kLoopIcon);
+		MessageBuilder(FABER_TRANSPORT_LOOP), kLoopIcon);
 
 	BLayoutBuilder::Group<>(transportView, B_HORIZONTAL, 0)
 			.AddGlue(0.0f)
 			.Add(fStopButton)
 			.Add(fPlayButton)
 			.Add(BuildButton(B_TRANSLATE("Record"),
-				GeneralMessage(FABER_TRANSPORT_REC), kRecordIcon))
+				MessageBuilder(FABER_TRANSPORT_REC), kRecordIcon))
 			.Add(BuildButton(B_TRANSLATE("Rewind All"),
-				GeneralMessage(FABER_TRANSPORT_REW_ALL), kSeekBackwardAllIcon))
+				MessageBuilder(FABER_TRANSPORT_REW_ALL), kSeekBackwardAllIcon))
 			.Add(BuildButton(B_TRANSLATE("Rewind"),
-				GeneralMessage(FABER_TRANSPORT_REW), kSeekBackwardIcon))
+				MessageBuilder(FABER_TRANSPORT_REW), kSeekBackwardIcon))
 			.Add(BuildButton(B_TRANSLATE("Forward"),
-				GeneralMessage(FABER_TRANSPORT_FWD), kSeekForwardIcon))
+				MessageBuilder(FABER_TRANSPORT_FWD), kSeekForwardIcon))
 			.Add(BuildButton(B_TRANSLATE("Forward All"),
-				GeneralMessage(FABER_TRANSPORT_FWD_ALL), kSeekForwardAllIcon))
+				MessageBuilder(FABER_TRANSPORT_FWD_ALL), kSeekForwardAllIcon))
 			.Add(fLoopButton)
 			.AddGlue(0.0f)
 		.End();

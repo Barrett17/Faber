@@ -591,7 +591,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 			key->altKey = control2->GetKey();
 			key->altMod = control2->GetMod();
 			key->label = gKeyBind->GetLabel(index);
-			key->message = GeneralMessage(message);
+			key->message = MessageBuilder(message);
 			key->isMenuItem = menu;
 	
 			gKeyBind->AddKeyBind(key);
