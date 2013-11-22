@@ -5,8 +5,10 @@
 #ifndef SPIN_SLIDER_H
 #define SPIN_SLIDER_H
 
-#include "VolumeSlider.h"
+#include <StringView.h>
+
 #include "Spinner.h"
+#include "VolumeSlider.h"
 
 
 class SpinSlider : public BView {
@@ -31,6 +33,7 @@ private:
 			void				_Init(int32 minValue, int32 maxValue);
 			Spinner*			fSpinControl;
 			VolumeSlider*		fSlider;
+			BStringView*		fLabel;
 };
 
 

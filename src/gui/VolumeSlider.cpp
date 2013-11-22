@@ -255,9 +255,17 @@ VolumeSlider::PreferredBarThickness() const
 status_t
 VolumeSlider::Invoke(BMessage* message)
 {
-	printf("invoke\n");
+	// This is used to set the value of the
+	// SpinControl in SpinSlider.
 	BMessenger mess(this);
 	mess.SendMessage(new BMessage(CUSTOM_INVOKED));
+
+	// this is added to fix the drawing
+	// problems with the thumb
+	// probably there is a better solution
+	// TODO investigate
+	Invalidate();
+
 	BSlider::Invoke();
 }
 

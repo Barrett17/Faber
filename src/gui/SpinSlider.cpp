@@ -20,10 +20,10 @@ SpinSlider::SpinSlider(const char* name, const char* label,
 	fSlider = new VolumeSlider(name, minValue,
 		maxValue, maxValue/2, message);
 
+	_Init(minValue, maxValue);
+
 	if (label != NULL)
 		SetLabel(label);
-
-	_Init(minValue, maxValue);
 }
 
 
@@ -68,11 +68,16 @@ SpinSlider::_Init(int32 minValue, int32 maxValue)
 	fSpinControl->SetRange(minValue, maxValue);
 
 	fSpinControl->SetValue(fSlider->Value());
-	fSpinControl->SetExplicitMaxSize(BSize(50, 50));
+	fSpinControl->SetExplicitMaxSize(BSize(60, 50));
+	
+	fLabel = new BStringView("", "", B_WILL_DRAW);
 
-	BLayoutBuilder::Grid<>(this, 0.5)
-		.Add(fSlider, 0, 0)
-		.Add(fSpinControl, 1, 0)
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(fLabel)
+		.AddGrid(0.5)
+			.Add(fSlider, 0, 0)
+			.Add(fSpinControl, 1, 0)
+		.End()
 	.End();
 }
 
@@ -92,7 +97,7 @@ void SpinSlider::AttachedToWindow(void)
 void
 SpinSlider::SetLabel(const char* label)
 {
-	fSlider->SetLabel(label);
+	fLabel->SetText(label);
 }
 
 

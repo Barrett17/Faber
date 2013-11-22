@@ -86,6 +86,7 @@ Application Faber :
 	Spinner.cpp
 	Divider.cpp
 	SplitterView.cpp
+	MediaFileInfoView.cpp
 
 	# Settings
 	SettingsWindow.cpp
@@ -116,6 +117,8 @@ Application Faber :
 	EffectsManager.cpp
 	FaberEffect.cpp
 	AudioEffect.cpp
+
+	MediaFileInfo.cpp
 
 	# Audio nodes
 	AudioNode.cpp
