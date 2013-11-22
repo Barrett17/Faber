@@ -49,6 +49,9 @@ ZoomWidget::ZoomWidget()
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(zoomView);
+
+	SetExplicitSize(BSize(140, 40));
+
 }
 
 

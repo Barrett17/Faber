@@ -110,6 +110,11 @@ const uint32 FABER_UNMUTE_ALL			=	'umal';
 const uint32 FABER_SORT_BY_NAME			=	'srbn';
 const uint32 FABER_SORT_BY_DURATION		=	'srbd';
 
+// Track contextual menu
+
+const uint32 FABER_TRACK_SET_NAME		=	'trsn';
+const uint32 FABER_TRACK_GET_INFO		=	'trgi';
+
 // Effects and audio manipulation
 
 const uint32 FABER_EFFECT_CALL			=	'fecl';

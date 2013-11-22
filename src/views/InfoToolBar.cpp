@@ -37,11 +37,12 @@ InfoToolBar::InfoToolBar()
 	fPointerTextView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
-	slider->SetExplicitMaxSize(BSize(150, B_SIZE_UNSET));
-	slider->SetExplicitSize(BSize(130, 40));
+	slider->SetExplicitMaxSize(BSize(150, 40));
+	//slider->SetExplicitSize(BSize(130, 40));
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(slider)
+		.AddGlue()
 		.AddGlue()
 		.Add(new ZoomWidget())
 	.End();

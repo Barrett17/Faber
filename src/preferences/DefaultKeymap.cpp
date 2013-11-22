@@ -161,8 +161,11 @@ KeyBind kToolsBar[] {
 KeyBind kTrackContextualMenu[] {
 	{ 0, "TrackMenu", 0, 0, 0, 0, FABER_ITEM_START },
 
-    { 1,"Set Name...",                  0, 0,                           0, 0,                     0 },
-    { 1,"Get Informations",                  0, 0,                           0, 0,                0 },
+	{ 1,"Set Name...",                  0, 0,                           0, 0,                  FABER_TRACK_SET_NAME },
+
+	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
+
+    { 1,"Get Informations",                  0, 0,                           0, 0,             FABER_TRACK_GET_INFO },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
