@@ -55,14 +55,11 @@ public:
 			//							CurrentClipboard();
 			//void						EmptyClipboard();
 private:
-
-			status_t					SaveTrack(BMessage* msg);
+			status_t					_SaveTrack(AudioTrack* track);
 
 			static ProjectManager*		fInstance;
 
 			BString						fName;
-
 			bool						fWasSaved;
-
 			BPath						fProjectPath;
 };

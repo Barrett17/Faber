@@ -77,6 +77,8 @@ status_t
 ProjectManager::SaveProject()
 {
 
+
+	fWasSaved = true;
 	return B_OK;
 }
 
@@ -84,7 +86,13 @@ ProjectManager::SaveProject()
 status_t
 ProjectManager::LoadProject(entry_ref ref)
 {
+	/*
+	ProjectFile* project = new ProjectFile(ref);
+	if (project->InitCheck() != B_OK)
+		return B_ERROR;
 
+	
+	*/
 	return B_OK;
 }
 
@@ -120,7 +128,7 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile)
 
 
 status_t
-ProjectManager::SaveTrack(BMessage* message)
+ProjectManager::_SaveTrack(AudioTrack* track)
 {
 
 	return B_OK;
