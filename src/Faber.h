@@ -23,6 +23,7 @@
 #include <Application.h>
 
 #include "FaberWindow.h"
+#include "ProjectManager.h"
 
 
 class FaberApp : public BApplication
@@ -33,9 +34,9 @@ public:
 	virtual void			RefsReceived(BMessage* message);
 	virtual bool			QuitRequested();
 
-			void			Save(BMessage* message);
 private:
  			FaberWindow*	fFaberWindow;
+ 			ProjectManager* fProjectManager;
 };
 
 #endif

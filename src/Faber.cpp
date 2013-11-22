@@ -21,7 +21,6 @@
 
 #include "FaberDefs.h"
 #include "FaberWindow.h"
-#include "TrackIO.h"
 #include "WindowsManager.h"
 
 
@@ -42,6 +41,8 @@ FaberApp::FaberApp()
 {
 	fFaberWindow = WindowsManager::MainWindow();
 	fFaberWindow->Show();
+
+	fProjectManager = ProjectManager::Get();
 }
 
 
@@ -49,7 +50,8 @@ bool
 FaberApp::QuitRequested()
 {
 	if (fFaberWindow) {
-		if (fFaberWindow->Lock() && fFaberWindow->QuitRequested()) {
+		if (fFaberWindow->Lock()
+			&& fFaberWindow->QuitRequested()) {
 			fFaberWindow->Quit();
 			return true;
 		}
@@ -66,10 +68,6 @@ FaberApp::MessageReceived(BMessage* message)
 		case FABER_DROP_PASTE:
 		case B_PASTE:
 
-		//case FABER_GENERAL_MESSAGE:
-		//	fFaberWindow->PostMessage(message);
-		//break;
-
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:
 			RefsReceived(message);
@@ -84,17 +82,10 @@ FaberApp::MessageReceived(BMessage* message)
 void
 FaberApp::RefsReceived(BMessage* message)
 {
-	Track* track = TrackIO::Get()->Load(message);
-
-	if (track == NULL)
-		return;
-
-	fFaberWindow->MainView()->AddTrack(track);
-}
-
-
-void
-FaberApp::Save(BMessage* message)
-{
-	//Track* track = TrackIO::Get()->Save(message);
+	entry_ref ref;
+	int32 count = 0;
+	while (message->FindRef("refs", count, &ref) == B_OK) {
+		fProjectManager->LoadFile(ref);
+		count++;
+	}
 }

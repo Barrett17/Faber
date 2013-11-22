@@ -40,9 +40,9 @@ void SpinSlider::MessageReceived(BMessage* msg)
 		// This is a custom message sent from seekslider
 		// to make the spincontrol updated. Feel free to replace it
 		// with something better.
-		/*case CUSTOM_INVOKED:
+		case CUSTOM_INVOKED:
 			SetValue(fSlider->Value());
-		break;*/
+		break;
 
 		case MSG_SPIN_CHANGED:
 			if (fSpinControl) 
@@ -72,7 +72,7 @@ SpinSlider::_Init(int32 minValue, int32 maxValue)
 
 	BLayoutBuilder::Grid<>(this, 0.5)
 		.Add(fSlider, 0, 0)
-		.Add(fSpinControl, 2, 0)
+		.Add(fSpinControl, 1, 0)
 	.End();
 }
 

@@ -7,6 +7,7 @@
 #include "VolumeSlider.h"
 
 #include <GradientLinear.h>
+#include <Window.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -248,6 +249,16 @@ VolumeSlider::PreferredBarThickness() const
 #else
 	return 8.0f;
 #endif
+}
+
+
+status_t
+VolumeSlider::Invoke(BMessage* message)
+{
+	printf("invoke\n");
+	BMessenger mess(this);
+	mess.SendMessage(new BMessage(CUSTOM_INVOKED));
+	BSlider::Invoke();
 }
 
 

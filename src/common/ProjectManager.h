@@ -17,9 +17,14 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <Entry.h>
+#include <MediaFile.h>
 #include <Message.h>
+#include <Path.h>
 #include <String.h>
 #include <SupportDefs.h>
+
+#include "FaberWindow.h"
 
 
 class ProjectManager {
@@ -35,24 +40,29 @@ public:
 
 			bool						WasSaved() const;
 
-			status_t					SaveProject(BMessage* message);
-			status_t					LoadProject(BMessage* message);
+			status_t					SaveProject();
+			status_t					LoadProject(entry_ref ref);
 
-			status_t					LoadTrack(BMessage* message);
-			status_t					SaveTrack(BMessage* message);
+			status_t					LoadFile(entry_ref ref);
+			status_t					LoadMediaFile(BMediaFile* mediaFile);
 
 			void						Undo();
 			void						Redo();
 
-			BString					Name() const;
+			BString						Name() const;
 			void						SetName(const char* name);
 
 			//							CurrentClipboard();
 			//void						EmptyClipboard();
 private:
+
+			status_t					SaveTrack(BMessage* msg);
+
 			static ProjectManager*		fInstance;
 
 			BString						fName;
 
 			bool						fWasSaved;
+
+			BPath						fProjectPath;
 };

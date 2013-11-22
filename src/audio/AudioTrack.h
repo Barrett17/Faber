@@ -20,6 +20,7 @@
 #ifndef _AUDIO_TRACK_H
 #define _AUDIO_TRACK_H
 
+#include <MediaFile.h>
 #include <String.h>
 
 #include "Track.h"
@@ -29,7 +30,11 @@ class CPeakFile;
 class AudioTrack : public Track {
 public:
 							AudioTrack();
+							AudioTrack(BMediaFile* mediaFile);
+	
 							~AudioTrack();
+
+			status_t		InitCheck() const;
 
 	virtual bool			IsAudio() const;
 
@@ -53,6 +58,8 @@ private:
 			float*			fArea;
 			int64			fSize;
 			CPeakFile*		fPeak;
+
+			bool			fInitCheck;
 };
 
 #endif

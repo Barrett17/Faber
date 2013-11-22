@@ -21,30 +21,31 @@
 
 #include <Box.h>
 #include <Button.h>
+#include <ControlLook.h>
 #include <LayoutBuilder.h>
 #include <OutlineListView.h>
 #include <ScrollView.h>
 
 #include "FaberDefs.h"
-#include <VolumeSlider.h>
+#include "VolumeSlider.h"
+
+static float kPadding = be_control_look->DefaultItemSpacing();
 
 
 ExportWindow::ExportWindow()
 	:
-	BWindow(BRect(100, 100, 500, 500), "Faber" , B_TITLED_WINDOW,
-		B_NOT_RESIZABLE | B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE)
+	BWindow(BRect(100, 100, 500, 420), "Faber" , B_TITLED_WINDOW,
+		B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE)
 {
 	SetTitle(B_TRANSLATE("Export Project"));
 
-	BBox* sessionBox = new BBox(B_FANCY_BORDER, _CreateSessionBox());
-	sessionBox->SetLabel("Current Session");
-
 	BBox* optionsBox = new BBox(B_FANCY_BORDER, _CreateOptionsBox());
 	optionsBox->SetLabel("Options");
+	optionsBox->SetExplicitSize(BSize(350, 150));
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 5.0f)
+	BLayoutBuilder::Group<>(this, B_VERTICAL)
+		.SetInsets(kPadding)
 		.Add(optionsBox)
-		.Add(sessionBox)
 		.AddGroup(B_HORIZONTAL)
 			.Add(new BButton(B_TRANSLATE("Export"), MessageBuilder(FABER_EXPORT_PROJECT)))
 			.Add(new BButton(B_TRANSLATE("Cancel"), MessageBuilder(FABER_CANCEL)))
@@ -54,41 +55,50 @@ ExportWindow::ExportWindow()
 
 
 BView*
-ExportWindow::_CreateSessionBox()
-{
-	BView* view = new BView("", B_WILL_DRAW);
-
-	BOutlineListView* listView = new BOutlineListView("Tracks list");
-	listView->SetExplicitSize(BSize(300, 200));
-
-	BScrollView* scrollView = new BScrollView("scroll", listView,
-		B_FOLLOW_ALL_SIDES, false, true, B_PLAIN_BORDER);
-
-	BLayoutBuilder::Group<>(view, B_HORIZONTAL)
-		.Add(scrollView)
-		.AddGlue()
-	.End();
-
-	return view;
-}
-
-
-BView*
 ExportWindow::_CreateOptionsBox()
 {
 	BView* view = new BView("", B_WILL_DRAW);
 
-	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
-	slider->SetExplicitSize(BSize(200, 40));
+	BStringView* fPathView = new BStringView("", "", B_WILL_DRAW);
+	fPathView->SetExplicitSize(BSize(200, B_SIZE_UNSET));
+
+	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7);
+	//slider->SetExplicitSize(BSize(150, B_SIZE_UNSET));
+	slider->SetLabel("Audio Quality");
+
+	BMenuField* fFormatMenu = new BMenuField(NULL, B_TRANSLATE("Format:"), 
+				new BPopUpMenu(""));
+
+	fFormatMenu->SetExplicitMinSize(BSize(200, B_SIZE_UNSET));
+
+	BMenuField*	fEncodingMenu = new BMenuField(NULL, B_TRANSLATE("Encoding:"), 
+				new BPopUpMenu(""));
+
+	fEncodingMenu->SetExplicitMinSize(BSize(200, B_SIZE_UNSET));
+
+	BTextControl* fFileNameControl = new BTextControl("File name :", "", NULL);
+	fFileNameControl->SetExplicitSize(BSize(200, B_SIZE_UNSET));
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL)
+		.SetInsets(kPadding)
 		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton("Browse", NULL))
-			.Add(new BStringView("", "path", B_WILL_DRAW))
+			.AddGroup(B_VERTICAL)
+
+				.Add(fFormatMenu)
+				.Add(fEncodingMenu)
+			.End()
+
 			.AddGlue()
+			
 		.End()
-		
 		.Add(slider)
+
+		.AddGroup(B_HORIZONTAL)
+			.Add(new BButton(B_TRANSLATE("Output directory"), NULL))
+			.Add(fPathView)
+			//.AddGlue()
+		.End()
+		.Add(fFileNameControl)
 	.End();
 
 	return view;

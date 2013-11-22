@@ -307,12 +307,14 @@ Spinner::SetValue(int32 value)
 {
 	if (value > GetMax() || value < GetMin())
 		return;
-	
+
+	printf("Set val\n");
 	BControl::SetValue(value);
 	
 	char string[50];
 	sprintf(string,"%ld",value);
 	fTextControl->SetText(string);
+	Invalidate();
 }
 
 

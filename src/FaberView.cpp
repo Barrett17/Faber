@@ -63,12 +63,8 @@ FaberView::~FaberView()
 void
 FaberView::MessageReceived(BMessage* message)
 {
-	//message->PrintToStream();
 	switch (message->what)
 	{
-		//case FABER_GENERAL_MESSAGE:
-		//	fTracksContainer->MessageReceived(message);
-		//break;
 
 		default:
 			BGroupView::MessageReceived(message);

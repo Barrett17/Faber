@@ -32,6 +32,17 @@ AudioTrack::AudioTrack()
 }
 
 
+AudioTrack::AudioTrack(BMediaFile* mediaFile)
+	:
+	Track(),
+	fInitCheck(true)
+{
+	//SetName(B_TRANSLATE("Empty Audio Track"));
+
+	//fMediaFile = mediaFile;
+}
+
+
 AudioTrack::~AudioTrack()
 {
 	delete fArea;
@@ -112,4 +123,11 @@ status_t
 AudioTrack::ApplyEffect(int32 id, int64 start, int64 end)
 {
 
+}
+
+
+status_t
+AudioTrack::InitCheck() const
+{
+	return fInitCheck;
 }

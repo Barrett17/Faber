@@ -19,6 +19,8 @@
 
 #include "ProjectManager.h"
 
+#include "FaberDefs.h"
+
 ProjectManager* ProjectManager::fInstance = NULL;
 
 
@@ -72,26 +74,56 @@ ProjectManager::WasSaved() const
 
 
 status_t
-ProjectManager::SaveProject(BMessage* message)
+ProjectManager::SaveProject()
 {
+
+	return B_OK;
 }
 
 
 status_t
-ProjectManager::LoadProject(BMessage* message)
+ProjectManager::LoadProject(entry_ref ref)
 {
+
+	return B_OK;
 }
 
 
 status_t
-ProjectManager::LoadTrack(BMessage* message)
+ProjectManager::LoadFile(entry_ref ref)
 {
+	printf("file\n");
+
+	BMediaFile* mediaFile = new BMediaFile(&ref);
+	if (mediaFile->InitCheck() == B_OK) {
+		return LoadMediaFile(mediaFile);
+	} else {
+		return LoadProject(ref);
+	}
+}
+
+
+status_t
+ProjectManager::LoadMediaFile(BMediaFile* mediaFile)
+{
+	AudioTrack* track = new AudioTrack(mediaFile);
+
+	status_t ret = track->InitCheck();
+	if (ret != B_OK) {
+		delete track;
+		return ret;
+	}
+
+  	WindowsManager::MainWindow()->MainView()->AddTrack(track);
+	return B_OK;
 }
 
 
 status_t
 ProjectManager::SaveTrack(BMessage* message)
 {
+
+	return B_OK;
 }
 
 
@@ -120,4 +152,12 @@ void
 ProjectManager::SetName(const char* name)
 {
 	fName = BString(name);
+	BString title("Faber - ");
+	title.Append(fName);
+
+	FaberWindow* win = WindowsManager::MainWindow();
+	if (win->Lock()) {
+		win->SetTitle(title);
+		win->Unlock();
+	}
 }

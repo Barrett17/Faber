@@ -11,6 +11,8 @@
 
 #include <Slider.h>
 
+const uint32 CUSTOM_INVOKED = 'csik';
+
 
 class VolumeSlider : public BSlider {
 public:
@@ -26,6 +28,8 @@ public:
 
 	virtual BRect				ThumbFrame() const;
 	virtual	void				DrawThumb();
+
+	virtual status_t			Invoke(BMessage* invoke = NULL);
 
 	virtual	BSize				MinSize();
 
