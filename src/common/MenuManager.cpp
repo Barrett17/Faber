@@ -75,6 +75,13 @@ MenuManager::BuildFileMenu()
 
 
 BMenu*
+MenuManager::BuildRecentMenu()
+{
+
+}
+
+
+BMenu*
 MenuManager::BuildEditMenu()
 {
 	return _BuildMenu(kEditMenu);

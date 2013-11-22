@@ -178,7 +178,7 @@ WindowsManager::GetSavePanel()
 ExportWindow*
 WindowsManager::GetExportPanel()
 {
-	if (Get()->fExportWindow == NULL) {
+	if (!IsWindowValid(Get()->fExportWindow)) {
 		Get()->fExportWindow = new ExportWindow();
 	}
 

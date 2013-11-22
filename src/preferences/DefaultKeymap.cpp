@@ -50,6 +50,29 @@ KeyBind kEditMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
+
+
+	{ 0, "Zoom", 0, 0, 0, 0, FABER_ITEM_START },
+
+    { 0,"Zoom In",                    B_UP_ARROW, 0,                0,0,                       FABER_ZOOM_IN },
+    { 0,"Zoom Out",                   B_DOWN_ARROW, 0,              0,0,                       FABER_ZOOM_OUT },
+    { 0,"Zoom Full",                  B_UP_ARROW, B_SHIFT_KEY,      0,0,                       FABER_ZOOM_FULL },
+    { 0,"Zoom to Selection",          B_DOWN_ARROW, B_SHIFT_KEY,    0,0,                       FABER_ZOOM_SELECTION },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
+
+
+
+	{ 0, "Tools", 0, 0, 0, 0, FABER_ITEM_START },
+
+    { 0,"Selection Tool",                 0, 0,                 '1', 0,                        FABER_SELECTION_TOOL },
+    { 0,"Draw tool",                      0, 0,                 '2', 0,                        FABER_DRAW_TOOL },
+    { 0,"Play tool",                      0, 0,                 '3', 0,                        FABER_PLAY_TOOL },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
+
+	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
+
 	{ 0, "Zero Cross", 0, 0, 0, 0, FABER_ITEM_START },
 
     { 1,"Zero In",            0, 0,                               0, 0,                         FABER_ZERO_IN },
@@ -61,13 +84,7 @@ KeyBind kEditMenu[] {
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
-	{ 0, "Tools", 0, 0, 0, 0, FABER_ITEM_START },
 
-    { 0,"Selection Tool",                 0, 0,                 '1', 0,                        FABER_SELECTION_TOOL },
-    { 0,"Draw tool",                      0, 0,                 '2', 0,                        FABER_DRAW_TOOL },
-    { 0,"Play tool",                      0, 0,                 '3', 0,                        FABER_PLAY_TOOL },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 	//{ 1,"Set frequency",      0, 0,                               0, 0,                       FABER_SET_FREQUENCY },
@@ -99,17 +116,6 @@ KeyBind kTracksMenu[] {
     { 1,"By Name",             0, 0,                           0, 0,                            FABER_SORT_BY_NAME },
     { 1,"By Duration",           0, 0,                           0, 0,                          FABER_SORT_BY_DURATION },
    // { 1,"By Type",           0, 0,                           0, 0,                            FABER_SORT_BY_TYPE },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
-
-	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
-
-	{ 0, "Zoom", 0, 0, 0, 0, FABER_ITEM_START },
-
-    { 0,"Zoom In",                    B_UP_ARROW, 0,                0,0,                       FABER_ZOOM_IN },
-    { 0,"Zoom Out",                   B_DOWN_ARROW, 0,              0,0,                       FABER_ZOOM_OUT },
-    { 0,"Zoom Full",                  B_UP_ARROW, B_SHIFT_KEY,      0,0,                       FABER_ZOOM_FULL },
-    { 0,"Zoom to Selection",          B_DOWN_ARROW, B_SHIFT_KEY,    0,0,                       FABER_ZOOM_SELECTION },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 

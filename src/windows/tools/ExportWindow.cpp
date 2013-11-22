@@ -41,7 +41,7 @@ ExportWindow::ExportWindow()
 
 	BBox* optionsBox = new BBox(B_FANCY_BORDER, _CreateOptionsBox());
 	optionsBox->SetLabel("Options");
-	optionsBox->SetExplicitSize(BSize(350, 150));
+	optionsBox->SetExplicitSize(BSize(350, 250));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.SetInsets(kPadding)
@@ -64,17 +64,18 @@ ExportWindow::_CreateOptionsBox()
 
 	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7);
 	//slider->SetExplicitSize(BSize(150, B_SIZE_UNSET));
-	slider->SetLabel("Audio Quality");
+	slider->SetLabel(B_TRANSLATE("Audio Quality"));
+	slider->SetLimitLabels(B_TRANSLATE("Low"), B_TRANSLATE("High"));
 
-	BMenuField* fFormatMenu = new BMenuField(NULL, B_TRANSLATE("Format:"), 
+	BMenuField* fFormatMenu = new BMenuField(NULL, B_TRANSLATE("File Format:"), 
 				new BPopUpMenu(""));
 
-	fFormatMenu->SetExplicitMinSize(BSize(200, B_SIZE_UNSET));
+	fFormatMenu->SetExplicitMinSize(BSize(250, B_SIZE_UNSET));
 
-	BMenuField*	fEncodingMenu = new BMenuField(NULL, B_TRANSLATE("Encoding:"), 
+	BMenuField*	fEncodingMenu = new BMenuField(NULL, B_TRANSLATE("Audio Encoding:"), 
 				new BPopUpMenu(""));
 
-	fEncodingMenu->SetExplicitMinSize(BSize(200, B_SIZE_UNSET));
+	fEncodingMenu->SetExplicitMinSize(BSize(250, B_SIZE_UNSET));
 
 	BTextControl* fFileNameControl = new BTextControl("File name :", "", NULL);
 	fFileNameControl->SetExplicitSize(BSize(200, B_SIZE_UNSET));
