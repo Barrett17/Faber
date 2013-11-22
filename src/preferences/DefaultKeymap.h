@@ -10,9 +10,12 @@ extern KeyBind kEditMenu[];
 extern KeyBind kTracksMenu[];
 extern KeyBind kHelpMenu[];
 extern KeyBind kPlayButtons[];
+extern KeyBind kTrackContextualMenu[];
+extern KeyBind kEngineMenu[];
+
 extern KeyBind kZoomBar[];
 extern KeyBind kToolsBar[];
-extern KeyBind kTrackContextualMenu[];
+
 extern KeyBind* kDefaultKeymap[];
 
 #endif	// _DEFAULT_KEYMAP_H_

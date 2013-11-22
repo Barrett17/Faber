@@ -22,6 +22,7 @@
 #include <Application.h>
 
 #include "AboutWindow.h"
+#include "AudioGate.h"
 #include "FaberDefs.h"
 
 
@@ -52,7 +53,9 @@ WindowsManager::WindowsManager()
 	fOpenPanel(NULL),
 	fSettingsWindow(NULL),
 	fMainWindow(NULL),
-	fExportWindow(NULL)
+	fExportWindow(NULL),
+	fFaberMixer(NULL),
+	fSystemMixer(NULL)
 {
 	fProgress = new ProgressWindow(BRect(0, 0, 300, 40));
 }
@@ -183,6 +186,36 @@ WindowsManager::GetExportPanel()
 	}
 
 	return Get()->fExportWindow;
+}
+
+
+ParameterWindow*
+WindowsManager::GetSystemMixer()
+{
+	if (!IsWindowValid(Get()->fSystemMixer)) {
+		media_node node;
+		live_node_info info;
+		BMediaRoster::Roster()->GetAudioMixer(&node);
+		info.node = node;
+		strcpy(info.name, "System Mixer");
+		Get()->fSystemMixer = new ParameterWindow(_CalculateWindowPoint(), info);
+	}
+
+	return Get()->fSystemMixer;
+}
+
+
+ParameterWindow*
+WindowsManager::GetFaberMixer()
+{
+	if (!IsWindowValid(Get()->fFaberMixer)) {
+		live_node_info info;
+		info.node = AudioGate::Get()->Mixer()->Node();
+		strcpy(info.name, AudioGate::Get()->Mixer()->Name());
+		Get()->fFaberMixer = new ParameterWindow(_CalculateWindowPoint(), info);
+	}
+
+	return Get()->fFaberMixer;
 }
 
 

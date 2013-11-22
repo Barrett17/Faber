@@ -24,6 +24,7 @@
 
 #include "EffectWindow.h"
 #include "FaberDefs.h"
+#include "ParameterWindow.h"
 
 
 CommandsServer* CommandsServer::fInstance = NULL;
@@ -44,6 +45,7 @@ CommandsServer::CommandsServer()
 	BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE)
 {
 	fProjectManager = ProjectManager::Get();
+	fAudioGate = AudioGate::Get();
 }
 
 
@@ -139,6 +141,13 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 		case FABER_REDO:
 		{
 
+			break;
+		}
+
+		case FABER_OPEN_MIXER:
+		{
+			WindowsManager::GetFaberMixer()->Show();
+			skip = true;
 			break;
 		}
 

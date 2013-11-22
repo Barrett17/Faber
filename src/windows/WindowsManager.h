@@ -27,6 +27,7 @@
 #include "FaberEffect.h"
 #include "FaberWindow.h"
 #include "OpenPanel.h"
+#include "ParameterWindow.h"
 #include "ProgressWindow.h"
 #include "SettingsWindow.h"
 
@@ -72,6 +73,9 @@ public:
 	static BFilePanel*		GetSavePanel();
 	static ExportWindow*	GetExportPanel();
 
+	static ParameterWindow*	GetFaberMixer();
+	static ParameterWindow*	GetSystemMixer();
+
 	// Progress window methods
 	void					ProgressUpdate(int32 delta);
 	void					StartProgress(const char *label,
@@ -95,6 +99,9 @@ private:
 	OpenPanel*				fOpenPanel;
 	BFilePanel*				fSavePanel;
 	ExportWindow*			fExportWindow;
+
+	ParameterWindow*		fFaberMixer;
+	ParameterWindow*		fSystemMixer;
 };
 
 #endif

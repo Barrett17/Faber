@@ -26,6 +26,10 @@ AudioGate::AudioGate(/*TracksManager* fTracksManager*/)
 	:
 	MediaGate()
 {
+	fAudioMixer = new AudioMixer(false);
+
+	fRoster = BMediaRoster::Roster();
+	fRoster->RegisterNode(fAudioMixer);
 }
 
 AudioGate::~AudioGate()
@@ -128,6 +132,13 @@ media_format
 AudioGate::Format() const
 {
 	return fFormat;
+}
+
+
+AudioMixer*
+AudioGate::Mixer() const
+{
+	return fAudioMixer;
 }
 
 

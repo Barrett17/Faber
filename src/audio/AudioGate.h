@@ -21,8 +21,10 @@
 #define _AUDIO_GATE_H
 
 #include <MediaDefs.h>
+#include <MediaRoster.h>
 #include <ObjectList.h>
 
+#include "AudioMixer.h"
 #include "MediaGate.h"
 
 
@@ -35,10 +37,9 @@ public:
 class AudioGate : public MediaGate {
 public:
 									AudioGate();
-
 			virtual					~AudioGate();
 
-			static AudioGate*	Get();
+			static AudioGate*		Get();
 
 			status_t				Init();
 			status_t				InitNode();
@@ -58,6 +59,7 @@ public:
 			void 					SetFilterHook(FilterHook* hook);
 			void 					RemoveFilterHook(FilterHook* hook);
 
+			AudioMixer*				Mixer() const;
 
 			//void RegisterWatchHandler(BHandler* handler);
 
@@ -72,6 +74,9 @@ private:
 
 			BObjectList<FilterHook> fHooksList;
 			bool					fLoop;
+
+			BMediaRoster*			fRoster;
+			AudioMixer*				fAudioMixer;
 };
 
 #endif

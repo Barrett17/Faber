@@ -9,10 +9,13 @@ SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src media ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src media node_manager ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src media node_manager support ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src audio ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio effects ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio nodes ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src audio mixer ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
@@ -22,6 +25,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src views widgets ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows mixer ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows misc ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
@@ -75,6 +79,9 @@ Application Faber :
 	ScreenInfo.cpp
 	EffectWindow.cpp
 
+	ParameterWindow.cpp
+	ParameterContainerView.cpp
+
 	# Gui Widgets
 	SpinSlider.cpp
 	PeakView.cpp
@@ -108,7 +115,7 @@ Application Faber :
 	TrackIO.cpp
 	MouseIcons.cpp
 
-	# Audio internal API
+	# Audio and Media internal API
 	Track.cpp
 	AudioTrack.cpp
 	MediaGate.cpp
@@ -120,8 +127,33 @@ Application Faber :
 
 	MediaFileInfo.cpp
 
+	# NodeManager 
+	AddOnHost.cpp
+	Connection.cpp
+	NodeManager.cpp
+	NodeGroup.cpp
+	NodeRef.cpp
+	NodeSyncThread.cpp
+
+	# NodeManager support
+	MultiInvoker.cpp
+	ObservableLooper.cpp
+	ObservableHandler.cpp
+	observe.cpp
+
 	# Audio nodes
 	AudioNode.cpp
+
+	# Audio Mixer
+	AudioMixer.cpp
+	ByteSwap.cpp
+	Interpolate.cpp
+	MixerCore.cpp
+	MixerInput.cpp
+	MixerOutput.cpp
+	MixerSettings.cpp
+	MixerUtils.cpp
+	Resampler.cpp
 
 	# Effects
 	#SimpleEffects.cpp
@@ -139,7 +171,7 @@ Application Faber :
 	#Trim.cpp
 
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
-	: Faber.rdef ToolBarIcons.rdef
+	: Faber.rdef ToolBarIcons.rdef AudioMixer.rdef
 ;
 
 InstallBin $(FABER_DIRECTORY) : Faber ;

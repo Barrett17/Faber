@@ -89,6 +89,7 @@ const uint32 FABER_SAVE_AS_PROJECT		=	'svas';
 const uint32 FABER_UNDO					=	'undo';
 const uint32 FABER_REDO					=	'redo';
 
+const uint32 FABER_OPEN_MIXER			=	'fbOM';
 
 const uint32 FABER_NEW_AUDIO_TRACK		=   'FNat';
 const uint32 FABER_NEW_LABEL_TRACK		=   'FNlt';

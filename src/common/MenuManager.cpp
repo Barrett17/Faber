@@ -61,6 +61,7 @@ MenuManager::BuildMainMenuBar()
 	menuBar->AddItem(BuildTracksMenu());
 	menuBar->AddItem(BuildEffectsMenu());
 	menuBar->AddItem(BuildGenerateMenu());
+	menuBar->AddItem(BuildEngineMenu());
 	menuBar->AddItem(BuildHelpMenu());
 
 	return menuBar;
@@ -128,6 +129,13 @@ MenuManager::BuildGenerateMenu()
 	}
 
 	return menu;
+}
+
+
+BMenu*
+MenuManager::BuildEngineMenu()
+{
+	return _BuildMenu(kEngineMenu);
 }
 
 

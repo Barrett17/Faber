@@ -92,10 +92,6 @@ KeyBind kEditMenu[] {
     { 1,"Trim",               'T', B_COMMAND_KEY,                   0, 0,                       FABER_TRIM },
 	{ 1,"Clear",              'B', B_COMMAND_KEY,            B_DELETE, 0,                       FABER_CLEAR },
 
-	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
-
-	{ 1,"Settings",      'P', B_COMMAND_KEY,                 'P', B_SHIFT_KEY,              FABER_SETTINGS },
-
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_EOF }
@@ -149,6 +145,20 @@ KeyBind kHelpMenu[] {
 
     { 1,"Homepage",                  0, 0,                           0, 0,                      FABER_OPEN_HOMEPAGE },
     { 1,"About",                  0, 0,                           0, 0,                         FABER_ABOUT },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_EOF }
+};
+
+KeyBind kEngineMenu[] {
+	{ 0, "Engine", 0, 0, 0, 0, FABER_ITEM_START },
+
+    { 1,"Mixer",                  0, 0,                           0, 0,                      FABER_OPEN_MIXER },
+
+	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
+
+	{ 1,"Settings",      'P', B_COMMAND_KEY,                 'P', B_SHIFT_KEY,              FABER_SETTINGS },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 

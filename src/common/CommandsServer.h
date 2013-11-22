@@ -22,6 +22,7 @@
 
 #include <MessageFilter.h>
 
+#include "AudioGate.h"
 #include "FaberView.h"
 #include "ProjectManager.h"
 
@@ -39,6 +40,7 @@ private:
 			static CommandsServer*		fInstance;
 			FaberView*					fFaberView;
 			ProjectManager*				fProjectManager;
+			AudioGate*					fAudioGate;
 			
 };
 
