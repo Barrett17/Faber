@@ -20,7 +20,6 @@
 #include "AudioTrack.h"
 
 #include "FaberDefs.h"
-#include "PeakFile.h"
 
 
 AudioTrack::AudioTrack()
@@ -28,7 +27,6 @@ AudioTrack::AudioTrack()
 	Track()
 {
 	SetName(B_TRANSLATE("Empty Audio Track"));
-	fPeak = new CPeakFile(this);
 }
 
 
@@ -46,7 +44,6 @@ AudioTrack::AudioTrack(BMediaFile* mediaFile)
 AudioTrack::~AudioTrack()
 {
 	delete fArea;
-	delete fPeak;
 }
 
 
@@ -69,25 +66,6 @@ int32
 AudioTrack::CountChannels() const
 {
 	return fFormat.u.raw_audio.channel_count;
-}
-
-
-void
-AudioTrack::InitPeakFile()
-{
-	bool flag = false;
-	if (fFormat.u.raw_audio.channel_count == 1)
-		flag = true;
-
-	fPeak->Init(fSize+1, flag);
-	fPeak->CreatePeaks(0, fSize+1, fSize+1);
-}
-
-
-CPeakFile*
-AudioTrack::PeakFile() const
-{
-	return fPeak;
 }
 
 

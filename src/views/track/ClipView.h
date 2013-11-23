@@ -17,44 +17,27 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _AUDIO_TRACK_H
-#define _AUDIO_TRACK_H
+#ifndef CLIPVIEW_H
+#define CLIPVIEW_H
 
-#include <MediaFile.h>
-#include <String.h>
-
-#include "Track.h"
-
-
-class AudioTrack : public Track {
+class ClipView : public BGroupView
+{
 public:
-							AudioTrack();
-							AudioTrack(BMediaFile* mediaFile);
-	
-							~AudioTrack();
+							ClipView();
 
-			status_t		InitCheck() const;
+	virtual 				~ClipView();
 
-	virtual bool			IsAudio() const;
+			bool			IsSelected() const;
 
-			void			SetFramerate(float framerate);
-			int32			CountChannels() const;
+			void			SelectAll();
+			void			Unselect();
 
-			bool			IsMono() const;
-			bool			IsStereo() const;
-			
-			void			SetArea(float* area, int64 size);
-			int64			Size() const;
-			float*			Area() const;
+	virtual void			ZoomIn() = 0;
+	virtual void			ZoomOut() = 0;
+	virtual void			ZoomFull() = 0;
+	virtual void			ZoomSelection() = 0;
 
-			status_t		ApplyEffect(int32 id, int64 start, int64 end);
-
-private:
-
-			float*			fArea;
-			int64			fSize;
-
-			bool			fInitCheck;
 };
+
 
 #endif

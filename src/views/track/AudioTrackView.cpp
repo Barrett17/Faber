@@ -44,10 +44,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 {
 	fEnd = track->Size();
 
-	fSampleView = new SampleView(this);
-
-	fSampleView->SetExplicitMinSize(BSize(150, HEIGHT_VAL_REF));
-	fSampleView->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, HEIGHT_VAL_REF));
+	//fSampleView->SetExplicitMinSize(BSize(150, HEIGHT_VAL_REF));
+	//fSampleView->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, HEIGHT_VAL_REF));
 
 	BBox* box = new BBox("box");
 
@@ -116,7 +114,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(box)
-		.Add(fSampleView)
+		//.Add(fSampleView)
 	.End();
 
 	printf("%lld %lld\n", fStart, fEnd);
@@ -132,7 +130,7 @@ AudioTrackView::~AudioTrackView()
 void
 AudioTrackView::Pulse()
 {
-	fSampleView->Pulse();
+	//fSampleView->Pulse();
 }
 
 
@@ -174,7 +172,7 @@ AudioTrackView::Dirty() const
 void
 AudioTrackView::UpdateScroll(float newValue, float min, float max)
 {
-	fSampleView->UpdateScroll(newValue, min, max);
+	//fSampleView->UpdateScroll(newValue, min, max);
 }
 
 
@@ -182,28 +180,28 @@ AudioTrackView::UpdateScroll(float newValue, float min, float max)
 bool
 AudioTrackView::IsSelected() const
 {
-	return fSampleView->IsSelected();
+	//return fSampleView->IsSelected();
 }
 
 
 void
 AudioTrackView::ZoomIn()
 {
-	fSampleView->ZoomIn();
+	//fSampleView->ZoomIn();
 }
 
 
 void
 AudioTrackView::ZoomOut()
 {
-	fSampleView->ZoomOut();
+	//fSampleView->ZoomOut();
 }
 
 
 void
 AudioTrackView::ZoomFull()
 {
-	fSampleView->ZoomFull();
+	//fSampleView->ZoomFull();
 
 }
 
@@ -211,5 +209,5 @@ AudioTrackView::ZoomFull()
 void
 AudioTrackView::ZoomSelection()
 {
-	fSampleView->ZoomSelection();
+	//fSampleView->ZoomSelection();
 }

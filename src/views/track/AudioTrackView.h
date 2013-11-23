@@ -26,10 +26,7 @@
 #include <View.h>
 
 #include "AudioTrack.h"
-#include "SampleView.h"
 #include "TrackView.h"
-
-class SampleView;
 
 
 class AudioTrackView : public TrackView
@@ -68,14 +65,10 @@ public:
 			bool			IsSelected() const;
 
 private:
-
-			SampleView*		fSampleView;
 			AudioTrack*		fTrack;
 
 			bool			fUpdateDrawCache;
 			bool			fDirty;
-
-			friend class	SampleView;
 };
 
 #endif
