@@ -96,26 +96,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	PeakView* peak = new PeakView("OutputPeakView", false, false);
 	peak->SetExplicitMaxSize(BSize(200, 15));
 
-	VolumeSlider* volumeSlider = new VolumeSlider("volumeSlider",
-		0, 10, 7, NULL);
-	volumeSlider->SetToolTip(B_TRANSLATE(
-		"Move vertically to set the track volume."));
-	volumeSlider->SetValue(fTrack->Volume());
-
-	VolumeSlider* balanceSlider = new VolumeSlider("balanceSlider",
-		0, 10, 7, NULL);
-	balanceSlider->SetToolTip(B_TRANSLATE(
-		"Move vertically to balance the sound."));
-	balanceSlider->SetValue(fTrack->Balance());
-
-	BString label;
-	if (fTrack->IsMono())
-		label = "Mono,";
-	else
-		label = "Stereo,";
-
-	label.Append(" 44100Hz");
-
 	BLayoutBuilder::Group<>(box, B_VERTICAL, 0)
 		.SetInsets(10, 10, 10, 10)
 		.AddSplit(B_VERTICAL, 0)
@@ -130,18 +110,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 				.Add(soloButton)
 				.Add(peak)
 			.End()
-		.End()
-
-		.AddGroup(B_HORIZONTAL, 0)
-				.Add(new BStringView("", "v-", B_WILL_DRAW))
-				.Add(volumeSlider)
-				.Add(new BStringView("", "v+", B_WILL_DRAW))
-		.End()
-
-		.AddGroup(B_HORIZONTAL, 0)
-			.Add(new BStringView("", "b-", B_WILL_DRAW))
-			.Add(balanceSlider)
-			.Add(new BStringView("", "b+", B_WILL_DRAW))
 		.End()
 		.AddGlue()
 	.End();
