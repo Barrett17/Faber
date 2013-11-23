@@ -1,7 +1,7 @@
 /*
  * AudioMixer.rdef
  */
-
+/*
 resource app_signature "application/x-vnd.Haiku-mixer.media_addon";
 
 resource app_version {
@@ -13,3 +13,4 @@ resource app_version {
 	short_info = "1.0.0",
 	long_info = "Haiku AudioMixer media add-on."
 };
+*/

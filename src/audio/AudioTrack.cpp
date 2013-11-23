@@ -24,7 +24,8 @@
 
 AudioTrack::AudioTrack()
 	:
-	Track()
+	Track(),
+	fMediaFile(NULL)
 {
 	SetName(B_TRANSLATE("Empty Audio Track"));
 }
@@ -33,17 +34,19 @@ AudioTrack::AudioTrack()
 AudioTrack::AudioTrack(BMediaFile* mediaFile)
 	:
 	Track(),
-	fInitCheck(true)
+	fInitCheck(true),
+	fMediaFile(mediaFile)
 {
 	//SetName(B_TRANSLATE("Empty Audio Track"));
 
 	//fMediaFile = mediaFile;
+	fMediaFile->TrackAt(0)->DecodedFormat(&fFormat);
 }
 
 
 AudioTrack::~AudioTrack()
 {
-	delete fArea;
+	delete fMediaFile;
 }
 
 
@@ -51,14 +54,6 @@ bool
 AudioTrack::IsAudio() const
 {
 	return true;
-}
-
-
-void
-AudioTrack::SetArea(float* area, int64 size)
-{
-	fArea = area;
-	fSize = size;
 }
 
 
@@ -84,16 +79,16 @@ AudioTrack::IsStereo() const
 
 
 int64
-AudioTrack::Size() const
+AudioTrack::Frames() const
 {
-	return fSize;
+
 }
 
 
-float*
-AudioTrack::Area() const
+BMediaFile*
+AudioTrack::MediaFile() const
 {
-	return fArea;
+	return fMediaFile;
 }
 
 

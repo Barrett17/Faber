@@ -52,6 +52,7 @@ private:
 	bigtime_t fTotalTime;
 	int32 fPreview[20000];
 	float fHeight;
+	bool fUpdate;
 };
 
 #endif	/* SCOPEVIEW_H */

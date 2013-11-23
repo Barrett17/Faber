@@ -21,6 +21,7 @@
 #define _AUDIO_TRACK_H
 
 #include <MediaFile.h>
+#include <MediaTrack.h>
 #include <String.h>
 
 #include "Track.h"
@@ -40,19 +41,18 @@ public:
 			void			SetFramerate(float framerate);
 			int32			CountChannels() const;
 
+			int64			Frames() const;
+
 			bool			IsMono() const;
 			bool			IsStereo() const;
-			
-			void			SetArea(float* area, int64 size);
-			int64			Size() const;
-			float*			Area() const;
+
+			BMediaFile*		MediaFile() const;
 
 			status_t		ApplyEffect(int32 id, int64 start, int64 end);
 
 private:
-
-			float*			fArea;
-			int64			fSize;
+			BMediaFile*		fMediaFile;
+			
 
 			bool			fInitCheck;
 };

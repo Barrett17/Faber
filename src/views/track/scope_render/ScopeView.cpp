@@ -17,7 +17,7 @@
 
 #define SAMPLES_COUNT 20000
 
-//#define TRACE 1
+#define TRACE 1
 #ifdef TRACE
 #define TRACE(x...) printf(x)
 #else
@@ -34,7 +34,9 @@ ScopeView::ScopeView(BRect rect, uint32 resizeFlags)
 	fMainTime(0),
 	fRightTime(1000000),
 	fLeftTime(0),
-	fTotalTime(1000000)
+	fTotalTime(1000000),
+	fUpdate(true)
+
 {
 	fHeight = Bounds().Height();
 }
@@ -49,6 +51,7 @@ ScopeView::~ScopeView()
 void
 ScopeView::AttachedToWindow()
 {
+	printf("attached\n");
 	SetViewColor(B_TRANSPARENT_COLOR);
 	InitBitmap();
 	Run();
@@ -66,7 +69,7 @@ void
 ScopeView::Draw(BRect updateRect)
 {
 	BRect bounds = Bounds();
-	SetHighColor(0,0,0);
+	SetHighColor(55,57,62);
 	
 	if (!fIsRendering)
 		DrawBitmapAsync(fBitmap, BPoint(0, 0));
@@ -174,7 +177,9 @@ ScopeView::ComputeRendering()
 void
 ScopeView::RenderLoop()
 {
+
 	while (acquire_sem(fRenderSem) == B_OK) {
+	printf("loop\n");
 		fIsRendering = true;
 		
 		switch (fPlayFormat.u.raw_audio.format) {
@@ -276,9 +281,13 @@ ScopeView::CancelRendering()
 void
 ScopeView::FrameResized(float width, float height)
 {
-	InitBitmap();
-	RenderBitmap();
-	Invalidate();
+	if (fUpdate == true) {
+		InitBitmap();
+		RenderBitmap();
+		fUpdate = false;
+	} else {
+		Invalidate();
+	}
 	TRACE("invalidate done\n");
 }
 
@@ -360,7 +369,9 @@ ScopeView::RenderBitmap()
 	float width = fBitmapView->Bounds().Width() + 1;
 	
 	fBitmapView->SetDrawingMode(B_OP_ADD);
+	//fBitmapView->SetDrawingMode(B_OP_ALPHA);
 	fBitmapView->SetHighColor(15,60,15);
+	fBitmapView->SetLowColor(55,57,62);
 	int32 leftIndex = 
 		(fTotalTime != 0) ? fLeftTime * 20000 / fTotalTime : 0;
 	int32 rightIndex = 

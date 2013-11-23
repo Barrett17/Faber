@@ -21,6 +21,7 @@
 
 #include <Box.h>
 #include <LayoutBuilder.h>
+#include <MediaTrack.h>
 #include <PopUpMenu.h>
 #include <StringView.h>
 
@@ -31,7 +32,7 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 180
+#define HEIGHT_VAL_REF 100
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
@@ -42,10 +43,10 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fDirty(false),
 	fUpdateDrawCache(false)
 {
-	fEnd = track->Size();
+	fEnd = track->Frames();
 
-	//fSampleView->SetExplicitMinSize(BSize(150, HEIGHT_VAL_REF));
-	//fSampleView->SetExplicitMaxSize(BSize(B_SIZE_UNLIMITED, HEIGHT_VAL_REF));
+	fScopeView = new ScopeView(BRect(20, 20, 150, HEIGHT_VAL_REF), B_FOLLOW_LEFT_RIGHT |
+		B_FRAME_EVENTS | B_WILL_DRAW);
 
 	BBox* box = new BBox("box");
 
@@ -114,7 +115,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(box)
-		//.Add(fSampleView)
+		.Add(fScopeView)
 	.End();
 
 	printf("%lld %lld\n", fStart, fEnd);
@@ -124,13 +125,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 AudioTrackView::~AudioTrackView()
 {
-}
-
-
-void
-AudioTrackView::Pulse()
-{
-	//fSampleView->Pulse();
 }
 
 
@@ -185,8 +179,21 @@ AudioTrackView::IsSelected() const
 
 
 void
+AudioTrackView::Render()
+{
+	fScopeView->CancelRendering();
+
+	BMediaTrack* renderTrack = Track()->MediaFile()->TrackAt(0);
+
+	fScopeView->SetTotalTime(renderTrack->Duration(), true);
+	fScopeView->RenderTrack(renderTrack, Track()->Format());
+}
+
+
+void
 AudioTrackView::ZoomIn()
 {
+	Render();
 	//fSampleView->ZoomIn();
 }
 

@@ -26,6 +26,7 @@
 #include <View.h>
 
 #include "AudioTrack.h"
+#include "ScopeView.h"
 #include "TrackView.h"
 
 
@@ -34,7 +35,7 @@ class AudioTrackView : public TrackView
 public:
 							AudioTrackView(const char* name = "AudioTrackView",
 								AudioTrack* track = NULL,
-								uint32 resizingMode = B_FOLLOW_NONE);
+								uint32 resizingMode = B_FOLLOW_LEFT_RIGHT | B_FRAME_EVENTS);
 	virtual 				~AudioTrackView();
 
 			// Utility methods for fast access to the
@@ -51,9 +52,6 @@ public:
 			void			SetDirty(bool dirty);
 			bool			Dirty() const;
 
-			// Drawing related methods
-			void			Pulse();
-
 			void			ZoomIn();
 			void			ZoomOut();
 			void			ZoomFull();
@@ -64,8 +62,11 @@ public:
 
 			bool			IsSelected() const;
 
+			void			Render();
+
 private:
 			AudioTrack*		fTrack;
+			ScopeView*		fScopeView;
 
 			bool			fUpdateDrawCache;
 			bool			fDirty;

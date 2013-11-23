@@ -116,13 +116,16 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile)
 {
 	AudioTrack* track = new AudioTrack(mediaFile);
 
+	printf("loading media file\n");
 	status_t ret = track->InitCheck();
-	if (ret != B_OK) {
+	/*if (ret != B_NO_ERROR) {
 		delete track;
+		printf("%s\n", strerror(ret));
 		return ret;
-	}
+	}*/
 
   	WindowsManager::MainWindow()->MainView()->AddTrack(track);
+
 	return B_OK;
 }
 
