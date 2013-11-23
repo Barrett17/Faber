@@ -160,7 +160,7 @@ WindowsManager::GetOpenPanel()
 {
 	if (Get()->fOpenPanel == NULL) {
 		Get()->fOpenPanel = new BFilePanel(B_OPEN_PANEL, new BMessenger(be_app),
-			NULL, true, new BMessage(FABER_SAVE_PROJECT));
+			NULL, true, new BMessage(FABER_FILE_OPEN));
 
 		Get()->fOpenPanel->Window()->SetTitle(B_TRANSLATE("Open file(s)"));	
 	}

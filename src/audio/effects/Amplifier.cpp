@@ -50,13 +50,12 @@ AmplifierEffect::SettingsPanel()
 	BView* view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	SpinSlider* slider = new SpinSlider("level", NULL,
+	SpinSlider* slider = new SpinSlider("level", B_TRANSLATE("Level (%)"),
 		new BMessage(CONTROL_CHANGED), 1, 300);
 
 	//slider->SetValue(Prefs.filter_amplifier_value);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL, 0.5)
-		.Add(new BStringView("", B_TRANSLATE("Level (%)")))
 		.Add(slider)
 	.End();
 

@@ -21,9 +21,11 @@
 #define EXPORT_WINDOW_H
 
 #include <Box.h>
+#include <TabView.h>
 #include <Window.h>
 
 #include "FaberEffect.h"
+
 
 class ExportWindow : public BWindow
 {
@@ -32,7 +34,14 @@ public:
 
 	virtual void		MessageReceived(BMessage*);
 
+private:
+	void				_AddTab(BView* view, const char* label);
 	BView*				_CreateOptionsBox();
+	BView*				_BuildMixerView();
+	BView*				_BuildInfoView();
+
+
+	BTabView*			fTabView;
 };
 
 #endif

@@ -34,17 +34,19 @@ static float kPadding = be_control_look->DefaultItemSpacing();
 ExportWindow::ExportWindow()
 	:
 	BWindow(BRect(100, 100, 500, 420), "Faber" , B_TITLED_WINDOW,
-		B_NOT_MINIMIZABLE | B_NOT_ZOOMABLE)
+		B_NOT_MINIMIZABLE | B_NOT_RESIZABLE | B_NOT_ZOOMABLE)
 {
 	SetTitle(B_TRANSLATE("Export Project"));
 
-	BBox* optionsBox = new BBox(B_FANCY_BORDER, _CreateOptionsBox());
-	optionsBox->SetLabel("Options");
-	optionsBox->SetExplicitSize(BSize(350, 250));
+	fTabView = new BTabView("");
+
+	_AddTab(_CreateOptionsBox(), B_TRANSLATE("Output"));
+	_AddTab(_BuildMixerView(), B_TRANSLATE("Mixer"));
+	_AddTab(_BuildInfoView(), B_TRANSLATE("Additional Info"));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
 		.SetInsets(kPadding)
-		.Add(optionsBox)
+		.Add(fTabView)
 		.AddGroup(B_HORIZONTAL)
 			.Add(new BButton(B_TRANSLATE("Export"), MessageBuilder(FABER_EXPORT_PROJECT)))
 			.Add(new BButton(B_TRANSLATE("Cancel"), MessageBuilder(FABER_CANCEL)))
@@ -58,48 +60,44 @@ ExportWindow::_CreateOptionsBox()
 {
 	BView* view = new BView("", B_WILL_DRAW);
 
-	BStringView* fPathView = new BStringView("", "", B_WILL_DRAW);
-	fPathView->SetExplicitSize(BSize(200, B_SIZE_UNSET));
-
 	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7);
-	//slider->SetExplicitSize(BSize(150, B_SIZE_UNSET));
+	slider->SetExplicitSize(BSize(200, B_SIZE_UNSET));
 	slider->SetLabel(B_TRANSLATE("Audio Quality"));
 	slider->SetLimitLabels(B_TRANSLATE("Low"), B_TRANSLATE("High"));
 
 	BMenuField* fFormatMenu = new BMenuField(NULL, B_TRANSLATE("File Format:"), 
 				new BPopUpMenu(""));
 
-	fFormatMenu->SetExplicitMinSize(BSize(250, B_SIZE_UNSET));
+	fFormatMenu->SetExplicitSize(BSize(200, B_SIZE_UNSET));
 
 	BMenuField*	fEncodingMenu = new BMenuField(NULL, B_TRANSLATE("Audio Encoding:"), 
 				new BPopUpMenu(""));
-
-	fEncodingMenu->SetExplicitMinSize(BSize(250, B_SIZE_UNSET));
-
-	BTextControl* fFileNameControl = new BTextControl("File name :", "", NULL);
-	fFileNameControl->SetExplicitSize(BSize(200, B_SIZE_UNSET));
+	fEncodingMenu->SetExplicitSize(BSize(200, B_SIZE_UNSET));
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL)
 		.SetInsets(kPadding)
-		.AddGroup(B_HORIZONTAL)
-			.AddGroup(B_VERTICAL)
-
-				.Add(fFormatMenu)
-				.Add(fEncodingMenu)
-			.End()
-
-			.AddGlue()
-			
-		.End()
+		.Add(fFormatMenu)
+		.Add(fEncodingMenu)
 		.Add(slider)
-
-		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton(B_TRANSLATE("Output directory"), NULL))
-			.Add(fPathView)
-			//.AddGlue()
-		.End()
-		.Add(fFileNameControl)
 	.End();
+
+	return view;
+}
+
+
+BView*
+ExportWindow::_BuildMixerView()
+{
+	BView* view = new BView("", B_WILL_DRAW);
+
+	return view;
+}
+
+
+BView*
+ExportWindow::_BuildInfoView()
+{
+	BView* view = new BView("", B_WILL_DRAW);
 
 	return view;
 }
@@ -115,4 +113,14 @@ ExportWindow::MessageReceived(BMessage *message)
 			BWindow::MessageReceived(message);
 	}
 	
+}
+
+
+void
+ExportWindow::_AddTab(BView* view, const char* label)
+{
+	BTab* tab = new BTab();
+
+	fTabView->AddTab(view, tab);
+	tab->SetLabel(label);
 }

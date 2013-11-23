@@ -156,6 +156,12 @@ KeyBind kEngineMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
+	{ 0, "Set Output", 0, 0, 0, 0, FABER_ITEM_START },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
+
+	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
+
 	{ 1,"Settings",      'P', B_COMMAND_KEY,                 'P', B_SHIFT_KEY,              FABER_SETTINGS },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },

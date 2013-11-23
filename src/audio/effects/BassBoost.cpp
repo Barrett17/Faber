@@ -51,20 +51,18 @@ BassBoostEffect::SettingsPanel()
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	freq = new SpinSlider("frequency", NULL,
+	freq = new SpinSlider("frequency", B_TRANSLATE("Frequency (Hz)"),
 		new BMessage(CONTROL_CHANGED), 1, 1000);
 
 	//freq->SetValue(Prefs.filter_bassboost_frequency);
 
-	boost = new SpinSlider("frequency", NULL,
+	boost = new SpinSlider("frequency", B_TRANSLATE("Boost (dB)"),
 		new BMessage(CONTROL_CHANGED), 0, 24);
 
 //	boost->SetValue(Prefs.filter_bassboost_boost);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL, 0)
-		.Add(new BStringView("",  B_TRANSLATE("Frequency (Hz)")))
 		.Add(freq, 0)
-		.Add(new BStringView("",  B_TRANSLATE("Boost (dB)")))
 		.Add(boost, 1)
 	.End();
 
