@@ -26,7 +26,6 @@
 #include "ExportWindow.h"
 #include "FaberEffect.h"
 #include "FaberWindow.h"
-#include "OpenPanel.h"
 #include "ParameterWindow.h"
 #include "ProgressWindow.h"
 #include "SettingsWindow.h"
@@ -69,7 +68,7 @@ public:
 	static void				ShowAbout();
 
 	// App panels
-	static OpenPanel*		GetOpenPanel();
+	static BFilePanel*		GetOpenPanel();
 	static BFilePanel*		GetSavePanel();
 	static ExportWindow*	GetExportPanel();
 
@@ -96,7 +95,7 @@ private:
 	SettingsWindow*			fSettingsWindow;
 	ProgressWindow*			fProgress;
 
-	OpenPanel*				fOpenPanel;
+	BFilePanel*				fOpenPanel;
 	BFilePanel*				fSavePanel;
 	ExportWindow*			fExportWindow;
 

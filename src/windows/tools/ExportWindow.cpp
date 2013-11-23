@@ -23,8 +23,7 @@
 #include <Button.h>
 #include <ControlLook.h>
 #include <LayoutBuilder.h>
-#include <OutlineListView.h>
-#include <ScrollView.h>
+#include <StringView.h>
 
 #include "FaberDefs.h"
 #include "VolumeSlider.h"

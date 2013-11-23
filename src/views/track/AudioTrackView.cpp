@@ -31,7 +31,7 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 200
+#define HEIGHT_VAL_REF 180
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,

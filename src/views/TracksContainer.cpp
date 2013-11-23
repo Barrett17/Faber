@@ -21,6 +21,7 @@
 
 #include <GroupLayoutBuilder.h>
 #include <ScrollView.h>
+#include <StringView.h>
 
 #include "AudioTrackView.h"
 #include "FaberDefs.h"
