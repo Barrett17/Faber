@@ -169,48 +169,6 @@ KeyBind kEngineMenu[] {
 	{ 0, NULL, 0, 0, 0, 0, FABER_EOF }
 };
 
-KeyBind kPlayButtons[] {
-	{ 0, "Transport Widget", 0, 0, 0, 0, FABER_ITEM_START },
-
-    { 0,"Play",     ' ', B_CONTROL_KEY,       0, 0,                                             FABER_TRANSPORT_PLAY },
-    { 0,"Stop",       0, 0,                   0, 0,                                             FABER_TRANSPORT_STOP },
-    { 0,"Rew",        0, 0,                   0, 0,                                             FABER_TRANSPORT_REW },
-    { 0,"Rew All",B_HOME, B_SHIFT_KEY,        0, 0,                                             FABER_TRANSPORT_REW_ALL },
-    { 0,"Forward",        0, 0,               0, 0,                                             FABER_TRANSPORT_FWD },
-    { 0,"Forward All",B_END, B_SHIFT_KEY,     0, 0,                                             FABER_TRANSPORT_FWD_ALL },
-    { 0,"Record",         0, 0,               0, 0,                                             FABER_TRANSPORT_REC },
-    { 0,"Loop",     'L', 0,                   0, 0,                                             FABER_TRANSPORT_LOOP },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_EOF }
-};
-
-KeyBind kZoomBar[] {
-	{ 0, "Zoom Widget", 0, 0, 0, 0, FABER_ITEM_START },
-
-    { 0,"Zoom In",                    B_UP_ARROW, 0,                0,0,                       FABER_ZOOM_IN },
-    { 0,"Zoom Out",                   B_DOWN_ARROW, 0,              0,0,                       FABER_ZOOM_OUT },
-    { 0,"Zoom Full",                  B_UP_ARROW, B_SHIFT_KEY,      0,0,                       FABER_ZOOM_FULL },
-    { 0,"Zoom to Selection",          B_DOWN_ARROW, B_SHIFT_KEY,    0,0,                       FABER_ZOOM_SELECTION },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_EOF }
-};
-
-KeyBind kToolsBar[] {
-	{ 0, "Tools Widget", 0, 0, 0, 0, FABER_ITEM_START },
-
-    { 0,"Selection Tool",                 0, 0,                 '1', 0,                        FABER_SELECTION_TOOL },
-    { 0,"Draw tool",                      0, 0,                 '2', 0,                        FABER_DRAW_TOOL },
-    { 0,"Play tool",                      0, 0,                 '3', 0,                        FABER_PLAY_TOOL },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_EOF }
-};
-
 KeyBind kTrackContextualMenu[] {
 	{ 0, "TrackMenu", 0, 0, 0, 0, FABER_ITEM_START },
 
@@ -247,9 +205,6 @@ KeyBind* kDefaultKeymap[] {
 	kEditMenu,
 	kTracksMenu,
 	kHelpMenu,
-	//kPlayButtons,
-	//kToolsBar,
-	//kZoomBar,
 	kEngineMenu,
 	kTrackContextualMenu,
 	NULL

@@ -32,7 +32,7 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 100
+#define HEIGHT_VAL_REF 150
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
@@ -103,11 +103,12 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 				.AddGlue()
 				.Add(toolButton)
 			.End()
+			.Add(peak)
 			.AddGroup(B_HORIZONTAL, 0)
 				.Add(recButton)
 				.Add(muteButton)
 				.Add(soloButton)
-				.Add(peak)
+
 			.End()
 		.End()
 		.AddGlue()

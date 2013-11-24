@@ -285,6 +285,7 @@ ScopeView::FrameResized(float width, float height)
 		InitBitmap();
 		RenderBitmap();
 		fUpdate = false;
+		Invalidate();
 	} else {
 		Invalidate();
 	}
@@ -323,7 +324,7 @@ ScopeView::MouseDown(BPoint position)
 		}
 
 		BBitmap* bitmap = new BBitmap(
-			BRect(0, 0, 31, 31), 0, B_RGBA32);
+			BRect(0, 0, 31, 31), B_TRANSPARENT_MAGIC_RGBA32, B_RGBA32);
 		if (BIconUtils::GetVectorIcon(data, size, bitmap) < B_OK) {
 			delete[] data;
 			delete bitmap;
@@ -348,7 +349,7 @@ ScopeView::InitBitmap()
 	BRect rect = Bounds();
 	
 	fBitmap = new BBitmap(rect, BScreen().ColorSpace(), true);
-	memset(fBitmap->Bits(), 0, fBitmap->BitsLength());
+	memset(fBitmap->Bits(), B_TRANSPARENT_MAGIC_RGBA32, fBitmap->BitsLength());
 	
 	rect.OffsetToSelf(B_ORIGIN);
 	fBitmapView = new BView(rect.OffsetToSelf(B_ORIGIN), "bitmapView", 
@@ -365,13 +366,13 @@ ScopeView::RenderBitmap()
 	
 	/* rendering */
 	fBitmap->Lock();
-	memset(fBitmap->Bits(), 0, fBitmap->BitsLength());
+	memset(fBitmap->Bits(), B_TRANSPARENT_MAGIC_RGBA32, fBitmap->BitsLength());
 	float width = fBitmapView->Bounds().Width() + 1;
 	
 	fBitmapView->SetDrawingMode(B_OP_ADD);
 	//fBitmapView->SetDrawingMode(B_OP_ALPHA);
-	fBitmapView->SetHighColor(15,60,15);
-	fBitmapView->SetLowColor(55,57,62);
+	fBitmapView->SetHighColor(55,57,62);
+
 	int32 leftIndex = 
 		(fTotalTime != 0) ? fLeftTime * 20000 / fTotalTime : 0;
 	int32 rightIndex = 

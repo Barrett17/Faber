@@ -129,17 +129,17 @@ AudioMixer::AudioMixer(bool isSystemMixer)
 	fDefaultFormat.u.raw_audio.valid_bits = 0;
 	fDefaultFormat.u.raw_audio.matrix_mask = 0;
 
-	if (isSystemMixer) {
+	//if (isSystemMixer) {
 		// to get persistent settings, assign a settings file
 		BPath path;
 		if (B_OK != find_directory (B_USER_SETTINGS_DIRECTORY, &path))
 			path.SetTo("/boot/home/config/settings/");
-		path.Append("System Audio Mixer");
+		path.Append("Faber/Mixer_conf");
 		fCore->Settings()->SetSettingsFile(path.Path());
 
 		// disable stop on the auto started (system) mixer
 		DisableNodeStop();
-	}
+	//}
 
 	ApplySettings();
 }
