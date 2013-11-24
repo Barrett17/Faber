@@ -24,6 +24,9 @@
 #define TRACE(x...)
 #endif
 
+#define BITMAP_BACKGROUND 60
+
+
 ScopeView::ScopeView(BRect rect, uint32 resizeFlags)
 	: BView(rect, "scope", resizeFlags, B_WILL_DRAW | B_FRAME_EVENTS),
 	fThreadId(-1),
@@ -51,8 +54,7 @@ ScopeView::~ScopeView()
 void
 ScopeView::AttachedToWindow()
 {
-	printf("attached\n");
-	SetViewColor(B_TRANSPARENT_COLOR);
+	SetViewColor(60,60,60);
 	InitBitmap();
 	Run();
 }
@@ -80,7 +82,7 @@ ScopeView::Draw(BRect updateRect)
 	if (fTotalTime != 0)
 		x += (fMainTime - fLeftTime) * bounds.right
 			/ (fRightTime - fLeftTime);
-	SetHighColor(60,255,40);
+	SetHighColor(100, 100, 100);
 	StrokeLine(BPoint(x, bounds.top), BPoint(x, bounds.bottom));
 	
 	Sync();
@@ -286,8 +288,6 @@ ScopeView::FrameResized(float width, float height)
 		RenderBitmap();
 		fUpdate = false;
 		Invalidate();
-	} else {
-		Invalidate();
 	}
 	TRACE("invalidate done\n");
 }
@@ -296,7 +296,7 @@ ScopeView::FrameResized(float width, float height)
 void
 ScopeView::MouseDown(BPoint position)
 {
-	if (!fMediaTrack)
+	/*if (!fMediaTrack)
 		return;
 
 	uint32 buttons;
@@ -332,7 +332,7 @@ ScopeView::MouseDown(BPoint position)
 		}
 		delete[] data;
 		DragMessage(&drag, bitmap, B_OP_ALPHA, BPoint(0,0));
-	}
+	}*/
 }
 
 
@@ -349,11 +349,12 @@ ScopeView::InitBitmap()
 	BRect rect = Bounds();
 	
 	fBitmap = new BBitmap(rect, BScreen().ColorSpace(), true);
-	memset(fBitmap->Bits(), B_TRANSPARENT_MAGIC_RGBA32, fBitmap->BitsLength());
+	memset(fBitmap->Bits(), BITMAP_BACKGROUND, fBitmap->BitsLength());
 	
 	rect.OffsetToSelf(B_ORIGIN);
 	fBitmapView = new BView(rect.OffsetToSelf(B_ORIGIN), "bitmapView", 
 		B_FOLLOW_LEFT|B_FOLLOW_TOP, B_WILL_DRAW);
+
 	fBitmap->AddChild(fBitmapView);
 }
 
@@ -366,11 +367,10 @@ ScopeView::RenderBitmap()
 	
 	/* rendering */
 	fBitmap->Lock();
-	memset(fBitmap->Bits(), B_TRANSPARENT_MAGIC_RGBA32, fBitmap->BitsLength());
+	memset(fBitmap->Bits(), BITMAP_BACKGROUND, fBitmap->BitsLength());
 	float width = fBitmapView->Bounds().Width() + 1;
 	
 	fBitmapView->SetDrawingMode(B_OP_ADD);
-	//fBitmapView->SetDrawingMode(B_OP_ALPHA);
 	fBitmapView->SetHighColor(55,57,62);
 
 	int32 leftIndex = 

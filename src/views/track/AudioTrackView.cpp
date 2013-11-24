@@ -95,7 +95,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	PeakView* peak = new PeakView("OutputPeakView", false, false);
 	peak->SetExplicitMaxSize(BSize(200, 15));
 
-	BLayoutBuilder::Group<>(box, B_VERTICAL, 0)
+	BLayoutBuilder::Group<>(box, B_VERTICAL, 10)
 		.SetInsets(10, 10, 10, 10)
 		.AddSplit(B_VERTICAL, 0)
 			.AddGroup(B_HORIZONTAL, 0)
@@ -103,13 +103,13 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 				.AddGlue()
 				.Add(toolButton)
 			.End()
-			.Add(peak)
 			.AddGroup(B_HORIZONTAL, 0)
 				.Add(recButton)
 				.Add(muteButton)
 				.Add(soloButton)
-
+				.AddGlue()
 			.End()
+			.Add(peak)
 		.End()
 		.AddGlue()
 	.End();
