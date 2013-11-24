@@ -151,20 +151,6 @@ AudioTrackView::UpdateDrawCache() const
 
 
 void
-AudioTrackView::SetDirty(bool dirty)
-{
-	fDirty = dirty;
-}
-
-
-bool
-AudioTrackView::Dirty() const
-{
-	return fDirty;
-}
-
-
-void
 AudioTrackView::UpdateScroll(float newValue, float min, float max)
 {
 	//fSampleView->UpdateScroll(newValue, min, max);

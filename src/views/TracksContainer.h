@@ -35,8 +35,6 @@ public:
 
 	void				MessageReceived(BMessage* message);
 
-	TrackView*			CurrentTrack();
-	TrackView*			CurrentSelection();
 	void				SelectAll();
 	void				UnselectAll();
 
@@ -47,6 +45,9 @@ public:
 	status_t			AddTrack(Track* track);
 	status_t			RemoveTrack(int32 index);
 	status_t			RemoveTrack(TrackView* track = NULL);
+
+	TrackView*			CurrentFocus();
+	TrackViewList&		SelectedTracks();
 
 	bool 				HasChanged();
 
@@ -60,10 +61,6 @@ public:
 	void				ZoomSelection();
 
 	int32				CalcZoomLevel() const;
-
-	void				Pulse();
-
-	void				SetDirty(bool dirty);
 
 	// NOTE this will not update the scroll bar
 	// don't use it, use the following method instead.
@@ -83,6 +80,7 @@ private:
 
 	int64				fStart;
 	int64				fEnd;
+	int64				fTotalTime;
 };
 
 #endif

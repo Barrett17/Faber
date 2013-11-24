@@ -48,10 +48,6 @@ public:
 			void			SetUpdateDrawCache(bool value);
 			bool			UpdateDrawCache() const;
 
-			// Needed by the SampleView
-			void			SetDirty(bool dirty);
-			bool			Dirty() const;
-
 			void			ZoomIn();
 			void			ZoomOut();
 			void			ZoomFull();

@@ -27,6 +27,9 @@
 class Track {
 public:
 							Track();
+	virtual 				~Track();
+
+	virtual	bigtime_t		Duration() const;
 
 	virtual bool			IsAudio() const = 0;
 			//bool			IsMIDI() const;
@@ -52,19 +55,29 @@ public:
 	virtual void			SetSolo(bool solo);
 	virtual bool			IsSolo() const;
 
+	virtual bool			HasChanged() const;
+	virtual bool			HasUndo() const;
+	virtual bool			HasRedo() const;
+
 			void 			SetFormat(media_format format);
 			media_format 	Format() const;
 
 protected:
 			media_format	fFormat;
+			bigtime_t		fDuration;
 
 private:
+			BString			fName;
 
 			bool			fMuted;
 			bool			fSolo;
 			bool			fRecording;
 			bool			fPlaying;
-			BString			fName;
+
+			bool			fHasChanged;
+			bool			fHasUndo;
+			bool			fHasRedo;
+
 			float			fVolume;
 			float			fBalance;
 };

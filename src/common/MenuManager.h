@@ -45,6 +45,7 @@ public:
 	BMenu*					BuildEffectsMenu();
 	BMenu*					BuildGenerateMenu();
 	BMenu*					BuildEngineMenu();
+	BMenu*					BuildProjectMenu();
 	BMenu*					BuildHelpMenu();
 
 	BPopUpMenu*				BuildTrackContextualMenu();

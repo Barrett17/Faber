@@ -36,7 +36,8 @@ TracksContainer::TracksContainer()
 	BGroupView(B_VERTICAL, 0),
 	fTrackViews(false),
 	fStart(0),
-	fEnd(0)
+	fEnd(0),
+	fTotalTime(0)
 {
 	// TODO fix color schemes
 	rgb_color backgroundColor = {120,120,120};
@@ -89,14 +90,6 @@ TracksContainer::TracksContainer()
 
 TracksContainer::~TracksContainer()
 {
-}
-
-
-void
-TracksContainer::Pulse()
-{
-	for (int i = 0; i < CountTracks(); i++)
-		TrackAt(i)->Pulse();
 }
 
 
@@ -279,7 +272,7 @@ TracksContainer::CountTracks() const
 
 
 TrackView*
-TracksContainer::CurrentTrack()
+TracksContainer::CurrentFocus()
 {
 	for (int i = 0; i < CountTracks(); i++) {
 		TrackView* track = TrackAt(i);
@@ -291,9 +284,27 @@ TracksContainer::CurrentTrack()
 }
 
 
+TrackViewList&
+TracksContainer::SelectedTracks()
+{
+	/*for (int i = 0; i < CountTracks(); i++) {
+		TrackView* track = TrackAt(i);
+		if (track->IsFocus())
+			return track;
+	}
+
+	return NULL;*/
+}
+
+
 bool
 TracksContainer::HasChanged()
 {
+	for (int i = 0; i < CountTracks(); i++) {
+		TrackView* track = TrackAt(i);
+		if (track->HasChanged())
+			return true;
+	}
 	return false;
 }
 
@@ -365,16 +376,6 @@ TracksContainer::ZoomSelection()
 	for (int i = 0; i < CountTracks(); i++) {
 		TrackView* track = TrackAt(i);
 		track->ZoomSelection();
-	}
-}
-
-
-void
-TracksContainer::SetDirty(bool dirty)
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		AudioTrackView* track = (AudioTrackView*) TrackAt(i);
-		track->SetDirty(dirty);
 	}
 }
 

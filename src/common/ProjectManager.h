@@ -44,7 +44,8 @@ public:
 			status_t					LoadProject(entry_ref ref);
 
 			status_t					LoadFile(entry_ref ref);
-			status_t					LoadMediaFile(BMediaFile* mediaFile);
+			status_t					LoadMediaFile(BMediaFile* mediaFile,
+											const char* name);
 
 			void						Undo();
 			void						Redo();

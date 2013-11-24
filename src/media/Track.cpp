@@ -32,6 +32,18 @@ Track::Track()
 }
 
 
+Track::~Track()
+{
+}
+
+
+bigtime_t
+Track::Duration() const
+{
+	return fDuration;
+}
+
+
 void
 Track::SetFormat(media_format format)
 {
@@ -141,4 +153,25 @@ bool
 Track::IsSolo() const
 {
 	return fSolo;
+}
+
+
+bool
+Track::HasChanged() const
+{
+	return fHasChanged;
+}
+
+
+bool
+Track::HasUndo() const
+{
+	return fHasUndo;
+}
+
+
+bool
+Track::HasRedo() const
+{
+	return fHasChanged;
 }

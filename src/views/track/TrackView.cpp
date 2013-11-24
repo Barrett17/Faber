@@ -195,3 +195,31 @@ TrackView::SetPointer(int64 pointer)
 {
 	fPointer = pointer;
 }
+
+
+bigtime_t
+TrackView::Duration() const
+{
+	return fTrack->Duration();
+}
+
+
+bool
+TrackView::HasChanged() const
+{
+	return fTrack->HasChanged();
+}
+
+
+bool
+TrackView::HasUndo() const
+{
+	return fTrack->HasUndo();
+}
+
+
+bool
+TrackView::HasRedo() const
+{
+	return fTrack->HasChanged();
+}

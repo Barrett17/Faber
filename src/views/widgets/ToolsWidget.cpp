@@ -47,7 +47,7 @@ ToolsWidget::ToolsWidget()
 			.AddStrut(5.0f)
 		.End();
 
-	toolsView->SetExplicitSize(BSize(100, 40));
+	toolsView->SetExplicitSize(BSize(70, 40));
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(toolsView);

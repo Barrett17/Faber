@@ -53,6 +53,8 @@ public:
 			int64			Pointer() const;
 			int64			SelectionPointer() const;
 
+			bigtime_t		Duration() const;
+
 	virtual const BString&	Name() const;
 	virtual void 			SetName(const char* name);
 
@@ -78,6 +80,10 @@ public:
 	virtual void			ZoomOut() = 0;
 	virtual void			ZoomFull() = 0;
 	virtual void			ZoomSelection() = 0;
+
+	virtual bool			HasChanged() const;
+	virtual bool			HasUndo() const;
+	virtual bool			HasRedo() const;
 
 protected:
 			Track*			fTrack;

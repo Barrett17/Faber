@@ -93,7 +93,7 @@ ProjectManager::LoadProject(entry_ref ref)
 
 	
 	*/
-	return B_OK;
+	return B_ERROR;
 }
 
 
@@ -104,25 +104,28 @@ ProjectManager::LoadFile(entry_ref ref)
 
 	BMediaFile* mediaFile = new BMediaFile(&ref);
 	if (mediaFile->InitCheck() == B_OK) {
-		return LoadMediaFile(mediaFile);
-	} else {
-		return LoadProject(ref);
+		return LoadMediaFile(mediaFile, ref.name);
 	}
+
+	delete mediaFile;
+
+	return LoadProject(ref);
 }
 
 
 status_t
-ProjectManager::LoadMediaFile(BMediaFile* mediaFile)
+ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 {
 	AudioTrack* track = new AudioTrack(mediaFile);
+	track->SetName(name);
 
 	printf("loading media file\n");
 	status_t ret = track->InitCheck();
-	/*if (ret != B_NO_ERROR) {
+	if (ret < B_OK) {
 		delete track;
 		printf("%s\n", strerror(ret));
 		return ret;
-	}*/
+	}
 
   	WindowsManager::MainWindow()->MainView()->AddTrack(track);
 

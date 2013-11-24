@@ -31,7 +31,7 @@ class AudioTrack : public Track {
 public:
 							AudioTrack();
 							AudioTrack(BMediaFile* mediaFile);
-	
+
 							~AudioTrack();
 
 			status_t		InitCheck() const;
@@ -52,7 +52,7 @@ public:
 
 private:
 			BMediaFile*		fMediaFile;
-			
+			BMediaTrack*	fMediaTrack;
 
 			bool			fInitCheck;
 };

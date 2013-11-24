@@ -37,10 +37,12 @@ AudioTrack::AudioTrack(BMediaFile* mediaFile)
 	fInitCheck(true),
 	fMediaFile(mediaFile)
 {
-	//SetName(B_TRANSLATE("Empty Audio Track"));
+	fMediaTrack = fMediaFile->TrackAt(0);
+	if (fMediaTrack == NULL) {
+		fInitCheck = B_ERROR;
+	}
 
-	//fMediaFile = mediaFile;
-	fMediaFile->TrackAt(0)->DecodedFormat(&fFormat);
+	fMediaTrack->DecodedFormat(&fFormat);
 }
 
 

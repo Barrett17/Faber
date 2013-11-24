@@ -43,7 +43,6 @@ public:
 
 			status_t				Init();
 			status_t				InitNode();
-			
 
 			status_t 				Start();
 			status_t				StartFrom(int64 position);
@@ -61,7 +60,7 @@ public:
 
 			AudioMixer*				Mixer() const;
 
-			//void RegisterWatchHandler(BHandler* handler);
+			//void					RegisterWatchHandler(BHandler* handler);
 
 			void					SetFramerate(float framerate);
 
