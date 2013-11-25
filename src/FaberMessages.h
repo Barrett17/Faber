@@ -69,11 +69,6 @@ public:
 
 // GUI
 
-const uint32 FABER_SELECTION_TOOL		=	'fstl';
-const uint32 FABER_DRAW_TOOL			=	'fdwt';
-const uint32 FABER_PLAY_TOOL			=	'fplt';
-const uint32 FABER_TEMPORAL_TOOL		= 	'ftmt';
-
 const uint32 FABER_ABOUT				= 	'abou';
 const uint32 FABER_OPEN_HOMEPAGE		=	'hmpg';
 const uint32 FABER_SETTINGS				=	'stng';
@@ -151,14 +146,23 @@ const uint32 FABER_ZOOM_OUT				=	'zoot';
 const uint32 FABER_ZOOM_FULL			=	'zofl';
 const uint32 FABER_ZOOM_SELECTION		=	'zosl';
 
+// Tools
+
+const uint32 FABER_SELECTION_TOOL		=	'fstl';
+const uint32 FABER_DRAW_TOOL			=	'fdwt';
+const uint32 FABER_PLAY_TOOL			=	'fplt';
+const uint32 FABER_TEMPORAL_TOOL		= 	'ftmt';
+
+// Panels et similia
+
+const uint32 FABER_APPLY				=	'fbaP';
+const uint32 FABER_REVERT				=	'fbrv';
+const uint32 FABER_CANCEL				=	'fbcn';
+
 // Menu definitions
 const uint32 FABER_ITEM_START			=	'fits';
 const uint32 FABER_ITEM_END				=	'fite';
 const uint32 FABER_EOF					=	'feof';
 const uint32 FABER_SPLITTER				=	'spli';
-
-const uint32 FABER_APPLY				=	'fbaP';
-const uint32 FABER_REVERT				=	'fbrv';
-const uint32 FABER_CANCEL				=	'fbcn';
 
 #endif

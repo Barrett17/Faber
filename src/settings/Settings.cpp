@@ -27,17 +27,8 @@
 
 const uint32 kMsgSettings = 'stng';
 
-/*
-Settings* Settings::fInstance = NULL;
+#define COLOR_TYPE 'clrt'
 
-Settings* Settings::Instance()
-{
-	if(fInstance != NULL)
-		return fInstance;
-
-	fInstance = new Settings();
-	return fInstance;
-}*/
 
 Settings::Settings(const char* path)
 	:
@@ -88,7 +79,6 @@ Settings::OpenSettings()
 		return fError;
 	}
 
-	_SetTo();
 	return B_OK;	
 }
 
@@ -113,14 +103,11 @@ Settings::DeleteSettings()
 status_t
 Settings::FlattenSettings()
 {
-	_CheckSettings();
-
 	//PrintToStream();
 	fSettingsFile->Seek(0, SEEK_SET);
 	return Flatten(fSettingsFile);
 }
 
-#define COLOR_TYPE 'clrt'
 
 status_t
 Settings::WriteColor(const char* name, rgb_color setting)
@@ -144,17 +131,4 @@ status_t
 Settings::RemoveSetting(const char* name)
 {
 	return RemoveData(name);
-}
-
-
-void
-Settings::_CheckSettings()
-{
-	//MakeEmpty();
-}
-
-
-void
-Settings::_SetTo()
-{
 }

@@ -35,25 +35,38 @@ public:
 
 	void				MessageReceived(BMessage* message);
 
-	void				SelectAll();
-	void				UnselectAll();
-
 	int32 				CountTracks() const;
 	TrackView*			TrackAt(int32 index) const;
 	TrackView*			TrackByID(int32 id);
+	int32				IndexToID(int32 index);
+	int32				IDToIndex(int32 id);
+
 	status_t 			AddTrack(TrackView* track, int32 index = 0);
 	status_t			AddTrack(Track* track);
+
 	status_t			RemoveTrack(int32 index);
 	status_t			RemoveTrack(TrackView* track = NULL);
+
+	void				SelectAll();
+	void				UnselectAll();
+
+	void				MoveUp(int32 id);
+	void				MoveDown(int32 id);
 
 	TrackView*			CurrentFocus();
 	TrackViewList&		SelectedTracks();
 
 	bool 				HasChanged();
 
-	/*
-	status_t 			MuteAllTracks(bool mute);
-	//status_t			ReorderTracks(enum reorderType);*/
+	void	 			MuteAllTracks(bool mute);
+	void				ReorderTracks(int reorder);
+
+	void				CopyAndSilence();
+	void				Copy();
+	void				Cut();
+	void				Paste();
+	void				Trim();
+	void				Clear();
 
 	void				ZoomIn();
 	void				ZoomOut();

@@ -67,7 +67,6 @@ FaberApp::MessageReceived(BMessage* message)
 	{
 		case FABER_DROP_PASTE:
 		case B_PASTE:
-
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:
 			RefsReceived(message);

@@ -123,21 +123,19 @@ TracksContainer::MessageReceived(BMessage* message)
 			break;
 
 		case FABER_MUTE_ALL:
-
+			MuteAllTracks(true);
 			break;
 
 		case FABER_UNMUTE_ALL:
-
+			MuteAllTracks(false);
 			break;
-
 
 		case FABER_SORT_BY_NAME:
-
+			ReorderTracks(0);
 			break;
 
-
 		case FABER_SORT_BY_DURATION:
-
+			ReorderTracks(1);
 			break;
 
 		case B_SELECT_ALL:
@@ -149,23 +147,27 @@ TracksContainer::MessageReceived(BMessage* message)
 			break;
 
 		case B_COPY:
-			//fTrack->Copy();
+			Copy();
 			break;
 
 		case FABER_COPY_SILENCE:
-			//fTrack->CutAndSilence()
+			CopyAndSilence();
 			break;
 
 		case B_CUT:
-			//fTrack->Cut(true);
+			Cut();
 			break;
 
 		case B_PASTE:
-			//fTrack->Paste();
+			Paste();
 			break;
 
-		case FABER_DROP_PASTE:
-			//fTrack->DropPaste();
+		case FABER_CLEAR:
+			Clear();
+			break;
+
+		case FABER_TRIM:
+			Trim();
 			break;
 
 		case FABER_ZOOM_IN:
@@ -287,13 +289,15 @@ TracksContainer::CurrentFocus()
 TrackViewList&
 TracksContainer::SelectedTracks()
 {
-	/*for (int i = 0; i < CountTracks(); i++) {
+	TrackViewList* tracks = new TrackViewList(false);
+
+	for (int i = 0; i < CountTracks(); i++) {
 		TrackView* track = TrackAt(i);
-		if (track->IsFocus())
-			return track;
+		if (track->IsSelected())
+			tracks->AddItem(track);
 	}
 
-	return NULL;*/
+	return *tracks;
 }
 
 
@@ -377,6 +381,65 @@ TracksContainer::ZoomSelection()
 		TrackView* track = TrackAt(i);
 		track->ZoomSelection();
 	}
+}
+
+
+void
+TracksContainer::MuteAllTracks(bool mute)
+{
+	for (int i = 0; i < CountTracks(); i++) {
+		TrackView* track = TrackAt(i);
+		track->MuteTrack(mute);
+	}
+}
+
+
+void
+TracksContainer::ReorderTracks(int order)
+{
+
+}
+
+
+void
+TracksContainer::Copy()
+{
+
+}
+
+
+void
+TracksContainer::Trim()
+{
+
+}
+
+
+void
+TracksContainer::CopyAndSilence()
+{
+
+}
+
+
+void
+TracksContainer::Cut()
+{
+
+}
+
+
+void
+TracksContainer::Paste()
+{
+
+}
+
+
+void
+TracksContainer::Clear()
+{
+
 }
 
 

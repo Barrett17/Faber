@@ -17,27 +17,41 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef CLIPVIEW_H
-#define CLIPVIEW_H
+#ifndef FABER_SETTINGS_H
+#define FABER_SETTINGS_H
 
-class ClipView : public BGroupView
-{
+#include <File.h>
+#include <InterfaceDefs.h>
+#include <Message.h>
+#include <Path.h>
+#include <String.h>
+
+
+class Settings : public BMessage {
 public:
-							ClipView();
+						Settings(const char* path);
+virtual					~Settings();
 
-	virtual 				~ClipView();
+		status_t		InitCheck() const;
 
-			bool			IsSelected() const;
+		status_t		ReadColor(const char* name, rgb_color* color);
+		status_t		WriteColor(const char* name, rgb_color color);
+		
+		status_t		RemoveSetting(const char* name);
 
-			void			SelectAll();
-			void			Unselect();
+private:
+		status_t		OpenSettings();
+		status_t		FlattenSettings();
+		status_t		DeleteSettings();
 
-	virtual void			ZoomIn() = 0;
-	virtual void			ZoomOut() = 0;
-	virtual void			ZoomFull() = 0;
-	virtual void			ZoomSelection() = 0;
+		BFile*			fSettingsFile;
+		BPath			fSettingsPath;
 
-};
+		int32			fControl;
 
+		status_t		fError;
 
-#endif
+	//static Settings*	fInstance;
+}; 
+
+#endif /* SETTINGS_H */

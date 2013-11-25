@@ -48,6 +48,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fScopeView = new ScopeView(BRect(20, 20, 150, HEIGHT_VAL_REF), B_FOLLOW_LEFT_RIGHT |
 		B_FRAME_EVENTS | B_WILL_DRAW);
 
+	Render();
+
 	BBox* box = new BBox("box");
 
 	box->SetExplicitMinSize(BSize(150, HEIGHT_VAL_REF));
@@ -129,6 +131,12 @@ AudioTrackView::~AudioTrackView()
 }
 
 
+void
+AudioTrackView::FrameResized()
+{
+}
+
+
 AudioTrack*
 AudioTrackView::Track() const
 {
@@ -174,6 +182,8 @@ AudioTrackView::Render()
 
 	fScopeView->SetTotalTime(renderTrack->Duration(), true);
 	fScopeView->RenderTrack(renderTrack, Track()->Format());
+
+	fScopeView->Invalidate();
 }
 
 

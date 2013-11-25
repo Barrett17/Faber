@@ -17,10 +17,27 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef AUDIO_CLIPVIEW_H
-#define AUDIO_CLIPVIEW_H
+#ifndef CLIPVIEW_H
+#define CLIPVIEW_H
 
-#include <SupportDefs.h>
+class ClipView : public BGroupView
+{
+public:
+							ClipView();
+
+	virtual 				~ClipView();
+
+			bool			IsSelected() const;
+
+			void			SelectAll();
+			void			Unselect();
+
+	virtual void			ZoomIn() = 0;
+	virtual void			ZoomOut() = 0;
+	virtual void			ZoomFull() = 0;
+	virtual void			ZoomSelection() = 0;
+
+};
 
 
 #endif

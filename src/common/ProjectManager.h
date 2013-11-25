@@ -34,18 +34,18 @@ public:
 
 			static ProjectManager*		Get();
 
-			bool						HasChanged() const;
-			bool						HasRedo() const;
-			bool						HasUndo() const;
-
-			bool						WasSaved() const;
-
 			status_t					SaveProject();
 			status_t					LoadProject(entry_ref ref);
 
 			status_t					LoadFile(entry_ref ref);
 			status_t					LoadMediaFile(BMediaFile* mediaFile,
 											const char* name);
+
+			bool						HasChanged() const;
+			bool						WasSaved() const;
+			
+			bool						HasRedo() const;
+			bool						HasUndo() const;
 
 			void						Undo();
 			void						Redo();
@@ -54,7 +54,7 @@ public:
 			void						SetName(const char* name);
 
 			//							CurrentClipboard();
-			//void						EmptyClipboard();
+			//void						CleanClipboard();
 private:
 			status_t					_SaveTrack(AudioTrack* track);
 
