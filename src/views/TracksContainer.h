@@ -37,9 +37,10 @@ public:
 
 	int32 				CountTracks() const;
 	TrackView*			TrackAt(int32 index) const;
-	TrackView*			TrackByID(int32 id);
-	int32				IndexToID(int32 index);
-	int32				IDToIndex(int32 id);
+	TrackView*			TrackByID(uint32 id);
+
+	uint32				IndexToID(int32 index);
+	int32				IDToIndex(uint32 id);
 
 	status_t 			AddTrack(TrackView* track, int32 index = 0);
 	status_t			AddTrack(Track* track);

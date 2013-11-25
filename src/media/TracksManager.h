@@ -17,28 +17,28 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "TracksManager.h"
-
-#include "FaberDefs.h"
-
-TracksManager* TracksManager::fInstance = NULL;
+#include <AudioTrack.h>
 
 
-TracksManager*
-TracksManager::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new TracksManager();
+class TracksManager {
+public:
+										TracksManager();
+	virtual								~TracksManager();
 
-	return fInstance;	
-}
+			static TracksManager*		Get();
 
-TracksManager::TracksManager()
-{
-}
+			static status_t				RegisterTrack(AudioTrack* track);
+			static void					UnregisterTrack(AudioTrack* track);
 
+			static status_t				RegisterTrack(Track* track);
+			static void					UnregisterTrack(Track* track);
 
-TracksManager::~TracksManager()
-{
-}
+private:
+			static TracksManager*		fInstance;
 
+			AudioTrackList				fTracks;
+
+			uint32				fLastID;
+
+			friend class AudioTrack;
+};

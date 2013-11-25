@@ -175,3 +175,17 @@ Track::HasRedo() const
 {
 	return fHasChanged;
 }
+
+
+uint32
+Track::ID()
+{
+	return fID;
+}
+
+
+void
+Track::SetID(uint32 id)
+{
+	fID = id;
+}

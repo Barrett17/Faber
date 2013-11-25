@@ -62,9 +62,13 @@ public:
 			void 			SetFormat(media_format format);
 			media_format 	Format() const;
 
+			uint32			ID();
+
 protected:
 			media_format	fFormat;
 			bigtime_t		fDuration;
+
+			void			SetID(uint32 id);
 
 private:
 			BString			fName;
@@ -80,6 +84,10 @@ private:
 
 			float			fVolume;
 			float			fBalance;
+
+			uint32			fID;
+
+			friend class 	TracksManager;
 };
 
 #endif

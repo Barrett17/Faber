@@ -27,6 +27,7 @@
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
 #include "TimeBar.h"
+#include "TracksManager.h"
 #include "TrackView.h"
 #include "WidgetFrame.h"
 
@@ -117,10 +118,17 @@ TracksContainer::MessageReceived(BMessage* message)
 		}
 
 		case FABER_REMOVE_TRACK:
-			//int32 id = message->FindInt32("track_id");
-			// Track* track = TrackByID(id);
-			// RemoveTrack(track);
+		{
+			uint32 id;
+			message->FindUInt32("track_id", &id);
+			TrackView* track = TrackByID(id);
+			if (track != NULL)
+				RemoveTrack(track);
+			else
+				// TODO report error
+
 			break;
+		}
 
 		case FABER_MUTE_ALL:
 			MuteAllTracks(true);
@@ -224,8 +232,11 @@ status_t
 TracksContainer::AddTrack(Track* track)
 {
 	if (track->IsAudio()) {
-		AudioTrackView* trackView = new AudioTrackView("AudioTrack",
-			(AudioTrack*) track);
+		AudioTrack* audioTrack = (AudioTrack*) track;
+
+		TracksManager::RegisterTrack(audioTrack);
+
+		AudioTrackView* trackView = new AudioTrackView("AudioTrack", audioTrack);
 		return AddTrack(trackView);
 	}
 	return B_ERROR;
@@ -244,6 +255,10 @@ TracksContainer::RemoveTrack(int32 index)
 status_t
 TracksContainer::RemoveTrack(TrackView* track)
 {
+	TracksManager::UnregisterTrack((AudioTrack*)track->GetTrack());
+
+	fTrackViews.RemoveItem(track);
+
 	fLayout->RemoveView(track);
 
 	float max, min;
@@ -256,9 +271,6 @@ TracksContainer::RemoveTrack(TrackView* track)
 		Looper()->Unlock();
 	}
 
-	fTrackViews.RemoveItem(track);
-	delete track;
-
 	return B_OK;
 }
 
@@ -267,6 +279,18 @@ TrackView*
 TracksContainer::TrackAt(int32 index) const
 {
 	return fTrackViews.ItemAt(index);
+}
+
+
+TrackView*
+TracksContainer::TrackByID(uint32 id)
+{
+	for (int i = 0; i < CountTracks(); i++) {
+		TrackView* track = TrackAt(i);
+		if (track->ID() == id)
+			return track;
+	}
+	return NULL;
 }
 
 

@@ -39,7 +39,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	uint32 resizingMode)
 	:
 	TrackView(name, track, resizingMode),
-	fTrack(track),
+	fAudioTrack(track),
 	fDirty(false),
 	fUpdateDrawCache(false)
 {
@@ -59,7 +59,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	muteButton->SetToolTip(B_TRANSLATE("Mute Track"));
 	muteButton->SetIcon(kMuteIcon);
 	muteButton->TrimIcon();
-	muteButton->SetValue(fTrack->IsMute());
+	muteButton->SetValue(fAudioTrack->IsMute());
 
 	IconButton* recButton = new IconButton(NULL, 0, NULL, NULL, this);
 	recButton->SetToolTip(B_TRANSLATE("Disable Recording"));
@@ -87,8 +87,11 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	trackMenu->SetTargetForItems(this);
 
+	BMessage* closeMsg = MessageBuilder(FABER_REMOVE_TRACK);
+	closeMsg->AddUInt32("track_id", ID());
+
 	IconButton* closeButton = new IconButton(NULL, 0, NULL,
-		MessageBuilder(FABER_REMOVE_TRACK), this);
+		closeMsg, this);
 
 	closeButton->SetToolTip(B_TRANSLATE("Close"));
 	closeButton->SetIcon(kCloseTrackIcon);
@@ -140,21 +143,7 @@ AudioTrackView::FrameResized()
 AudioTrack*
 AudioTrackView::Track() const
 {
-	return fTrack;
-}
-
-
-void
-AudioTrackView::SetUpdateDrawCache(bool value)
-{
-	fUpdateDrawCache = value;
-}
-
-
-bool
-AudioTrackView::UpdateDrawCache() const
-{
-	return fUpdateDrawCache;
+	return fAudioTrack;
 }
 
 

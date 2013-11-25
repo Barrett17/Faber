@@ -230,3 +230,10 @@ TrackView::HasRedo() const
 {
 	return fTrack->HasChanged();
 }
+
+
+uint32
+TrackView::ID() const
+{
+	return fTrack->ID();
+}

@@ -17,24 +17,48 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <AudioTrack.h>
+#include "TracksManager.h"
+
+#include "FaberDefs.h"
+
+TracksManager* TracksManager::fInstance = NULL;
 
 
-class TracksManager {
-public:
-										TracksManager();
-	virtual								~TracksManager();
+TracksManager*
+TracksManager::Get()
+{
+	if (fInstance == NULL)
+		fInstance = new TracksManager();
 
-			static TracksManager*		Get();
+	return fInstance;	
+}
 
-			AudioTrack*					RegisterTrack(AudioTrack* track);
-
-			void						UnregisterTrack(AudioTrack* track);
-
-private:
-			static TracksManager*		fInstance;
-			AudioTrackList				fTracks;
+TracksManager::TracksManager()
+	:
+	fLastID(-1)
+{
+}
 
 
-			friend class AudioTrack;
-};
+TracksManager::~TracksManager()
+{
+}
+
+
+status_t
+TracksManager::RegisterTrack(AudioTrack* track)
+{
+	Get()->fLastID++;
+	track->SetID(Get()->fLastID);
+
+	Get()->fTracks.AddItem(track);
+
+	return B_OK;
+}
+
+
+void
+TracksManager::UnregisterTrack(AudioTrack* track)
+{
+	Get()->fTracks.RemoveItem(track);
+}

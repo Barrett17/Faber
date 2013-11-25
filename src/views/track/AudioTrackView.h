@@ -47,9 +47,6 @@ public:
 
 			AudioTrack*		Track() const;
 
-			void			SetUpdateDrawCache(bool value);
-			bool			UpdateDrawCache() const;
-
 			void			ZoomIn();
 			void			ZoomOut();
 			void			ZoomFull();
@@ -63,7 +60,7 @@ public:
 			void			Render();
 
 private:
-			AudioTrack*		fTrack;
+			AudioTrack*		fAudioTrack;
 			ScopeView*		fScopeView;
 
 			bool			fUpdateDrawCache;

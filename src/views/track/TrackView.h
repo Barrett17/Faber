@@ -87,6 +87,8 @@ public:
 	virtual bool			HasUndo() const;
 	virtual bool			HasRedo() const;
 
+	virtual uint32			ID() const;
+
 protected:
 			Track*			fTrack;
 
