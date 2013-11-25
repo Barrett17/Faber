@@ -47,6 +47,7 @@ KeyBind kEditMenu[] {
 
 	{ 1,"Select All",         'A', B_COMMAND_KEY,                   0, 0,                       B_SELECT_ALL },
 	{ 1,"Unselect All",       'U', B_COMMAND_KEY,                   0, 0,                       FABER_UNSELECT_ALL },
+    { 1,"Invert Selection",    0, 0,                           0, 0,                     0 },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
@@ -182,7 +183,8 @@ KeyBind kTrackContextualMenu[] {
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
     { 1,"Select All",           0, 0,                           0, 0,                     0 },
-    { 1,"Unselect All",           0, 0,                           0, 0,                     0 },
+    { 1,"Unselect",           0, 0,                           0, 0,                     0 },
+    { 1,"Invert Selection",           0, 0,                           0, 0,                     0 },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
@@ -190,11 +192,16 @@ KeyBind kTrackContextualMenu[] {
     { 1,"Separate channels",           0, 0,                           0, 0,                     0 },
     { 1,"Merge channels",           0, 0,                           0, 0,                     0 },
 
+	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
+
+	{ 1, "Set Input Node", 0, 0, 0, 0, FABER_ITEM_START },
+
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 0, "Set Input", 0, 0, 0, 0, FABER_ITEM_START },
+	{ 1, "Move Up", 0, 0, 0, 0, 0 },
+	{ 1, "Move Down", 0, 0, 0, 0, 0 },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 

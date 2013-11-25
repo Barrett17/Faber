@@ -47,6 +47,7 @@ public:
 
 			AudioTrack*		Track() const;
 
+			// GUI interaction
 			void			ZoomIn();
 			void			ZoomOut();
 			void			ZoomFull();
