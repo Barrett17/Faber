@@ -22,6 +22,7 @@
 
 #include <MediaFile.h>
 #include <MediaTrack.h>
+#include <ObjectList.h>
 #include <String.h>
 
 #include "Track.h"
@@ -56,5 +57,7 @@ private:
 
 			bool			fInitCheck;
 };
+
+typedef BObjectList<AudioTrack> AudioTrackList;
 
 #endif

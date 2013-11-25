@@ -120,6 +120,7 @@ Application Faber :
 	# Audio and Media internal API
 	Track.cpp
 	AudioTrack.cpp
+	TracksManager.cpp
 	MediaGate.cpp
 	AudioGate.cpp
 
