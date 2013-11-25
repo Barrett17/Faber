@@ -1793,6 +1793,14 @@ AudioMixer::UpdateParameterWeb()
 			B_TRANSLATE("To master"), B_WEB_BUFFER_OUTPUT);
 	}
 
+	// Tracks settings
+
+	top = web->MakeGroup(B_TRANSLATE("Tracks"));
+	group = top->MakeGroup("");
+
+	
+
+
 	if (fCore->Settings()->AllowOutputChannelRemapping()) {
 		top = web->MakeGroup(B_TRANSLATE("Output mapping")); // top level group
 		outputchannels = top->MakeGroup("");
@@ -1888,6 +1896,7 @@ AudioMixer::UpdateParameterWeb()
 		B_TRANSLATE("Refuse output format changes"), B_ENABLE);
 	group->MakeDiscreteParameter(PARAM_ETC(90), B_MEDIA_RAW_AUDIO,
 		B_TRANSLATE("Refuse input format changes"), B_ENABLE);
+
 
 	fCore->Unlock();
 	SetParameterWeb(web);
