@@ -37,6 +37,8 @@ public:
 
 			bool			IsSelected() const;
 
+			Track*			GetTrack() const;
+
 			/*
 			void			CurrentSelection(int64* start,int64* end) const;
 			void			SelectAt(int64 start,int64 end);

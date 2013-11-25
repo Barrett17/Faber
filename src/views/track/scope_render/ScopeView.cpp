@@ -12,7 +12,6 @@
 #include <MimeType.h>
 #include <Screen.h>
 #include <Window.h>
-#include "DrawingTidbits.h"
 #include "ScopeView.h"
 
 #define SAMPLES_COUNT 20000
@@ -381,8 +380,12 @@ ScopeView::RenderBitmap()
 	for (int32 i = leftIndex; i<rightIndex; i++) {
 		BPoint point((i - leftIndex) * width / (rightIndex - leftIndex), 
 			fPreview[i]);
+
+		BPoint point2(((i - leftIndex) * width / (rightIndex - leftIndex)), 
+			fPreview[i]/4);
+
 		//TRACE("point x %f y %f\n", point.x, point.y);
-		fBitmapView->StrokeLine(point, point);
+		fBitmapView->StrokeLine(point2, point);
 	}
 	
 	fBitmap->Unlock();

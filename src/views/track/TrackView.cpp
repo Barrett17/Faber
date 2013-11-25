@@ -41,6 +41,13 @@ TrackView::~TrackView()
 }
 
 
+Track*
+TrackView::GetTrack() const
+{
+	return fTrack;
+}
+
+
 const BString&
 TrackView::Name() const
 {

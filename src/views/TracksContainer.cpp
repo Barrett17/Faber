@@ -197,6 +197,8 @@ status_t
 TracksContainer::AddTrack(TrackView* track, int32 index)
 {
 	float max, min;
+	status_t ret;
+
 	if (Looper()->Lock()) {
 		fVerticalScroll->GetRange(&min, &max);
 		max += 170;
@@ -204,11 +206,13 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 		Looper()->Unlock();
 	}
 
-	AudioTrackView* tr = (AudioTrackView*)track;
+	if (track->GetTrack()->IsAudio()) {
+		AudioTrackView* tr = (AudioTrackView*)track;
 
-	fLayout->AddView(track, index);
+		fLayout->AddView(track, index);
 
-	status_t ret = fTrackViews.AddItem(track, index);
+		ret = fTrackViews.AddItem(track, index);
+	}
 
 	MenuManager::UpdateMenu();
 

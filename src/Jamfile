@@ -71,7 +71,6 @@ Application Faber :
 	AudioTrackView.cpp
 	
 	# scope render
-	DrawingTidbits.cpp
 	ScopeView.cpp
 
 	# Various windows and related code
