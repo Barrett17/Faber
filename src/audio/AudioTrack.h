@@ -33,11 +33,14 @@ public:
 							AudioTrack();
 							AudioTrack(BMediaFile* mediaFile);
 
-							~AudioTrack();
+			virtual			~AudioTrack();
 
 			status_t		InitCheck() const;
 
 	virtual bool			IsAudio() const;
+
+	virtual void 			SetFormat(media_format format);
+	virtual media_format 	Format() const;
 
 			void			SetFramerate(float framerate);
 			int32			CountChannels() const;
@@ -52,6 +55,7 @@ public:
 			status_t		ApplyEffect(int32 id, int64 start, int64 end);
 
 private:
+			media_format	fFormat;
 			BMediaFile*		fMediaFile;
 			BMediaTrack*	fMediaTrack;
 

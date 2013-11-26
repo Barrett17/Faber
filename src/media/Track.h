@@ -59,16 +59,12 @@ public:
 	virtual bool			HasUndo() const;
 	virtual bool			HasRedo() const;
 
-			void 			SetFormat(media_format format);
-			media_format 	Format() const;
-
-			uint32			ID();
+	virtual uint32			ID();
 
 protected:
-			media_format	fFormat;
 			bigtime_t		fDuration;
 
-			void			SetID(uint32 id);
+	virtual void			SetID(uint32 id);
 
 private:
 			BString			fName;

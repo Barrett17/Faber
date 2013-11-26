@@ -44,20 +44,6 @@ Track::Duration() const
 }
 
 
-void
-Track::SetFormat(media_format format)
-{
-	fFormat.SpecializeTo(&format);
-}
-
-
-media_format
-Track::Format() const
-{
-	return fFormat;
-}
-
-
 const BString&
 Track::Name() const
 {

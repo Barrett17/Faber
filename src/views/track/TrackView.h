@@ -39,21 +39,17 @@ public:
 
 			Track*			GetTrack() const;
 
-			/*
-			void			CurrentSelection(int64* start,int64* end) const;
-			void			SelectAt(int64 start,int64 end);
-			*/
-
 			void			SelectAll();
 			void			Unselect();
+
+			void			GetSelection(int64 start, int64 end) const;
+			void			Select(int64 start, int64 end);
 
 			int64			Start() const;
 			int64			End() const;
 
 			void			SetPointer(int64 pointer);
-
 			int64			Pointer() const;
-			int64			SelectionPointer() const;
 
 			bigtime_t		Duration() const;
 

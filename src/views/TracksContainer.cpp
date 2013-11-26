@@ -255,11 +255,11 @@ TracksContainer::RemoveTrack(int32 index)
 status_t
 TracksContainer::RemoveTrack(TrackView* track)
 {
-	TracksManager::UnregisterTrack((AudioTrack*)track->GetTrack());
-
 	fTrackViews.RemoveItem(track);
 
 	fLayout->RemoveView(track);
+
+	TracksManager::UnregisterTrack((AudioTrack*)track->GetTrack());
 
 	float max, min;
 

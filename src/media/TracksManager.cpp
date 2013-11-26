@@ -46,9 +46,28 @@ TracksManager::~TracksManager()
 
 
 status_t
+TracksManager::RegisterTrack(Track* track)
+{
+	if (track->IsAudio())
+		RegisterTrack((AudioTrack*)track);
+
+	return B_OK;
+}
+
+
+void
+TracksManager::UnregisterTrack(Track* track)
+{
+	if (track->IsAudio())
+		UnregisterTrack((AudioTrack*)track);
+}
+
+
+status_t
 TracksManager::RegisterTrack(AudioTrack* track)
 {
 	Get()->fLastID++;
+
 	track->SetID(Get()->fLastID);
 
 	Get()->fTracks.AddItem(track);
@@ -61,4 +80,5 @@ void
 TracksManager::UnregisterTrack(AudioTrack* track)
 {
 	Get()->fTracks.RemoveItem(track);
+	delete track;
 }

@@ -52,6 +52,20 @@ AudioTrack::~AudioTrack()
 }
 
 
+void
+AudioTrack::SetFormat(media_format format)
+{
+	fFormat.SpecializeTo(&format);
+}
+
+
+media_format
+AudioTrack::Format() const
+{
+	return fFormat;
+}
+
+
 bool
 AudioTrack::IsAudio() const
 {

@@ -35,7 +35,9 @@ class AudioTrackView : public TrackView
 public:
 							AudioTrackView(const char* name = "AudioTrackView",
 								AudioTrack* track = NULL,
-								uint32 resizingMode = B_FOLLOW_LEFT_RIGHT | B_FRAME_EVENTS);
+								uint32 resizingMode = B_FOLLOW_LEFT_RIGHT |
+									B_FRAME_EVENTS);
+
 	virtual 				~AudioTrackView();
 
 			void			FrameResized();

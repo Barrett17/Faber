@@ -37,7 +37,6 @@ TrackView::TrackView(const char* name,
 
 TrackView::~TrackView()
 {
-	delete fTrack;
 }
 
 
@@ -175,11 +174,11 @@ TrackView::Pointer() const
 }
 
 
-int64
-TrackView::SelectionPointer() const
+void
+TrackView::GetSelection(int64 start, int64 end) const
 {
 	//printf("get sel pointer %lld\n", fSelectionPointer);
-	return fSelectionPointer;
+	//return fSelectionPointer;
 }
 
 
