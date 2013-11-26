@@ -19,8 +19,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src audio mixer ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src views track old_render ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src views track scope_render ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src views track render ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views widgets ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
@@ -70,8 +69,9 @@ Application Faber :
 	TrackView.cpp
 	AudioTrackView.cpp
 	
-	# scope render
-	ScopeView.cpp
+	# Render
+	WavePeak.cpp
+	WaveRender.cpp
 
 	# Various windows and related code
 	ProgressWindow.cpp
@@ -114,7 +114,6 @@ Application Faber :
 
 	# Common
 	Singleton.cpp
-	MouseIcons.cpp
 
 	# Audio and Media internal API
 	Track.cpp

@@ -259,7 +259,7 @@ TracksContainer::RemoveTrack(TrackView* track)
 
 	fLayout->RemoveView(track);
 
-	TracksManager::UnregisterTrack((AudioTrack*)track->GetTrack());
+	TracksManager::UnregisterTrack(track->GetTrack());
 
 	float max, min;
 

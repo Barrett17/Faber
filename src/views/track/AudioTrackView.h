@@ -26,8 +26,8 @@
 #include <View.h>
 
 #include "AudioTrack.h"
-#include "ScopeView.h"
 #include "TrackView.h"
+#include "WaveRender.h"
 
 
 class AudioTrackView : public TrackView
@@ -60,11 +60,10 @@ public:
 
 			bool			IsSelected() const;
 
-			void			Render();
 
 private:
 			AudioTrack*		fAudioTrack;
-			ScopeView*		fScopeView;
+			WaveRender*		fWaveRender;
 
 			bool			fUpdateDrawCache;
 			bool			fDirty;

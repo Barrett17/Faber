@@ -1,7 +1,26 @@
+/*
+    Copyright 2013 Dario Casalinuovo. All rights reserved.
 
-#include <BView.h>
+    This file is part of Faber.
 
-#include "WavePeaks.h"
+    Faber is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Faber is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Faber.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include "AudioTrack.h"
+#include <View.h>
+
+#include "WavePeak.h"
 
 
 class WaveRender : public BView
@@ -31,7 +50,7 @@ public:
 			void			ZoomIn();
 			void			ZoomOut();
 			void			ZoomFull();
-			void			ZoomSelection();			
+			void			ZoomSelection();		
 
 private:
 			void			_Render();
@@ -39,5 +58,6 @@ private:
 
 			bool			fIsSelected;
 
-			WavePeaks*		fWavePeaks;
-}
+			WavePeak*		fWavePeak;
+};
+

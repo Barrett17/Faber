@@ -28,7 +28,6 @@
 #include "FaberDefs.h"
 #include "IconButton.h"
 #include "MenuManager.h"
-#include "PeakView.h"
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
@@ -45,10 +44,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 {
 	fEnd = track->Frames();
 
-	fScopeView = new ScopeView(BRect(20, 20, 150, HEIGHT_VAL_REF), B_FOLLOW_LEFT_RIGHT |
-		B_FRAME_EVENTS | B_WILL_DRAW);
-
-	Render();
+	fWaveRender = new WaveRender(fAudioTrack);
 
 	BBox* box = new BBox("box");
 
@@ -120,7 +116,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(box)
-		.Add(fScopeView)
+		.Add(fWaveRender)
 	.End();
 
 	printf("%lld %lld\n", fStart, fEnd);
@@ -149,51 +145,35 @@ AudioTrackView::Track() const
 void
 AudioTrackView::UpdateScroll(float newValue, float min, float max)
 {
-	//fSampleView->UpdateScroll(newValue, min, max);
+	//fWaveRender->UpdateScroll(newValue, min, max);
 }
-
 
 
 bool
 AudioTrackView::IsSelected() const
 {
-	//return fSampleView->IsSelected();
-}
-
-
-void
-AudioTrackView::Render()
-{
-	fScopeView->CancelRendering();
-
-	BMediaTrack* renderTrack = Track()->MediaFile()->TrackAt(0);
-
-	fScopeView->SetTotalTime(renderTrack->Duration(), true);
-	fScopeView->RenderTrack(renderTrack, Track()->Format());
-
-	fScopeView->Invalidate();
+	return fWaveRender->IsSelected();
 }
 
 
 void
 AudioTrackView::ZoomIn()
 {
-	Render();
-	//fSampleView->ZoomIn();
+	fWaveRender->ZoomIn();
 }
 
 
 void
 AudioTrackView::ZoomOut()
 {
-	//fSampleView->ZoomOut();
+	fWaveRender->ZoomOut();
 }
 
 
 void
 AudioTrackView::ZoomFull()
 {
-	//fSampleView->ZoomFull();
+	fWaveRender->ZoomFull();
 
 }
 
@@ -201,5 +181,5 @@ AudioTrackView::ZoomFull()
 void
 AudioTrackView::ZoomSelection()
 {
-	//fSampleView->ZoomSelection();
+	fWaveRender->ZoomSelection();
 }

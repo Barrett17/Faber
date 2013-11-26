@@ -24,6 +24,7 @@
 #include <String.h>
 #include <SupportDefs.h>
 
+#include "AudioTrack.h"
 #include "FaberWindow.h"
 
 
