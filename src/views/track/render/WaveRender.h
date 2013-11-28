@@ -59,5 +59,6 @@ private:
 			bool			fIsSelected;
 
 			WavePeak*		fWavePeak;
+			AudioTrack*		fTrack;
 };
 

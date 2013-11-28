@@ -33,19 +33,36 @@ public:
 							AudioTrack();
 							AudioTrack(BMediaFile* mediaFile);
 
-			virtual			~AudioTrack();
+							~AudioTrack();
+
+			// BMediaFile-like API
 
 			status_t		InitCheck() const;
 
-	virtual bool			IsAudio() const;
+			status_t		ReadFrames(void* buffer, int64* frameCount,
+								media_header* header = NULL);
 
-	virtual void 			SetFormat(media_format format);
-	virtual media_format 	Format() const;
+			status_t		ReplaceFrames(const void* buffer,
+								int64* _frameCount,
+								const media_header* header);
+
+			status_t		SeekToTime(bigtime_t* _time, int32 flags = 0);
+			status_t		SeekToFrame(int64* _frame, int32 flags = 0);
+
+			status_t		WriteFrames(const void* data, int32 frameCount,
+								int32 flags = 0);
+
+			int64			CountFrames() const;
+
+			 void 			SetFormat(media_format format);
+			media_format 	Format() const;
 
 			void			SetFramerate(float framerate);
 			int32			CountChannels() const;
 
-			int64			Frames() const;
+			// Other utils
+
+			bool			IsAudio() const;
 
 			bool			IsMono() const;
 			bool			IsStereo() const;
@@ -58,8 +75,6 @@ private:
 			media_format	fFormat;
 			BMediaFile*		fMediaFile;
 			BMediaTrack*	fMediaTrack;
-
-			bool			fInitCheck;
 };
 
 typedef BObjectList<AudioTrack> AudioTrackList;

@@ -34,14 +34,15 @@ AudioTrack::AudioTrack()
 AudioTrack::AudioTrack(BMediaFile* mediaFile)
 	:
 	Track(),
-	fInitCheck(true),
 	fMediaFile(mediaFile)
 {
-	fMediaTrack = fMediaFile->TrackAt(0);
-	if (fMediaTrack == NULL) {
-		fInitCheck = B_ERROR;
-	}
+	fFormat.type = B_MEDIA_RAW_AUDIO;
+	fFormat.u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
+	fFormat.u.raw_audio.frame_rate = 44100;
+	fFormat.u.raw_audio.byte_order = 
+		(B_HOST_IS_BENDIAN) ? B_MEDIA_BIG_ENDIAN : B_MEDIA_LITTLE_ENDIAN;
 
+	fMediaTrack = fMediaFile->TrackAt(0);
 	fMediaTrack->DecodedFormat(&fFormat);
 }
 
@@ -94,10 +95,54 @@ AudioTrack::IsStereo() const
 }
 
 
-int64
-AudioTrack::Frames() const
+status_t
+AudioTrack::ReadFrames(void* buffer, int64* frameCount,
+	media_header* header)
 {
+	return fMediaTrack->ReadFrames(buffer, frameCount, header);
+}
 
+
+status_t
+AudioTrack::ReplaceFrames(const void* buffer,
+int64* frameCount, const media_header* header)
+{
+	return fMediaTrack->ReplaceFrames(buffer, frameCount, header);
+}
+
+
+status_t
+AudioTrack::SeekToTime(bigtime_t* time, int32 flags)
+{
+	return fMediaTrack->SeekToTime(time, flags);
+}
+
+status_t
+AudioTrack::SeekToFrame(int64* frame, int32 flags)
+{
+	return fMediaTrack->SeekToTime(frame, flags);
+}
+
+
+status_t
+AudioTrack::WriteFrames(const void* data, int32 frameCount,
+	int32 flags)
+{
+	return fMediaTrack->WriteFrames(data, frameCount, flags);
+}
+
+
+int64
+AudioTrack::CountFrames() const
+{
+	return fMediaTrack->CountFrames();
+}
+
+
+status_t
+AudioTrack::InitCheck() const
+{
+	return fMediaTrack->InitCheck();
 }
 
 
@@ -112,11 +157,4 @@ status_t
 AudioTrack::ApplyEffect(int32 id, int64 start, int64 end)
 {
 
-}
-
-
-status_t
-AudioTrack::InitCheck() const
-{
-	return fInitCheck;
 }

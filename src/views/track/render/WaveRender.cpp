@@ -19,18 +19,50 @@
 
 #include "WaveRender.h"
 
+#include <stdio.h>
+
 
 WaveRender::WaveRender(AudioTrack* track)
 	: 
-	BView("", B_WILL_DRAW)
+	BView("", B_WILL_DRAW),
+	fTrack(track)
 {
-
+	fWavePeak = new WavePeak(track);
+	SetViewColor(60,60,60);
 }	
 
 
 void
 WaveRender::Draw(BRect rect)
 {
+	float width = Bounds().Width();
+	
+	SetDrawingMode(B_OP_ADD);
+	SetHighColor(55,57,62);
+
+	float* buffer = fWavePeak->Preview()->ItemAt(0);
+
+	int32 start = 0;
+	int32 size = fWavePeak->FramesRead();
+
+	float center = Bounds().Height() / 2.0f;
+
+	int32 channels = fTrack->CountChannels();
+
+	for (int32 i = 0; i < size; i++) {
+		float var = buffer[i];
+
+		if (var == -1)
+			printf("error var = -1");
+
+		BPoint point(i, 
+			center);
+
+		BPoint point2(i, 
+			center+var*100);
+
+		StrokeLine(point, point2);
+	}
 
 }
 

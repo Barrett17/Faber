@@ -24,14 +24,15 @@ WavePeak::WavePeak(AudioTrack* track)
 	:
 	fTrack(track)
 {
-	_RenderPeaks(0, fTrack->Frames(), 512);
+	fPreview = new BObjectList<float>(true);
+	_RenderPeaks(0, fTrack->CountFrames(), 256);
 }
 
 
-BObjectList<BPositionIO>&
-WavePeak::PreviewRequested()
+BObjectList<float>*
+WavePeak::Preview()
 {
-
+	return fPreview;
 }
 
 
@@ -51,22 +52,59 @@ WavePeak::_RenderPeaks(int64 start, int64 end, int64 detail)
 
 	uint32 channels = fTrack->CountChannels();
 
-	if (fPreview.CountItems() > 0)
-		fPreview.MakeEmpty();
+	uint64 framesPerChannel = ((fTrack->CountFrames()/detail)/channels)*2;
 
-	_InitPreview(channels);
+	for (uint32 i = 0; i < channels; i++) {
+		float* buf = new float[framesPerChannel*2];
+		fPreview->AddItem(buf);
+	}
 
-	for (int64 frame = start; frame < end; frame+=detail) {
-		for (int c = 0; c < channels; c++) {
-			BPositionIO* buf = fPreview.ItemAt(c);
-			
+	int64 frames = 0;
+	float buffer[format.u.raw_audio.buffer_size 
+		/ (format.u.raw_audio.format 
+		& media_raw_audio_format::B_AUDIO_SIZE_MASK)];
+
+	int64 timer = 0;
+
+	while (fTrack->ReadFrames(buffer, &frames) == B_OK) {
+		for (int i = 0; i < frames; i+=channels) {
+			float max[channels];
+			float min[channels];
+
+			memset(&max, -1, channels);
+			memset(&min, -1, channels);
+
+			timer+=channels;
+			for (int j = frames; j < frames+channels; j++) {
+				float value = buffer[j];
+	
+				if (max[i] < value || max[i] == -1)
+					max[i] = value;
+	
+				if (min[i] > value || min[i] == -1)
+					min[i] = value;
+			}
+
+			if (timer >= detail) {
+				timer = 0;
+				fFrameCount+=2;
+
+				for (uint32 i = 0; i < channels; i++) {
+					float* buf = fPreview->ItemAt(i);
+					buf[fFrameCount] = max[i];
+					buf[fFrameCount+1] = min[i];
+					max[i] = -1;
+					min[i] = -1;
+				}
+			}
+
 		}
 	}
 }
 
 
-void
-WavePeak::_InitPreview(uint32 channels)
+int64
+WavePeak::FramesRead() const
 {
-
+	return fFrameCount;
 }

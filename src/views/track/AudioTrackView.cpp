@@ -42,7 +42,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	fDirty(false),
 	fUpdateDrawCache(false)
 {
-	fEnd = track->Frames();
+	fEnd = track->CountFrames();
 
 	fWaveRender = new WaveRender(fAudioTrack);
 

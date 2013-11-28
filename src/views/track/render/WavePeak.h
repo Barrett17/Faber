@@ -18,25 +18,32 @@
 */
 
 #include <MediaFile.h>
+#include <ObjectList.h>
 
 #include "AudioTrack.h"
 
 
 class WavePeak
 {
+public:
 								WavePeak(AudioTrack* track);
 
-	BObjectList<BPositionIO>&	PreviewRequested();
+	BObjectList<float>*			Preview();
 
 	void						UpdateRequested(int64 start, int64 end);
+
+	int64						FramesRead() const;
 
 private:
 	void						_RenderPeaks(int64 start, int64 end,
 									int64 detail);
 
-	void						_InitPreview(uint32 channels);
+	void						_FillTable(float* buffer, int64 frames,
+									int32 channels);
 
 	AudioTrack*					fTrack;
 
-	BObjectList<BMallocIO>		fPreview;
+	BObjectList<float>*			fPreview;
+
+	int64						fFrameCount;
 };
