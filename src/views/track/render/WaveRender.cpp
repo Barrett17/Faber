@@ -19,6 +19,8 @@
 
 #include "WaveRender.h"
 
+#include <Window.h>
+
 #include <stdio.h>
 
 
@@ -26,7 +28,11 @@ WaveRender::WaveRender(AudioTrack* track)
 	: 
 	BView("", B_WILL_DRAW),
 	fTrack(track),
-	fUpdate(true)
+	fUpdate(true),
+	fPointer(0),
+	fStart(0),
+	fEnd(0),
+	fSelectionEnd(0)
 {
 	fWavePeak = new WavePeak(track);
 	SetViewColor(60,60,60);
@@ -47,7 +53,6 @@ WaveRender::Draw(BRect rect)
 	SetDrawingMode(B_OP_ALPHA);
 	SetHighColor(155,157,162);
 
-	int32 start = 0;
 	int32 channels = fTrack->CountChannels();
 
 	float center = Bounds().Height()/(channels*2);
@@ -57,6 +62,11 @@ WaveRender::Draw(BRect rect)
 		_RenderChannel(buffer, center);
 		center += center*2;
 	}
+
+	SetHighColor(255,255,255);
+
+	StrokeLine(BPoint(fPointer, rect.bottom), BPoint(fPointer, 0));
+	
 }
 
 
@@ -77,8 +87,6 @@ WaveRender::_RenderChannel(float* buffer, float center)
 		BPoint point2(i, 
 			center-max*30.0f);
 
-		//printf("%f\n", max);
-
 		BPoint point3(i, 
 			center-min*30.0f);
 
@@ -89,7 +97,6 @@ WaveRender::_RenderChannel(float* buffer, float center)
 
 		if (count >= size)
 			break;
-
 	}
 
 }
@@ -98,14 +105,25 @@ WaveRender::_RenderChannel(float* buffer, float center)
 void
 WaveRender::MouseDown(BPoint point)
 {
+	BMessage* message = Window()->CurrentMessage();
+	uint32 button = 0;
+	uint32 click = 0;
 
+	message->FindInt32("buttons", (int32*)&button);
+	message->FindInt32("clicks", (int32*)&click);
+
+	if (button == B_PRIMARY_MOUSE_BUTTON) {
+		fPointer = point.x;	
+		Invalidate();
+	} else if (button == B_SECONDARY_MOUSE_BUTTON) {
+
+	}
 }
 
 
 void
 WaveRender::MouseUp(BPoint point)
 {
-
 }
 
 void
@@ -117,14 +135,9 @@ WaveRender::MouseMoved(BPoint point, uint32, const BMessage* message)
 void
 WaveRender::FrameResized(float width, float height)
 {
-
 }
 
-void
-WaveRender::RedrawRequested()
-{
 
-}
 void
 WaveRender::UpdateRequested(BRect rect)
 {
@@ -142,11 +155,14 @@ WaveRender::IsSelected()
 {
 
 }
+
+
 void
 WaveRender::CurrentSelection(int64 start, int64 end)
 {
 
 }
+
 
 int64
 WaveRender::Pointer()

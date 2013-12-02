@@ -34,25 +34,22 @@ public:
 
 	virtual 				~TrackView();
 
-	virtual uint32			ID() const;
+			uint32			ID() const;
 
-			bool			IsSelected() const;
+	virtual bool			IsSelected() const = 0;
 
-			Track*			GetTrack() const;
+	virtual Track*			GetTrack() const;
 
-			void			SelectAll();
-			void			Unselect();
+	virtual void			SelectAll() = 0;
+	virtual void			Unselect() = 0;
 
-			void			GetSelection(int64 start, int64 end) const;
-			void			Select(int64 start, int64 end);
+	virtual void			GetSelection(int64 start, int64 end) const = 0;
+	virtual void			Select(int64 start, int64 end) = 0;
 
-			void			ScrollBy(int64 value);
+	virtual void			ScrollBy(int64 value) = 0;
 
-			int64			TrackStart() const;
-			int64			TrackEnd() const;
-
-			void			SetPointer(int64 pointer);
-			int64			Pointer() const;
+	virtual void			SetPointer(int64 pointer) = 0;
+	virtual int64			Pointer() const = 0;
 
 			bigtime_t		Duration() const;
 			int64			Frames() const;

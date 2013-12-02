@@ -26,11 +26,7 @@ TrackView::TrackView(const char* name,
 	Track* track, uint32 resizingMode)
 	:
 	BGroupView(B_HORIZONTAL, resizingMode),
-	fTrack(track),
-	fTrackStart(0),
-	fTrackEnd(0),
-	fSelectionPointer(0),
-	fPointer(0)
+	fTrack(track)
 {
 }
 
@@ -142,64 +138,6 @@ bool
 TrackView::IsSolo() const
 {
 	return fTrack->IsSolo();
-}
-
-
-void
-TrackView::SelectAll()
-{
-
-}
-
-
-void
-TrackView::Unselect()
-{
-
-}
-
-
-bool
-TrackView::IsSelected() const
-{
-	//return fSampleView->IsSelected();
-	return false;
-}
-
-
-int64
-TrackView::Pointer() const
-{
-	return fPointer;
-}
-
-
-void
-TrackView::GetSelection(int64 start, int64 end) const
-{
-	//printf("get sel pointer %lld\n", fSelectionPointer);
-	//return fSelectionPointer;
-}
-
-
-int64
-TrackView::TrackStart() const
-{
-	return fTrackStart;
-}
-
-
-int64
-TrackView::TrackEnd() const
-{
-	return fTrackEnd;
-}
-
-
-void
-TrackView::SetPointer(int64 pointer)
-{
-	fPointer = pointer;
 }
 
 

@@ -49,6 +49,22 @@ public:
 
 			AudioTrack*		GetTrack() const;
 
+			bool			IsSelected() const;
+
+			void			SelectAll();
+			void			Unselect();
+
+			void			GetSelection(int64 start, int64 end) const;
+			void			Select(int64 start, int64 end);
+
+			void			ScrollBy(int64 value);
+
+			void			SetPointer(int64 pointer);
+			int64			Pointer() const;
+
+			bigtime_t		Duration() const;
+			int64			Frames() const;
+
 			// GUI interaction
 			void			ZoomIn();
 			void			ZoomOut();
@@ -57,9 +73,6 @@ public:
 
 			void			UpdateScroll(float newValue,
 								float max, float min);
-
-			bool			IsSelected() const;
-
 
 private:
 			AudioTrack*		fAudioTrack;

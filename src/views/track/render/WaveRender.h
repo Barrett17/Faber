@@ -38,7 +38,6 @@ public:
 
 	virtual void			FrameResized(float width, float height);
 
-			void			RedrawRequested();
 			void			UpdateRequested(BRect rect);
 
 			void			ScrollBy(int64 value);
@@ -64,5 +63,12 @@ private:
 			WavePeak*		fWavePeak;
 			AudioTrack*		fTrack;
 			bool			fUpdate;
+
+			int64			fPointer;
+			int64			fStart;
+			int64			fEnd;
+			int64			fSelectionEnd;
+
+			friend class	AudioTrackView;
 };
 

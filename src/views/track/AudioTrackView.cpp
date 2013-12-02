@@ -181,3 +181,51 @@ AudioTrackView::ZoomSelection()
 {
 	fWaveRender->ZoomSelection();
 }
+
+
+void
+AudioTrackView::SelectAll()
+{
+
+}
+
+
+void
+AudioTrackView::Unselect()
+{
+
+}
+
+
+int64
+AudioTrackView::Pointer() const
+{
+	return fWaveRender->fPointer;
+}
+
+
+void
+AudioTrackView::GetSelection(int64 start, int64 end) const
+{
+	//printf("get sel pointer %lld\n", fSelectionPointer);
+	//return fSelectionPointer;
+}
+
+
+void
+AudioTrackView::ScrollBy(int64 value)
+{
+}
+
+
+void
+AudioTrackView::Select(int64 start, int64 end)
+{
+}
+
+
+void
+AudioTrackView::SetPointer(int64 pointer)
+{
+	fWaveRender->fPointer = pointer;
+}
