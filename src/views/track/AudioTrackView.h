@@ -38,7 +38,7 @@ public:
 								uint32 resizingMode = B_FOLLOW_LEFT_RIGHT |
 									B_FRAME_EVENTS);
 
-	virtual 				~AudioTrackView();
+							~AudioTrackView();
 
 			void			FrameResized();
 
@@ -54,7 +54,7 @@ public:
 			void			SelectAll();
 			void			Unselect();
 
-			void			GetSelection(int64 start, int64 end) const;
+			void			CurrentSelection(int64* start, int64* end) const;
 			void			Select(int64 start, int64 end);
 
 			void			ScrollBy(int64 value);

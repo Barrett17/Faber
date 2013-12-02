@@ -40,8 +40,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	TrackView(name, track, resizingMode),
 	fAudioTrack(track)
 {
-	fTrackEnd = track->CountFrames();
-
 	fWaveRender = new WaveRender(fAudioTrack);
 
 	BBox* box = new BBox("box");
@@ -116,9 +114,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 		.Add(box)
 		.Add(fWaveRender)
 	.End();
-
-	printf("%lld %lld\n", fTrackStart, fTrackEnd);
-
 }
 
 
@@ -186,14 +181,14 @@ AudioTrackView::ZoomSelection()
 void
 AudioTrackView::SelectAll()
 {
-
+	fWaveRender->SelectAll();
 }
 
 
 void
 AudioTrackView::Unselect()
 {
-
+	fWaveRender->Unselect();
 }
 
 
@@ -205,10 +200,9 @@ AudioTrackView::Pointer() const
 
 
 void
-AudioTrackView::GetSelection(int64 start, int64 end) const
+AudioTrackView::CurrentSelection(int64* start, int64* end) const
 {
-	//printf("get sel pointer %lld\n", fSelectionPointer);
-	//return fSelectionPointer;
+	fWaveRender->CurrentSelection(start, end);
 }
 
 

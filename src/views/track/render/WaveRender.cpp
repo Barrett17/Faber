@@ -81,14 +81,11 @@ WaveRender::_RenderChannel(float* buffer, float center)
 		float max = buffer[count];
 		float min = buffer[count+1];
 
-		BPoint point(i, 
-			center);
+		BPoint point(i, center);
 
-		BPoint point2(i, 
-			center-max*30.0f);
+		BPoint point2(i, center-max*30.0f);
 
-		BPoint point3(i, 
-			center-min*30.0f);
+		BPoint point3(i, center-min*30.0f);
 
 		StrokeLine(point, point2);
 		StrokeLine(point, point3);
@@ -158,7 +155,21 @@ WaveRender::IsSelected()
 
 
 void
-WaveRender::CurrentSelection(int64 start, int64 end)
+WaveRender::CurrentSelection(int64* start, int64* end)
+{
+
+}
+
+
+void
+WaveRender::SelectAll()
+{
+
+}
+
+
+void
+WaveRender::Unselect()
 {
 
 }
@@ -197,17 +208,3 @@ WaveRender::ZoomSelection()
 {
 
 }		
-
-
-void
-WaveRender::_Render()
-{
-
-}
-
-
-void
-WaveRender::_UpdatePeaks()
-{
-
-}

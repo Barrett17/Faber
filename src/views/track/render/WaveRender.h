@@ -43,7 +43,9 @@ public:
 			void			ScrollBy(int64 value);
 
 			bool			IsSelected();
-			void			CurrentSelection(int64 start, int64 end);
+			void			CurrentSelection(int64* start, int64* end);
+			void			SelectAll();
+			void			Unselect();
 
 			int64			Pointer();
 
@@ -53,9 +55,6 @@ public:
 			void			ZoomSelection();		
 
 private:
-			void			_Render();
-			void			_UpdatePeaks();
-
 			void			_RenderChannel(float* buffer, float center);
 
 			bool			fIsSelected;

@@ -215,7 +215,6 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 	}
 
 	if (track->GetTrack()->IsAudio()) {
-		AudioTrackView* tr = (AudioTrackView*)track;
 
 		fLayout->AddView(track, index);
 

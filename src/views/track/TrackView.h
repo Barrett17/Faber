@@ -43,7 +43,7 @@ public:
 	virtual void			SelectAll() = 0;
 	virtual void			Unselect() = 0;
 
-	virtual void			GetSelection(int64 start, int64 end) const = 0;
+	virtual void			CurrentSelection(int64* start, int64* end) const = 0;
 	virtual void			Select(int64 start, int64 end) = 0;
 
 	virtual void			ScrollBy(int64 value) = 0;
@@ -86,11 +86,6 @@ public:
 
 protected:
 			Track*			fTrack;
-
-			int64			fPointer;
-			int64			fTrackStart;
-			int64			fTrackEnd;
-			int64			fSelectionPointer;
 };
 
 
