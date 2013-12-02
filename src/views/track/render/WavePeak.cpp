@@ -19,10 +19,13 @@
 
 #include "WavePeak.h"
 
+#include <stdio.h>
+
 
 WavePeak::WavePeak(AudioTrack* track)
 	:
-	fTrack(track)
+	fTrack(track),
+	fFrameCount(0)
 {
 	fPreview = new BObjectList<float>(true);
 	_RenderPeaks(0, fTrack->CountFrames(), 256);
@@ -52,54 +55,52 @@ WavePeak::_RenderPeaks(int64 start, int64 end, int64 detail)
 
 	uint32 channels = fTrack->CountChannels();
 
-	uint64 framesPerChannel = ((fTrack->CountFrames()/detail)/channels)*2;
+	uint64 framesPerChannel = fTrack->CountFrames()/channels;
 
 	for (uint32 i = 0; i < channels; i++) {
-		float* buf = new float[framesPerChannel*2];
+		float* buf = new float[framesPerChannel];
+		memset(buf, 0, framesPerChannel);
 		fPreview->AddItem(buf);
 	}
 
 	int64 frames = 0;
+	int64 timer = 0;
+
 	float buffer[format.u.raw_audio.buffer_size 
 		/ (format.u.raw_audio.format 
 		& media_raw_audio_format::B_AUDIO_SIZE_MASK)];
 
-	int64 timer = 0;
+	int chan = 0;
 
 	while (fTrack->ReadFrames(buffer, &frames) == B_OK) {
-		for (int i = 0; i < frames; i+=channels) {
-			float max[channels];
-			float min[channels];
+		for (int i = 0; i < frames; i++) {
+				float value = buffer[i];
+				//printf("%f\n", value);
+				float* buf = fPreview->ItemAt(chan);
 
-			memset(&max, -1, channels);
-			memset(&min, -1, channels);
-
-			timer+=channels;
-			for (int j = frames; j < frames+channels; j++) {
-				float value = buffer[j];
+				if (buf[fFrameCount] < value || buf[fFrameCount] == 0)
+					buf[fFrameCount] = value;
 	
-				if (max[i] < value || max[i] == -1)
-					max[i] = value;
-	
-				if (min[i] > value || min[i] == -1)
-					min[i] = value;
-			}
+				if (buf[fFrameCount+1] > value || buf[fFrameCount+1] == 0)
+					buf[fFrameCount+1] = value;
 
-			if (timer >= detail) {
-				timer = 0;
-				fFrameCount+=2;
+				//printf("%f %f\n", buf[fFrameCount], buf[fFrameCount+1]);
 
-				for (uint32 i = 0; i < channels; i++) {
-					float* buf = fPreview->ItemAt(i);
-					buf[fFrameCount] = max[i];
-					buf[fFrameCount+1] = min[i];
-					max[i] = -1;
-					min[i] = -1;
+				if (chan == channels-1)
+					chan = 0;
+				else
+					chan++;
+
+				timer++;
+
+				if (timer == detail) {
+					fFrameCount+=2;
+					timer = 0;
+					chan = 0;
 				}
-			}
 
+			}
 		}
-	}
 }
 
 

@@ -56,9 +56,13 @@ private:
 			void			_Render();
 			void			_UpdatePeaks();
 
+			void			_RenderChannel(float* buffer,
+								float center, float max);
+
 			bool			fIsSelected;
 
 			WavePeak*		fWavePeak;
 			AudioTrack*		fTrack;
+			bool			fUpdate;
 };
 
