@@ -32,6 +32,12 @@ WavePeak::WavePeak(AudioTrack* track)
 }
 
 
+WavePeak::~WavePeak()
+{
+	delete fPreview;
+}
+
+
 BObjectList<float>*
 WavePeak::Preview()
 {

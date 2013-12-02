@@ -31,24 +31,22 @@
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 150
+#define HEIGHT_VAL_REF 75
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	uint32 resizingMode)
 	:
 	TrackView(name, track, resizingMode),
-	fAudioTrack(track),
-	fDirty(false),
-	fUpdateDrawCache(false)
+	fAudioTrack(track)
 {
-	fEnd = track->CountFrames();
+	fTrackEnd = track->CountFrames();
 
 	fWaveRender = new WaveRender(fAudioTrack);
 
 	BBox* box = new BBox("box");
 
-	box->SetExplicitSize(BSize(150, HEIGHT_VAL_REF));
+	box->SetExplicitSize(BSize(150, HEIGHT_VAL_REF*track->CountChannels()));
 
 	IconButton* muteButton = new IconButton(NULL, 0, NULL, NULL, this);
 	muteButton->SetToolTip(B_TRANSLATE("Mute Track"));
@@ -119,7 +117,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 		.Add(fWaveRender)
 	.End();
 
-	printf("%lld %lld\n", fStart, fEnd);
+	printf("%lld %lld\n", fTrackStart, fTrackEnd);
 
 }
 
@@ -136,7 +134,7 @@ AudioTrackView::FrameResized()
 
 
 AudioTrack*
-AudioTrackView::Track() const
+AudioTrackView::GetTrack() const
 {
 	return fAudioTrack;
 }

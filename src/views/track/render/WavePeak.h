@@ -27,6 +27,7 @@ class WavePeak
 {
 public:
 								WavePeak(AudioTrack* track);
+			 					~WavePeak();
 
 	BObjectList<float>*			Preview();
 

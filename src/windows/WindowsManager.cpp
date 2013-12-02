@@ -29,7 +29,6 @@
 WindowsManager*	WindowsManager::fInstance = NULL;
 
 const char* kCopyrights[] = {
-	"2002 Xentronix",
 	NULL
 };
 

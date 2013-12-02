@@ -33,13 +33,19 @@ WaveRender::WaveRender(AudioTrack* track)
 }	
 
 
+WaveRender::~WaveRender()
+{
+	delete fWavePeak;
+}
+
+
 void
 WaveRender::Draw(BRect rect)
 {
 	float width = Bounds().Width();
 
-	SetDrawingMode(B_OP_ADD);
-	SetHighColor(55,57,62);
+	SetDrawingMode(B_OP_ALPHA);
+	SetHighColor(155,157,162);
 
 	int32 start = 0;
 	int32 channels = fTrack->CountChannels();
@@ -47,20 +53,19 @@ WaveRender::Draw(BRect rect)
 	float center = Bounds().Height()/(channels*2);
 
 	for (int32 i = 0; i < channels; i++) {
-		printf("%d\n", i);
 		float* buffer = fWavePeak->Preview()->ItemAt(i);
-		_RenderChannel(buffer, center, 10.0f);
+		_RenderChannel(buffer, center);
 		center += center*2;
 	}
 }
 
 
 void
-WaveRender::_RenderChannel(float* buffer, float center, float max)
+WaveRender::_RenderChannel(float* buffer, float center)
 {
 	int32 count = 0;
 
-	int32 size = fWavePeak->FramesRead()/fTrack->CountChannels();
+	int64 size = fWavePeak->FramesRead()/fTrack->CountChannels();
 
 	for (int32 i = 0; i < size; i++) {
 		float max = buffer[count];
@@ -70,12 +75,12 @@ WaveRender::_RenderChannel(float* buffer, float center, float max)
 			center);
 
 		BPoint point2(i, 
-			center-max*50);
+			center-max*30.0f);
 
 		//printf("%f\n", max);
 
 		BPoint point3(i, 
-			center-min*50);
+			center-min*30.0f);
 
 		StrokeLine(point, point2);
 		StrokeLine(point, point3);

@@ -34,6 +34,8 @@ public:
 
 	virtual 				~TrackView();
 
+	virtual uint32			ID() const;
+
 			bool			IsSelected() const;
 
 			Track*			GetTrack() const;
@@ -44,34 +46,37 @@ public:
 			void			GetSelection(int64 start, int64 end) const;
 			void			Select(int64 start, int64 end);
 
-			int64			Start() const;
-			int64			End() const;
+			void			ScrollBy(int64 value);
+
+			int64			TrackStart() const;
+			int64			TrackEnd() const;
 
 			void			SetPointer(int64 pointer);
 			int64			Pointer() const;
 
 			bigtime_t		Duration() const;
+			int64			Frames() const;
 
-	virtual const BString&	Name() const;
-	virtual void 			SetName(const char* name);
+			const BString&	Name() const;
+			void 			SetName(const char* name);
 
-	virtual float			Volume() const;
-	virtual void			SetVolume(float volume);
+			float			Volume() const;
+			void			SetVolume(float volume);
 
-	virtual void			SetBalance(float balance);
-	virtual float			Balance() const;
+			void			SetBalance(float balance);
+			float			Balance() const;
 
-	virtual bool			IsPlaying() const;
-	virtual void			SetPlaying(bool playing);
+			bool			IsPlaying() const;
+			void			SetPlaying(bool playing);
 
-	virtual void			SetRecording(bool solo);
-	virtual bool			IsRecording() const;
+			void			SetRecording(bool solo);
+			bool			IsRecording() const;
 
-	virtual void	 		MuteTrack(bool mute);
-	virtual bool 			IsMute() const;
+			void	 		MuteTrack(bool mute);
+			bool 			IsMute() const;
 
-	virtual void			SetSolo(bool solo);
-	virtual bool			IsSolo() const;
+			void			SetSolo(bool solo);
+			bool			IsSolo() const;
 
 	virtual void			ZoomIn() = 0;
 	virtual void			ZoomOut() = 0;
@@ -82,14 +87,12 @@ public:
 	virtual bool			HasUndo() const;
 	virtual bool			HasRedo() const;
 
-	virtual uint32			ID() const;
-
 protected:
 			Track*			fTrack;
 
 			int64			fPointer;
-			int64			fStart;
-			int64			fEnd;
+			int64			fTrackStart;
+			int64			fTrackEnd;
 			int64			fSelectionPointer;
 };
 

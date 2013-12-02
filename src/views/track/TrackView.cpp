@@ -27,8 +27,8 @@ TrackView::TrackView(const char* name,
 	:
 	BGroupView(B_HORIZONTAL, resizingMode),
 	fTrack(track),
-	fStart(0),
-	fEnd(0),
+	fTrackStart(0),
+	fTrackEnd(0),
 	fSelectionPointer(0),
 	fPointer(0)
 {
@@ -183,16 +183,16 @@ TrackView::GetSelection(int64 start, int64 end) const
 
 
 int64
-TrackView::Start() const
+TrackView::TrackStart() const
 {
-	return fStart;
+	return fTrackStart;
 }
 
 
 int64
-TrackView::End() const
+TrackView::TrackEnd() const
 {
-	return fEnd;
+	return fTrackEnd;
 }
 
 

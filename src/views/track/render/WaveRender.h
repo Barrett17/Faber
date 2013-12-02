@@ -27,6 +27,7 @@ class WaveRender : public BView
 {
 public:
 							WaveRender(AudioTrack* track);	
+			 				~WaveRender();
 
 	virtual void			Draw(BRect rect);
 	virtual void			MouseDown(BPoint point);
@@ -56,8 +57,7 @@ private:
 			void			_Render();
 			void			_UpdatePeaks();
 
-			void			_RenderChannel(float* buffer,
-								float center, float max);
+			void			_RenderChannel(float* buffer, float center);
 
 			bool			fIsSelected;
 

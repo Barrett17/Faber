@@ -47,7 +47,7 @@ public:
 			int32			CountChannels() const;
 			int32			FrameRate() const;
 
-			AudioTrack*		Track() const;
+			AudioTrack*		GetTrack() const;
 
 			// GUI interaction
 			void			ZoomIn();
@@ -64,9 +64,6 @@ public:
 private:
 			AudioTrack*		fAudioTrack;
 			WaveRender*		fWaveRender;
-
-			bool			fUpdateDrawCache;
-			bool			fDirty;
 };
 
 #endif

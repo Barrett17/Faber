@@ -32,8 +32,18 @@ public:
 	virtual void		MessageReceived(BMessage* message);
 	virtual void		Draw(BRect rect);
 
-	void				SetDuration(bigtime_t duration);
-	bigtime_t			Duration();
+	void				SetFrames(int64 duration);
+
+	int64				Frames() const;
+	bigtime_t			Duration() const;
+
+	void				SetStart(int64 frame);
+	void				SetEnd(int64 frame);
+
+	void				SetDisplayRange(int64 start, int64 end);
+
+	void				SetPointer(int64 frame);
+	int64				Pointer() const;
 
 private:
 	int32				fSpacing;

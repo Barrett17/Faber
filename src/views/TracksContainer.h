@@ -35,6 +35,14 @@ public:
 
 	void				MessageReceived(BMessage* message);
 
+	void				SetFrames(int64 duration);
+
+	bigtime_t			Duration() const;
+	int64				Frames() const;
+
+	void				SetStart(int64 frame);
+	void				SetEnd(int64 frame);
+
 	int32 				CountTracks() const;
 	TrackView*			TrackAt(int32 index) const;
 	TrackView*			TrackByID(uint32 id);
@@ -94,7 +102,7 @@ private:
 
 	int64				fStart;
 	int64				fEnd;
-	int64				fTotalTime;
+	int64				fDuration;
 };
 
 #endif

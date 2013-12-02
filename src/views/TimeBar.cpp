@@ -116,12 +116,12 @@ TimeBar::Draw(BRect rect)
 
 
 void
-TimeBar::SetDuration(bigtime_t duration)
+TimeBar::SetFrames(int64 frames)
 {
 }
 
 
 bigtime_t
-TimeBar::Duration()
+TimeBar::Duration() const
 {
 }

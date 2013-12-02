@@ -38,7 +38,7 @@ TracksContainer::TracksContainer()
 	fTrackViews(false),
 	fStart(0),
 	fEnd(0),
-	fTotalTime(0)
+	fDuration(0)
 {
 	// TODO fix color schemes
 	rgb_color backgroundColor = {120,120,120};
@@ -270,6 +270,8 @@ TracksContainer::RemoveTrack(TrackView* track)
 
 		Looper()->Unlock();
 	}
+
+	delete track;
 
 	return B_OK;
 }
