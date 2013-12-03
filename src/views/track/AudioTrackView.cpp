@@ -122,12 +122,6 @@ AudioTrackView::~AudioTrackView()
 }
 
 
-void
-AudioTrackView::FrameResized()
-{
-}
-
-
 AudioTrack*
 AudioTrackView::GetTrack() const
 {
@@ -138,7 +132,7 @@ AudioTrackView::GetTrack() const
 void
 AudioTrackView::UpdateScroll(float newValue, float min, float max)
 {
-	//fWaveRender->UpdateScroll(newValue, min, max);
+	
 }
 
 
@@ -209,12 +203,14 @@ AudioTrackView::CurrentSelection(int64* start, int64* end) const
 void
 AudioTrackView::ScrollBy(int64 value)
 {
+	fWaveRender->ScrollBy(value);
 }
 
 
 void
 AudioTrackView::Select(int64 start, int64 end)
 {
+	fWaveRender->Select(start, end);
 }
 
 

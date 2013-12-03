@@ -46,6 +46,7 @@ public:
 
 			bool			IsSelected();
 			void			CurrentSelection(int64* start, int64* end);
+			void			Select(int64 start, int64 end);
 			void			SelectAll();
 			void			Unselect();
 
@@ -68,7 +69,8 @@ private:
 			int64			fPointer;
 			int64			fStart;
 			int64			fEnd;
-			int64			fSelectionEnd;
+			int64			fSelectionLeft;
+			int64			fSelectionRight;
 
 			friend class	AudioTrackView;
 };

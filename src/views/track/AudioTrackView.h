@@ -40,8 +40,6 @@ public:
 
 							~AudioTrackView();
 
-			void			FrameResized();
-
 			// Utility methods for fast access to the
 			// Track's values
 			int32			CountChannels() const;

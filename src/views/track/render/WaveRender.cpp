@@ -31,10 +31,12 @@ WaveRender::WaveRender(AudioTrack* track)
 	fUpdate(true),
 	fPointer(0),
 	fStart(0),
-	fEnd(0),
-	fSelectionEnd(0)
+	fSelectionLeft(-1),
+	fSelectionRight(-1)
 {
 	fWavePeak = new WavePeak(track);
+	fEnd = fTrack->CountFrames();
+
 	SetViewColor(60,60,60);
 }	
 
@@ -77,7 +79,7 @@ WaveRender::_RenderChannel(float* buffer, float center)
 
 	int64 size = fWavePeak->FramesRead()/fTrack->CountChannels();
 
-	for (int32 i = 0; i < size; i++) {
+	for (int32 i = fStart; i < fEnd; i++) {
 		float max = buffer[count];
 		float min = buffer[count+1];
 
@@ -160,30 +162,42 @@ WaveRender::ScrollBy(int64 value)
 
 }
 
+
+void
+WaveRender::Select(int64 start, int64 end)
+{
+
+}
+
+
 bool
 WaveRender::IsSelected()
 {
-
+	return (fSelectionLeft > -1 && fSelectionRight > -1);
 }
 
 
 void
 WaveRender::CurrentSelection(int64* start, int64* end)
 {
-
+	*start = fSelectionLeft;
+	*end = fSelectionRight;
 }
 
 
 void
 WaveRender::SelectAll()
 {
-
+	fSelectionLeft = 0;
+	//fSelectionRight = 
 }
 
 
 void
 WaveRender::Unselect()
 {
+	fSelectionLeft = -1;
+	fSelectionRight = -1;
 
 }
 
@@ -191,7 +205,7 @@ WaveRender::Unselect()
 int64
 WaveRender::Pointer()
 {
-
+	return fPointer;
 }
 
 

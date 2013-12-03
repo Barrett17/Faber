@@ -19,8 +19,6 @@
 
 #include "TrackView.h"
 
-#include <stdio.h>
-
 
 TrackView::TrackView(const char* name,
 	Track* track, uint32 resizingMode)
