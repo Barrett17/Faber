@@ -38,6 +38,8 @@ public:
 
 	virtual void			FrameResized(float width, float height);
 
+	virtual	void			MakeFocus(bool focused = true);
+
 			void			UpdateRequested(BRect rect);
 
 			void			ScrollBy(int64 value);
@@ -52,7 +54,7 @@ public:
 			void			ZoomIn();
 			void			ZoomOut();
 			void			ZoomFull();
-			void			ZoomSelection();		
+			void			ZoomSelection();
 
 private:
 			void			_RenderChannel(float* buffer, float center);

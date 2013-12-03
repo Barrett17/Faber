@@ -63,10 +63,10 @@ WaveRender::Draw(BRect rect)
 		center += center*2;
 	}
 
-	SetHighColor(255,255,255);
-
-	StrokeLine(BPoint(fPointer, rect.bottom), BPoint(fPointer, 0));
-	
+	if (IsFocus()) {
+		SetHighColor(255,255,255);
+		StrokeLine(BPoint(fPointer, rect.bottom), BPoint(fPointer, 0));
+	}
 }
 
 
@@ -102,6 +102,8 @@ WaveRender::_RenderChannel(float* buffer, float center)
 void
 WaveRender::MouseDown(BPoint point)
 {
+	MakeFocus();
+
 	BMessage* message = Window()->CurrentMessage();
 	uint32 button = 0;
 	uint32 click = 0;
@@ -110,11 +112,12 @@ WaveRender::MouseDown(BPoint point)
 	message->FindInt32("clicks", (int32*)&click);
 
 	if (button == B_PRIMARY_MOUSE_BUTTON) {
-		fPointer = point.x;	
+		fPointer = point.x;
 		Invalidate();
 	} else if (button == B_SECONDARY_MOUSE_BUTTON) {
 
 	}
+
 }
 
 
@@ -132,6 +135,16 @@ WaveRender::MouseMoved(BPoint point, uint32, const BMessage* message)
 void
 WaveRender::FrameResized(float width, float height)
 {
+}
+
+
+void
+WaveRender::MakeFocus(bool focused)
+{
+	if (focused == false)
+		Invalidate();
+
+	BView::MakeFocus(focused);
 }
 
 
