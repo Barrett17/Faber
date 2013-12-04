@@ -40,8 +40,6 @@ public:
 
 	virtual	void			MakeFocus(bool focused = true);
 
-			void			UpdateRequested(BRect rect);
-
 			void			ScrollBy(int64 value);
 
 			bool			IsSelected();
@@ -59,8 +57,12 @@ public:
 
 private:
 			void			_RenderChannel(float* buffer, float center);
+			void			_RenderTrack(BRect rect);
+			void			_RenderPointer(BRect rect);
 
 			bool			fIsSelected;
+
+			bool			fMousePrimary;
 
 			WavePeak*		fWavePeak;
 			AudioTrack*		fTrack;

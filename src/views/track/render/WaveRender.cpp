@@ -50,6 +50,14 @@ WaveRender::~WaveRender()
 void
 WaveRender::Draw(BRect rect)
 {
+	_RenderTrack(rect);
+	_RenderPointer(rect);
+}
+
+
+void
+WaveRender::_RenderTrack(BRect rect)
+{
 	float width = Bounds().Width();
 
 	SetDrawingMode(B_OP_ALPHA);
@@ -64,11 +72,6 @@ WaveRender::Draw(BRect rect)
 		_RenderChannel(buffer, center);
 		center += center*2;
 	}
-
-	if (IsFocus()) {
-		SetHighColor(255,255,255);
-		StrokeLine(BPoint(fPointer, rect.bottom), BPoint(fPointer, 0));
-	}
 }
 
 
@@ -80,6 +83,15 @@ WaveRender::_RenderChannel(float* buffer, float center)
 	int64 size = fWavePeak->FramesRead()/fTrack->CountChannels();
 
 	for (int32 i = fStart; i < fEnd; i++) {
+
+		if (IsSelected() && i >= fSelectionLeft
+			&& i <= fSelectionRight) {
+			SetHighColor(255,255,255);
+			SetLowColor(155,157,162);
+		} else {
+			SetHighColor(155,157,162);
+		}
+
 		float max = buffer[count];
 		float min = buffer[count+1];
 
@@ -102,8 +114,21 @@ WaveRender::_RenderChannel(float* buffer, float center)
 
 
 void
+WaveRender::_RenderPointer(BRect rect)
+{
+	if (IsFocus()) {
+		SetHighColor(255,255,255);
+		StrokeLine(BPoint(fPointer, rect.bottom),
+			BPoint(fPointer, 0));
+	}
+}
+
+
+void
 WaveRender::MouseDown(BPoint point)
 {
+	printf("WaveRender::MouseDown\n");
+
 	MakeFocus();
 
 	BMessage* message = Window()->CurrentMessage();
@@ -114,24 +139,53 @@ WaveRender::MouseDown(BPoint point)
 	message->FindInt32("clicks", (int32*)&click);
 
 	if (button == B_PRIMARY_MOUSE_BUTTON) {
-		fPointer = point.x;
+		fPointer = fStart+point.x;
+
+		if (fIsSelected) {
+			fIsSelected = false;
+			fSelectionLeft = -1;
+			fSelectionRight = -1;
+			fMousePrimary = false;
+		} else {
+			fMousePrimary = true;
+		}
+
 		Invalidate();
+
 	} else if (button == B_SECONDARY_MOUSE_BUTTON) {
 
 	}
-
 }
 
 
 void
 WaveRender::MouseUp(BPoint point)
 {
+	printf("WaveRender::MouseUp\n");
+
+	if (fMousePrimary)
+		fMousePrimary = false;
 }
 
 void
 WaveRender::MouseMoved(BPoint point, uint32, const BMessage* message)
 {
+	printf("WaveRender::MouseMoved\n");
 
+	if (fMousePrimary) {
+		fIsSelected = true;
+
+		int64 frame = fStart+point.x;
+
+		if (frame < fPointer) {
+			fSelectionRight = fPointer;
+			fSelectionLeft = frame;
+		} else if (frame > fPointer) {
+			fSelectionLeft = fPointer;
+			fSelectionRight = frame;
+		}
+		Invalidate();
+	}
 }
 
 void
@@ -151,29 +205,27 @@ WaveRender::MakeFocus(bool focused)
 
 
 void
-WaveRender::UpdateRequested(BRect rect)
-{
-
-}
-
-void
 WaveRender::ScrollBy(int64 value)
 {
-
+	fStart += value;
+	fEnd += value;
+	Invalidate();
 }
 
 
 void
 WaveRender::Select(int64 start, int64 end)
 {
-
+	fSelectionLeft = start;
+	fSelectionRight = end;
+	Invalidate();
 }
 
 
 bool
 WaveRender::IsSelected()
 {
-	return (fSelectionLeft > -1 && fSelectionRight > -1);
+	return fIsSelected;
 }
 
 
