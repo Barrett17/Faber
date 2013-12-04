@@ -132,7 +132,7 @@ AudioTrackView::GetTrack() const
 void
 AudioTrackView::UpdateScroll(float newValue, float min, float max)
 {
-	
+	fWaveRender->ScrollBy(-100);
 }
 
 

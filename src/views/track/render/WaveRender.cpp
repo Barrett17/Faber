@@ -58,8 +58,6 @@ WaveRender::Draw(BRect rect)
 void
 WaveRender::_RenderTrack(BRect rect)
 {
-	float width = Bounds().Width();
-
 	SetDrawingMode(B_OP_ALPHA);
 	SetHighColor(155,157,162);
 
@@ -82,12 +80,24 @@ WaveRender::_RenderChannel(float* buffer, float center)
 
 	int64 size = fWavePeak->FramesRead()/fTrack->CountChannels();
 
-	for (int32 i = fStart; i < fEnd; i++) {
+	int32 start = (int32)Bounds().left;
+	int32 end = (int32)Bounds().right;
+
+	float width = Bounds().Width();
+
+	int64 skip = 1;
+
+	/*if (fEnd-fStart > (end-start)) {
+		skip = (fEnd-fStart)/(width);
+		//skip /= 2;
+	}*/
+
+	for (int32 i = start; i < end; i++) {
 
 		if (IsSelected() && i >= fSelectionLeft
 			&& i <= fSelectionRight) {
 			SetHighColor(255,255,255);
-			SetLowColor(155,157,162);
+			SetLowColor(200,200,200);
 		} else {
 			SetHighColor(155,157,162);
 		}
@@ -104,9 +114,9 @@ WaveRender::_RenderChannel(float* buffer, float center)
 		StrokeLine(point, point2);
 		StrokeLine(point, point3);
 
-		count+=2;
+		count+=2*skip;
 
-		if (count >= size)
+		if (count >=  fEnd-fStart || count >= size)
 			break;
 	}
 
@@ -120,6 +130,17 @@ WaveRender::_RenderPointer(BRect rect)
 		SetHighColor(255,255,255);
 		StrokeLine(BPoint(fPointer, rect.bottom),
 			BPoint(fPointer, 0));
+	}
+
+	if (IsSelected()) {
+		int64 fPoint = fSelectionRight;
+
+		if(fSelectionLeft < fPointer)
+			fPoint = fSelectionLeft;
+
+		SetHighColor(255,255,255);
+		StrokeLine(BPoint(fPoint, rect.bottom),
+			BPoint(fPoint, 0));
 	}
 }
 
@@ -197,8 +218,10 @@ WaveRender::FrameResized(float width, float height)
 void
 WaveRender::MakeFocus(bool focused)
 {
-	if (focused == false)
+	if (focused == false) {
+		fIsSelected = false;
 		Invalidate();
+	}
 
 	BView::MakeFocus(focused);
 }
