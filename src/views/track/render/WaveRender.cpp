@@ -23,6 +23,8 @@
 
 #include <stdio.h>
 
+#define DEFAULT_ZOOM_LEVEL 128
+
 
 WaveRender::WaveRender(AudioTrack* track)
 	: 
@@ -32,7 +34,8 @@ WaveRender::WaveRender(AudioTrack* track)
 	fPointer(0),
 	fStart(0),
 	fSelectionLeft(-1),
-	fSelectionRight(-1)
+	fSelectionRight(-1),
+	fZoomLevel(DEFAULT_ZOOM_LEVEL)
 {
 	fWavePeak = new WavePeak(track);
 	fEnd = fTrack->CountFrames();
@@ -76,8 +79,6 @@ WaveRender::_RenderTrack(BRect rect)
 void
 WaveRender::_RenderChannel(float* buffer, float center)
 {
-	int32 count = 0;
-
 	int64 size = fWavePeak->FramesRead()/fTrack->CountChannels();
 
 	int32 start = (int32)Bounds().left;
@@ -85,12 +86,9 @@ WaveRender::_RenderChannel(float* buffer, float center)
 
 	float width = Bounds().Width();
 
-	int64 skip = 1;
+	int64 skip = fZoomLevel;
 
-	/*if (fEnd-fStart > (end-start)) {
-		skip = (fEnd-fStart)/(width);
-		//skip /= 2;
-	}*/
+	int32 count = fStart;
 
 	for (int32 i = start; i < end; i++) {
 
@@ -148,7 +146,7 @@ WaveRender::_RenderPointer(BRect rect)
 void
 WaveRender::MouseDown(BPoint point)
 {
-	printf("WaveRender::MouseDown\n");
+	//printf("WaveRender::MouseDown\n");
 
 	MakeFocus();
 
@@ -182,7 +180,7 @@ WaveRender::MouseDown(BPoint point)
 void
 WaveRender::MouseUp(BPoint point)
 {
-	printf("WaveRender::MouseUp\n");
+	//printf("WaveRender::MouseUp\n");
 
 	if (fMousePrimary)
 		fMousePrimary = false;
@@ -191,7 +189,7 @@ WaveRender::MouseUp(BPoint point)
 void
 WaveRender::MouseMoved(BPoint point, uint32, const BMessage* message)
 {
-	printf("WaveRender::MouseMoved\n");
+	//printf("WaveRender::MouseMoved\n");
 
 	if (fMousePrimary) {
 		fIsSelected = true;
@@ -287,26 +285,33 @@ WaveRender::Pointer()
 void
 WaveRender::ZoomIn()
 {
-
+	fZoomLevel /= 2;
+	Invalidate();
 }
 
 
 void
 WaveRender::ZoomOut()
 {
-
+	fZoomLevel += fZoomLevel;
+	Invalidate();
 }
 
 
 void
 WaveRender::ZoomFull()
 {
-
+	fZoomLevel = DEFAULT_ZOOM_LEVEL;
+	Invalidate();
 }
 
 
 void
 WaveRender::ZoomSelection()
 {
+	printf("%ld %ld\n", fSelectionLeft, fSelectionRight); 
+	//fStart = fSelectionLeft;
+	//fEnd = fSelectionRight;
 
+	//Invalidate();
 }		

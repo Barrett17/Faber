@@ -74,6 +74,8 @@ private:
 			int64			fSelectionLeft;
 			int64			fSelectionRight;
 
+			float			fZoomLevel;
+
 			friend class	AudioTrackView;
 };
 
