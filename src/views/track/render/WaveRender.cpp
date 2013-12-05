@@ -216,10 +216,8 @@ WaveRender::FrameResized(float width, float height)
 void
 WaveRender::MakeFocus(bool focused)
 {
-	if (focused == false) {
-		fIsSelected = false;
-		Invalidate();
-	}
+	if (focused == false)
+		Unselect();
 
 	BView::MakeFocus(focused);
 }
@@ -239,6 +237,7 @@ WaveRender::Select(int64 start, int64 end)
 {
 	fSelectionLeft = start;
 	fSelectionRight = end;
+	fIsSelected = true;
 	Invalidate();
 }
 
@@ -271,7 +270,8 @@ WaveRender::Unselect()
 {
 	fSelectionLeft = -1;
 	fSelectionRight = -1;
-
+	fIsSelected = false;
+	Invalidate();
 }
 
 
@@ -310,8 +310,8 @@ void
 WaveRender::ZoomSelection()
 {
 	printf("%ld %ld\n", fSelectionLeft, fSelectionRight); 
-	//fStart = fSelectionLeft;
-	//fEnd = fSelectionRight;
+	fStart = fSelectionLeft;
+	fEnd = fSelectionRight;
 
-	//Invalidate();
+	Unselect();
 }		
