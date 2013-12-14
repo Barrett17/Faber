@@ -65,7 +65,7 @@ WavePeak::_RenderPeaks(int64 start, int64 end, int64 detail)
 
 	for (uint32 i = 0; i < channels; i++) {
 		float* buf = new float[framesPerChannel];
-		memset(buf, 0, framesPerChannel);
+		//memset(buf, 0, framesPerChannel);
 		fPreview->AddItem(buf);
 	}
 

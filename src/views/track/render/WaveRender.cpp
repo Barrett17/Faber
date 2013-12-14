@@ -21,9 +21,9 @@
 
 #include <Window.h>
 
-#include <stdio.h>
+#include "FaberDefs.h"
 
-#define DEFAULT_ZOOM_LEVEL 128
+#include <stdio.h>
 
 
 WaveRender::WaveRender(AudioTrack* track)
@@ -33,12 +33,12 @@ WaveRender::WaveRender(AudioTrack* track)
 	fUpdate(true),
 	fPointer(0),
 	fStart(0),
-	fSelectionLeft(-1),
-	fSelectionRight(-1),
-	fZoomLevel(DEFAULT_ZOOM_LEVEL)
+	fSelectionStart(-1),
+	fSelectionEnd(-1),
+	fZoomFactor(20)
 {
 	fWavePeak = new WavePeak(track);
-	fEnd = fTrack->CountFrames();
+	fEnd = fTrack->CountFrames()/fTrack->CountChannels();
 
 	SetViewColor(60,60,60);
 }	
@@ -54,7 +54,7 @@ void
 WaveRender::Draw(BRect rect)
 {
 	_RenderTrack(rect);
-	_RenderPointer(rect);
+	_RenderPointers(rect);
 }
 
 
@@ -79,21 +79,16 @@ WaveRender::_RenderTrack(BRect rect)
 void
 WaveRender::_RenderChannel(float* buffer, float center)
 {
-	int64 size = fWavePeak->FramesRead()/fTrack->CountChannels();
+	int64 end = Bounds().right;
 
-	int32 start = (int32)Bounds().left;
-	int32 end = (int32)Bounds().right;
+	printf("%ld %ld %ld\n", fStart, fEnd);
 
-	float width = Bounds().Width();
+	int64 count = _FrameToScreen(fStart);
 
-	int64 skip = fZoomLevel;
+	for (int64 i = 0; i < end; i++) {
 
-	int32 count = fStart;
-
-	for (int32 i = start; i < end; i++) {
-
-		if (IsSelected() && i >= fSelectionLeft
-			&& i <= fSelectionRight) {
+		if (IsSelected() && i >= _FrameToScreen(fSelectionStart)
+			&& i <= _FrameToScreen(fSelectionEnd)) {
 			SetHighColor(255,255,255);
 			SetLowColor(200,200,200);
 		} else {
@@ -103,42 +98,40 @@ WaveRender::_RenderChannel(float* buffer, float center)
 		float max = buffer[count];
 		float min = buffer[count+1];
 
-		BPoint point(i, center);
+		BPoint pointMin(i, center-max*30.0f);
+		BPoint pointMax(i, center-min*30.0f);
 
-		BPoint point2(i, center-max*30.0f);
+		StrokeLine(pointMin, pointMax);
 
-		BPoint point3(i, center-min*30.0f);
-
-		StrokeLine(point, point2);
-		StrokeLine(point, point3);
-
-		count+=2*skip;
-
-		if (count >=  fEnd-fStart || count >= size)
-			break;
+		count+=2*fZoomFactor;
 	}
 
 }
 
 
 void
-WaveRender::_RenderPointer(BRect rect)
+WaveRender::_RenderPointers(BRect rect)
 {
+	int64 pointer = fPointer/128;
+
 	if (IsFocus()) {
 		SetHighColor(255,255,255);
-		StrokeLine(BPoint(fPointer, rect.bottom),
-			BPoint(fPointer, 0));
+		StrokeLine(BPoint(pointer, rect.bottom),
+			BPoint(pointer, 0));
 	}
 
 	if (IsSelected()) {
-		int64 fPoint = fSelectionRight;
+		printf("rendering\n");
+		int64 point;
 
-		if(fSelectionLeft < fPointer)
-			fPoint = fSelectionLeft;
+		if(fSelectionStart < fPointer)
+			point = _FrameToScreen(fSelectionStart);
+		else
+			point = _FrameToScreen(fSelectionEnd);
 
 		SetHighColor(255,255,255);
-		StrokeLine(BPoint(fPoint, rect.bottom),
-			BPoint(fPoint, 0));
+		StrokeLine(BPoint(point, rect.bottom),
+			BPoint(point, 0));
 	}
 }
 
@@ -158,12 +151,12 @@ WaveRender::MouseDown(BPoint point)
 	message->FindInt32("clicks", (int32*)&click);
 
 	if (button == B_PRIMARY_MOUSE_BUTTON) {
-		fPointer = fStart+point.x;
+		fPointer = fStart+_ScreenToFrame(point.x);
 
 		if (fIsSelected) {
 			fIsSelected = false;
-			fSelectionLeft = -1;
-			fSelectionRight = -1;
+			fSelectionStart = -1;
+			fSelectionEnd = -1;
 			fMousePrimary = false;
 		} else {
 			fMousePrimary = true;
@@ -194,18 +187,16 @@ WaveRender::MouseMoved(BPoint point, uint32, const BMessage* message)
 	if (fMousePrimary) {
 		fIsSelected = true;
 
-		int64 frame = fStart+point.x;
+		int64 frame = fStart+_ScreenToFrame(point.x);
 
-		if (frame < fPointer) {
-			fSelectionRight = fPointer;
-			fSelectionLeft = frame;
-		} else if (frame > fPointer) {
-			fSelectionLeft = fPointer;
-			fSelectionRight = frame;
-		}
-		Invalidate();
+		if (frame < fPointer)
+			Select(frame, fPointer);
+		else if (frame > fPointer)
+			Select(fPointer, frame);
+
 	}
 }
+
 
 void
 WaveRender::FrameResized(float width, float height)
@@ -226,8 +217,13 @@ WaveRender::MakeFocus(bool focused)
 void
 WaveRender::ScrollBy(int64 value)
 {
+	if (fEnd+value > TrackEnd()
+		|| fStart+value < TrackStart())
+		return;
+
 	fStart += value;
 	fEnd += value;
+
 	Invalidate();
 }
 
@@ -235,8 +231,8 @@ WaveRender::ScrollBy(int64 value)
 void
 WaveRender::Select(int64 start, int64 end)
 {
-	fSelectionLeft = start;
-	fSelectionRight = end;
+	fSelectionStart = start;
+	fSelectionEnd = end;
 	fIsSelected = true;
 	Invalidate();
 }
@@ -252,24 +248,25 @@ WaveRender::IsSelected()
 void
 WaveRender::CurrentSelection(int64* start, int64* end)
 {
-	*start = fSelectionLeft;
-	*end = fSelectionRight;
+	*start = fSelectionStart;
+	*end = fSelectionEnd;
 }
 
 
 void
 WaveRender::SelectAll()
 {
-	fSelectionLeft = 0;
-	//fSelectionRight = 
+	Select(fStart, fEnd);
+
+	Invalidate();
 }
 
 
 void
 WaveRender::Unselect()
 {
-	fSelectionLeft = -1;
-	fSelectionRight = -1;
+	fSelectionStart = -1;
+	fSelectionEnd = -1;
 	fIsSelected = false;
 	Invalidate();
 }
@@ -285,7 +282,13 @@ WaveRender::Pointer()
 void
 WaveRender::ZoomIn()
 {
-	fZoomLevel /= 2;
+	fZoomFactor /= 2;
+
+	if (fZoomFactor < 1) {
+		fZoomFactor = 1;
+		return;
+	}
+
 	Invalidate();
 }
 
@@ -293,7 +296,13 @@ WaveRender::ZoomIn()
 void
 WaveRender::ZoomOut()
 {
-	fZoomLevel += fZoomLevel;
+	fZoomFactor *= 2;
+
+	if (fZoomFactor > 40) {
+		fZoomFactor = 40;
+		return;
+	}
+
 	Invalidate();
 }
 
@@ -301,7 +310,10 @@ WaveRender::ZoomOut()
 void
 WaveRender::ZoomFull()
 {
-	fZoomLevel = DEFAULT_ZOOM_LEVEL;
+	fStart = TrackStart();
+	fEnd = TrackEnd();
+	fZoomFactor = 20;
+
 	Invalidate();
 }
 
@@ -309,9 +321,49 @@ WaveRender::ZoomFull()
 void
 WaveRender::ZoomSelection()
 {
-	printf("%ld %ld\n", fSelectionLeft, fSelectionRight); 
-	fStart = fSelectionLeft;
-	fEnd = fSelectionRight;
+	if (!IsSelected())
+		return;
 
-	Unselect();
-}		
+	printf("%ld %ld\n", fSelectionStart, fSelectionEnd); 
+	fStart = fSelectionStart;
+	fEnd = fSelectionEnd;
+
+	fZoomFactor = _DisplaySize()/Bounds().right;
+
+	Invalidate();
+}
+
+
+int64
+WaveRender::TrackStart() const
+{
+	return 0;
+}
+
+
+int64
+WaveRender::TrackEnd() const
+{
+	return fTrack->CountFrames()/fTrack->CountChannels();
+}
+
+
+int64
+WaveRender::_DisplaySize()
+{
+	return fEnd-fStart;
+}
+
+
+int64
+WaveRender::_ScreenToFrame(int64 value)
+{
+	return value*128;
+}
+
+
+int64
+WaveRender::_FrameToScreen(int64 value)
+{
+	return value/128;
+}

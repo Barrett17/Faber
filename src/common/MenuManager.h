@@ -48,13 +48,13 @@ public:
 	BMenu*					BuildProjectMenu();
 	BMenu*					BuildHelpMenu();
 
-	BPopUpMenu*				BuildTrackContextualMenu();
+	BPopUpMenu*				BuildTrackContextualMenu(BView* target);
 
 	static void				UpdateMenu();
 
 private:
 	BMenu*					_BuildMenu(KeyBind* bind);
-	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind);
+	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind, BView* target = NULL);
 	BMenuItem*				_BuildMenuItem(uint32 message, const char* label);
 
 	static MenuManager*		fInstance;

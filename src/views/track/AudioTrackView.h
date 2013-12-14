@@ -40,6 +40,8 @@ public:
 
 							~AudioTrackView();
 
+			void			MessageReceived(BMessage* message);
+
 			// Utility methods for fast access to the
 			// Track's values
 			int32			CountChannels() const;

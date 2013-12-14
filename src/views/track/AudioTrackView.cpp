@@ -73,10 +73,8 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	toolButton->SetIcon(kMuteIcon);
 
 	// Track menu
-	BPopUpMenu* trackMenu = MenuManager::Get()->BuildTrackContextualMenu();
+	BPopUpMenu* trackMenu = MenuManager::Get()->BuildTrackContextualMenu(this);
 	toolButton->SetMenu(trackMenu);
-
-	trackMenu->SetTargetForItems(this);
 
 	BMessage* closeMsg = MessageBuilder(FABER_REMOVE_TRACK);
 	closeMsg->AddUInt32("track_id", ID());
@@ -122,6 +120,27 @@ AudioTrackView::~AudioTrackView()
 }
 
 
+void
+AudioTrackView::MessageReceived(BMessage* message)
+{
+	message->PrintToStream();
+	switch (message->what)
+	{
+
+		case B_SELECT_ALL:
+			SelectAll();
+			break;
+
+		case FABER_UNSELECT_ALL:
+			Unselect();
+			break;
+
+		default:
+			BGroupView::MessageReceived(message);
+	}
+}
+
+
 AudioTrack*
 AudioTrackView::GetTrack() const
 {
@@ -132,7 +151,7 @@ AudioTrackView::GetTrack() const
 void
 AudioTrackView::UpdateScroll(float newValue, float min, float max)
 {
-	fWaveRender->ScrollBy(-100);
+	fWaveRender->ScrollBy(-2000);
 }
 
 

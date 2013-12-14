@@ -55,10 +55,17 @@ public:
 			void			ZoomFull();
 			void			ZoomSelection();
 
+			int64			TrackEnd() const;
+			int64			TrackStart() const;
+
 private:
 			void			_RenderChannel(float* buffer, float center);
 			void			_RenderTrack(BRect rect);
-			void			_RenderPointer(BRect rect);
+			void			_RenderPointers(BRect rect);
+
+			int64			_DisplaySize();
+			int64			_ScreenToFrame(int64 value);
+			int64			_FrameToScreen(int64 value);
 
 			bool			fIsSelected;
 
@@ -71,10 +78,10 @@ private:
 			int64			fPointer;
 			int64			fStart;
 			int64			fEnd;
-			int64			fSelectionLeft;
-			int64			fSelectionRight;
+			int64			fSelectionStart;
+			int64			fSelectionEnd;
 
-			float			fZoomLevel;
+			int64			fZoomFactor;
 
 			friend class	AudioTrackView;
 };

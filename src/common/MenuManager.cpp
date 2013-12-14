@@ -155,9 +155,9 @@ MenuManager::BuildHelpMenu()
 
 
 BPopUpMenu*
-MenuManager::BuildTrackContextualMenu()
+MenuManager::BuildTrackContextualMenu(BView* target)
 {
-	return _BuildPopUpMenu(kTrackContextualMenu);
+	return _BuildPopUpMenu(kTrackContextualMenu, target);
 }
 
 
@@ -197,7 +197,7 @@ MenuManager::_BuildMenu(KeyBind* bind)
 
 
 BPopUpMenu*
-MenuManager::_BuildPopUpMenu(KeyBind* bind)
+MenuManager::_BuildPopUpMenu(KeyBind* bind, BView* target)
 {
 	// The first item describe the menu
 	BPopUpMenu* menu = new BPopUpMenu(bind[0].label);
@@ -217,6 +217,9 @@ MenuManager::_BuildPopUpMenu(KeyBind* bind)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
 		} else {
 			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
+			if (target != NULL)
+				item->SetTarget(target);
+
 			menu->AddItem(item);
 		}
 	}
