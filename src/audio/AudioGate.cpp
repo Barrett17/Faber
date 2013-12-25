@@ -22,7 +22,7 @@
 AudioGate* AudioGate::fInstance = NULL;
 
 
-AudioGate::AudioGate(/*TracksManager* fTracksManager*/)
+AudioGate::AudioGate()
 	:
 	MediaGate()
 {
