@@ -17,31 +17,18 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef EXPORT_WINDOW_H
-#define EXPORT_WINDOW_H
+#ifndef PARAMETER_WINDOW_H
+#define PARAMETER_WINDOW_H
 
-#include <Box.h>
-#include <TabView.h>
 #include <Window.h>
 
-#include "FaberEffect.h"
 
-
-class ExportWindow : public BWindow
+class ParameterWindow : public BWindow
 {
 public:
-					ExportWindow();
+				ParameterWindow(live_node_info& nodeInfo);
 
-	virtual void			MessageReceived(BMessage*);
-
-private:
-	void				_AddTab(BView* view, const char* label);
-	BView*				_CreateOptionsBox();
-	BView*				_BuildMixerView();
-	BView*				_BuildInfoView();
-
-
-	BTabView*			fTabView;
+	virtual void		MessageReceived(BMessage*);
 };
 
 #endif
