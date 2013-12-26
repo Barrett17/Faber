@@ -2,6 +2,7 @@
 class MediaRecorder {
 public:
 									MediaRecorder(const char* name,
+										media_format format,
 										int32 priority = 0);
 
 	virtual							~MediaRecorder();

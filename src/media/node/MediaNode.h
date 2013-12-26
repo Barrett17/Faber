@@ -16,3 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+
+class MediaNode : public BMediaEventLooper {
+	// TODO some methods should have here default null/err implementations
+	// such as :
+
+	virtual void 			NodeRegistered();
+
+	virtual	BMediaAddOn*	AddOn(int32* id) const;
+	virtual	status_t 		HandleMessage(int32 code, const void* data,
+								size_t size);
+	// HandleEvent(...);
+};
