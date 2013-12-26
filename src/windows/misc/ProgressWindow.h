@@ -32,7 +32,8 @@
 #include <Window.h>
 #include <StatusBar.h>
 
-class ProgressWindow : public BWindow {
+class ProgressWindow : public BWindow
+{
  public:
 						ProgressWindow(BRect frame);
 	virtual				~ProgressWindow();
