@@ -16,3 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#ifndef PARAMETER_WINDOW_H
+#define PARAMETER_WINDOW_H
+
+#include <Window.h>
+
+
+class ParameterWindow : public BWindow
+{
+public:
+				ParameterWindow(live_node_info& nodeInfo);
+
+	virtual void		MessageReceived(BMessage*);
+};
+
+#endif

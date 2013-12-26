@@ -1,5 +1,11 @@
 #include "DefaultKeymap.h"
 
+// Until we add support for XML in the API
+// keymap support is disabled under gcc2,
+// because it's unworth work.
+
+#if __GNUC__ > 3
+
 KeyBind kFileMenu[] {
 	{ 0, "File", 0, 0, 0, 0, FABER_ITEM_START },
 	{ 1,"New Project",         'N', B_COMMAND_KEY,                   0, 0,                      FABER_NEW_PROJECT },
@@ -217,3 +223,5 @@ KeyBind* kDefaultKeymap[] {
 	kTrackContextualMenu,
 	NULL
 };
+
+#endif

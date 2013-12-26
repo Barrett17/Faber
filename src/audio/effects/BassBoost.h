@@ -29,7 +29,7 @@
 #ifndef BASS_BOOST_EFFECT_H
 #define BASS_BOOST_EFFECT_H
 
-#include <SpinSlider.h>
+#include "SpinSlider.h"
 
 #include "AudioEffect.h"
 

@@ -29,11 +29,9 @@
 #ifndef AMP_FILTER_H
 #define AMP_FILTER_H
 
-#include <SpinSlider.h>
-
 #include "AudioTrack.h"
 #include "AudioEffect.h"
-
+#include "SpinSlider.h"
 
 class AmplifierEffect : public AudioEffect
 {

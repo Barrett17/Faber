@@ -19,7 +19,7 @@
 #include <Roster.h>
 #include <Window.h>
 
-#include <binary_compatibility/Interface.h>
+#include "binary_compatibility/Interface.h"
 
 #include "IconUtils.h"
 #include "ToolButton.h"

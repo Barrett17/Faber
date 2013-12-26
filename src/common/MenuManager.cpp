@@ -170,6 +170,9 @@ MenuManager::UpdateMenu()
 BMenu*
 MenuManager::_BuildMenu(KeyBind* bind)
 {
+	if (bind == NULL)
+		return NULL;
+
 	// The first item describe the menu
 	BMenu* menu = new BMenu(bind[0].label);
 	BObjectList<BMenu> menuList(false);
@@ -199,6 +202,9 @@ MenuManager::_BuildMenu(KeyBind* bind)
 BPopUpMenu*
 MenuManager::_BuildPopUpMenu(KeyBind* bind, BView* target)
 {
+	if (bind == NULL)
+		return NULL;
+
 	// The first item describe the menu
 	BPopUpMenu* menu = new BPopUpMenu(bind[0].label);
 	BObjectList<BPopUpMenu> menuList(false);

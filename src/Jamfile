@@ -9,12 +9,12 @@ SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src media ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src media node_manager ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src media node_manager support ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src media api ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src media node ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src audio ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio effects ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src audio nodes ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src audio node ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio mixer ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
@@ -26,17 +26,20 @@ SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows mixer ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window node_manager ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window node_manager support ] ;
+
 SEARCH_SOURCE += [ FDirName $(TOP) src windows misc ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
 
-# NOTE this is the location for headers needed to 
-# access the BPrivate namespace data, only put such type of
-# headers there. 
-SEARCH_SOURCE += [ FDirName $(TOP) src common private_headers ] ;
-
 SEARCH_SOURCE += [ FDirName $(TOP) src settings ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src settings panel ] ;
+
+# NOTE this is the location for headers needed to 
+# access the BPrivate namespace data, only put such type of
+# headers there. Will be removed at some point.
+SEARCH_SOURCE += [ FDirName $(TOP) src common private_headers ] ;
 
 
 Application Faber :
@@ -110,7 +113,7 @@ Application Faber :
 	Interface.cpp
 	Keymap.cpp
 	ColorScheme.cpp
-	SwatchView.cpp
+	#SwatchView.cpp
 
 	# Common
 	Singleton.cpp
