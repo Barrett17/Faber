@@ -22,7 +22,6 @@
 #include <Button.h>
 #include <GroupLayoutBuilder.h>
 
-#include "ColorScheme.h"
 #include "Engine.h"
 #include "FaberDefs.h"
 #include "Interface.h"
@@ -40,7 +39,6 @@ SettingsView::SettingsView()
 	_AddTab(new EngineView(), B_TRANSLATE("Engine"));
 	_AddTab(new InterfaceView(), B_TRANSLATE("Interface"));
 	_AddTab(new KeymapView(), B_TRANSLATE("Keymap"));
-	_AddTab(new ColorSchemeView(), B_TRANSLATE("Color Scheme"));
 
 	BGroupLayoutBuilder(this)
 		.Add(fTabView)
