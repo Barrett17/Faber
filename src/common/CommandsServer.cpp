@@ -58,7 +58,7 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 	//message->PrintToStream();
 	switch (message->what)
 	{
-		
+
 		case FABER_ABOUT:
 			WindowsManager::ShowAbout();
 			skip = true;
