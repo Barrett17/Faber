@@ -143,12 +143,6 @@ AudioGate::Mixer() const
 
 
 status_t
-AudioGate::Init()
-{
-}
-
-
-status_t
-AudioGate::InitNode()
+AudioGate::_InitNode()
 {
 }

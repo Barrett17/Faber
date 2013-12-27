@@ -17,6 +17,8 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <MediaEventLooper.h>
+
 
 class MediaNode : public BMediaEventLooper {
 	// TODO some methods should have here default null/err implementations

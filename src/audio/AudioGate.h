@@ -41,9 +41,6 @@ public:
 
 			static AudioGate*		Get();
 
-			status_t				Init();
-			status_t				InitNode();
-
 			status_t 				Start();
 			status_t				StartFrom(int64 position);
 			status_t 				Stop();
@@ -68,6 +65,8 @@ public:
 			media_format 			Format() const;
 
 private:
+			status_t				_InitNode();
+
 			static AudioGate* fInstance;
 			media_format			fFormat;
 

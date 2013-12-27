@@ -17,6 +17,7 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 class MediaRecorder {
 public:
 									MediaRecorder(const char* name,
@@ -54,7 +55,7 @@ public:
 
 			bool					IsStarted() const;
 
-			const media_output &	Input() const;
+			const media_output&		Input() const;
 			const media_input&		Output() const;
 
 			const media_format&		Format() const;

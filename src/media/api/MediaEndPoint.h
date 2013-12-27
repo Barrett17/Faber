@@ -17,56 +17,62 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// TODO define a way to check the type of the endpoint, eg audio/video
+// TODO research about a way to check the type of the endpoint, eg input/output
 
 
 class MediaEndPoint
 {
 public:
 
-							MediaEndPoint(int32 id, const char* name = NULL);
-	virtual						~MediaEndPoint();
+									MediaEndPoint(int32 id,
+										const char* name = NULL);
 
-		const int32				ID() const;
+	virtual							~MediaEndPoint();
 
-		const char*				Name() const;
+			const int32				ID() const;
 
-		const media_node&			Node() const;
+			const char*				Name() const;
 
-		status_t				SetOutput(media_output* out);
-		media_output				Output() const;
+			const media_node&		Node() const;
 
-		status_t				SetInput(media_input* in);
-		media_input				Input() const;
+			status_t				SetOutput(media_output* out);
+			media_output			Output() const;
 
-		status_t				SetSource(media_source& source);
-		const media_source&			Source() const;
+			status_t				SetInput(media_input* in);
+			media_input				Input() const;
 
-		status_t				SetDestination(media_destination& dest);
-		const media_destination&		Destination() const;
+			status_t				SetSource(media_source& source);
+			const media_source&			Source() const;
 
-		status_t				SetFormat(media_format* format);
-		const media_format&			Format() const;
+			status_t				SetDestination(media_destination& dest);
+			const media_destination& Destination() const;
 
-		void					SetDataStatus(int32 status);
-		int32					DataStatus() const;
+			status_t				SetFormat(media_format* format);
+			const media_format&		Format() const;
 
-		void					SetOutputEnabled(bool enabled);
-		bool					OutputEnabled() const;
+			void					SetDataStatus(int32 status);
+			int32					DataStatus() const;
 
-		void					SetBufferGroup(BBufferGroup* buffers, bool own);
-		const BBufferGroup*			Buffers() const;
+			void					SetOutputEnabled(bool enabled);
+			bool					OutputEnabled() const;
 
-		void					SetNextBuffer(BBuffer* buffer);
-		BBuffer*				NextBuffer() const;
+			void					SetBufferGroup(BBufferGroup* buffers,
+										bool own);
 
-		void					SetLatencies(bigtime_t* process, bigtime_t* downstream);
+			const BBufferGroup*		Buffers() const;
 
-		bool					BuffersOwned() const;
+			void					SetNextBuffer(BBuffer* buffer);
+			BBuffer*				NextBuffer() const;
 
-		bigtime_t				ProcessLatency() const;
-		bigtime_t				DownstreamLatency() const;
+			void					SetLatencies(bigtime_t* process,
+										bigtime_t* downstream);
 
-		void					GetLatencies(bigtime_t* process, bigtime_t* downstream);
+			bool					BuffersOwned() const;
+
+			bigtime_t				ProcessLatency() const;
+			bigtime_t				DownstreamLatency() const;
+
+			void					GetLatencies(bigtime_t* process,
+										bigtime_t* downstream);
 
 };

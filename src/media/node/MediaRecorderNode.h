@@ -17,7 +17,6 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <MediaEventLooper.h>
 #include <BufferConsumer.h>
 
 #include "MediaNode.h"
@@ -37,6 +36,13 @@ public:
 			status_t		GetInput(media_input* out_input) const;
 
 			void			SetDataEnabled(bool enabled);
+
+			status_t		SetHook(void* cookie,
+								void (*record_hook)(
+								void* cookie,
+								void* data,
+								size_t size,
+								const media_header& header));
 
 protected:
 
