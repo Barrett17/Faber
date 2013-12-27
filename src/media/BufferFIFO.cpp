@@ -16,3 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include "BufferFIFO.h"
+
+
+BufferFIFO::BufferFIFO(size_t size, int32 numBuffers,
+	uint32 placement, uint32 lock)
+{
+}
+
+
+BufferFIFO::~BufferFIFO()
+{
+}
+
+
+BBuffer*
+BufferFIFO::GetEmptyBuffer() const
+{
+}
+
+
+BBuffer*
+BufferFIFO::GetBuffer() const
+{
+}
+
+
+void
+BufferFIFO::AddToQueue(BBuffer* buffer)
+{
+}
+
+
+void
+BufferFIFO::RecycleBuffer(BBuffer* buffer)
+{
+}
+
+
+bool
+BufferFIFO::HasData() const
+{
+}
