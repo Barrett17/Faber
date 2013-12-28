@@ -18,26 +18,27 @@
 */
 
 
-class BufferFIFO
+class BlockFIFO
 {
 public:
-											BufferFIFO(size_t size,
-												int32 numBuffers = 3,
-												uint32 placement = B_ANY_ADDRESS,
-												uint32 lock = B_FULL_LOCK);
+											BlockFIFO(size_t size,
+												int32 numBuffers = 3);
 
-	virtual									~BufferFIFO();
-
-			BBuffer*						GetEmptyBuffer() const;
-
-			BBuffer*						GetBuffer() const;
-			void							AddToQueue(BBuffer* buffer);
-			void							RecycleBuffer(BBuffer* buffer);
+	virtual									~BlockFIFO();
 
 			bool							HasData() const;
 
+			void							Write(BBuffer* buffer);
+
+			MediaBlock*						GetNextBlock(
+												bool remove = false,
+												bigtime_t timeout = 0) const;
+
 private:
-			BLocker							fLocker;
-			BObjectList<BBuffer*>			fBuffers;
-			BBufferGroup*					fBufferProvider;
+			BLocker							fReadLock;
+			BLocker							fWriteLock;
+
+			BObjectList<MediaBlock>			fReadyBlocks;
+
+			MediaBlock*						fCurrentBlock;
 };

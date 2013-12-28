@@ -66,6 +66,7 @@ public:
 
 			bool			IsMono() const;
 			bool			IsStereo() const;
+			bool			IsMultichannel() const;
 
 			BMediaFile*		MediaFile() const;
 

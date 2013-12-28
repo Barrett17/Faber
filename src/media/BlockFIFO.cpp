@@ -17,45 +17,32 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BufferFIFO.h"
+#include "BlockFIFO.h"
 
 
-BufferFIFO::BufferFIFO(size_t size, int32 numBuffers,
-	uint32 placement, uint32 lock)
+BlockFIFO::BlockFIFO(size_t size, int32 numBuffers)
 {
 }
 
 
-BufferFIFO::~BufferFIFO()
-{
-}
-
-
-BBuffer*
-BufferFIFO::GetEmptyBuffer() const
-{
-}
-
-
-BBuffer*
-BufferFIFO::GetBuffer() const
-{
-}
-
-
-void
-BufferFIFO::AddToQueue(BBuffer* buffer)
-{
-}
-
-
-void
-BufferFIFO::RecycleBuffer(BBuffer* buffer)
+BlockFIFO::~BlockFIFO()
 {
 }
 
 
 bool
-BufferFIFO::HasData() const
+BlockFIFO::HasData() const
+{
+}
+
+
+void
+BlockFIFO::Write(BBuffer*buffer)
+{
+}
+
+
+MediaBlock*
+BlockFIFO::GetNextBlock(bool remove, bigtime_t timeout) const
 {
 }
