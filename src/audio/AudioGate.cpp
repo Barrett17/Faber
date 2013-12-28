@@ -26,10 +26,10 @@ AudioGate::AudioGate()
 	:
 	MediaGate()
 {
-	fAudioMixer = new AudioMixer(false);
+	//fAudioEngine = new AudioEngine(false);
 
-	fRoster = BMediaRoster::Roster();
-	fRoster->RegisterNode(fAudioMixer);
+	//fRoster = BMediaRoster::Roster();
+	//fRoster->RegisterNode(fAudioEngine);
 }
 
 AudioGate::~AudioGate()
@@ -135,11 +135,11 @@ AudioGate::Format() const
 }
 
 
-AudioMixer*
+/*AudioMixer*
 AudioGate::Mixer() const
 {
 	return fAudioMixer;
-}
+}*/
 
 
 status_t

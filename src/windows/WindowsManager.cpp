@@ -210,14 +210,14 @@ WindowsManager::GetSystemMixer()
 ParameterWindow*
 WindowsManager::GetFaberMixer()
 {
-	if (!IsWindowValid(Get()->fFaberMixer)) {
+	/*if (!IsWindowValid(Get()->fFaberMixer)) {
 		live_node_info info;
 		info.node = AudioGate::Get()->Mixer()->Node();
 		strcpy(info.name, AudioGate::Get()->Mixer()->Name());
 		Get()->fFaberMixer = new ParameterWindow(_CalculateWindowPoint(), info);
 	}
 
-	return Get()->fFaberMixer;
+	return Get()->fFaberMixer;*/
 }
 
 

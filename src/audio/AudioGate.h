@@ -24,7 +24,6 @@
 #include <MediaRoster.h>
 #include <ObjectList.h>
 
-#include "AudioMixer.h"
 #include "MediaGate.h"
 
 
@@ -55,7 +54,7 @@ public:
 			void 					SetFilterHook(FilterHook* hook);
 			void 					RemoveFilterHook(FilterHook* hook);
 
-			AudioMixer*				Mixer() const;
+			//AudioEngine*			Engine() const;
 
 			//void					RegisterWatchHandler(BHandler* handler);
 
@@ -67,14 +66,14 @@ public:
 private:
 			status_t				_InitNode();
 
-			static AudioGate* fInstance;
+			static AudioGate*		fInstance;
 			media_format			fFormat;
 
 			BObjectList<FilterHook> fHooksList;
 			bool					fLoop;
 
 			BMediaRoster*			fRoster;
-			AudioMixer*				fAudioMixer;
+			//AudioEngine*			fAudioEngine;
 };
 
 #endif

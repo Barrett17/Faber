@@ -22,7 +22,6 @@ SEARCH_SOURCE += [ FDirName $(TOP) src views track render ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views widgets ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src windows mixer ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window node_manager ] ;
@@ -111,7 +110,6 @@ Application Faber :
 	Engine.cpp
 	Interface.cpp
 	Keymap.cpp
-	ColorScheme.cpp
 	#SwatchView.cpp
 
 	# Common
@@ -127,6 +125,7 @@ Application Faber :
 	EffectsManager.cpp
 	FaberEffect.cpp
 	AudioEffect.cpp
+	AudioUtils.cpp
 
 	MediaFileInfo.cpp
 
@@ -144,18 +143,7 @@ Application Faber :
 	observe.cpp
 
 	# Audio nodes
-
-
-	# Audio Mixer
-	AudioMixer.cpp
-	ByteSwap.cpp
-	Interpolate.cpp
-	MixerCore.cpp
-	MixerInput.cpp
-	MixerOutput.cpp
-	MixerSettings.cpp
-	MixerUtils.cpp
-	Resampler.cpp
+	
 
 	# Effects
 	#SimpleEffects.cpp
@@ -173,7 +161,7 @@ Application Faber :
 	#Trim.cpp
 
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
-	: Faber.rdef ToolBarIcons.rdef AudioMixer.rdef
+	: Faber.rdef ToolBarIcons.rdef
 ;
 
 InstallBin $(FABER_DIRECTORY) : Faber ;
