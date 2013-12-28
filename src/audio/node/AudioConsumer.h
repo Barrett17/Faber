@@ -16,3 +16,58 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+class AudioConsumer : public MediaNode, public BBufferConsumer
+{
+public:
+							AudioConsumer(const char* name,
+								const media_format format);
+
+			void			SetFormat(const media_format format);
+			media_format&	Format() const;
+
+protected:
+
+	virtual					~AudioConsumer();
+
+	// BMediaNode
+	virtual void 			NodeRegistered();
+
+	virtual	BMediaAddOn*	AddOn(int32* id) const;
+	virtual	status_t 		HandleMessage(int32 code, const void* data,
+								size_t size);
+
+	// BBufferConsumer
+	virtual void 			BufferReceived(BBuffer* buffer);
+
+	virtual status_t 		AcceptFormat(const media_destination& dst,
+								media_format* format);
+
+	virtual status_t	 	GetNextInput(int32* cookie,	media_input* input);
+
+	virtual void 			DisposeInputCookie(int32 cookie);
+
+	virtual status_t 		FormatChanged(const media_source& src,
+								const media_destination& dst,
+								int32 change_tag,
+								const media_format& format);
+
+	virtual void 			ProducerDataStatus(const media_destination& dst,
+								int32 status,
+								bigtime_t when);
+
+	virtual status_t	 	GetLatencyFor(const media_destination& dst,
+								bigtime_t* latency,
+								media_node_id* time_src);
+
+	virtual status_t 		Connected(const media_source&src, 
+								const media_destination& dst,
+								const media_format& format,
+								media_input* input);
+
+	virtual void 			Disconnected(const media_source& src,
+								const media_destination& where);
+
+protected:
+				BString		fName;
+};

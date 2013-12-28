@@ -17,10 +17,9 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "AudioFilter.h"
 
-class AudioFilter : public AudioConsumer, public AudioProducer
+
+AudioFilter::AudioFilter(const char *name, const media_format format)
 {
-public:
-							AudioFilter(const char* name,
-								const media_format format);
-};
+}
