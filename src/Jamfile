@@ -15,7 +15,6 @@ SEARCH_SOURCE += [ FDirName $(TOP) src media node ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio effects ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio node ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src audio mixer ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views track ] ;
