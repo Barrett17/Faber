@@ -17,7 +17,10 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class AudioConsumer : public MediaNode, public BBufferConsumer
+#include <BufferConsumer.h>
+
+
+class AudioConsumer : public BBufferConsumer
 {
 public:
 							AudioConsumer(const char* name,
@@ -30,15 +33,9 @@ protected:
 
 	virtual					~AudioConsumer();
 
-	// BMediaNode
-	virtual void 			NodeRegistered();
-
-	virtual	BMediaAddOn*	AddOn(int32* id) const;
-	virtual	status_t 		HandleMessage(int32 code, const void* data,
-								size_t size);
-
 	// BBufferConsumer
-	virtual void 			BufferReceived(BBuffer* buffer);
+
+	//virtual void 			BufferReceived(BBuffer* buffer);
 
 	virtual status_t 		AcceptFormat(const media_destination& dst,
 								media_format* format);
@@ -69,5 +66,5 @@ protected:
 								const media_destination& where);
 
 protected:
-				BString		fName;
+
 };

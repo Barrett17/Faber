@@ -18,53 +18,69 @@
 */
 
 
-class AudioProducer : public MediaNode, BBufferProducer {
+#include <BufferProducer.h>
+
+
+class AudioProducer : public BBufferProducer {
 public:
 
-					AudioProducer(const char* name,
-						const media_format format);
-	virtual 		~AudioProducer();
+							AudioProducer(const char* name,
+								const media_format format);
+
+			void			SetFormat(const media_format format);
+			media_format&	Format() const;
 
 protected:
 
-	virtual 	void 		NodeRegistered();
+	virtual 				~AudioProducer();
 
-	virtual		BMediaAddOn*	AddOn(int32 *id) const;
-	virtual		status_t 	HandleMessage(int32 code, const void *data,
-								size_t size);
-	virtual 	status_t 	FormatSuggestionRequested(media_type type,
-									int32 quality, media_format *format);
-	virtual 	status_t 	FormatProposal(const media_source &src,
-									media_format *format);
-	virtual 	status_t 	FormatChangeRequested(const media_source &src,
-									const media_destination &dst,
-									media_format *format,
+	// BBufferProducer
+
+	virtual	status_t	 	FormatSuggestionRequested(media_type type,
+									int32 quality, media_format* format);
+
+	virtual status_t 		FormatProposal(const media_source& src,
+									media_format* format);
+
+	virtual status_t 		FormatChangeRequested(const media_source& src,
+									const media_destination& dst,
+									media_format* format,
 									int32* _deprecated_);
-	virtual 	void 		LateNoticeReceived(const media_source &src,
-									bigtime_t late,	bigtime_t when);
-	virtual 	status_t	GetNextOutput(int32 *cookie, media_output *output);
-	virtual 	status_t 	DisposeOutputCookie(int32 cookie);
-	virtual 	status_t	SetBufferGroup(const media_source &src,
-									BBufferGroup *group);
-	virtual 	status_t 	PrepareToConnect(const media_source &src,
-									const media_destination &dst,
-									media_format *format,
-									media_source *out_source,
-									char *name);
-	virtual 	void 		Connect(status_t status,
-									const media_source &src,
-									const media_destination &dst,
-									const media_format &format,
-									char* name);
-	virtual		void 		Disconnect(const media_source &src,
-									const media_destination &dst);		
-	virtual 	void 		EnableOutput(const media_source &src,
-									bool enabled, int32* _deprecated_);
-	virtual 	status_t 	GetLatency(bigtime_t *outLatency);
-	virtual 	void 		LatencyChanged(	const media_source &src,
-									const media_destination &dst,
-									bigtime_t latency, uint32 flags);
 
-			void		ProducerDataStatus(const media_destination &dst,
-									int32 status, bigtime_t when);
+	//virtual 	void 		LateNoticeReceived(const media_source& src,
+	//								bigtime_t late,	bigtime_t when);
+
+	virtual status_t		GetNextOutput(int32* cookie, media_output* output);
+
+	virtual status_t	 	DisposeOutputCookie(int32 cookie);
+	
+	virtual status_t		SetBufferGroup(const media_source& src,
+								BBufferGroup* group);
+
+	virtual status_t	 	PrepareToConnect(const media_source& src,
+								const media_destination& dst,
+								media_format* format,
+								media_source* out_source,
+								char* name);
+
+	virtual void 			Connect(status_t status,
+								const media_source& src,
+								const media_destination& dst,
+								const media_format& format,
+								char* name);
+
+	virtual	void 			Disconnect(const media_source& src,
+								const media_destination& dst);		
+
+	virtual void 			EnableOutput(const media_source& src,
+								bool enabled, int32* _deprecated_);
+
+	virtual status_t 		GetLatency(bigtime_t* outLatency);
+
+	virtual void 			LatencyChanged(	const media_source& src,
+								const media_destination& dst,
+								bigtime_t latency, uint32 flags);
+
+			void			ProducerDataStatus(const media_destination& dst,
+								int32 status, bigtime_t when);
 };

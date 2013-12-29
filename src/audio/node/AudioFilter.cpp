@@ -20,6 +20,37 @@
 #include "AudioFilter.h"
 
 
-AudioFilter::AudioFilter(const char *name, const media_format format)
+AudioFilter::AudioFilter(const char* name,
+	const media_format format)
+	:
+	BMediaNode(name),
+	AudioProducer(name, format),
+	AudioConsumer(name, format)
 {
+	
+}
+
+
+AudioFilter::~AudioFilter()
+{
+
+}
+/*
+void
+AudioFilter::NodeRegistered()
+{
+}
+
+
+BMediaAddOn*
+AudioFilter::AddOn(int32* id) const
+{
+	return NULL;
+}
+
+*/
+status_t
+AudioFilter::HandleMessage(int32 code, const void* data, size_t size)
+{
+	return B_OK;
 }

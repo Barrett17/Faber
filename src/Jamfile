@@ -142,8 +142,13 @@ Application Faber :
 	ObservableHandler.cpp
 	observe.cpp
 
+	# Media nodes
+	#MediaRecorderNode.cpp
+
 	# Audio nodes
-	
+	AudioProducer.cpp
+	AudioConsumer.cpp
+	AudioFilter.cpp
 
 	# Effects
 	#SimpleEffects.cpp

@@ -22,6 +22,9 @@
 
 AudioConsumer::AudioConsumer(const char* name,
 	const media_format format)
+	:
+	BMediaNode(name),
+	BBufferConsumer(B_MEDIA_RAW_AUDIO)
 {
 }
 
@@ -43,39 +46,50 @@ AudioConsumer::~AudioConsumer()
 }
 
 
-void
-AudioConsumer::NodeRegistered()
-{
-}
-
-
-BMediaAddOn*
-AudioConsumer::AddOn(int32 *id) const
-{
-}
-
-
-status_t
-AudioConsumer::HandleMessage(int32 code, const void* data, size_t size)
-{
-}
-
-
+/*
 void
 AudioConsumer::BufferReceived(BBuffer* buffer)
 {
-}
+}*/
 
 
 status_t
 AudioConsumer::AcceptFormat(const media_destination& dst, media_format* format)
 {
+	if (dst.port != ControlPort())
+		return B_MEDIA_BAD_DESTINATION;
+
+	if (format->type == B_MEDIA_UNKNOWN_TYPE)
+		format->type = B_MEDIA_RAW_AUDIO;
+
+	if (format->type != B_MEDIA_RAW_AUDIO)
+		return B_MEDIA_BAD_FORMAT;
+
+	/*if (format->u.raw_audio.format != media_raw_audio_format::B_AUDIO_INT)
+		return B_MEDIA_BAD_FORMAT;
+
+	// TODO finish it
+	format->u.raw_audio.format = media_raw_audio_format::B_AUDIO_INT;*/
+	return B_OK;
 }
 
 
 status_t
 AudioConsumer::GetNextInput(int32* cookie, media_input* input)
 {
+	/*MediaEndPointMap* endPoints = fAudioGate->GetInputPorts();
+
+	if (*cookie >= endPoints->CountItems())
+		return B_BAD_INDEX;
+
+	MediaEndPoint* endpoint = endPoints->ItemAt(*cookie);
+	if (endpoint == NULL)
+		return B_BAD_INDEX;
+
+	*input = endpoint->Input();
+	*cookie++;*/
+
+	return B_OK;
 }
 
 
@@ -90,6 +104,7 @@ AudioConsumer::FormatChanged(const media_source& src,
 	const media_destination& dst, int32 change_tag,
 	const media_format& format)
 {
+	return B_MEDIA_BAD_FORMAT;
 }
 
 
@@ -97,6 +112,8 @@ void
 AudioConsumer::ProducerDataStatus(const media_destination& dst,
 	int32 status, bigtime_t when)
 {
+	//if (dst != media_destination::null)
+	//	SendDataStatus(status, dst, when);
 }
 
 
@@ -104,6 +121,22 @@ status_t
 AudioConsumer::GetLatencyFor(const media_destination& dst,
 	bigtime_t* latency, media_node_id* time_src)
 {
+	/*//printf("AudioConsumer::GetLatencyFor\n");
+	*latency = fDownstreamLatency + fProcessLatency;
+	// we have multiple inputs with different IDs, but
+	// the port number must match our ControlPort()
+	if (dst.port != ControlPort())
+		return B_MEDIA_BAD_DESTINATION;
+
+	// return our event latency - this includes our internal + downstream
+	// latency, but _not_ the scheduling latency
+	*latency += EventLatency();
+	*time_src += TimeSource()->ID();
+
+	//printf("AudioConsumer::GetLatencyFor %Ld, timesource is %ld\n",
+	//	*latency, *time_src);*/
+
+	return B_OK;
 }
 
 
@@ -112,6 +145,12 @@ AudioConsumer::Connected(const media_source& src,
 	const media_destination& dst, const media_format& format,
 	media_input* input)
 {
+	if (src.id != 0 || src.port != ControlPort())
+		return B_MEDIA_BAD_DESTINATION;
+	
+	//fFormat = format;
+
+	return B_OK;
 }
 
 
@@ -119,4 +158,6 @@ void
 AudioConsumer::Disconnected(const media_source& src,
 	const media_destination& where)
 {
+	if (where.port != ControlPort())
+		return;
 }

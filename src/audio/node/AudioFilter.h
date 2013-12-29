@@ -17,10 +17,19 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "AudioProducer.h"
+#include "AudioConsumer.h"
+
 
 class AudioFilter : public AudioConsumer, public AudioProducer
 {
 public:
 							AudioFilter(const char* name,
 								const media_format format);
+	virtual 				~AudioFilter();
+
+	// NOTE removing those functions will cause an inheritance error
+	virtual status_t		HandleMessage(int32, const void*, size_t);
+
+
 };
