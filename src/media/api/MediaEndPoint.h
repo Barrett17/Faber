@@ -26,13 +26,21 @@
 #include <MediaNode.h>
 #include <ObjectList.h>
 
+enum MediaEndPointKind {
+	MEDIA_NO_KIND = 0,
+	MEDIA_INPUT = 1,
+	MEDIA_OUTPUT = 2
+};
+
 
 class MediaEndPoint
 {
 public:
 
 									MediaEndPoint(int32 id,
-										const char* name = NULL);
+										const char* name = NULL,
+										MediaEndPointKind kind
+											= MEDIA_NO_KIND);
 
 	virtual							~MediaEndPoint();
 
@@ -47,6 +55,9 @@ public:
 
 			status_t				SetInput(media_input* in);
 			media_input				Input() const;
+
+			bool					IsInput() const;
+			bool					IsOutput() const;
 
 			status_t				SetSource(media_source& source);
 			const media_source&		Source() const;
@@ -105,7 +116,7 @@ private:
 			bigtime_t				fProcessLatency;
 			bigtime_t				fDownstreamLatency;
 
-			
+			MediaEndPointKind		fEndPointKind;
 };
 
 // TODO just temporarily replace with HashMap.

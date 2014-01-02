@@ -22,7 +22,13 @@
 #include <MediaNode.h>
 
 
-MediaEndPoint::MediaEndPoint(int32 id, const char* name)
+MediaEndPoint::MediaEndPoint(int32 id, const char* name,
+	MediaEndPointKind kind)
+	:
+	fID(id),
+	fName(name),
+	fEndPointKind(kind)
+	
 {
 }
 
@@ -84,6 +90,20 @@ media_input
 MediaEndPoint::Input() const
 {
 	return fInput;
+}
+
+
+bool
+MediaEndPoint::IsInput() const
+{
+	return fEndPointKind == MEDIA_INPUT;
+}
+
+
+bool
+MediaEndPoint::IsOutput() const
+{
+	return fEndPointKind == MEDIA_OUTPUT;
 }
 
 
