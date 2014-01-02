@@ -22,6 +22,8 @@
 #include <MediaEventLooper.h>
 #include <TimeSource.h>
 
+#include "MediaEndPoint.h"
+
 
 class AudioEngine : public BBufferProducer, BBufferConsumer, BMediaEventLooper
 {
@@ -135,4 +137,8 @@ private:
 			size_t			fFramesSent;
 
 			BBufferGroup*	fBufferGroup;
+
+			MediaEndPointMap fInputs;
+			MediaEndPoint*	fOutput;
+
 };

@@ -20,10 +20,10 @@
 #ifndef MEDIA_END_POINT
 #define MEDIA_END_POINT
 
-// TODO research about a way to check the type of the endpoint, eg input/output
-
 #include <Buffer.h>
 #include <BufferGroup.h>
+#include <MediaDefs.h>
+#include <MediaNode.h>
 #include <ObjectList.h>
 
 
@@ -49,7 +49,7 @@ public:
 			media_input				Input() const;
 
 			status_t				SetSource(media_source& source);
-			const media_source&			Source() const;
+			const media_source&		Source() const;
 
 			status_t				SetDestination(media_destination& dest);
 			const media_destination& Destination() const;
@@ -81,7 +81,31 @@ public:
 
 			void					GetLatencies(bigtime_t* process,
 										bigtime_t* downstream);
+private:
+			const char*				fName;
+			int32					fID;
 
+			media_node				fNode;
+			media_format			fFormat;
+
+			media_output			fOutput;
+			media_input				fInput;
+
+			media_source			fMediaSource;
+			media_destination		fMediaDestination;
+
+			int32					fDataStatus;
+
+			bool					fOutputEnabled;
+			bool					fOwnedBuffers;
+
+			BBufferGroup*			fBufferGroup;
+			BBuffer*				fNextBuffer;
+
+			bigtime_t				fProcessLatency;
+			bigtime_t				fDownstreamLatency;
+
+			
 };
 
 // TODO just temporarily replace with HashMap.
