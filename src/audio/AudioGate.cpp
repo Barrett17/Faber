@@ -26,10 +26,10 @@ AudioGate::AudioGate()
 	:
 	MediaGate()
 {
-	//fAudioEngine = new AudioEngine(false);
+	fAudioEngine = new AudioEngine();
 
-	//fRoster = BMediaRoster::Roster();
-	//fRoster->RegisterNode(fAudioEngine);
+	fRoster = BMediaRoster::Roster();
+	fRoster->RegisterNode(fAudioEngine);
 }
 
 AudioGate::~AudioGate()

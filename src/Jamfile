@@ -23,6 +23,8 @@ SEARCH_SOURCE += [ FDirName $(TOP) src views widgets ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools ] ;
+
+# NOTE deprecated will be removed
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window node_manager ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window node_manager support ] ;
@@ -122,6 +124,8 @@ Application Faber :
 	MediaGate.cpp
 	AudioGate.cpp
 
+	MediaEndPoint.cpp
+
 	EffectsManager.cpp
 	FaberEffect.cpp
 	AudioEffect.cpp
@@ -146,9 +150,11 @@ Application Faber :
 	#MediaRecorderNode.cpp
 
 	# Audio nodes
-	AudioProducer.cpp
-	AudioConsumer.cpp
-	AudioFilter.cpp
+	#AudioProducer.cpp
+	#AudioConsumer.cpp
+	#AudioFilter.cpp
+
+	AudioEngine.cpp
 
 	# Effects
 	#SimpleEffects.cpp
@@ -165,7 +171,7 @@ Application Faber :
 	#ZeroCrossings.cpp
 	#Trim.cpp
 
-	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
+	: be media $(TARGET_LIBSTDC++) tracker translation localestub
 	: Faber.rdef ToolBarIcons.rdef
 ;
 

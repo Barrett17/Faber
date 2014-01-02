@@ -24,6 +24,7 @@
 #include <MediaRoster.h>
 #include <ObjectList.h>
 
+#include "AudioEngine.h"
 #include "MediaGate.h"
 
 
@@ -54,8 +55,6 @@ public:
 			void 					SetFilterHook(FilterHook* hook);
 			void 					RemoveFilterHook(FilterHook* hook);
 
-			//AudioEngine*			Engine() const;
-
 			//void					RegisterWatchHandler(BHandler* handler);
 
 			void					SetFramerate(float framerate);
@@ -73,7 +72,7 @@ private:
 			bool					fLoop;
 
 			BMediaRoster*			fRoster;
-			//AudioEngine*			fAudioEngine;
+			AudioEngine*			fAudioEngine;
 };
 
 #endif

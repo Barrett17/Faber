@@ -17,7 +17,14 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef MEDIA_END_POINT
+#define MEDIA_END_POINT
+
 // TODO research about a way to check the type of the endpoint, eg input/output
+
+#include <Buffer.h>
+#include <BufferGroup.h>
+#include <ObjectList.h>
 
 
 class MediaEndPoint
@@ -76,3 +83,8 @@ public:
 										bigtime_t* downstream);
 
 };
+
+// TODO just temporarily replace with HashMap.
+typedef BObjectList<MediaEndPoint> MediaEndPointMap;
+
+#endif

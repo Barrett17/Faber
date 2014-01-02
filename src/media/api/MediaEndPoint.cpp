@@ -19,6 +19,8 @@
 
 #include "MediaEndPoint.h"
 
+#include <MediaNode.h>
+
 
 MediaEndPoint::MediaEndPoint(int32 id, const char* name)
 {
