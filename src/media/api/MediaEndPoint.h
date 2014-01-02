@@ -119,7 +119,7 @@ private:
 			MediaEndPointKind		fEndPointKind;
 };
 
-// TODO just temporarily replace with HashMap.
+// TODO just a temporary solution, replace (maybe composite?) with HashMap.
 typedef BObjectList<MediaEndPoint> MediaEndPointMap;
 
 #endif

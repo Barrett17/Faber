@@ -36,13 +36,11 @@ class MediaBlock
 			status_t		SeekToTime(bigtime_t* _time, int32 flags = 0);
 			status_t		SeekToFrame(int64* _frame, int32 flags = 0);
 
-			void			ReplaceWith(MediaBlock* block);
-
 			status_t		DetachFromFile();
 
 			status_t		DeleteFile();
 
-			bool			IsReady() const;
+			status_t		CopyFrom(MediaBlock* block);
 
 private:
 			int64			fSize;
@@ -54,12 +52,32 @@ private:
 
 			BMediaFile*		fFile;
 			BMediaTrack*	fTrack;
-
-			bool			fReady;
 };
 
 
+class MediaFileBlock
+{
+
+};
+
+// the same as MediaFileBlock but in RAM.
+
+class VirtualBlock
+{
+
+};
+
+// This block is meant to represent empty audio data.
+// Useful to save space.
+
 class EmptySpaceBlock : public MediaBlock
+{
+
+};
+
+// Meant to contain additional infos, not sure if it's needed.
+
+class AttributeBlock : public MediaBlock
 {
 
 };
