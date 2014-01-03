@@ -25,6 +25,7 @@
 #include <ObjectList.h>
 
 #include "AudioEngine.h"
+#include "MediaEndPoint.h"
 #include "MediaGate.h"
 
 
@@ -40,6 +41,9 @@ public:
 			virtual					~AudioGate();
 
 			static AudioGate*		Get();
+
+			// TODO some of those methods should be moved
+			// to MediaGate as they are very general.
 
 			status_t 				Start();
 			status_t				StartFrom(int64 position);
@@ -62,6 +66,13 @@ public:
 			void 					SetFormat(media_format format);
 			media_format 			Format() const;
 
+protected:
+			friend class			AudioEngine;
+
+			// TODO should be them thread safe?
+			const MediaEndPointMap&	GetInputs();
+			const MediaEndPointMap&	GetOutputs();
+
 private:
 			status_t				_InitNode();
 
@@ -72,7 +83,11 @@ private:
 			bool					fLoop;
 
 			BMediaRoster*			fRoster;
+
 			AudioEngine*			fAudioEngine;
+
+			MediaEndPointMap*		fInputs;
+			MediaEndPointMap*		fOutputs;
 };
 
 #endif

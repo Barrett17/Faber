@@ -17,12 +17,17 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _AUDIO_ENGINE_H
+#define _AUDIO_ENGINE_H
+
 #include <BufferConsumer.h>
 #include <BufferProducer.h>
 #include <MediaEventLooper.h>
 #include <TimeSource.h>
 
 #include "MediaEndPoint.h"
+
+class AudioGate;
 
 
 class AudioEngine : public BBufferProducer, BBufferConsumer, BMediaEventLooper
@@ -127,6 +132,8 @@ protected:
 								const media_destination& dst,
 								bigtime_t latency, uint32 flags);
 private:
+			AudioGate*		fAudioGate;
+
 			media_format	fFormat;
 
 			bigtime_t		fDownstreamLatency;
@@ -137,8 +144,6 @@ private:
 			size_t			fFramesSent;
 
 			BBufferGroup*	fBufferGroup;
-
-			MediaEndPointMap fInputs;
-			MediaEndPoint*	fOutput;
-
 };
+
+#endif

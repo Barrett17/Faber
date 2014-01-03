@@ -38,7 +38,5 @@ private:
 
 			AudioTrackList				fTracks;
 
-			uint32				fLastID;
-
-			friend class AudioTrack;
+			uint32						fLastID;
 };
