@@ -73,6 +73,11 @@ protected:
 			const MediaEndPointMap&	GetInputs();
 			const MediaEndPointMap&	GetOutputs();
 
+			friend class			TracksManager;
+
+			status_t				RegisterEndPoint(MediaEndPoint* point);
+			status_t				UnregisterEndPoint(MediaEndPoint* point);
+
 private:
 			status_t				_InitNode();
 
