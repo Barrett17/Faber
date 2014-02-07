@@ -17,8 +17,8 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _MENUMANAGER_H_
-#define _MENUMANAGER_H_
+#ifndef _MENUBUILDER_H_
+#define _MENUBUILDER_H_
 
 #include <Menu.h>
 #include <MenuBar.h>
@@ -28,13 +28,13 @@
 #include "FaberDefs.h"
 
 
-class MenuManager
+class MenuBuilder
 {
 public:
-							MenuManager();
-	virtual					~MenuManager();
+							MenuBuilder();
+	virtual					~MenuBuilder();
 
-	static MenuManager*		Get();
+	static MenuBuilder*		Get();
 
 	BMenuBar*				BuildMainMenuBar();
 
@@ -57,8 +57,8 @@ private:
 	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind, BView* target = NULL);
 	BMenuItem*				_BuildMenuItem(uint32 message, const char* label);
 
-	static MenuManager*		fInstance;
+	static MenuBuilder*		fInstance;
 	FaberShortcut*			fKeyBind;
 };
 
-#endif	// _MENUMANAGER_H_
+#endif	// _MenuBuilder_H_

@@ -28,7 +28,6 @@
 #include "FaberPreferences.h"
 #include "FaberResources.h"
 #include "FaberShortcut.h"
-#include "MenuManager.h"
 #include "WindowsManager.h"
 
 #include <stdio.h>

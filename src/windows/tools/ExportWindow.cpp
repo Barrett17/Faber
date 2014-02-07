@@ -23,6 +23,7 @@
 #include <Button.h>
 #include <ControlLook.h>
 #include <LayoutBuilder.h>
+#include <PopUpMenu.h>
 #include <StringView.h>
 
 #include "FaberDefs.h"

@@ -38,7 +38,6 @@ AudioEngine::AudioEngine()
 	BBufferProducer(B_MEDIA_RAW_AUDIO),
 	BMediaEventLooper()
 {
-	fAudioGate = AudioGate::Get();
 }
 
 
@@ -75,9 +74,6 @@ AudioEngine::NodeRegistered()
 
 	fFormat.u.raw_audio.channel_count = 1;
 	fFormat.u.raw_audio.format = ENGINE_FORMAT;
-
-	// TODO change this, the AudioGate is responsible of the format.
-	fAudioGate->SetFormat(fFormat);
 
 	Run();
 }
@@ -128,7 +124,7 @@ AudioEngine::AcceptFormat(const media_destination& dst, media_format* format)
 status_t
 AudioEngine::GetNextInput(int32* cookie, media_input* input)
 {
-	MediaEndPointMap endPoints = fAudioGate->GetInputs();
+	/*MediaEndPointMap endPoints = fAudioGate->GetInputs();
 
 	if (*cookie >= endPoints.CountItems())
 		return B_BAD_INDEX;
@@ -140,7 +136,7 @@ AudioEngine::GetNextInput(int32* cookie, media_input* input)
 	*input = endpoint->Input();
 	*cookie++;
 
-	return B_OK;
+	return B_OK;*/
 }
 
 
@@ -279,7 +275,7 @@ status_t
 AudioEngine::GetNextOutput(int32* cookie,
 	media_output* output)
 {
-	MediaEndPointMap endPoints = fAudioGate->GetOutputs();
+	/*MediaEndPointMap endPoints = fAudioGate->GetOutputs();
 
 	if (*cookie >= endPoints.CountItems())
 		return B_BAD_INDEX;
@@ -293,7 +289,7 @@ AudioEngine::GetNextOutput(int32* cookie,
 
 	*cookie += 1;
 
-	return B_OK;
+	return B_OK;*/
 }
 
 

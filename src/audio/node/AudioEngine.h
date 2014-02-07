@@ -132,8 +132,6 @@ protected:
 								const media_destination& dst,
 								bigtime_t latency, uint32 flags);
 private:
-			AudioGate*		fAudioGate;
-
 			media_format	fFormat;
 
 			bigtime_t		fDownstreamLatency;

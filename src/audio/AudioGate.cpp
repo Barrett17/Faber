@@ -146,3 +146,15 @@ status_t
 AudioGate::_InitNode()
 {
 }
+
+
+const MediaEndPointMap&
+AudioGate::GetInputs()
+{
+}
+
+
+const MediaEndPointMap&
+AudioGate::GetOutputs()
+{
+}

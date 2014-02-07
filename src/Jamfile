@@ -6,7 +6,7 @@ SubDirSysHdrs [ FDirName $(TOP) ] ;
 # we have sources. If you add a location
 # you have to add it here.
 SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src interface ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src media ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src media api ] ;
@@ -49,9 +49,9 @@ Application Faber :
 	FaberView.cpp
 
 	CommandsServer.cpp
+
 	ProjectManager.cpp
 	WindowsManager.cpp
-	MenuManager.cpp
 
 	TracksContainer.cpp
 	ToolBar.cpp
@@ -59,7 +59,9 @@ Application Faber :
 	FaberScrollBar.cpp
 	TimeBar.cpp
 
-	# Widgets
+	MenuBuilder.cpp
+
+	# Faber Widgets
 	FaberWidget.cpp
 	TransportWidget.cpp
 	ZoomWidget.cpp
@@ -85,10 +87,7 @@ Application Faber :
 	ScreenInfo.cpp
 	EffectWindow.cpp
 
-	ParameterWindow.cpp
-	ParameterContainerView.cpp
-
-	# Gui Widgets
+	# Interface
 	SpinSlider.cpp
 	PeakView.cpp
 	VolumeSlider.cpp
@@ -114,9 +113,6 @@ Application Faber :
 	Keymap.cpp
 	#SwatchView.cpp
 
-	# Common
-	Singleton.cpp
-
 	# Audio and Media internal API
 	Track.cpp
 	AudioTrack.cpp
@@ -133,26 +129,8 @@ Application Faber :
 
 	MediaFileInfo.cpp
 
-	# NodeManager 
-	AddOnHost.cpp
-	Connection.cpp
-	NodeManager.cpp
-	NodeGroup.cpp
-	NodeRef.cpp
-	NodeSyncThread.cpp
-	# NodeManager support
-	MultiInvoker.cpp
-	ObservableLooper.cpp
-	ObservableHandler.cpp
-	observe.cpp
-
 	# Media nodes
 	#MediaRecorderNode.cpp
-
-	# Audio nodes
-	#AudioProducer.cpp
-	#AudioConsumer.cpp
-	#AudioFilter.cpp
 
 	AudioEngine.cpp
 
@@ -166,10 +144,6 @@ Application Faber :
 	#Room.cpp
 	#Reverb.cpp
 	Delay.cpp
-
-	#Resample.cpp
-	#ZeroCrossings.cpp
-	#Trim.cpp
 
 	: be media $(TARGET_LIBSTDC++) tracker translation localestub
 	: Faber.rdef ToolBarIcons.rdef

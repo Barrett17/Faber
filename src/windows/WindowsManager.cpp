@@ -194,7 +194,7 @@ WindowsManager::GetExportPanel()
 ParameterWindow*
 WindowsManager::GetSystemMixer()
 {
-	if (!IsWindowValid(Get()->fSystemMixer)) {
+	/*if (!IsWindowValid(Get()->fSystemMixer)) {
 		media_node node;
 		live_node_info info;
 		BMediaRoster::Roster()->GetAudioMixer(&node);
@@ -203,7 +203,8 @@ WindowsManager::GetSystemMixer()
 		Get()->fSystemMixer = new ParameterWindow(_CalculateWindowPoint(), info);
 	}
 
-	return Get()->fSystemMixer;
+	return Get()->fSystemMixer;*/
+	return NULL;
 }
 
 

@@ -27,7 +27,7 @@
 
 #include "FaberDefs.h"
 #include "IconButton.h"
-#include "MenuManager.h"
+#include "MenuBuilder.h"
 #include "ToolButton.h"
 #include "VolumeSlider.h"
 
@@ -73,7 +73,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	toolButton->SetIcon(kMuteIcon);
 
 	// Track menu
-	BPopUpMenu* trackMenu = MenuManager::Get()->BuildTrackContextualMenu(this);
+	BPopUpMenu* trackMenu = MenuBuilder::Get()->BuildTrackContextualMenu(this);
 	toolButton->SetMenu(trackMenu);
 
 	BMessage* closeMsg = MessageBuilder(FABER_REMOVE_TRACK);

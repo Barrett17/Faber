@@ -26,6 +26,7 @@
 #include "AudioTrackView.h"
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
+#include "MenuBuilder.h"
 #include "TimeBar.h"
 #include "TracksManager.h"
 #include "TrackView.h"
@@ -221,7 +222,7 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 		ret = fTrackViews.AddItem(track, index);
 	}
 
-	MenuManager::UpdateMenu();
+	MenuBuilder::UpdateMenu();
 
 	return ret;
 }

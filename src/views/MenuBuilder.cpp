@@ -17,7 +17,7 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "MenuManager.h"
+#include "MenuBuilder.h"
 
 #include <MenuItem.h>
 #include <ObjectList.h>
@@ -25,34 +25,34 @@
 #include "EffectsManager.h"
 #include "FaberEffect.h"
 
-MenuManager* MenuManager::fInstance = NULL;
+MenuBuilder* MenuBuilder::fInstance = NULL;
 
 
-MenuManager*
-MenuManager::Get()
+MenuBuilder*
+MenuBuilder::Get()
 {
 	if (fInstance == NULL)
-		fInstance = new MenuManager();
+		fInstance = new MenuBuilder();
 
 	return fInstance;	
 }
 
 
-MenuManager::MenuManager()
+MenuBuilder::MenuBuilder()
 {
 	fKeyBind = FaberShortcut::Get();
 	fKeyBind->CreateDefaultKeys();
 }
 
 
-MenuManager::~MenuManager()
+MenuBuilder::~MenuBuilder()
 {
 
 }
 
 
 BMenuBar*
-MenuManager::BuildMainMenuBar()
+MenuBuilder::BuildMainMenuBar()
 {
 	BMenuBar* menuBar = new BMenuBar("MainMenuBar");
 
@@ -70,35 +70,35 @@ MenuManager::BuildMainMenuBar()
 
 
 BMenu*
-MenuManager::BuildFileMenu()
+MenuBuilder::BuildFileMenu()
 {
 	return _BuildMenu(kFileMenu);
 }
 
 
 BMenu*
-MenuManager::BuildRecentMenu()
+MenuBuilder::BuildRecentMenu()
 {
 
 }
 
 
 BMenu*
-MenuManager::BuildEditMenu()
+MenuBuilder::BuildEditMenu()
 {
 	return _BuildMenu(kEditMenu);
 }
 
 
 BMenu*
-MenuManager::BuildTracksMenu()
+MenuBuilder::BuildTracksMenu()
 {
 	return _BuildMenu(kTracksMenu);
 }
 
 
 BMenu*
-MenuManager::BuildEffectsMenu()
+MenuBuilder::BuildEffectsMenu()
 {
 	BMenu* menu = new BMenu(B_TRANSLATE("Effects"));
 	EffectsManager* effectsManager = EffectsManager::Get();
@@ -116,7 +116,7 @@ MenuManager::BuildEffectsMenu()
 
 
 BMenu*
-MenuManager::BuildGenerateMenu()
+MenuBuilder::BuildGenerateMenu()
 {
 	BMenu* menu = new BMenu(B_TRANSLATE("Generate"));
 	EffectsManager* effectsManager = EffectsManager::Get();
@@ -134,41 +134,41 @@ MenuManager::BuildGenerateMenu()
 
 
 BMenu*
-MenuManager::BuildEngineMenu()
+MenuBuilder::BuildEngineMenu()
 {
 	return _BuildMenu(kEngineMenu);
 }
 
 
 BMenu*
-MenuManager::BuildProjectMenu()
+MenuBuilder::BuildProjectMenu()
 {
 	return _BuildMenu(kProjectMenu);
 }
 
 
 BMenu*
-MenuManager::BuildHelpMenu()
+MenuBuilder::BuildHelpMenu()
 {
 	return _BuildMenu(kHelpMenu);
 }
 
 
 BPopUpMenu*
-MenuManager::BuildTrackContextualMenu(BView* target)
+MenuBuilder::BuildTrackContextualMenu(BView* target)
 {
 	return _BuildPopUpMenu(kTrackContextualMenu, target);
 }
 
 
 void
-MenuManager::UpdateMenu()
+MenuBuilder::UpdateMenu()
 {
 }
 
 
 BMenu*
-MenuManager::_BuildMenu(KeyBind* bind)
+MenuBuilder::_BuildMenu(KeyBind* bind)
 {
 	if (bind == NULL)
 		return NULL;
@@ -200,7 +200,7 @@ MenuManager::_BuildMenu(KeyBind* bind)
 
 
 BPopUpMenu*
-MenuManager::_BuildPopUpMenu(KeyBind* bind, BView* target)
+MenuBuilder::_BuildPopUpMenu(KeyBind* bind, BView* target)
 {
 	if (bind == NULL)
 		return NULL;
@@ -234,7 +234,7 @@ MenuManager::_BuildPopUpMenu(KeyBind* bind, BView* target)
 
 
 BMenuItem*
-MenuManager::_BuildMenuItem(uint32 message, const char* label)
+MenuBuilder::_BuildMenuItem(uint32 message, const char* label)
 {
 	if (message == FABER_SPLITTER)
 		return new BSeparatorItem();
