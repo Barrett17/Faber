@@ -31,12 +31,13 @@
 #define ENGINE_BUFSIZE 1024
 
 
-AudioEngine::AudioEngine()
+AudioEngine::AudioEngine(AudioGate* audioGate)
 	:
 	BMediaNode("Faber Audio Engine"),
 	BBufferConsumer(B_MEDIA_RAW_AUDIO),
 	BBufferProducer(B_MEDIA_RAW_AUDIO),
-	BMediaEventLooper()
+	BMediaEventLooper(),
+	fAudioGate(audioGate)
 {
 }
 
@@ -124,7 +125,7 @@ AudioEngine::AcceptFormat(const media_destination& dst, media_format* format)
 status_t
 AudioEngine::GetNextInput(int32* cookie, media_input* input)
 {
-	/*MediaEndPointMap endPoints = fAudioGate->GetInputs();
+	MediaEndPointMap endPoints = fAudioGate->GetInputs();
 
 	if (*cookie >= endPoints.CountItems())
 		return B_BAD_INDEX;
@@ -136,7 +137,7 @@ AudioEngine::GetNextInput(int32* cookie, media_input* input)
 	*input = endpoint->Input();
 	*cookie++;
 
-	return B_OK;*/
+	return B_OK;
 }
 
 
@@ -275,7 +276,7 @@ status_t
 AudioEngine::GetNextOutput(int32* cookie,
 	media_output* output)
 {
-	/*MediaEndPointMap endPoints = fAudioGate->GetOutputs();
+	MediaEndPointMap endPoints = fAudioGate->GetOutputs();
 
 	if (*cookie >= endPoints.CountItems())
 		return B_BAD_INDEX;
@@ -289,7 +290,7 @@ AudioEngine::GetNextOutput(int32* cookie,
 
 	*cookie += 1;
 
-	return B_OK;*/
+	return B_OK;
 }
 
 
@@ -413,7 +414,8 @@ void
 AudioEngine::HandleEvent(const media_timed_event *event,
 	bigtime_t late, bool realTimeEvent)
 {
-	/*//printf("ClientNode::HandleEvent %d\n", event->type);
+	//printf("Faber AudioEngine::HandleEvent %d\n", event->type);
+
 	switch (event->type) {
 		case BTimedEventQueue::B_HANDLE_BUFFER:
 		{
@@ -443,12 +445,7 @@ AudioEngine::HandleEvent(const media_timed_event *event,
 			break;
 		}
 
-		case BTimedEventQueue::B_DATA_STATUS:
-		{
-			break;
-		}
-
-		case NEW_BUFFER_EVENT:
+		/*case NEW_BUFFER_EVENT:
 		{
 			ComputeCycle();
 			_DataAvailable(event->event_time);
@@ -459,9 +456,9 @@ AudioEngine::HandleEvent(const media_timed_event *event,
 			_ScheduleOutputEvent(nextEvent);
 
 			break;
-		}
+		}*/
 
 		default:
 			break;
-	}*/
+	}
 }

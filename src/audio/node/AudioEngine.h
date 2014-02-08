@@ -34,7 +34,7 @@ class AudioEngine : public BBufferProducer, BBufferConsumer, BMediaEventLooper
 {
 public:
 
-							AudioEngine();
+							AudioEngine(AudioGate* audioGate);
 
 protected:
 
@@ -142,6 +142,8 @@ private:
 			size_t			fFramesSent;
 
 			BBufferGroup*	fBufferGroup;
+
+			AudioGate*		fAudioGate;
 };
 
 #endif

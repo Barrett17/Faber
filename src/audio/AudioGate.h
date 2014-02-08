@@ -37,34 +37,20 @@ public:
 
 			static AudioGate*		Get();
 
-			// TODO some of those methods should be moved
-			// to MediaGate as they are very general.
-
-			status_t 				Start();
-			status_t				StartFrom(int64 position);
-			status_t 				Stop();
-			bool					IsStarted() const;
-
-			void					SetLoop(bool loop);
-			bool					Loop() const;
-
-			void					SetPause(bool pause);
-			bool					IsPaused() const;
-
-			//void					RegisterWatchHandler(BHandler* handler);
-
-			void 					SetFormat(media_format format);
-			media_format 			Format() const;
+	virtual status_t 				Start();
+	virtual status_t 				Stop();
 
 			// Tracks Management
 
-			static status_t			RegisterTrack(AudioTrack* track);
-			static void				UnregisterTrack(AudioTrack* track);
-
 			static status_t			RegisterTrack(Track* track);
-			static void				UnregisterTrack(Track* track);
+			static status_t			UnregisterTrack(Track* track);
+
+			static status_t			RegisterTrack(AudioTrack* track);
+			static status_t			UnregisterTrack(AudioTrack* track);
 
 protected:
+			friend class			AudioEngine;
+
 			const MediaEndPointMap&	GetInputs();
 			const MediaEndPointMap&	GetOutputs();
 
@@ -72,8 +58,6 @@ private:
 
 			static AudioGate*		fInstance;
 			media_format			fFormat;
-
-			bool					fLoop;
 
 			BMediaRoster*			fRoster;
 

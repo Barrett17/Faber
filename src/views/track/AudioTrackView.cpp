@@ -70,7 +70,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	ToolButton* toolButton = new ToolButton(NULL, trackName.String(), NULL);
 	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
-	toolButton->SetIcon(kMuteIcon);
+	toolButton->SetIcon(kStopIcon);
 
 	// Track menu
 	BPopUpMenu* trackMenu = MenuBuilder::Get()->BuildTrackContextualMenu(this);

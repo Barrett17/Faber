@@ -100,7 +100,7 @@ Application Faber :
 	SettingsWindow.cpp
 	SettingsView.cpp
 	Settings.cpp
-	FaberPreferences.cpp
+	SettingsManager.cpp
 	FaberShortcut.cpp
 
 	DefaultKeymap.cpp

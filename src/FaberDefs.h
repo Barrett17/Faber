@@ -25,9 +25,9 @@
 #include <Catalog.h>
 
 #include "FaberMessages.h"
-#include "FaberPreferences.h"
 #include "FaberResources.h"
 #include "FaberShortcut.h"
+#include "SettingsManager.h"
 #include "WindowsManager.h"
 
 #include <stdio.h>

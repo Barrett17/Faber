@@ -17,5 +17,5 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "FaberPreferences.h"
+#include "SettingsManager.h"
 

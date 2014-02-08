@@ -21,16 +21,18 @@
 
 AudioGate* AudioGate::fInstance = NULL;
 
-
 AudioGate::AudioGate()
 	:
 	MediaGate(),
 	fLastID(-1)
 {
-	fAudioEngine = new AudioEngine();
+	fAudioEngine = new AudioEngine(this);
 
 	fRoster = BMediaRoster::Roster();
 	fRoster->RegisterNode(fAudioEngine);
+
+	//fInputs = new MediaEndPointMap();
+	//fOutputs = new MediaEndPointMap();
 }
 
 AudioGate::~AudioGate()
@@ -51,82 +53,30 @@ AudioGate::Get()
 status_t
 AudioGate::Start()
 {
-	fStarted = true;
 
-}
-
-
-status_t
-AudioGate::StartFrom(int64 position)
-{
+	return MediaGate::Start();
 }
 
 
 status_t
 AudioGate::Stop()
 {
-	fStarted = false;
-}
 
-
-void
-AudioGate::SetPause(bool pause)
-{
-	fStarted = !pause;
-}
-
-
-bool
-AudioGate::IsStarted() const
-{
-	return fStarted;
-}
-
-
-bool
-AudioGate::IsPaused() const
-{
-	return !fStarted;
-}
-
-
-void
-AudioGate::SetLoop(bool loop)
-{
-	fLoop = loop;
-}
-
-
-bool
-AudioGate::Loop() const
-{
-	return fLoop;
-}
-
-
-void
-AudioGate::SetFormat(media_format format)
-{
-	fFormat = format;
-}
-
-
-media_format
-AudioGate::Format() const
-{
-	return fFormat;
+	return MediaGate::Stop();
 }
 
 
 const MediaEndPointMap&
 AudioGate::GetInputs()
 {
+	//return *fInputs;
 }
 
 
 const MediaEndPointMap&
 AudioGate::GetOutputs()
 {
+	//return *fOutputs;
 }
 
 
@@ -134,17 +84,19 @@ status_t
 AudioGate::RegisterTrack(Track* track)
 {
 	if (track->IsAudio())
-		RegisterTrack((AudioTrack*)track);
+		return RegisterTrack((AudioTrack*)track);
 
-	return B_OK;
+	return B_ERROR;
 }
 
 
-void
+status_t
 AudioGate::UnregisterTrack(Track* track)
 {
 	if (track->IsAudio())
-		UnregisterTrack((AudioTrack*)track);
+		return UnregisterTrack((AudioTrack*)track);
+
+	return B_ERROR;
 }
 
 
@@ -161,10 +113,12 @@ AudioGate::RegisterTrack(AudioTrack* track)
 }
 
 
-void
+status_t
 AudioGate::UnregisterTrack(AudioTrack* track)
 {
 	Get()->fTracks.RemoveItem(track);
 	delete track;
+
+	return B_OK;
 }
 

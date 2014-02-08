@@ -17,35 +17,3 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _MEDIA_GATE_H
-#define _MEDIA_GATE_H
-
-#include <SupportDefs.h>
-
-#include "Track.h"
-
-
-class MediaGate {
-public:
-	virtual status_t				Start();
-	virtual status_t				Stop();
-
-			bool					IsStarted() const;
-
-			void					SetLoop(bool loop);
-			bool					Loop() const;
-
-			void					SetPause(bool pause);
-			bool					IsPaused() const;
-
-			static status_t			RegisterTrack(Track* track);
-			static status_t			UnregisterTrack(Track* track);
-
-	//virtual void RegisterWatchHandler(BHandler* handler) = 0;
-
-protected:
-			bool					fStarted;
-			bool					fLoop;
-};
-
-#endif

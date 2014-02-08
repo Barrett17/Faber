@@ -19,8 +19,55 @@
 
 #include "MediaGate.h"
 
+
+status_t
+MediaGate::Start()
+{
+	fStarted = true;
+
+	return B_OK;
+}
+
+
+status_t
+MediaGate::Stop()
+{
+	fStarted = false;
+
+	return B_OK;
+}
+
+
+void
+MediaGate::SetPause(bool pause)
+{
+	fStarted = !pause;
+}
+
+
 bool
 MediaGate::IsStarted() const
 {
 	return fStarted;
+}
+
+
+bool
+MediaGate::IsPaused() const
+{
+	return !fStarted;
+}
+
+
+void
+MediaGate::SetLoop(bool loop)
+{
+	fLoop = loop;
+}
+
+
+bool
+MediaGate::Loop() const
+{
+	return fLoop;
 }
