@@ -26,19 +26,19 @@ public:
 
 	virtual									~BlockFIFO();
 
+			status_t						Acquire();
+			status_t						Release();
+
 			bool							HasData() const;
 
 			void							Write(BBuffer* buffer);
 
-			MediaBlock*						GetNextBlock(
-												bool remove = false,
-												bigtime_t timeout = 0) const;
+			MediaBlock*						CurrentBlock();
+			MediaBlock*						Extract();
 
 private:
-			BLocker							fReadLock;
-			BLocker							fWriteLock;
+			BLocker							fLock;
 
-			BObjectList<MediaBlock>			fReadyBlocks;
-
+			MediaBlock*						fReadyBlock;
 			MediaBlock*						fCurrentBlock;
 };

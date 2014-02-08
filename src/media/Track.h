@@ -83,7 +83,7 @@ private:
 
 			uint32			fID;
 
-			friend class 	TracksManager;
+			friend class 	AudioGate;
 };
 
 #endif

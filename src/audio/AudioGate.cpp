@@ -24,7 +24,8 @@ AudioGate* AudioGate::fInstance = NULL;
 
 AudioGate::AudioGate()
 	:
-	MediaGate()
+	MediaGate(),
+	fLastID(-1)
 {
 	fAudioEngine = new AudioEngine();
 
@@ -104,24 +105,6 @@ AudioGate::Loop() const
 
 
 void
-AudioGate::SetFilterHook(FilterHook* hook)
-{
-}
-
-
-void
-AudioGate::RemoveFilterHook(FilterHook* hook)
-{
-}
-
-
-void
-AudioGate::SetFramerate(float framerate)
-{
-}
-
-
-void
 AudioGate::SetFormat(media_format format)
 {
 	fFormat = format;
@@ -135,19 +118,6 @@ AudioGate::Format() const
 }
 
 
-/*AudioMixer*
-AudioGate::Mixer() const
-{
-	return fAudioMixer;
-}*/
-
-
-status_t
-AudioGate::_InitNode()
-{
-}
-
-
 const MediaEndPointMap&
 AudioGate::GetInputs()
 {
@@ -158,3 +128,43 @@ const MediaEndPointMap&
 AudioGate::GetOutputs()
 {
 }
+
+
+status_t
+AudioGate::RegisterTrack(Track* track)
+{
+	if (track->IsAudio())
+		RegisterTrack((AudioTrack*)track);
+
+	return B_OK;
+}
+
+
+void
+AudioGate::UnregisterTrack(Track* track)
+{
+	if (track->IsAudio())
+		UnregisterTrack((AudioTrack*)track);
+}
+
+
+status_t
+AudioGate::RegisterTrack(AudioTrack* track)
+{
+	Get()->fLastID++;
+
+	track->SetID(Get()->fLastID);
+
+	Get()->fTracks.AddItem(track);
+
+	return B_OK;
+}
+
+
+void
+AudioGate::UnregisterTrack(AudioTrack* track)
+{
+	Get()->fTracks.RemoveItem(track);
+	delete track;
+}
+

@@ -30,9 +30,6 @@ public:
 	virtual status_t Stop() = 0;
 
 	bool	IsStarted() const;
-	// used to set a filter before to
-	// pass the audio to the node
-	//virtual void SetFilterHook() = 0;
 
 	// Register a handler to obtain
 	// data for analyzer windows

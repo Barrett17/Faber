@@ -17,26 +17,10 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "AudioTrack.h"
-
-
-class TracksManager {
+class DataIndex
+{
 public:
-										TracksManager();
-	virtual								~TracksManager();
 
-			static TracksManager*		Get();
 
-			static status_t				RegisterTrack(AudioTrack* track);
-			static void					UnregisterTrack(AudioTrack* track);
 
-			static status_t				RegisterTrack(Track* track);
-			static void					UnregisterTrack(Track* track);
-
-private:
-			static TracksManager*		fInstance;
-
-			AudioTrackList				fTracks;
-
-			uint32						fLastID;
 };

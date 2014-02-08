@@ -25,15 +25,10 @@
 #include <ObjectList.h>
 
 #include "AudioEngine.h"
+#include "AudioTrack.h"
 #include "MediaEndPoint.h"
 #include "MediaGate.h"
 
-
-class FilterHook {
-public:
-	void	(*hook)(float*, size_t, void*);
-	void*	cookie;
-};
 
 class AudioGate : public MediaGate {
 public:
@@ -56,35 +51,28 @@ public:
 			void					SetPause(bool pause);
 			bool					IsPaused() const;
 
-			void 					SetFilterHook(FilterHook* hook);
-			void 					RemoveFilterHook(FilterHook* hook);
-
 			//void					RegisterWatchHandler(BHandler* handler);
-
-			void					SetFramerate(float framerate);
 
 			void 					SetFormat(media_format format);
 			media_format 			Format() const;
 
-protected:
-			friend class			AudioEngine;
+			// Tracks Management
 
-			// TODO should be them thread safe?
+			static status_t			RegisterTrack(AudioTrack* track);
+			static void				UnregisterTrack(AudioTrack* track);
+
+			static status_t			RegisterTrack(Track* track);
+			static void				UnregisterTrack(Track* track);
+
+protected:
 			const MediaEndPointMap&	GetInputs();
 			const MediaEndPointMap&	GetOutputs();
 
-			friend class			TracksManager;
-
-			status_t				RegisterEndPoint(MediaEndPoint* point);
-			status_t				UnregisterEndPoint(MediaEndPoint* point);
-
 private:
-			status_t				_InitNode();
 
 			static AudioGate*		fInstance;
 			media_format			fFormat;
 
-			BObjectList<FilterHook> fHooksList;
 			bool					fLoop;
 
 			BMediaRoster*			fRoster;
@@ -93,6 +81,10 @@ private:
 
 			MediaEndPointMap*		fInputs;
 			MediaEndPointMap*		fOutputs;
+
+			AudioTrackList			fTracks;
+			uint32					fLastID;
+
 };
 
 #endif

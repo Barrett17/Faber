@@ -91,12 +91,9 @@ Application Faber :
 	SpinSlider.cpp
 	PeakView.cpp
 	VolumeSlider.cpp
-	FStringItem.cpp
 	IconButton.cpp
 	ToolButton.cpp
 	Spinner.cpp
-	Divider.cpp
-	SplitterView.cpp
 	MediaFileInfoView.cpp
 
 	# Settings
@@ -112,11 +109,11 @@ Application Faber :
 	Interface.cpp
 	Keymap.cpp
 	#SwatchView.cpp
+	FStringItem.cpp
 
 	# Audio and Media internal API
 	Track.cpp
 	AudioTrack.cpp
-	TracksManager.cpp
 	MediaGate.cpp
 	AudioGate.cpp
 

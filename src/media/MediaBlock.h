@@ -18,9 +18,24 @@
 */
 
 
-class MediaBlock
+class DataBlock
 {
+	virtual ssize_t			Read(void* buffer, size_t numBytes);
+	virtual ssize_t			Read(void* buffer, size_t numBytes);
 
+	virtual ssize_t			ReadAt(off_t position, void* buffer,
+								size_t numBytes);
+
+	virtual off_t			Seek(off_t position, int32 mode);
+	virtual off_t			Position(void) const;
+
+private:
+			BDataIO*		fData;
+};
+
+
+class MediaBlock : public DataBlock
+{
 			bool			IsEmpty() const;
 			void			CleanUp();
 
@@ -36,48 +51,34 @@ class MediaBlock
 			status_t		SeekToTime(bigtime_t* _time, int32 flags = 0);
 			status_t		SeekToFrame(int64* _frame, int32 flags = 0);
 
-			status_t		DetachFromFile();
-
-			status_t		DeleteFile();
-
-			status_t		CopyFrom(MediaBlock* block);
-
 private:
 			int64			fSize;
 
 			int64			fStart;
 			int64			fEnd;
 
-			void*			fBuffer;
-
 			BMediaFile*		fFile;
 			BMediaTrack*	fTrack;
 };
 
 
-class MediaFileBlock
-{
-
-};
-
-// the same as MediaFileBlock but in RAM.
-
-class VirtualBlock
-{
-
-};
-
 // This block is meant to represent empty audio data.
 // Useful to save space.
 
-class EmptySpaceBlock : public MediaBlock
+class EmptyDataBlock : public DataBlock
 {
 
 };
 
-// Meant to contain additional infos, not sure if it's needed.
 
-class AttributeBlock : public MediaBlock
+class EmptyMediaBlock : public DataBlock
+{
+
+};
+
+// Meant to contain additional infos, just an idea right now
+
+class AttributeBlock : public DataBlock
 {
 
 };

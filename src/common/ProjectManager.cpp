@@ -48,21 +48,35 @@ ProjectManager::~ProjectManager()
 bool
 ProjectManager::HasChanged() const
 {
-	//return fHistory->HasChanged();
+	//return SnanpshotManager::HasChanged();
 }
 
 
 bool
 ProjectManager::HasRedo() const
 {
-	//return fHistory->HasRedo();
+	//return SnapshotManager::HasRedo();
 }
 
 
 bool
 ProjectManager::HasUndo() const
 {
-	//return fHistory->HasUndo();
+	//return SnapshotManager::HasUndo();
+}
+
+
+void
+ProjectManager::Undo()
+{
+	//return SnapshotManager::Undo();
+}
+
+
+void
+ProjectManager::Redo()
+{
+	//return SnapshotManager::Redo();
 }
 
 
@@ -138,20 +152,6 @@ ProjectManager::_SaveTrack(AudioTrack* track)
 {
 
 	return B_OK;
-}
-
-
-void
-ProjectManager::Undo()
-{
-	//return fHistory->Undo();
-}
-
-
-void
-ProjectManager::Redo()
-{
-	//return fHistory->Redo();
 }
 
 

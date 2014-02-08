@@ -28,7 +28,7 @@
 #include "FaberScrollBar.h"
 #include "MenuBuilder.h"
 #include "TimeBar.h"
-#include "TracksManager.h"
+#include "AudioGate.h"
 #include "TrackView.h"
 #include "WidgetFrame.h"
 
@@ -234,7 +234,7 @@ TracksContainer::AddTrack(Track* track)
 	if (track->IsAudio()) {
 		AudioTrack* audioTrack = (AudioTrack*) track;
 
-		TracksManager::RegisterTrack(audioTrack);
+		AudioGate::RegisterTrack(audioTrack);
 
 		AudioTrackView* trackView = new AudioTrackView("AudioTrack", audioTrack);
 		return AddTrack(trackView);
@@ -259,7 +259,7 @@ TracksContainer::RemoveTrack(TrackView* track)
 
 	fLayout->RemoveView(track);
 
-	TracksManager::UnregisterTrack(track->GetTrack());
+	AudioGate::UnregisterTrack(track->GetTrack());
 
 	float max, min;
 
