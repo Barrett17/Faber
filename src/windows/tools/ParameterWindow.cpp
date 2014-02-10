@@ -17,32 +17,19 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BlockFIFO.h"
+#include "ParameterWindow.h"
 
 
-BlockFIFO::BlockFIFO(size_t size, int32 numBuffers)
-{
-}
-
-
-BlockFIFO::~BlockFIFO()
-{
-}
-
-
-bool
-BlockFIFO::HasData() const
+ParameterWindow::ParameterWindow(live_node_info& nodeInfo)
+	: BWindow(BRect(100, 100, 300, 400), "ParameteterWindow",
+		B_DOCUMENT_WINDOW, B_WILL_ACCEPT_FIRST_CLICK
+			| B_ASYNCHRONOUS_CONTROLS),
+	fParameterView(nodeInfo)
 {
 }
 
 
 void
-BlockFIFO::Write(BBuffer* buffer)
-{
-}
-
-
-MediaBlock*
-BlockFIFO::GetNextBlock(bool remove, bigtime_t timeout) const
+ParameterWindow::MessageReceived(BMessage* message)
 {
 }

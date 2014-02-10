@@ -30,8 +30,8 @@
 class AudioGate;
 
 
-class AudioEngine : public BBufferProducer, BBufferConsumer, BMediaEventLooper
-{
+class AudioEngine : public BBufferProducer,
+	BBufferConsumer, BMediaEventLooper {
 public:
 
 							AudioEngine(AudioGate* audioGate);

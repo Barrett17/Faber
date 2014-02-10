@@ -38,10 +38,10 @@ public:
 			void					SetPause(bool pause);
 			bool					IsPaused() const;
 
+			// Tracks Management
+
 			static status_t			RegisterTrack(Track* track);
 			static status_t			UnregisterTrack(Track* track);
-
-	//virtual void RegisterWatchHandler(BHandler* handler) = 0;
 
 protected:
 			bool					fStarted;

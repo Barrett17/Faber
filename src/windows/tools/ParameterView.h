@@ -17,3 +17,20 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef PARAMETER_VIEW_H
+#define PARAMETER_VIEW_H
+
+#include <View.h>
+
+class ParameterView : public BWindow
+{
+public:
+								ParameterView(live_node_info& nodeInfo);
+
+	virtual void				MessageReceived(BMessage* message);
+
+private:
+			BParameterWeb*		fParameterWeb;
+};
+
+#endif

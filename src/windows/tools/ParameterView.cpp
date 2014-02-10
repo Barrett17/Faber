@@ -17,32 +17,19 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "BlockFIFO.h"
+#include "ParameterView.h"
 
 
-BlockFIFO::BlockFIFO(size_t size, int32 numBuffers)
+ParameterView::ParameterView(live_node_info& nodeInfo)
 {
-}
+	BMediaRoster* roster = BMediaRoster::CurrentRoster();
 
-
-BlockFIFO::~BlockFIFO()
-{
-}
-
-
-bool
-BlockFIFO::HasData() const
-{
+	if (roster != NULL)
+		roster->GetParameterWebFor(fNode, &fParameterWeb);
 }
 
 
 void
-BlockFIFO::Write(BBuffer* buffer)
-{
-}
-
-
-MediaBlock*
-BlockFIFO::GetNextBlock(bool remove, bigtime_t timeout) const
+ParameterView::MessageReceived(BMessage* message)
 {
 }

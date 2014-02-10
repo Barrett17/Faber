@@ -22,13 +22,18 @@
 
 #include <Window.h>
 
+#include "ParameterView.h"
+
 
 class ParameterWindow : public BWindow
 {
 public:
-				ParameterWindow(live_node_info& nodeInfo);
+								ParameterWindow(live_node_info& nodeInfo);
 
-	virtual void		MessageReceived(BMessage*);
+	virtual void				MessageReceived(BMessage* message);
+
+private:
+			ParameterView*		fParameterView;
 };
 
 #endif

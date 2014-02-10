@@ -52,6 +52,7 @@ protected:
 			friend class			AudioEngine;
 
 			const MediaEndPointMap&	GetInputs();
+
 			const MediaEndPointMap&	GetOutputs();
 
 private:
