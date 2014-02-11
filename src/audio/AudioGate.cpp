@@ -122,3 +122,9 @@ AudioGate::UnregisterTrack(AudioTrack* track)
 	return B_OK;
 }
 
+
+media_node
+AudioGate::Node()
+{
+	return fAudioEngine->Node();
+}

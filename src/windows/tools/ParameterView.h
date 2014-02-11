@@ -20,9 +20,10 @@
 #ifndef PARAMETER_VIEW_H
 #define PARAMETER_VIEW_H
 
-#include <View.h>
+#include <ParameterWeb.h>
+#include <GroupView.h>
 
-class ParameterView : public BWindow
+class ParameterView : public BGroupView
 {
 public:
 								ParameterView(live_node_info& nodeInfo);

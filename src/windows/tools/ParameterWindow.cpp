@@ -18,14 +18,21 @@
 */
 
 #include "ParameterWindow.h"
+#include <LayoutBuilder.h>
 
 
-ParameterWindow::ParameterWindow(live_node_info& nodeInfo)
-	: BWindow(BRect(100, 100, 300, 400), "ParameteterWindow",
+ParameterWindow::ParameterWindow(BPoint point, live_node_info& nodeInfo)
+	: BWindow(BRect(100, 100, 500, 400), "ParameteterWindow",
 		B_DOCUMENT_WINDOW, B_WILL_ACCEPT_FIRST_CLICK
-			| B_ASYNCHRONOUS_CONTROLS),
-	fParameterView(nodeInfo)
+			| B_ASYNCHRONOUS_CONTROLS)
 {
+	fParameterView = new ParameterView(nodeInfo);
+
+	SetTitle(nodeInfo.name);
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
+		.Add(fParameterView)
+	.End();
 }
 
 

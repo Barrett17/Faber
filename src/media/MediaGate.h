@@ -40,6 +40,7 @@ public:
 
 			// Tracks Management
 
+			// The base implementation does nothing.
 			static status_t			RegisterTrack(Track* track);
 			static status_t			UnregisterTrack(Track* track);
 

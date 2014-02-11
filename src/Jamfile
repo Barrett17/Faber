@@ -86,6 +86,8 @@ Application Faber :
 	InputRequestView.cpp
 	ScreenInfo.cpp
 	EffectWindow.cpp
+	ParameterWindow.cpp
+	ParameterView.cpp
 
 	# Interface
 	SpinSlider.cpp

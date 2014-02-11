@@ -21,7 +21,7 @@
 
 FaberShortcut* FaberShortcut::fInstance = NULL;
 
-// TODO using HashMap we can go from an O(n) execution time to O(n log n)
+// TODO using HashMap we can go from an O(n) execution time to O(log n)
 
 
 FaberShortcut*

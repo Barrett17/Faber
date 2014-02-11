@@ -28,7 +28,8 @@
 class ParameterWindow : public BWindow
 {
 public:
-								ParameterWindow(live_node_info& nodeInfo);
+								ParameterWindow(BPoint point,
+									live_node_info& nodeInfo);
 
 	virtual void				MessageReceived(BMessage* message);
 

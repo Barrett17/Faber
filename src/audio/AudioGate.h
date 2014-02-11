@@ -48,6 +48,8 @@ public:
 			static status_t			RegisterTrack(AudioTrack* track);
 			static status_t			UnregisterTrack(AudioTrack* track);
 
+			media_node				Node();
+
 protected:
 			friend class			AudioEngine;
 

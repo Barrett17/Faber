@@ -194,7 +194,7 @@ WindowsManager::GetExportPanel()
 ParameterWindow*
 WindowsManager::GetSystemMixer()
 {
-	/*if (!IsWindowValid(Get()->fSystemMixer)) {
+	if (!IsWindowValid(Get()->fSystemMixer)) {
 		media_node node;
 		live_node_info info;
 		BMediaRoster::Roster()->GetAudioMixer(&node);
@@ -203,22 +203,21 @@ WindowsManager::GetSystemMixer()
 		Get()->fSystemMixer = new ParameterWindow(_CalculateWindowPoint(), info);
 	}
 
-	return Get()->fSystemMixer;*/
-	return NULL;
+	return Get()->fSystemMixer;
 }
 
 
 ParameterWindow*
 WindowsManager::GetFaberMixer()
 {
-	/*if (!IsWindowValid(Get()->fFaberMixer)) {
+	if (!IsWindowValid(Get()->fFaberMixer)) {
 		live_node_info info;
-		info.node = AudioGate::Get()->Mixer()->Node();
-		strcpy(info.name, AudioGate::Get()->Mixer()->Name());
+		info.node = AudioGate::Get()->Node();
+		strcpy(info.name, "Mixer");
 		Get()->fFaberMixer = new ParameterWindow(_CalculateWindowPoint(), info);
 	}
 
-	return Get()->fFaberMixer;*/
+	return Get()->fFaberMixer;
 }
 
 

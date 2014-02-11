@@ -19,13 +19,23 @@
 
 #include "ParameterView.h"
 
+#include <LayoutBuilder.h>
+#include <MediaRoster.h>
+#include <MediaTheme.h>
+
 
 ParameterView::ParameterView(live_node_info& nodeInfo)
+	:
+	BGroupView(B_HORIZONTAL, 0)
 {
 	BMediaRoster* roster = BMediaRoster::CurrentRoster();
 
 	if (roster != NULL)
-		roster->GetParameterWebFor(fNode, &fParameterWeb);
+		roster->GetParameterWebFor(nodeInfo.node, &fParameterWeb);
+
+	BView* view = BMediaTheme::ViewFor(fParameterWeb, NULL, NULL);
+
+	AddChild(view);
 }
 
 

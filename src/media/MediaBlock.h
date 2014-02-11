@@ -36,7 +36,6 @@ private:
 
 class MediaBlock : public DataBlock
 {
-			bool			IsEmpty() const;
 			void			CleanUp();
 
 			status_t		ReadFrames(void* buffer, int64* frameCount);
@@ -71,14 +70,15 @@ class EmptyDataBlock : public DataBlock
 };
 
 
-class EmptyMediaBlock : public DataBlock
+class EmptyMediaBlock : public MediaBlock
 {
 
 };
 
-// Meant to contain additional infos, just an idea right now
+/* Meant to contain additional infos, just an idea right now
 
 class AttributeBlock : public DataBlock
 {
 
 };
+*/
