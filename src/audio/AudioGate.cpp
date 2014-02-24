@@ -37,6 +37,8 @@ AudioGate::AudioGate()
 
 AudioGate::~AudioGate()
 {
+	fRoster->UnregisterNode(fAudioEngine);
+	fRoster->ReleaseNode(fAudioEngine->Node());
 }
 
 

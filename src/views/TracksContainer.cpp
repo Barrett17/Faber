@@ -27,6 +27,7 @@
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
 #include "MenuBuilder.h"
+#include "ProjectManager.h"
 #include "TimeBar.h"
 #include "AudioGate.h"
 #include "TrackView.h"
@@ -206,7 +207,6 @@ status_t
 TracksContainer::AddTrack(TrackView* track, int32 index)
 {
 	float max, min;
-	status_t ret;
 
 	if (Looper()->Lock()) {
 		fVerticalScroll->GetRange(&min, &max);
@@ -215,10 +215,10 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 		Looper()->Unlock();
 	}
 
+	status_t ret;
+
 	if (track->GetTrack()->IsAudio()) {
-
 		fLayout->AddView(track, index);
-
 		ret = fTrackViews.AddItem(track, index);
 	}
 
@@ -234,9 +234,11 @@ TracksContainer::AddTrack(Track* track)
 	if (track->IsAudio()) {
 		AudioTrack* audioTrack = (AudioTrack*) track;
 
-		AudioGate::RegisterTrack(audioTrack);
+		ProjectManager::RegisterTrack(track);
 
-		AudioTrackView* trackView = new AudioTrackView("AudioTrack", audioTrack);
+		AudioTrackView* trackView =
+			new AudioTrackView("AudioTrack", audioTrack);
+
 		return AddTrack(trackView);
 	}
 	return B_ERROR;
@@ -255,12 +257,6 @@ TracksContainer::RemoveTrack(int32 index)
 status_t
 TracksContainer::RemoveTrack(TrackView* track)
 {
-	fTrackViews.RemoveItem(track);
-
-	fLayout->RemoveView(track);
-
-	AudioGate::UnregisterTrack(track->GetTrack());
-
 	float max, min;
 
 	if (Looper()->Lock()) {
@@ -271,6 +267,9 @@ TracksContainer::RemoveTrack(TrackView* track)
 		Looper()->Unlock();
 	}
 
+	fTrackViews.RemoveItem(track);
+	fLayout->RemoveView(track);
+	ProjectManager::UnregisterTrack(track->GetTrack());
 	delete track;
 
 	return B_OK;

@@ -26,12 +26,13 @@
 #include <String.h>
 
 #include "Track.h"
+#include "TrackIndex.h"
 
 
 class AudioTrack : public Track {
 public:
 							AudioTrack();
-							AudioTrack(BMediaFile* mediaFile);
+							AudioTrack(TrackIndex* index);
 
 							~AudioTrack();
 
@@ -74,8 +75,9 @@ public:
 
 private:
 			media_format	fFormat;
-			BMediaFile*		fMediaFile;
-			BMediaTrack*	fMediaTrack;
+
+			TrackIndex*		fTrackIndex;
+
 };
 
 typedef BObjectList<AudioTrack> AudioTrackList;

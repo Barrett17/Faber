@@ -17,10 +17,18 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class DataIndex
-{
-public:
+#ifndef TRACK_IO_H
+#define TRACK_IO_H
 
+#include "Track.h"
+#include "AudioTrack.h"
+
+
+class TrackIO {
+public:
+	static AudioTrack* ImportAudio(BMediaFile* mediaFile, const char* name);
 
 
 };
+
+#endif

@@ -43,7 +43,7 @@ ProgressWindow::ProgressWindow(BRect frame)
 {
 	Looper()->SetName("Progress Window");
 
-	BView *view = new BView(frame, NULL,
+	BView *view = new BView(frame, "ProgressView",
 		B_FOLLOW_ALL, B_WILL_DRAW | B_NOT_CLOSABLE);
 
 	frame.InsetBy(2,2);

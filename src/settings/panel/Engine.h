@@ -21,6 +21,14 @@
 
 #include <GroupView.h>
 
+/* TODO settings planned :
+
+	* Bypass system mixer
+	* Framerate (this probably fit well in a Project tab..)
+	* Default Blockfile size
+
+*/
+
 class EngineView: public BGroupView
 {
 public:

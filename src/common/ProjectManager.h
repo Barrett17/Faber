@@ -25,6 +25,7 @@
 #include <SupportDefs.h>
 
 #include "AudioTrack.h"
+#include "FaberView.h"
 #include "FaberWindow.h"
 
 
@@ -54,14 +55,15 @@ public:
 			BString						Name() const;
 			void						SetName(const char* name);
 
-			//							CurrentClipboard();
-			//void						CleanClipboard();
-private:
-			status_t					_SaveTrack(AudioTrack* track);
+			static status_t				RegisterTrack(Track* track);
+			static status_t				UnregisterTrack(Track* track);
 
+private:
 			static ProjectManager*		fInstance;
 
 			BString						fName;
 			bool						fWasSaved;
 			BPath						fProjectPath;
+
+			FaberView*					fFaberView;
 };

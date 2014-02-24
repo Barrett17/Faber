@@ -38,13 +38,16 @@ const char* kAuthors[] = {
 };
 
 const char* kThanks[] = {
-	"Frans van Nispen",
-	"Libwalter devs",
-	"Davide Gessa",
-	"Stephan Aßmus",
+	"morpe",
 	NULL
 };
 
+const char* kAdditionalCode[] {
+	"Frans van Nispen - BeAE effects and Shortcut view",
+	"Libwalter devs - Spinner Widget",
+	"Stephan Aßmus - GUI Widgets",
+	NULL
+};
 
 WindowsManager::WindowsManager()
 	:
@@ -147,6 +150,7 @@ WindowsManager::ShowAbout()
 	box->SetVersion(FABER_VERSION);
 	box->AddAuthors(kAuthors);
 	box->AddSpecialThanks(kThanks);
+	box->AddText("Faber contains code from :", kAdditionalCode);
 	box->AddExtraInfo(FABER_HELP_HOMEPAGE);
 
 	box->Show();
@@ -183,9 +187,9 @@ WindowsManager::GetSavePanel()
 ExportWindow*
 WindowsManager::GetExportPanel()
 {
-	if (!IsWindowValid(Get()->fExportWindow)) {
+	if (!IsWindowValid(Get()->fExportWindow))
 		Get()->fExportWindow = new ExportWindow();
-	}
+
 
 	return Get()->fExportWindow;
 }
@@ -197,10 +201,13 @@ WindowsManager::GetSystemMixer()
 	if (!IsWindowValid(Get()->fSystemMixer)) {
 		media_node node;
 		live_node_info info;
+
 		BMediaRoster::Roster()->GetAudioMixer(&node);
 		info.node = node;
-		strcpy(info.name, "System Mixer");
-		Get()->fSystemMixer = new ParameterWindow(_CalculateWindowPoint(), info);
+
+		strcpy(info.name, B_TRANSLATE("System Mixer"));
+		Get()->fSystemMixer = new ParameterWindow(
+			_CalculateWindowPoint(), info);
 	}
 
 	return Get()->fSystemMixer;
@@ -211,10 +218,15 @@ ParameterWindow*
 WindowsManager::GetFaberMixer()
 {
 	if (!IsWindowValid(Get()->fFaberMixer)) {
+
 		live_node_info info;
+
 		info.node = AudioGate::Get()->Node();
-		strcpy(info.name, "Mixer");
-		Get()->fFaberMixer = new ParameterWindow(_CalculateWindowPoint(), info);
+
+		strcpy(info.name, B_TRANSLATE("Mixer"));
+
+		Get()->fFaberMixer = new ParameterWindow(
+			_CalculateWindowPoint(), info);
 	}
 
 	return Get()->fFaberMixer;

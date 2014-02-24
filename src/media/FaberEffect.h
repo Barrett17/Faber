@@ -58,8 +58,8 @@ public:
 
 	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
 
-	status_t				FlattenSettings(BMessage* message);
-	status_t				UnflattenSettings(BMessage* message);
+	status_t				ArchiveSettings(BMessage* message);
+	status_t				UnarchiveSettings(BMessage* message);
 
 	//int32					CurrentPass() const;
 	//void					SetPass(int32 pass);

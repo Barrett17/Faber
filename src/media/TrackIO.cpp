@@ -17,18 +17,14 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "SettingsManager.h"
+#include "TrackIO.h"
 
-media_format
-SettingsManager::BuildAudioSessionFormat()
+
+AudioTrack*
+TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 {
-	media_format format;
 
-	format.type = B_MEDIA_RAW_AUDIO;
-	format.u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
-	format.u.raw_audio.frame_rate = 44100;
-	format.u.raw_audio.byte_order = 
-		(B_HOST_IS_BENDIAN) ? B_MEDIA_BIG_ENDIAN : B_MEDIA_LITTLE_ENDIAN;
+	TrackIndex* index = new TrackIndex();
 
-	return format;
 }
+

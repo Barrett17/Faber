@@ -17,4 +17,12 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <MediaDefs.h>
+
+
+class SettingsManager {
+public:
+	static media_format BuildAudioSessionFormat();
+
+};
 

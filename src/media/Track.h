@@ -65,6 +65,7 @@ protected:
 			bigtime_t		fDuration;
 
 	virtual void			SetID(uint32 id);
+			friend class 	AudioGate;
 
 private:
 			BString			fName;
@@ -82,8 +83,6 @@ private:
 			float			fBalance;
 
 			uint32			fID;
-
-			friend class 	AudioGate;
 };
 
 #endif

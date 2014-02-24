@@ -161,21 +161,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 			skip = true;
 			break;
 		}
-
-		case FABER_EFFECT_EXECUTE:
-		{
-
-			skip = true;		
-			break;
-		}
-
-		case FABER_EFFECT_ABORT:
-		{
-
-			skip = true;
-			break;
-		}
-
 	}
 
 	if (skip == true)

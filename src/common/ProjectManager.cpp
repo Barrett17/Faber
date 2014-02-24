@@ -19,7 +19,10 @@
 
 #include "ProjectManager.h"
 
+#include "AudioGate.h"
 #include "FaberDefs.h"
+#include "TrackIO.h"
+
 
 ProjectManager* ProjectManager::fInstance = NULL;
 
@@ -114,12 +117,10 @@ ProjectManager::LoadProject(entry_ref ref)
 status_t
 ProjectManager::LoadFile(entry_ref ref)
 {
-	printf("file\n");
-
 	BMediaFile* mediaFile = new BMediaFile(&ref);
-	if (mediaFile->InitCheck() == B_OK) {
+
+	if (mediaFile->InitCheck() == B_OK)
 		return LoadMediaFile(mediaFile, ref.name);
-	}
 
 	delete mediaFile;
 
@@ -130,14 +131,15 @@ ProjectManager::LoadFile(entry_ref ref)
 status_t
 ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 {
-	AudioTrack* track = new AudioTrack(mediaFile);
-	track->SetName(name);
+	AudioTrack* track = TrackIO::ImportAudio(mediaFile, name);
 
-	printf("loading media file\n");
+	printf("Faber: Loading media file %s\n", name);
+
 	status_t ret = track->InitCheck();
+
 	if (ret < B_OK) {
 		delete track;
-		printf("%s\n", strerror(ret));
+		printf("Error loading track: %s\n", strerror(ret));
 		return ret;
 	}
 
@@ -148,10 +150,20 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 
 
 status_t
-ProjectManager::_SaveTrack(AudioTrack* track)
+ProjectManager::RegisterTrack(Track* track)
 {
+	if (track->IsAudio()) {
+		return AudioGate::RegisterTrack((AudioTrack*)track);
+	}
+}
 
-	return B_OK;
+
+status_t
+ProjectManager::UnregisterTrack(Track* track)
+{
+	if (track->IsAudio()) {
+		return AudioGate::UnregisterTrack((AudioTrack*)track);
+	}
 }
 
 

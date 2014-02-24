@@ -23,6 +23,8 @@
 #include <Button.h>
 #include <LayoutBuilder.h>
 
+#include "FaberMessages.h"
+
 
 EffectWindow::EffectWindow(FaberEffect* effect)
 	:
@@ -56,7 +58,18 @@ EffectWindow::MessageReceived(BMessage *message)
 {
 	switch (message->what)
 	{
-	
+		case FABER_EFFECT_EXECUTE:
+		{
+
+			break;
+		}
+
+		case FABER_EFFECT_ABORT:
+		{
+
+			break;
+		}
+
 		default:
 			BWindow::MessageReceived(message);
 	}

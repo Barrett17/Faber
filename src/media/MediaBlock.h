@@ -17,9 +17,41 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _MEDIA_BLOCK_H
+#define _MEDIA_BLOCK_H
 
-class DataBlock
-{
+class TrackIndex;
+
+
+enum FaberDataBlockTypes {
+	FABER_RAW_DATA = 1001,
+	FABER_MEDIA_DATA,
+	FABER_MIDI_DATA
+};
+
+
+struct block_ref {
+	const char* name;
+	int32 id;
+	uint32 kind;
+};
+
+
+struct mediablock_ref : public block_ref {
+	int64 length;
+	int64 start;
+
+	int16* preview;
+	size_t size;
+};
+
+
+class DataBlock {
+public:
+							DataBlock(TrackIndex* owner, block_ref* ref);	
+
+	/*virtual	uint32			Kind() const = 0;
+
 	virtual ssize_t			Read(void* buffer, size_t numBytes);
 	virtual ssize_t			Read(void* buffer, size_t numBytes);
 
@@ -27,16 +59,20 @@ class DataBlock
 								size_t numBytes);
 
 	virtual off_t			Seek(off_t position, int32 mode);
-	virtual off_t			Position(void) const;
+	virtual off_t			Position(void) const;*/
 
 private:
 			BDataIO*		fData;
+			block_ref*		fBlockRef;
 };
 
 
-class MediaBlock : public DataBlock
-{
-			void			CleanUp();
+class MediaBlock : public DataBlock {
+public:
+							MediaBlock(TrackIndex* owner,
+								block_ref* ref);	
+
+	virtual	uint32			Kind() const;
 
 			status_t		ReadFrames(void* buffer, int64* frameCount);
 			int64			CountFrames() const;
@@ -51,34 +87,21 @@ class MediaBlock : public DataBlock
 			status_t		SeekToFrame(int64* _frame, int32 flags = 0);
 
 private:
-			int64			fSize;
-
-			int64			fStart;
-			int64			fEnd;
-
 			BMediaFile*		fFile;
 			BMediaTrack*	fTrack;
 };
 
 
-// This block is meant to represent empty audio data.
+// This block is meant to represent empty data.
 // Useful to save space.
-
-class EmptyDataBlock : public DataBlock
-{
-
-};
-
-
-class EmptyMediaBlock : public MediaBlock
-{
+/*
+class EmptyDataBlock : public DataBlock {
 
 };
 
-/* Meant to contain additional infos, just an idea right now
 
-class AttributeBlock : public DataBlock
-{
+class EmptyMediaBlock : public MediaBlock {
 
 };
 */
+#endif

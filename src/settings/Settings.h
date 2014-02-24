@@ -50,8 +50,6 @@ private:
 		int32			fControl;
 
 		status_t		fError;
-
-	//static Settings*	fInstance;
 }; 
 
 #endif /* SETTINGS_H */

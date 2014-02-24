@@ -99,14 +99,14 @@ Application Faber :
 	MediaFileInfoView.cpp
 
 	# Settings
-	SettingsWindow.cpp
-	SettingsView.cpp
 	Settings.cpp
 	SettingsManager.cpp
 	FaberShortcut.cpp
 
 	DefaultKeymap.cpp
 
+	SettingsWindow.cpp
+	SettingsView.cpp
 	Engine.cpp
 	Interface.cpp
 	Keymap.cpp
@@ -116,6 +116,8 @@ Application Faber :
 	# Audio and Media internal API
 	Track.cpp
 	AudioTrack.cpp
+	TrackIO.cpp
+
 	MediaGate.cpp
 	AudioGate.cpp
 

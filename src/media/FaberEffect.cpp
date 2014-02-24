@@ -61,14 +61,14 @@ FaberEffect::Flags() const
 
 
 status_t
-FaberEffect::FlattenSettings(BMessage* message)
+FaberEffect::ArchiveSettings(BMessage* message)
 {
 
 }
 
 
 status_t
-FaberEffect::UnflattenSettings(BMessage* message)
+FaberEffect::UnarchiveSettings(BMessage* message)
 {
 
 }

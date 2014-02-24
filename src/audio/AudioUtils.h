@@ -43,11 +43,6 @@ uint32 ChannelTypeToChannelMask(int type);
 double us_to_s(bigtime_t usecs);
 bigtime_t s_to_us(double secs);
 
-class MixerInput;
-class MixerOutput;
-
-const char *StringForFormat(char *buf, MixerOutput *output);
-const char *StringForFormat(char *buf, MixerInput *input);
 const char *StringForChannelMask(char *buf, uint32 mask);
 const char *StringForChannelType(char *buf, int type);
 

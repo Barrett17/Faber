@@ -17,18 +17,27 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "SettingsManager.h"
+#ifndef _TRACK_INDEX_H
+#define _TRACK_INDEX_H
 
-media_format
-SettingsManager::BuildAudioSessionFormat()
-{
-	media_format format;
+#include <File.h>
+#include <Path.h>
 
-	format.type = B_MEDIA_RAW_AUDIO;
-	format.u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
-	format.u.raw_audio.frame_rate = 44100;
-	format.u.raw_audio.byte_order = 
-		(B_HOST_IS_BENDIAN) ? B_MEDIA_BIG_ENDIAN : B_MEDIA_LITTLE_ENDIAN;
+#include "MediaBlock.h"
 
-	return format;
-}
+
+class TrackIndex {
+public:
+							TrackIndex() {};
+							TrackIndex(BPath path) {};
+
+		//					CountRevisions() const;
+
+		int32				CountBlocks() const;
+		const block_ref*	BlockAt(int32 index);
+
+private:
+		BFile*				fFile;
+};
+
+#endif

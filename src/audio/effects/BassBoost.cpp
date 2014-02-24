@@ -48,7 +48,7 @@ BassBoostEffect::SettingsPanel()
 {
 	BRect r(0,0,200,100);
 
-	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
+	BView *view = new BView(r, "BassBoost", B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	freq = new SpinSlider("frequency", B_TRANSLATE("Frequency (Hz)"),
