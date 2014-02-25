@@ -57,7 +57,7 @@ WavePeak::UpdateRequested(int64 start, int64 end)
 void
 WavePeak::_RenderPeaks(int64 start, int64 end, int64 detail)
 {
-	media_format format = fTrack->Format();
+	/*media_format format = fTrack->Format();
 
 	uint32 channels = fTrack->CountChannels();
 
@@ -106,7 +106,7 @@ WavePeak::_RenderPeaks(int64 start, int64 end, int64 detail)
 				}
 
 			}
-		}
+		}*/
 }
 
 

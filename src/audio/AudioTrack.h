@@ -36,46 +36,24 @@ public:
 
 							~AudioTrack();
 
-			// BMediaFile-like API
-
 			status_t		InitCheck() const;
-
-			status_t		ReadFrames(void* buffer, int64* frameCount,
-								media_header* header = NULL);
-
-			status_t		ReplaceFrames(const void* buffer,
-								int64* _frameCount,
-								const media_header* header);
-
-			status_t		SeekToTime(bigtime_t* _time, int32 flags = 0);
 			status_t		SeekToFrame(int64* _frame, int32 flags = 0);
-
-			status_t		WriteFrames(const void* data, int32 frameCount,
-								int32 flags = 0);
-
 			int64			CountFrames() const;
-
-			 void 			SetFormat(media_format format);
-			media_format 	Format() const;
-
-			void			SetFramerate(float framerate);
 			int32			CountChannels() const;
 
-			// Other utils
+			// TODO generalize a bit this notion creating a base type
+			// of objects suited to modify the track, FaberEffect
+			// will be derived from it.
+			status_t		ApplyEffect(int32 id, int64 start, int64 end);
 
+			// Other utils
 			bool			IsAudio() const;
 
 			bool			IsMono() const;
 			bool			IsStereo() const;
 			bool			IsMultichannel() const;
 
-			BMediaFile*		MediaFile() const;
-
-			status_t		ApplyEffect(int32 id, int64 start, int64 end);
-
 private:
-			media_format	fFormat;
-
 			TrackIndex*		fTrackIndex;
 
 };

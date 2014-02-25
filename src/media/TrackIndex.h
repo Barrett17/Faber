@@ -29,13 +29,24 @@
 class TrackIndex {
 public:
 							TrackIndex() {};
-							TrackIndex(BPath path) {};
 
 		//					CountRevisions() const;
 
 		int32				CountBlocks() const;
+
 		const block_ref*	BlockAt(int32 index);
 
+		status_t			AddBlock(int32 index, MediaBlock* block,
+								bool saveAndFree = false);
+
+		status_t			AddBlock(MediaBlock* block,
+								bool saveAndFree = false);
+
+		status_t			AddBlock(int32 index, block_ref* block);
+
+		status_t			RemoveBlock(int32 index);
+
+		status_t			RemoveBlocks(int32 start, int32 end);
 private:
 		BFile*				fFile;
 };

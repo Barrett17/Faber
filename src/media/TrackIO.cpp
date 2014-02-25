@@ -23,8 +23,30 @@
 AudioTrack*
 TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 {
-
+#if 0
 	TrackIndex* index = new TrackIndex();
 
+	media_format format = SettingsManager::BuildAudioSessionFormat();
+	format.buffer_size = SettingsManager::GetPreferredAudioBlockSize();
+
+	// TODO check original file format to ask 
+	// if the user want it to be resampled or not.
+
+	int64 frames = 0;
+	int64 timer = 0;
+
+	float buffer[format.u.raw_audio.buffer_size 
+		/ (format.u.raw_audio.format 
+		& media_raw_audio_format::B_AUDIO_SIZE_MASK)];
+
+	while (fTrack->ReadFrames(buffer, &frames) == B_OK) {
+		MediaBlock* block = _BuildBlock(buffer, frames);
+		index->AddBlock(block, true);
+	}
+
+	delete mediaFile;
+
+	return new AudioTrack(index);
+#endif
 }
 

@@ -36,26 +36,12 @@ AudioTrack::AudioTrack(TrackIndex* index)
 	Track(),
 	fTrackIndex(index)
 {
-	fFormat = SettingsManager::BuildAudioSessionFormat();
+	//fFormat = SettingsManager::BuildAudioSessionFormat();
 }
 
 
 AudioTrack::~AudioTrack()
 {
-}
-
-
-void
-AudioTrack::SetFormat(media_format format)
-{
-	fFormat.SpecializeTo(&format);
-}
-
-
-media_format
-AudioTrack::Format() const
-{
-	return fFormat;
 }
 
 
@@ -69,72 +55,42 @@ AudioTrack::IsAudio() const
 int32
 AudioTrack::CountChannels() const
 {
-	return fFormat.u.raw_audio.channel_count;
+	//return fTrackIndex->CountChannels();
+	return 1;
 }
 
 
 bool
 AudioTrack::IsMono() const
 {
-	return fFormat.u.raw_audio.channel_count == 1;
+	return CountChannels() == 1;
 }
 
 
 bool
 AudioTrack::IsStereo() const
 {
-	return fFormat.u.raw_audio.channel_count == 2;
+	return CountChannels() == 2;
 }
 
-
-status_t
-AudioTrack::ReadFrames(void* buffer, int64* frameCount,
-	media_header* header)
-{
-	//return fMediaTrack->ReadFrames(buffer, frameCount, header);
-}
-
-
-status_t
-AudioTrack::ReplaceFrames(const void* buffer,
-int64* frameCount, const media_header* header)
-{
-	//return fMediaTrack->ReplaceFrames(buffer, frameCount, header);
-}
-
-
-status_t
-AudioTrack::SeekToTime(bigtime_t* time, int32 flags)
-{
-	//return fMediaTrack->SeekToTime(time, flags);
-}
 
 status_t
 AudioTrack::SeekToFrame(int64* frame, int32 flags)
 {
-	//return fMediaTrack->SeekToTime(frame, flags);
-}
-
-
-status_t
-AudioTrack::WriteFrames(const void* data, int32 frameCount,
-	int32 flags)
-{
-	//return fMediaTrack->WriteFrames(data, frameCount, flags);
 }
 
 
 int64
 AudioTrack::CountFrames() const
 {
-	//return fMediaTrack->CountFrames();
+	//return fTrackIndex->CountFrames();
 }
 
 
 status_t
 AudioTrack::InitCheck() const
 {
-	//return fMediaTrack->InitCheck();
+	//return fTrackIndex->InitCheck();
 }
 
 
