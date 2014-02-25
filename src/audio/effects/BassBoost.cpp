@@ -69,13 +69,13 @@ BassBoostEffect::SettingsPanel()
 	return view;
 }
 
-
+/*
 status_t
 BassBoostEffect::FlattenSettings(BMessage* message)
 {
 	//Prefs.filter_bassboost_frequency = freq->Value();
 	//Prefs.filter_bassboost_boost = boost->Value();
-}
+}*/
 
 
 // Init & exit

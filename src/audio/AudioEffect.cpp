@@ -37,4 +37,5 @@ AudioEffect::FilterTrack(AudioTrack* track,
 	int64 start, size_t size)
 {
 
+	return B_OK;
 }

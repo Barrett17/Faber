@@ -79,7 +79,7 @@ MenuBuilder::BuildFileMenu()
 BMenu*
 MenuBuilder::BuildRecentMenu()
 {
-
+	return NULL;
 }
 
 

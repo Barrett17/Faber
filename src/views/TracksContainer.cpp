@@ -218,7 +218,7 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 	status_t ret;
 
 	if (track->GetTrack()->IsAudio()) {
-		fLayout->AddView(track, index);
+		fLayout->AddView(track);
 		ret = fTrackViews.AddItem(track, index);
 	}
 

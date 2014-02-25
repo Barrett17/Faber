@@ -43,9 +43,6 @@ public:
 	BView*					SettingsPanel();
 
 	void					FilterBuffer(float* buffer, size_t size);
-
-	status_t				FlattenSettings(BMessage* message);
-	status_t				UnflattenSettings(BMessage* message);
 };
 
 #endif

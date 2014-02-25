@@ -52,6 +52,8 @@ bool
 ProjectManager::HasChanged() const
 {
 	//return SnanpshotManager::HasChanged();
+
+	return false;
 }
 
 
@@ -59,6 +61,8 @@ bool
 ProjectManager::HasRedo() const
 {
 	//return SnapshotManager::HasRedo();
+
+	return false;
 }
 
 
@@ -66,6 +70,8 @@ bool
 ProjectManager::HasUndo() const
 {
 	//return SnapshotManager::HasUndo();
+
+	return false;
 }
 
 
@@ -155,6 +161,8 @@ ProjectManager::RegisterTrack(Track* track)
 	if (track->IsAudio()) {
 		return AudioGate::RegisterTrack((AudioTrack*)track);
 	}
+
+	return B_ERROR;
 }
 
 
@@ -164,6 +172,8 @@ ProjectManager::UnregisterTrack(Track* track)
 	if (track->IsAudio()) {
 		return AudioGate::UnregisterTrack((AudioTrack*)track);
 	}
+
+	return B_ERROR;
 }
 
 

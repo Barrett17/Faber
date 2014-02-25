@@ -43,9 +43,6 @@ public:
 
 	void			FilterBuffer(float* buffer, size_t size);
 
-	status_t		FlattenSettings(BMessage* message);
-	status_t		UnflattenSettings(BMessage* message);
-
 private:
 	bool			_InitFilter(float f, int32 channels = 2,
 						int32 pass = 0, int32 size = 0);

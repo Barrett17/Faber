@@ -63,17 +63,13 @@ AmplifierEffect::SettingsPanel()
 }
 
 
+/*
 status_t
 AmplifierEffect::FlattenSettings(BMessage* msg)
 {
 	//Prefs.filter_amplifier_value = value->Value();
 }
-
-
-status_t
-AmplifierEffect::UnflattenSettings(BMessage* msg)
-{
-}
+*/
 
 
 void

@@ -62,7 +62,7 @@ ToolsWidget::~ToolsWidget()
 void
 ToolsWidget::SetTool(const uint32 tool)
 {
-	for (int i = 0; i < 3; i++) {
+	for (uint32 i = 0; i < 3; i++) {
 		if (i == tool) {
 			fToolButtons[i]->SetPressed(true);			
 			fToolButtons[i]->SetEnabled(false);

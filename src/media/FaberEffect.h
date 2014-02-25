@@ -53,10 +53,9 @@ public:
 
 	int32					Flags() const;
 
-	virtual status_t		FilterTrack(AudioTrack* track,
-								int64 start, size_t size) = 0;
-
 	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
+
+	// TODO well probably is better to make it a BArchivable
 
 	status_t				ArchiveSettings(BMessage* message);
 	status_t				UnarchiveSettings(BMessage* message);

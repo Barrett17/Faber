@@ -47,9 +47,6 @@ public:
 	virtual void				DeAllocate();
 	virtual void 				FilterBuffer(float *, size_t);
 
-			status_t			FlattenSettings(BMessage* message);
-			status_t			UnflattenSettings(BMessage* message);
-
 	virtual BView*				SettingsPanel();
    
 private:
