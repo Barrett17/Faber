@@ -96,7 +96,6 @@ Application Faber :
 	IconButton.cpp
 	ToolButton.cpp
 	Spinner.cpp
-	MediaFileInfoView.cpp
 
 	# Settings
 	Settings.cpp
@@ -127,8 +126,6 @@ Application Faber :
 	FaberEffect.cpp
 	AudioEffect.cpp
 	AudioUtils.cpp
-
-	MediaFileInfo.cpp
 
 	# Media nodes
 	#MediaRecorderNode.cpp
