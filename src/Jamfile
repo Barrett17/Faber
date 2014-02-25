@@ -5,6 +5,7 @@ SubDirSysHdrs [ FDirName $(TOP) ] ;
 # This is the list of locations where
 # we have sources. If you add a location
 # you have to add it here.
+
 SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src interface ] ;
 
@@ -23,12 +24,6 @@ SEARCH_SOURCE += [ FDirName $(TOP) src views widgets ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools ] ;
-
-# NOTE deprecated will be removed
-SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window node_manager ] ;
-SEARCH_SOURCE += [ FDirName $(TOP) src windows tools parameter_window node_manager support ] ;
-
 SEARCH_SOURCE += [ FDirName $(TOP) src windows misc ] ;
 
 SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
@@ -70,7 +65,6 @@ Application Faber :
 	WidgetFrame.cpp
 
 	# TrackView implementations
-
 	TrackView.cpp
 	AudioTrackView.cpp
 	
@@ -109,7 +103,6 @@ Application Faber :
 	Engine.cpp
 	Interface.cpp
 	Keymap.cpp
-	#SwatchView.cpp
 	FStringItem.cpp
 
 	# Audio and Media internal API
@@ -120,17 +113,18 @@ Application Faber :
 	MediaGate.cpp
 	AudioGate.cpp
 
-	MediaEndPoint.cpp
-
 	EffectsManager.cpp
 	FaberEffect.cpp
 	AudioEffect.cpp
 	AudioUtils.cpp
 
-	# Media nodes
-	#MediaRecorderNode.cpp
-
+	# Media Nodes
 	AudioEngine.cpp
+
+	# media_kit improvement-API
+	MediaEndPoint.cpp
+	#MediaRecorder.cpp
+	#MediaRecorderNode.cpp
 
 	# Effects
 	#SimpleEffects.cpp
