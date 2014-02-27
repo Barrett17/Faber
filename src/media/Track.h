@@ -32,7 +32,7 @@ public:
 	virtual	bigtime_t		Duration() const;
 
 	virtual bool			IsAudio() const = 0;
-			//bool			IsMIDI() const;
+			//bool			IsMIDI() const = 0;
 
 	virtual const BString&	Name() const;
 	virtual void 			SetName(const char* name);

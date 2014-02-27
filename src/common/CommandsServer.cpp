@@ -69,7 +69,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 			const char* homepage = FABER_HELP_HOMEPAGE;
 			be_roster->Launch("text/html", 1,
 				const_cast<char**>(&homepage));
-
 			skip = true;
 			break;
 		}
@@ -125,28 +124,36 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 
 		case FABER_SAVE_AS_PROJECT:
 		{	
-			skip = true;
-
 			WindowsManager::GetSavePanel()->Show();
 
+			skip = true;
 			break;
 		}
 
 		case FABER_UNDO:
 		{
 
+			if (fProjectManager->HasUndo())
+				fProjectManager->Undo();
+
+			skip = true;
 			break;
 		}
 
 		case FABER_REDO:
 		{
 
+			if (fProjectManager->HasRedo())
+				fProjectManager->Redo();
+
+			skip = true;
 			break;
 		}
 
 		case FABER_OPEN_MIXER:
 		{
 			WindowsManager::GetFaberMixer()->Show();
+
 			skip = true;
 			break;
 		}

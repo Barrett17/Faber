@@ -29,8 +29,7 @@
 #include "TracksContainer.h"
 
 
-class FaberView : public BGroupView
-{
+class FaberView : public BGroupView {
 public:
 								FaberView();
 	virtual 					~FaberView();

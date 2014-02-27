@@ -38,7 +38,7 @@ WaveRender::WaveRender(AudioTrack* track)
 	fZoomFactor(20)
 {
 	fWavePeak = new WavePeak(track);
-	fEnd = fTrack->CountFrames()/fTrack->CountChannels();
+	//fEnd = fTrack->CountFrames()/fTrack->CountChannels();
 
 	SetViewColor(60,60,60);
 }	
@@ -344,7 +344,7 @@ WaveRender::TrackStart() const
 int64
 WaveRender::TrackEnd() const
 {
-	return fTrack->CountFrames()/fTrack->CountChannels();
+	//return fTrack->CountFrames()/fTrack->CountChannels();
 }
 
 

@@ -17,37 +17,22 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "InfoToolBar.h"
+#ifndef MEDIA_FORMAT_BUILDER_H
+#define MEDIA_FORMAT_BUILDER_H
 
-#include <GroupView.h>
-#include <LayoutBuilder.h>
-#include <TextView.h>
-
-#include "FaberDefs.h"
-#include "ZoomWidget.h"
-#include "VolumeSlider.h"
+#include "Track.h"
+#include "AudioTrack.h"
 
 
-InfoToolBar::InfoToolBar()
-	:
-	BView("InfoToolBar", B_WILL_DRAW)
-{
-	fPointerTextView = new BTextView("view", B_WILL_DRAW);
-	fPointerTextView->SetExplicitMaxSize(BSize(1500, 20));
-	fPointerTextView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+class MediaFormatBuilder {
+public:
+	static void BuildAudioBlockRawFormat(media_format* format);
 
-	VolumeSlider* slider = new VolumeSlider("slider", 0, 10, 7, NULL);
-	slider->SetExplicitMaxSize(BSize(150, B_SIZE_UNSET));
+	static void BuildAudioBlockEncodedFormat(media_format* format);
 
-	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
-		.Add(slider)
-		.AddGlue()
-		.AddGlue()
-		.Add(new ZoomWidget())
-	.End();
-}
+	static void BuildAudioBlockFormat(media_format* format);
 
+	static void BuildAudioGateFormat(media_format* format);
+};
 
-InfoToolBar::~InfoToolBar()
-{
-}
+#endif

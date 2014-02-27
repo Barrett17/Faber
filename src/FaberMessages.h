@@ -98,7 +98,6 @@ const uint32 FABER_COPY_SILENCE			=	'cpsl';
 
 const uint32 FABER_UNSELECT_ALL			=	'unsl';
 const uint32 FABER_CLEAR				=	'cler';
-const uint32 FABER_TRIM					=	'trim';
 
 const uint32 FABER_MUTE_ALL				=	'mtal';
 const uint32 FABER_UNMUTE_ALL			=	'umal';

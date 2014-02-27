@@ -28,27 +28,19 @@
 
 class TrackIndex {
 public:
-							TrackIndex() {};
+										TrackIndex() {};
 
-		//					CountRevisions() const;
+		status_t						InitCheck() const {return B_OK;};
 
-		int32				CountBlocks() const;
+		int32							CountChannels() const { return 1;};
+		void							AddChannel(MediaBlockTree* tree);
+		MediaBlockTree*					GetChannel(int32 index) const;
+		MediaBlockTree*					ExtractChannel(int32 index);
 
-		const block_ref*	BlockAt(int32 index);
-
-		status_t			AddBlock(int32 index, MediaBlock* block,
-								bool saveAndFree = false);
-
-		status_t			AddBlock(MediaBlock* block,
-								bool saveAndFree = false);
-
-		status_t			AddBlock(int32 index, block_ref* block);
-
-		status_t			RemoveBlock(int32 index);
-
-		status_t			RemoveBlocks(int32 start, int32 end);
 private:
-		BFile*				fFile;
+		BFile*							fFile;
+		BObjectList<MediaBlockTree*>	fChannels;
+		media_format					fOutputFormat;
 };
 
 #endif

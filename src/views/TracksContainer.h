@@ -74,7 +74,6 @@ public:
 	void				Copy();
 	void				Cut();
 	void				Paste();
-	void				Trim();
 	void				Clear();
 
 	void				ZoomIn();

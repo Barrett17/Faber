@@ -56,7 +56,10 @@ public:
 
 private:
 	BMenu*					_BuildMenu(KeyBind* bind);
-	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind, BView* target = NULL);
+
+	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind,
+								BView* target = NULL);
+
 	BMenuItem*				_BuildMenuItem(uint32 message, const char* label);
 
 	static MenuBuilder*		fInstance;

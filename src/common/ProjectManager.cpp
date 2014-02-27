@@ -123,6 +123,7 @@ ProjectManager::LoadProject(entry_ref ref)
 status_t
 ProjectManager::LoadFile(entry_ref ref)
 {
+	// TODO maybe use B_MEDIA_FILE_BIG_BUFFERS !?
 	BMediaFile* mediaFile = new BMediaFile(&ref);
 
 	if (mediaFile->InitCheck() == B_OK)

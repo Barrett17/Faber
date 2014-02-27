@@ -37,14 +37,15 @@ public:
 							~AudioTrack();
 
 			status_t		InitCheck() const;
-			status_t		SeekToFrame(int64* _frame, int32 flags = 0);
-			int64			CountFrames() const;
+
 			int32			CountChannels() const;
 
 			// TODO generalize a bit this notion creating a base type
 			// of objects suited to modify the track, FaberEffect
 			// will be derived from it.
-			status_t		ApplyEffect(int32 id, int64 start, int64 end);
+			//status_t		ApplyEffect(int32 id, int64 start, int64 end);
+
+			//status_t		ExecuteOperation(AudioTrackOperation* operation);
 
 			// Other utils
 			bool			IsAudio() const;

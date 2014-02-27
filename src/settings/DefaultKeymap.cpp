@@ -71,7 +71,6 @@ KeyBind kEditMenu[] {
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 	//{ 1,"Set frequency",      0, 0,                               0, 0,                       FABER_SET_FREQUENCY },
 
-    { 1,"Trim",               'T', B_COMMAND_KEY,                   0, 0,                       FABER_TRIM },
 	{ 1,"Clear",              'B', B_COMMAND_KEY,            B_DELETE, 0,                       FABER_CLEAR },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },

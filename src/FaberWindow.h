@@ -24,8 +24,7 @@
 #include "FaberView.h"
 
 
-class FaberWindow : public BWindow
-{
+class FaberWindow : public BWindow {
 public:
 								FaberWindow(BRect rect);
 	virtual						~FaberWindow();

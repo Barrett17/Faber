@@ -36,12 +36,12 @@ AudioTrack::AudioTrack(TrackIndex* index)
 	Track(),
 	fTrackIndex(index)
 {
-	//fFormat = SettingsManager::BuildAudioSessionFormat();
 }
 
 
 AudioTrack::~AudioTrack()
 {
+	delete fTrackIndex;
 }
 
 
@@ -55,8 +55,7 @@ AudioTrack::IsAudio() const
 int32
 AudioTrack::CountChannels() const
 {
-	//return fTrackIndex->CountChannels();
-	return 1;
+	return fTrackIndex->CountChannels();
 }
 
 
@@ -75,27 +74,7 @@ AudioTrack::IsStereo() const
 
 
 status_t
-AudioTrack::SeekToFrame(int64* frame, int32 flags)
-{
-}
-
-
-int64
-AudioTrack::CountFrames() const
-{
-	//return fTrackIndex->CountFrames();
-}
-
-
-status_t
 AudioTrack::InitCheck() const
 {
-	//return fTrackIndex->InitCheck();
-}
-
-
-status_t
-AudioTrack::ApplyEffect(int32 id, int64 start, int64 end)
-{
-
+	return fTrackIndex->InitCheck();
 }

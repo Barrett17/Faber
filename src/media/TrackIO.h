@@ -26,9 +26,12 @@
 
 class TrackIO {
 public:
-	static AudioTrack* ImportAudio(BMediaFile* mediaFile, const char* name);
+	static AudioTrack*		ImportAudio(BMediaFile* mediaFile,
+								const char* name);
 
-
+private:
+	static status_t			_BuildBlocks(void* buffer, int64 frames,
+								TrackIndex* index, uint32 channels);
 };
 
 #endif

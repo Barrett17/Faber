@@ -31,7 +31,7 @@ FaberView::FaberView()
 	BGroupView(B_VERTICAL, 0)
 {
 	fToolBar = new ToolBar();
-	//fToolBar->SetTool(Prefs.tool_mode);
+	//fToolBar->SetTool(SettingsManager::GetLatestTool());
 
 	fTracksContainer = new TracksContainer();
 
@@ -65,7 +65,6 @@ FaberView::MessageReceived(BMessage* message)
 {
 	switch (message->what)
 	{
-
 		default:
 			BGroupView::MessageReceived(message);
 	}

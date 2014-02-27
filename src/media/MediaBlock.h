@@ -20,10 +20,12 @@
 #ifndef _MEDIA_BLOCK_H
 #define _MEDIA_BLOCK_H
 
+#include <Entry.h>
+
 class TrackIndex;
 
 
-enum FaberDataBlockTypes {
+enum FaberDataBlockKinds {
 	FABER_RAW_DATA = 1001,
 	FABER_MEDIA_DATA,
 	FABER_MIDI_DATA
@@ -31,27 +33,34 @@ enum FaberDataBlockTypes {
 
 
 struct block_ref {
-	const char* name;
 	int32 id;
 	uint32 kind;
+	entry_ref entry;
+
+private:
+	block_ref* next;
 };
 
 
 struct mediablock_ref : public block_ref {
-	int64 length;
+	int64 frames;
 	int64 start;
 
-	int16* preview;
-	size_t size;
+private:
+	mediablock_ref* next;
 };
 
 
 class DataBlock {
 public:
-							DataBlock(TrackIndex* owner, block_ref* ref);	
+							DataBlock(TrackIndex* owner,
+								BDataIO* data);	
 
-	/*virtual	uint32			Kind() const = 0;
+		const block_ref*	GetRef();
 
+	virtual	uint32			Kind() const = 0;
+
+	/*
 	virtual ssize_t			Read(void* buffer, size_t numBytes);
 	virtual ssize_t			Read(void* buffer, size_t numBytes);
 
@@ -63,32 +72,55 @@ public:
 
 private:
 			BDataIO*		fData;
-			block_ref*		fBlockRef;
+			block_ref*		fRef;
 };
 
 
 class MediaBlock : public DataBlock {
 public:
-							MediaBlock(TrackIndex* owner,
-								block_ref* ref);	
+									MediaBlock(TrackIndex* owner,
+										BMediaFile* file);	
 
-	virtual	uint32			Kind() const;
+	virtual	uint32					Kind() const;
 
-			status_t		ReadFrames(void* buffer, int64* frameCount);
-			int64			CountFrames() const;
+	virtual const mediablock_ref*	GetRef();
 
-			status_t		WriteFrames(const void* data, int32 frameCount,
-								int32 flags = 0);
+			status_t				ReadFrames(void* buffer, int64* frameCount);
+			int64					CountFrames() const;
 
-			status_t		ReplaceFrames(const void* buffer,
-								int64* frameCount);
-
-			status_t		SeekToTime(bigtime_t* _time, int32 flags = 0);
-			status_t		SeekToFrame(int64* _frame, int32 flags = 0);
+			status_t				SeekToFrame(int64* _frame, int32 flags = 0);
 
 private:
-			BMediaFile*		fFile;
-			BMediaTrack*	fTrack;
+
+			int16*					fPreview;
+			size_t					fPreviewSize;
+
+			mediablock_ref*			fRef;
+			BMediaFile*				fFile;
+			BMediaTrack*			fTrack;
+};
+
+
+class MediaBlockTree {
+public:
+		int32						CountBlocks() const;
+
+		const block_ref*			BlockAt(int32 index);
+
+		status_t					AddBlock(int32 index, MediaBlock* block,
+										bool saveAndFree = false);
+		status_t					AddBlock(MediaBlock* block,
+										bool saveAndFree = false);
+		status_t					AddBlock(int32 index, block_ref* block);
+
+		status_t					RemoveBlock(int32 index);
+		status_t					RemoveBlocks(int32 start, int32 end);
+
+		//PreviewIterator*			GetPreview();
+		//MediaBlockIterator*		GetBlocks();
+private:
+		mediablock_ref*				fStart;
+		mediablock_ref*				fEnd;
 };
 
 
@@ -104,4 +136,5 @@ class EmptyMediaBlock : public MediaBlock {
 
 };
 */
+
 #endif

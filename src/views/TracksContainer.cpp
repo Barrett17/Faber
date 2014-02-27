@@ -176,10 +176,6 @@ TracksContainer::MessageReceived(BMessage* message)
 			Clear();
 			break;
 
-		case FABER_TRIM:
-			Trim();
-			break;
-
 		case FABER_ZOOM_IN:
 			ZoomIn();
 			break;
@@ -432,13 +428,6 @@ TracksContainer::ReorderTracks(int order)
 
 void
 TracksContainer::Copy()
-{
-
-}
-
-
-void
-TracksContainer::Trim()
 {
 
 }

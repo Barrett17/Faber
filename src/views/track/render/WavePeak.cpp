@@ -28,7 +28,7 @@ WavePeak::WavePeak(AudioTrack* track)
 	fFrameCount(0)
 {
 	fPreview = new BObjectList<float>(true);
-	_RenderPeaks(0, fTrack->CountFrames(), 128);
+	//_RenderPeaks(0, fTrack->CountFrames(), 128);
 }
 
 
