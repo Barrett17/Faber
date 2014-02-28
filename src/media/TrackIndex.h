@@ -33,13 +33,15 @@ public:
 		status_t						InitCheck() const {return B_OK;};
 
 		int32							CountChannels() const { return 1;};
-		void							AddChannel(MediaBlockTree* tree);
-		MediaBlockTree*					GetChannel(int32 index) const;
-		MediaBlockTree*					ExtractChannel(int32 index);
+		void							AddChannel(MediaBlockMap* tree);
+		MediaBlockMap*					GetChannel(int32 index) const;
+
+		// The following method will detach the track from the index.
+		MediaBlockMap*					ExtractChannel(int32 index);
 
 private:
 		BFile*							fFile;
-		BObjectList<MediaBlockTree*>	fChannels;
+		BObjectList<MediaBlockMap*>		fChannels;
 		media_format					fOutputFormat;
 };
 

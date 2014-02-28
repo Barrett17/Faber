@@ -43,8 +43,8 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 	}
 
 	for (uint32 i = 0; i < format.u.raw_audio.channel_count; i++) {
-		MediaBlockTree* tree = new MediaBlockTree();
-		index->AddChannel(tree);
+		MediaBlockMap* channel = new MediaBlockMap();
+		index->AddChannel(channel);
 	}
 
 	int64 frames = 0;

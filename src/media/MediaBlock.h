@@ -101,7 +101,7 @@ private:
 };
 
 
-class MediaBlockTree {
+class MediaBlockMap {
 public:
 		int32						CountBlocks() const;
 
