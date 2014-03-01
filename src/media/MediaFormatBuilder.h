@@ -20,8 +20,7 @@
 #ifndef MEDIA_FORMAT_BUILDER_H
 #define MEDIA_FORMAT_BUILDER_H
 
-#include "Track.h"
-#include "AudioTrack.h"
+#include <MediaDefs.h>
 
 
 class MediaFormatBuilder {

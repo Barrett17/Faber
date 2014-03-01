@@ -17,37 +17,20 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _TRACK_INDEX_H
-#define _TRACK_INDEX_H
-
-#include <File.h>
-#include <MediaDefs.h>
-#include <ObjectList.h>
-
-#include "MediaBlock.h"
+#include "DataBlock.h"
 
 
-class TrackIndex {
-public:
-										TrackIndex();
+DataBlock::DataBlock(BDataIO* data, FaberDataBlockKinds kind)
+	:
+	fData(data),
+	fKind(kind)
+{
 
-		status_t						InitCheck() const;
+}
 
-		uint32							CountChannels() const;
-		void							AddChannel(MediaBlockMap* tree);
-		MediaBlockMap*					GetChannel(int32 index) const;
 
-		BObjectList<MediaBlockMap>&		GetChannels() const;
+uint32
+DataBlock::Kind() const
+{
 
-		// The following method will detach and remove ownership of the channel
-		// from the index.
-		MediaBlockMap*					ExtractChannel(int32 index);
-
-private:
-		BFile*							fFile;
-		BObjectList<MediaBlockMap>*		fChannels;
-		media_format					fOutputFormat;
-		status_t						fInitErr;
-};
-
-#endif
+}

@@ -19,3 +19,98 @@
 
 #include "MediaBlock.h"
 
+
+MediaBlock::MediaBlock(BFile* file)
+	:
+	DataBlock(file, FABER_AUDIO_DATA),
+	fFramesCount(0)
+{
+
+}
+
+
+
+int16*
+MediaBlock::ReadPreview(size_t* size)
+{
+	return NULL;
+}
+
+
+status_t
+MediaBlock::ReadFrames(void* buffer, int64* frameCount)
+{
+	return B_ERROR;
+}
+
+
+int64
+MediaBlock::CountFrames() const
+{
+	return fFramesCount;
+}
+
+
+status_t
+MediaBlock::SeekToFrame(int64* frame)
+{
+	return B_ERROR;
+}
+
+
+MediaBlock*
+MediaBlock::CopyTo(BFile* file)
+{
+	// return StorageManager::CopyBlockInto(this, file);
+	return NULL;
+}
+
+
+int32
+MediaBlockMap::CountBlocks() const
+{
+	return 0;
+}
+
+
+MediaBlock*
+MediaBlockMap::BlockAt(int32 index)
+{
+	return NULL;
+}
+
+
+status_t
+MediaBlockMap::AddBlock(int32 index, MediaBlock* block,
+	bool saveAndFree)
+{
+	return B_ERROR;
+}
+
+
+status_t
+MediaBlockMap::AddBlock(MediaBlock* block, bool saveAndFree)
+{
+	return B_ERROR;
+}
+
+
+status_t
+MediaBlockMap::RemoveBlock(int32 index)
+{
+	return B_ERROR;
+}
+
+
+status_t
+MediaBlockMap::RemoveBlocks(int32 start, int32 end)
+{
+	return B_ERROR;
+}
+
+
+status_t
+MediaBlockMap::WriteFrames(void* buffer, int64 frameCount)
+{
+	return B_ERROR;
+}

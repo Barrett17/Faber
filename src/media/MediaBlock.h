@@ -20,58 +20,30 @@
 #ifndef _MEDIA_BLOCK_H
 #define _MEDIA_BLOCK_H
 
-#include <Entry.h>
+#include <File.h>
 
-//#include "HashMap.h"
-
-class TrackIndex;
-
-
-enum FaberDataBlockKinds {
-	FABER_RAW_DATA = 1001,
-	FABER_AUDIO_DATA,
-	FABER_MIDI_DATA
-};
-
-
-class DataBlock {
-public:
-									DataBlock(BDataIO* data,
-										FaberDataBlockKinds kind);	
-
-	virtual	uint32					Kind() const = 0;
-
-	/*
-	virtual ssize_t					Read(void* buffer, size_t numBytes);
-	virtual ssize_t					Read(void* buffer, size_t numBytes);
-
-	virtual ssize_t					ReadAt(off_t position, void* buffer,
-										size_t numBytes);
-
-	virtual off_t					Seek(off_t position, int32 mode);
-	virtual off_t					Position(void) const;*/
-
-private:
-			BDataIO*				fData;
-};
+#include "DataBlock.h"
+#include "HashMap.h"
 
 
 class MediaBlock : public DataBlock {
 public:
 									MediaBlock(BFile* file);	
 
-	virtual	uint32					Kind() const;
-
 			int16*					ReadPreview(size_t* size);
 
 			status_t				ReadFrames(void* buffer, int64* frameCount);
 			int64					CountFrames() const;
 
-			status_t				SeekToFrame(int64* _frame, int32 flags = 0);
+			status_t				SeekToFrame(int64* frame);
 
 			MediaBlock*				CopyTo(BFile* file);
 
+			//status_t				Acquire(TrackIndex* index);
+			//status_t				Release(TrackIndex* index);
+
 private:
+			int64					fFramesCount;
 			BFile*					fData;
 };
 
@@ -98,22 +70,9 @@ protected:
 
 		//PreviewIterator*			GetPreview();
 		//MediaBlockIterator*		GetBlocks();
+
 private:
-		//HashMap<MediaBlock, int64>			fMap;
+		HashMap<HashKey64<int64>, MediaBlock> fMap;
 };
-
-
-// This block is meant to represent empty data.
-// Useful to save space.
-/*
-class EmptyDataBlock : public DataBlock {
-
-};
-
-
-class EmptyMediaBlock : public MediaBlock {
-
-};
-*/
 
 #endif

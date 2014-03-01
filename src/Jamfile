@@ -26,21 +26,21 @@ SEARCH_SOURCE += [ FDirName $(TOP) src windows ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows tools ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src windows misc ] ;
 
-SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
-
 SEARCH_SOURCE += [ FDirName $(TOP) src settings ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src settings panel ] ;
 
+SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
+
 # NOTE this is the location for headers needed to 
 # access the BPrivate namespace data, only put such type of
-# headers there. Will be removed before once the API get stable,
-# alternatively before a stable release also the cpp file should
+# headers there. Will be removed once those APIs get stable,
+# if not before a stable release also the cpp file should
 # be bundled into the app.
 SEARCH_SOURCE += [ FDirName $(TOP) src common private_headers ] ;
 
 
 Application Faber :
-	# Core
+	# User Experience
 	Faber.cpp
 	FaberWindow.cpp
 	FaberView.cpp
@@ -110,10 +110,17 @@ Application Faber :
 	# Audio and Media internal API
 	Track.cpp
 	AudioTrack.cpp
+	TrackIndex.cpp
+
+	DataBlock.cpp
+	MediaBlock.cpp
+
 	TrackIO.cpp
 
 	MediaGate.cpp
 	AudioGate.cpp
+
+	MediaFormatBuilder.cpp
 
 	EffectsManager.cpp
 	FaberEffect.cpp

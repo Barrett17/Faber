@@ -17,37 +17,16 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _TRACK_INDEX_H
-#define _TRACK_INDEX_H
+#include "MediaFormatBuilder.h"
 
-#include <File.h>
-#include <MediaDefs.h>
-#include <ObjectList.h>
-
-#include "MediaBlock.h"
+#define FABER_BUFFER_SIZE 512
 
 
-class TrackIndex {
-public:
-										TrackIndex();
-
-		status_t						InitCheck() const;
-
-		uint32							CountChannels() const;
-		void							AddChannel(MediaBlockMap* tree);
-		MediaBlockMap*					GetChannel(int32 index) const;
-
-		BObjectList<MediaBlockMap>&		GetChannels() const;
-
-		// The following method will detach and remove ownership of the channel
-		// from the index.
-		MediaBlockMap*					ExtractChannel(int32 index);
-
-private:
-		BFile*							fFile;
-		BObjectList<MediaBlockMap>*		fChannels;
-		media_format					fOutputFormat;
-		status_t						fInitErr;
-};
-
-#endif
+void
+MediaFormatBuilder::BuildAudioBlockRawFormat(media_format* format)
+{
+	format->u.raw_audio.buffer_size = FABER_BUFFER_SIZE;
+	format->u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
+	format->type = B_MEDIA_RAW_AUDIO;
+	//*format.u.raw_audio.framerate = SettingsManager::GetProjectFramerate();
+}
