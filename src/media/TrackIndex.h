@@ -32,11 +32,14 @@ public:
 
 		status_t						InitCheck() const {return B_OK;};
 
-		int32							CountChannels() const { return 1;};
+		uint32							CountChannels() const { return 1;};
 		void							AddChannel(MediaBlockMap* tree);
 		MediaBlockMap*					GetChannel(int32 index) const;
 
-		// The following method will detach the track from the index.
+		BObjectList<MediaBlockMap>&		GetChannels() const;
+
+		// The following method will detach and remove ownership of the channel
+		// from the index.
 		MediaBlockMap*					ExtractChannel(int32 index);
 
 private:

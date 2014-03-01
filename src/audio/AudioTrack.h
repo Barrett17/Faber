@@ -32,8 +32,7 @@
 class AudioTrack : public Track {
 public:
 							AudioTrack();
-							AudioTrack(TrackIndex* index);
-
+							AudioTrack(const char* name, TrackIndex* index);
 							~AudioTrack();
 
 			status_t		InitCheck() const;
@@ -45,6 +44,7 @@ public:
 			// will be derived from it.
 			//status_t		ApplyEffect(int32 id, int64 start, int64 end);
 
+			// Something like :
 			//status_t		ExecuteOperation(AudioTrackOperation* operation);
 
 			// Other utils
@@ -52,7 +52,6 @@ public:
 
 			bool			IsMono() const;
 			bool			IsStereo() const;
-			bool			IsMultichannel() const;
 
 private:
 			TrackIndex*		fTrackIndex;

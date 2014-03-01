@@ -17,65 +17,10 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "AudioTrack.h"
+class SnapshotManager {
+public:
+		static BFile*			BlockFileRequested();
 
-#include "FaberDefs.h"
+private:
 
-
-AudioTrack::AudioTrack()
-	:
-	Track(),
-	fTrackIndex()
-{
-	SetName(B_TRANSLATE("Empty Audio Track"));
-}
-
-
-AudioTrack::AudioTrack(const char* name, TrackIndex* index)
-	:
-	Track(),
-	fTrackIndex(index)
-{
-	SetName(name);
-}
-
-
-AudioTrack::~AudioTrack()
-{
-	delete fTrackIndex;
-}
-
-
-bool
-AudioTrack::IsAudio() const
-{
-	return true;
-}
-
-
-int32
-AudioTrack::CountChannels() const
-{
-	return fTrackIndex->CountChannels();
-}
-
-
-bool
-AudioTrack::IsMono() const
-{
-	return CountChannels() == 1;
-}
-
-
-bool
-AudioTrack::IsStereo() const
-{
-	return CountChannels() == 2;
-}
-
-
-status_t
-AudioTrack::InitCheck() const
-{
-	return fTrackIndex->InitCheck();
-}
+};

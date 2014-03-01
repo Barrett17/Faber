@@ -30,7 +30,7 @@ public:
 								const char* name);
 
 private:
-	static status_t			_BuildBlocks(void* buffer, int64 frames,
+	static status_t			_BuildBlocks(float* buffer, int64 frames,
 								TrackIndex* index, uint32 channels);
 };
 

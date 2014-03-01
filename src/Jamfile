@@ -33,7 +33,9 @@ SEARCH_SOURCE += [ FDirName $(TOP) src settings panel ] ;
 
 # NOTE this is the location for headers needed to 
 # access the BPrivate namespace data, only put such type of
-# headers there. Will be removed at some point.
+# headers there. Will be removed before once the API get stable,
+# alternatively before a stable release also the cpp file should
+# be bundled into the app.
 SEARCH_SOURCE += [ FDirName $(TOP) src common private_headers ] ;
 
 

@@ -17,8 +17,11 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "MediaFormatBuilder.h"
 #include "TrackIO.h"
+
+#include <MediaFile.h>
+
+#include "MediaFormatBuilder.h"
 
 
 AudioTrack*
@@ -28,13 +31,13 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 
 	media_format format;
 
-	MediaFormatBuilder::BuildAudioBlockFormat(&format);
+	MediaFormatBuilder::BuildAudioBlockRawFormat(&format);
 
 	// TODO check original file format to ask 
 	// if the user want it to be resampled or not.
 	// NOTE atm we are considering only the first track, may and probably will
 	// change in future, or at least the user should be able to select which track
-	// to import (eventually all).
+	// to import (eventually all and as separated track).
 	BMediaTrack* track = mediaFile->TrackAt(0);
 
 	if (track->DecodedFormat(&format) != B_OK) {
@@ -54,20 +57,34 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 		& media_raw_audio_format::B_AUDIO_SIZE_MASK)];
 
 	while (track->ReadFrames(buffer, &frames) == B_OK)
-		_BuildBlocks(buffer, frames, index, format.u.raw_audio.channel_count);
+		_BuildBlocks((float*)buffer, frames, index, format.u.raw_audio.channel_count);
 
-	AudioTrack* ret = new AudioTrack(index);
-	// TODO Consider adding it in the constructor.
-	ret->SetName(name);
+	AudioTrack* ret = new AudioTrack(name, index);
  
-	return ret;
+ 	return ret;
 }
 
 
 status_t
-TrackIO::_BuildBlocks(void* buffer, int64 frames, TrackIndex* index,
+TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 	uint32 channels)
 {
+	BObjectList<MediaBlockMap> trackChannels = index->GetChannels();
+
+	float temp[channels][frames/channels];
+
+	int64 count = 0;
+
+	for (int64 i = 0; i < frames; i++) {
+		for (uint32 j = 0; j < channels; j++) {
+			temp[j][count] = buffer[i];
+			count++;
+		}
+	}
+
+	for (uint32 j = 0; j < channels; j++) {
+		trackChannels.ItemAt(j)->WriteFrames(&temp[j][0], frames/channels); 
+	}
 
 	return B_OK;
 }

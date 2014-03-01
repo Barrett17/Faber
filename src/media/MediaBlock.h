@@ -22,82 +22,57 @@
 
 #include <Entry.h>
 
+//#include "HashMap.h"
+
 class TrackIndex;
 
 
 enum FaberDataBlockKinds {
 	FABER_RAW_DATA = 1001,
-	FABER_MEDIA_DATA,
+	FABER_AUDIO_DATA,
 	FABER_MIDI_DATA
-};
-
-
-struct block_ref {
-	int32 id;
-	uint32 kind;
-	entry_ref entry;
-
-private:
-	block_ref* next;
-};
-
-
-struct mediablock_ref : public block_ref {
-	int64 frames;
-	int64 start;
-
-private:
-	mediablock_ref* next;
 };
 
 
 class DataBlock {
 public:
-							DataBlock(TrackIndex* owner,
-								BDataIO* data);	
+									DataBlock(BDataIO* data,
+										FaberDataBlockKinds kind);	
 
-		const block_ref*	GetRef();
-
-	virtual	uint32			Kind() const = 0;
+	virtual	uint32					Kind() const = 0;
 
 	/*
-	virtual ssize_t			Read(void* buffer, size_t numBytes);
-	virtual ssize_t			Read(void* buffer, size_t numBytes);
+	virtual ssize_t					Read(void* buffer, size_t numBytes);
+	virtual ssize_t					Read(void* buffer, size_t numBytes);
 
-	virtual ssize_t			ReadAt(off_t position, void* buffer,
-								size_t numBytes);
+	virtual ssize_t					ReadAt(off_t position, void* buffer,
+										size_t numBytes);
 
-	virtual off_t			Seek(off_t position, int32 mode);
-	virtual off_t			Position(void) const;*/
+	virtual off_t					Seek(off_t position, int32 mode);
+	virtual off_t					Position(void) const;*/
 
 private:
-			BDataIO*		fData;
-			block_ref*		fRef;
+			BDataIO*				fData;
 };
 
 
 class MediaBlock : public DataBlock {
 public:
-									MediaBlock(TrackIndex* owner,
-										BMediaFile* file);	
+									MediaBlock(BFile* file);	
 
 	virtual	uint32					Kind() const;
 
-	virtual const mediablock_ref*	GetRef();
+			int16*					ReadPreview(size_t* size);
 
 			status_t				ReadFrames(void* buffer, int64* frameCount);
 			int64					CountFrames() const;
 
 			status_t				SeekToFrame(int64* _frame, int32 flags = 0);
 
+			MediaBlock*				CopyTo(BFile* file);
+
 private:
-
-			int16*					fPreview;
-			size_t					fPreviewSize;
-
-			mediablock_ref*			fRef;
-			BMediaFile*				fFile;
-			BMediaTrack*			fTrack;
+			BFile*					fData;
 };
 
 
@@ -105,22 +80,26 @@ class MediaBlockMap {
 public:
 		int32						CountBlocks() const;
 
-		const block_ref*			BlockAt(int32 index);
+		MediaBlock*					BlockAt(int32 index);
 
 		status_t					AddBlock(int32 index, MediaBlock* block,
 										bool saveAndFree = false);
+
 		status_t					AddBlock(MediaBlock* block,
 										bool saveAndFree = false);
-		status_t					AddBlock(int32 index, block_ref* block);
 
 		status_t					RemoveBlock(int32 index);
 		status_t					RemoveBlocks(int32 start, int32 end);
 
+protected:
+		friend class				TrackIO;
+
+		status_t					WriteFrames(void* buffer, int64 frameCount);
+
 		//PreviewIterator*			GetPreview();
 		//MediaBlockIterator*		GetBlocks();
 private:
-		mediablock_ref*				fStart;
-		mediablock_ref*				fEnd;
+		//HashMap<MediaBlock, int64>			fMap;
 };
 
 
