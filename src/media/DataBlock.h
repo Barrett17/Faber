@@ -22,8 +22,6 @@
 
 #include <DataIO.h>
 
-#include "HashMap.h"
-
 class TrackIndex;
 
 

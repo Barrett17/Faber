@@ -81,15 +81,7 @@ MediaBlockMap::BlockAt(int32 index)
 
 
 status_t
-MediaBlockMap::AddBlock(int32 index, MediaBlock* block,
-	bool saveAndFree)
-{
-	return B_ERROR;
-}
-
-
-status_t
-MediaBlockMap::AddBlock(MediaBlock* block, bool saveAndFree)
+MediaBlockMap::AddBlock(MediaBlock* block, int32 index)
 {
 	return B_ERROR;
 }

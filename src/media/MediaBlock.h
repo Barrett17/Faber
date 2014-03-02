@@ -21,9 +21,9 @@
 #define _MEDIA_BLOCK_H
 
 #include <File.h>
+#include <ObjectList.h>
 
 #include "DataBlock.h"
-#include "HashMap.h"
 
 
 class MediaBlock : public DataBlock {
@@ -49,7 +49,12 @@ private:
 
 
 class MediaBlockNode {
+public:
+									MediaBlockNode(MediaBlock* block,
+										bool isSentinel = false);
 
+private:
+		MediaBlock*					fBlock;
 };
 
 
@@ -59,11 +64,7 @@ public:
 
 		MediaBlock*					BlockAt(int32 index);
 
-		status_t					AddBlock(int32 index, MediaBlock* block,
-										bool saveAndFree = false);
-
-		status_t					AddBlock(MediaBlock* block,
-										bool saveAndFree = false);
+		status_t					AddBlock(MediaBlock* block, int32 index = -1);
 
 		status_t					RemoveBlock(int32 index);
 		status_t					RemoveBlocks(int32 start, int32 end);
@@ -73,7 +74,7 @@ protected:
 		//MediaBlockIterator*		GetBlocks();
 
 private:
-		HashMap<HashKey64<int64>, MediaBlock> fMap;
+		BObjectList<MediaBlock>		fMap;
 };
 
 
