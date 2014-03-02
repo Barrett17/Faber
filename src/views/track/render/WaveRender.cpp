@@ -19,8 +19,6 @@
 
 #include "WaveRender.h"
 
-#include <Window.h>
-
 #include "FaberDefs.h"
 
 #include <stdio.h>
@@ -37,7 +35,6 @@ WaveRender::WaveRender(AudioTrack* track)
 	fSelectionEnd(-1),
 	fZoomFactor(20)
 {
-	fWavePeak = new WavePeak(track);
 	//fEnd = fTrack->CountFrames()/fTrack->CountChannels();
 
 	SetViewColor(60,60,60);
@@ -46,7 +43,6 @@ WaveRender::WaveRender(AudioTrack* track)
 
 WaveRender::~WaveRender()
 {
-	delete fWavePeak;
 }
 
 
@@ -64,7 +60,7 @@ WaveRender::_RenderTrack(BRect rect)
 	SetDrawingMode(B_OP_ALPHA);
 	SetHighColor(155,157,162);
 
-	int32 channels = fTrack->CountChannels();
+	/*int32 channels = fTrack->CountChannels();
 
 	float center = Bounds().Height()/(channels*2);
 
@@ -72,7 +68,7 @@ WaveRender::_RenderTrack(BRect rect)
 		float* buffer = fWavePeak->Preview()->ItemAt(i);
 		_RenderChannel(buffer, center);
 		center += center*2;
-	}
+	}*/
 }
 
 

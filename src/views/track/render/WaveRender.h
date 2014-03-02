@@ -20,8 +20,6 @@
 #include "AudioTrack.h"
 #include <View.h>
 
-#include "WavePeak.h"
-
 
 class WaveRender : public BView
 {
@@ -71,7 +69,6 @@ private:
 
 			bool			fMousePrimary;
 
-			WavePeak*		fWavePeak;
 			AudioTrack*		fTrack;
 			bool			fUpdate;
 

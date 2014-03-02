@@ -140,6 +140,9 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 {
 	AudioTrack* track = TrackIO::ImportAudio(mediaFile, name);
 
+	if (track == NULL)
+		return B_ERROR;
+
 	printf("Faber: Loading media file %s\n", name);
 
 	status_t ret = track->InitCheck();

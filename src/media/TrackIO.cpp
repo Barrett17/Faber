@@ -80,6 +80,7 @@ TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 			temp[j][count] = buffer[i];
 			count++;
 		}
+		count = 0;
 	}
 
 	for (uint32 j = 0; j < channels; j++) {
