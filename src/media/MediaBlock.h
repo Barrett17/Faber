@@ -48,6 +48,11 @@ private:
 };
 
 
+class MediaBlockNode {
+
+};
+
+
 class MediaBlockMap {
 public:
 		int32						CountBlocks() const;
@@ -64,15 +69,26 @@ public:
 		status_t					RemoveBlocks(int32 start, int32 end);
 
 protected:
-		friend class				TrackIO;
-
-		status_t					WriteFrames(void* buffer, int64 frameCount);
-
 		//PreviewIterator*			GetPreview();
 		//MediaBlockIterator*		GetBlocks();
 
 private:
 		HashMap<HashKey64<int64>, MediaBlock> fMap;
+};
+
+
+class MediaBlockMapWriter {
+public:
+									MediaBlockMapWriter();
+
+		bool						IsValid() const;
+		void						SetTo(MediaBlockMap* to);
+		status_t					WriteFrames(void* buffer, int64 frameCount,
+										int64 from = -1, bool overWrite = false);
+
+private:
+		MediaBlockMap*				fDestination;
+
 };
 
 #endif

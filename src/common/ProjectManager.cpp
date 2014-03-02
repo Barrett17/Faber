@@ -20,6 +20,7 @@
 #include "ProjectManager.h"
 
 #include "AudioGate.h"
+#include "AutoDeleter.h"
 #include "FaberDefs.h"
 #include "TrackIO.h"
 
@@ -129,8 +130,6 @@ ProjectManager::LoadFile(entry_ref ref)
 	if (mediaFile->InitCheck() == B_OK)
 		return LoadMediaFile(mediaFile, ref.name);
 
-	delete mediaFile;
-
 	return LoadProject(ref);
 }
 
@@ -138,6 +137,9 @@ ProjectManager::LoadFile(entry_ref ref)
 status_t
 ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 {
+
+	ObjectDeleter<BMediaFile> deleter(mediaFile);
+
 	AudioTrack* track = TrackIO::ImportAudio(mediaFile, name);
 
 	if (track == NULL)
@@ -147,7 +149,7 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 
 	status_t ret = track->InitCheck();
 
-	if (ret < B_OK) {
+	if (ret != B_OK) {
 		delete track;
 		printf("Error loading track: %s\n", strerror(ret));
 		return ret;

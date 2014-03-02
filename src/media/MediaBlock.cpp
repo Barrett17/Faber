@@ -110,7 +110,8 @@ MediaBlockMap::RemoveBlocks(int32 start, int32 end)
 
 
 status_t
-MediaBlockMap::WriteFrames(void* buffer, int64 frameCount)
+MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount,
+	int64 start, bool overWrite)
 {
 	return B_ERROR;
 }

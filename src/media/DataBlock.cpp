@@ -32,5 +32,5 @@ DataBlock::DataBlock(BDataIO* data, FaberDataBlockKinds kind)
 uint32
 DataBlock::Kind() const
 {
-
+	return fKind;
 }

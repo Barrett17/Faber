@@ -20,14 +20,14 @@
 #ifndef _TRACK_INDEX_H
 #define _TRACK_INDEX_H
 
-#include <File.h>
+#include <Archivable.h>
 #include <MediaDefs.h>
 #include <ObjectList.h>
 
 #include "MediaBlock.h"
 
 
-class TrackIndex {
+class TrackIndex : public BArchivable {
 public:
 										TrackIndex();
 
@@ -44,7 +44,6 @@ public:
 		MediaBlockMap*					ExtractChannel(int32 index);
 
 private:
-		BFile*							fFile;
 		BObjectList<MediaBlockMap>*		fChannels;
 		media_format					fOutputFormat;
 		status_t						fInitErr;

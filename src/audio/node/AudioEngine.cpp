@@ -135,7 +135,8 @@ AudioEngine::GetNextInput(int32* cookie, media_input* input)
 		return B_BAD_INDEX;
 
 	*input = endpoint->Input();
-	*cookie++;
+
+	*cookie += 1;
 
 	return B_OK;
 }

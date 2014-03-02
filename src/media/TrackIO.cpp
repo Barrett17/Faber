@@ -23,6 +23,8 @@
 
 #include "MediaFormatBuilder.h"
 
+#include <stdio.h>
+
 
 AudioTrack*
 TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
@@ -59,9 +61,9 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 	while (track->ReadFrames(buffer, &frames) == B_OK)
 		_BuildBlocks((float*)buffer, frames, index, format.u.raw_audio.channel_count);
 
-	AudioTrack* ret = new AudioTrack(name, index);
- 
- 	return ret;
+	mediaFile->ReleaseTrack(track);
+
+	return new AudioTrack(name, index);
 }
 
 
@@ -69,22 +71,27 @@ status_t
 TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 	uint32 channels)
 {
+	printf("Building block\n");
+
 	BObjectList<MediaBlockMap> trackChannels = index->GetChannels();
+
+	MediaBlockMapWriter writer;
 
 	float temp[channels][frames/channels];
 
 	int64 count = 0;
 
-	for (int64 i = 0; i < frames; i++) {
+	for (int64 i = 0; i < frames;) {
 		for (uint32 j = 0; j < channels; j++) {
 			temp[j][count] = buffer[i];
-			count++;
+			i++;
 		}
-		count = 0;
+		count++;
 	}
 
 	for (uint32 j = 0; j < channels; j++) {
-		trackChannels.ItemAt(j)->WriteFrames(&temp[j][0], frames/channels); 
+		writer.SetTo(trackChannels.ItemAt(j));
+		writer.WriteFrames(&temp[j][0], frames/channels); 
 	}
 
 	return B_OK;
