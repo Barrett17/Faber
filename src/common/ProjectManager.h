@@ -17,6 +17,9 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifndef _PROJECT_MANAGER
+#define _PROJECT_MANAGER
+
 #include <Entry.h>
 #include <MediaFile.h>
 #include <Message.h>
@@ -67,3 +70,5 @@ private:
 
 			FaberView*					fFaberView;
 };
+
+#endif

@@ -20,6 +20,7 @@
 #ifndef _MEDIA_BLOCK_H
 #define _MEDIA_BLOCK_H
 
+#include <Archivable.h>
 #include <File.h>
 #include <ObjectList.h>
 
@@ -41,6 +42,10 @@ public:
 
 			//status_t				Acquire(TrackIndex* index);
 			//status_t				Release(TrackIndex* index);
+protected:
+			friend class			MediaBlockMapWriter;
+			
+			BFile*					GetFile();
 
 private:
 			int64					fFramesCount;
@@ -48,32 +53,27 @@ private:
 };
 
 
-class MediaBlockNode {
-public:
-									MediaBlockNode(MediaBlock* block,
-										bool isSentinel = false);
-
-private:
-		MediaBlock*					fBlock;
-};
-
-
-class MediaBlockMap {
+class MediaBlockMap : public BArchivable {
 public:
 		int32						CountBlocks() const;
 
 		MediaBlock*					BlockAt(int32 index);
+		MediaBlock*					LastBlock();
 
-		status_t					AddBlock(MediaBlock* block, int32 index = -1);
+		status_t					AddBlock(MediaBlock* block, int32 index);
+		status_t					AddBlock(MediaBlock* block);
 
-		status_t					RemoveBlock(int32 index);
-		status_t					RemoveBlocks(int32 start, int32 end);
+		MediaBlock*					RemoveBlockAt(int32 index);
+		bool						RemoveBlock(MediaBlock* index);
 
 protected:
-		//PreviewIterator*			GetPreview();
-		//MediaBlockIterator*		GetBlocks();
+		//MediaBlockWriter*			GetBlockWriter();
+		//PreviewReader*			GetPreviewReader();
+		//MediaBlockReader*			GetBlockReader();
 
 private:
+		// Well, that will be replaced by an AVL Tree.
+		// For now it's fine anyway.
 		BObjectList<MediaBlock>		fMap;
 };
 
@@ -82,13 +82,13 @@ class MediaBlockMapWriter {
 public:
 									MediaBlockMapWriter();
 
-		bool						IsValid() const;
+		MediaBlockMap*				Current() const;
 		void						SetTo(MediaBlockMap* to);
 		status_t					WriteFrames(void* buffer, int64 frameCount,
 										int64 from = -1, bool overWrite = false);
 
 private:
-		MediaBlockMap*				fDestination;
+		mutable MediaBlockMap*		fMap;
 
 };
 

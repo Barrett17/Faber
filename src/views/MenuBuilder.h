@@ -50,7 +50,7 @@ public:
 
 	BPopUpMenu*				BuildTrackContextualMenu(BView* target);
 
-	//BMenu*					BuildLiveNodesMenu(node_type type);
+	//BMenu*				BuildLiveNodesMenu(node_type type);
 
 	static void				UpdateMenu();
 

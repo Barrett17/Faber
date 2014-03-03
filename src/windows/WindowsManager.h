@@ -49,7 +49,6 @@ public:
 	// static void			UpdateToolBar();
 	// static void			UpdateInfoToolBar();
 
-	// static void			MessageToMainWin(const uint32 msg);
 	// static void			MessageToMainWin(BMessage* msg);
 
 	// Continuing this way, would be cool to clean the code

@@ -58,8 +58,10 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 		/ (format.u.raw_audio.format 
 		& media_raw_audio_format::B_AUDIO_SIZE_MASK)];
 
-	while (track->ReadFrames(buffer, &frames) == B_OK)
-		_BuildBlocks((float*)buffer, frames, index, format.u.raw_audio.channel_count);
+	while (track->ReadFrames(buffer, &frames) == B_OK) {
+		_BuildBlocks((float*)buffer, frames, index,
+			format.u.raw_audio.channel_count);
+	}
 
 	mediaFile->ReleaseTrack(track);
 

@@ -17,10 +17,16 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-class SnapshotManager {
+#ifndef _STORAGE_MANAGER
+#define _STORAGE_MANAGER
+
+class StorageManager {
 public:
 		static BFile*			BlockFileRequested();
+		static BDirectory*		TempProjectDirRequested();
 
 private:
 
 };
+
+#endif
