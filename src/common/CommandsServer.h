@@ -31,13 +31,9 @@ class CommandsServer : public BMessageFilter {
 public:
 										CommandsServer();
 
-			static CommandsServer* 		Get();
-
 	virtual	filter_result				Filter(BMessage* message,
 											BHandler** target);				
 private:
-
-			static CommandsServer*		fInstance;
 			FaberView*					fFaberView;
 			ProjectManager*				fProjectManager;
 			AudioGate*					fAudioGate;

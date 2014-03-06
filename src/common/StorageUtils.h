@@ -16,16 +16,26 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef _STORAGE_UTILS_H
+#define _STORAGE_UTILS_H
 
-#ifndef _STORAGE_MANAGER
-#define _STORAGE_MANAGER
 
-class StorageManager {
+#include <File.h>
+#include <Path.h>
+
+
+class StorageUtils {
 public:
-		static BFile*			BlockFileRequested();
-		static BDirectory*		TempProjectDirRequested();
+		static BEntry*			BlockFileRequested();
 
+		static BPath			TemporaryProjectDirRequested();
+		static status_t			DeleteDirectory(BPath path);
+
+		static size_t			FramesToSize(int64 frames);
+		static int64			SizeToFrames(size_t size);
 private:
+		// TODO randomize
+		static int32			fLastCode;
 
 };
 

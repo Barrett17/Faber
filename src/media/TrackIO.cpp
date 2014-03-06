@@ -73,7 +73,7 @@ status_t
 TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 	uint32 channels)
 {
-	printf("Building block\n");
+	printf("Writing data\n");
 
 	BObjectList<MediaBlockMap> trackChannels = index->GetChannels();
 

@@ -31,30 +31,42 @@
 
 class AudioTrack : public Track {
 public:
-							AudioTrack();
-							AudioTrack(const char* name, TrackIndex* index);
-							~AudioTrack();
+									AudioTrack();
 
-			status_t		InitCheck() const;
+									AudioTrack(const char* name,
+										TrackIndex* index);
 
-			int32			CountChannels() const;
+									AudioTrack(BMessage* from);
+
+	virtual							~AudioTrack();
+
+	virtual	status_t 				Archive(BMessage* into,
+										bool deep = true) const;
+
+			static BArchivable*		Instantiate(BMessage* archive);
+
+			status_t				InitCheck() const;
+
+			int32					CountChannels() const;
 
 			// TODO generalize a bit this notion creating a base type
 			// of objects suited to modify the track, FaberEffect
 			// will be derived from it.
-			//status_t		ApplyEffect(int32 id, int64 start, int64 end);
+			//status_t				ApplyEffect(int32 id, int64 start,
+			//							int64 end);
 
 			// Something like :
-			//status_t		ExecuteOperation(AudioTrackOperation* operation);
+			//status_t				ExecuteOperation(
+			//							AudioTrackOperation* operation);
 
 			// Other utils
-			bool			IsAudio() const;
+			bool					IsAudio() const;
 
-			bool			IsMono() const;
-			bool			IsStereo() const;
+			bool					IsMono() const;
+			bool					IsStereo() const;
 
 private:
-			TrackIndex*		fTrackIndex;
+			TrackIndex*				fTrackIndex;
 
 };
 

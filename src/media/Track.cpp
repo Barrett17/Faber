@@ -32,9 +32,36 @@ Track::Track()
 }
 
 
+Track::Track(BMessage* from)
+	:
+	BArchivable(from)
+{
+
+}
+
+
 Track::~Track()
 {
 }
+
+
+status_t
+Track::Archive(BMessage* into, bool deep) const
+{
+	BArchivable::Archive(into, deep);
+
+	return B_OK;
+}
+
+/*
+BArchivable*
+Track::Instantiate(BMessage* archive)
+{
+	if (!validate_instantiation(archive, "Track"))
+		return NULL;
+
+	return new Track(archive);      
+}*/
 
 
 bigtime_t

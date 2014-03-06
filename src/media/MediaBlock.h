@@ -16,9 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _MEDIA_BLOCK_H
 #define _MEDIA_BLOCK_H
+
 
 #include <Archivable.h>
 #include <File.h>
@@ -26,14 +26,18 @@
 
 #include "DataBlock.h"
 
+#define BLOCK_SIZE_LIMIT 1024200
+
 
 class MediaBlock : public DataBlock {
 public:
-									MediaBlock(BFile* file);	
+									MediaBlock(BFile* file,
+										BEntry* entry);	
+	virtual 						~MediaBlock();
 
 			int16*					ReadPreview(size_t* size);
 
-			status_t				ReadFrames(void* buffer, int64* frameCount);
+			status_t				ReadFrames(void* buffer, int64 frameCount);
 			int64					CountFrames() const;
 
 			status_t				SeekToFrame(int64* frame);
@@ -42,54 +46,18 @@ public:
 
 			//status_t				Acquire(TrackIndex* index);
 			//status_t				Release(TrackIndex* index);
+
+			const BEntry&			GetEntry() const;
+
 protected:
 			friend class			MediaBlockMapWriter;
-			
-			BFile*					GetFile();
+
+			off_t					GetSize();
+			BFile*					GetFile() const;
 
 private:
-			int64					fFramesCount;
 			BFile*					fData;
-};
-
-
-class MediaBlockMap : public BArchivable {
-public:
-		int32						CountBlocks() const;
-
-		MediaBlock*					BlockAt(int32 index);
-		MediaBlock*					LastBlock();
-
-		status_t					AddBlock(MediaBlock* block, int32 index);
-		status_t					AddBlock(MediaBlock* block);
-
-		MediaBlock*					RemoveBlockAt(int32 index);
-		bool						RemoveBlock(MediaBlock* index);
-
-protected:
-		//MediaBlockWriter*			GetBlockWriter();
-		//PreviewReader*			GetPreviewReader();
-		//MediaBlockReader*			GetBlockReader();
-
-private:
-		// Well, that will be replaced by an AVL Tree.
-		// For now it's fine anyway.
-		BObjectList<MediaBlock>		fMap;
-};
-
-
-class MediaBlockMapWriter {
-public:
-									MediaBlockMapWriter();
-
-		MediaBlockMap*				Current() const;
-		void						SetTo(MediaBlockMap* to);
-		status_t					WriteFrames(void* buffer, int64 frameCount,
-										int64 from = -1, bool overWrite = false);
-
-private:
-		mutable MediaBlockMap*		fMap;
-
+			BEntry*					fEntry;
 };
 
 #endif

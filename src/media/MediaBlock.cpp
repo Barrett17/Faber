@@ -18,14 +18,23 @@
 */
 
 #include "MediaBlock.h"
-#include "StorageManager.h"
+#include "StorageUtils.h"
+
+#include <stdio.h>
 
 
-MediaBlock::MediaBlock(BFile* file)
+MediaBlock::MediaBlock(BFile* file, BEntry* entry)
 	:
 	DataBlock(file, FABER_AUDIO_DATA),
-	fFramesCount(0)
+	fData(file),
+	fEntry(entry)
 {
+}
+
+
+MediaBlock::~MediaBlock()
+{
+	delete fData;
 }
 
 
@@ -37,16 +46,19 @@ MediaBlock::ReadPreview(size_t* size)
 
 
 status_t
-MediaBlock::ReadFrames(void* buffer, int64* frameCount)
+MediaBlock::ReadFrames(void* buffer, int64 frameCount)
 {
-	return B_ERROR;
+	return fData->Read(buffer, StorageUtils::FramesToSize(frameCount));
 }
 
 
 int64
 MediaBlock::CountFrames() const
 {
-	return fFramesCount;
+	off_t size;
+	fData->GetSize(&size);
+
+	return StorageUtils::SizeToFrames(size);
 }
 
 
@@ -60,100 +72,30 @@ MediaBlock::SeekToFrame(int64* frame)
 MediaBlock*
 MediaBlock::CopyTo(BFile* file)
 {
-	// return StorageManager::CopyBlockInto(this, file);
+	// return StorageUtils::CopyBlockInto(this, file);
 	return NULL;
 }
 
 
-int32
-MediaBlockMap::CountBlocks() const
+const BEntry&
+MediaBlock::GetEntry() const
 {
-	return fMap.CountItems();
+	return *fEntry;
 }
 
 
-MediaBlock*
-MediaBlockMap::BlockAt(int32 index)
+BFile*
+MediaBlock::GetFile() const
 {
-	return fMap.ItemAt(index);
+	return fData;
 }
 
 
-MediaBlock*
-MediaBlockMap::LastBlock()
+off_t
+MediaBlock::GetSize()
 {
-	if (CountBlocks() == 0)
-		return NULL;
+	off_t size;
+	fData->GetSize(&size);
 
-	return BlockAt(CountBlocks()-1);
-}
-
-
-status_t
-MediaBlockMap::AddBlock(MediaBlock* block, int32 index)
-{
-	return fMap.AddItem(block, index);
-}
-
-
-status_t
-MediaBlockMap::AddBlock(MediaBlock* block)
-{
-	return fMap.AddItem(block);
-}
-
-
-MediaBlock*
-MediaBlockMap::RemoveBlockAt(int32 index)
-{
-	return fMap.RemoveItemAt(index);
-}
-
-
-bool
-MediaBlockMap::RemoveBlock(MediaBlock* block)
-{
-	return fMap.RemoveItem(block);
-}
-
-
-MediaBlockMapWriter::MediaBlockMapWriter()
-	:
-	fMap(NULL)
-{
-}
-
-
-void
-MediaBlockMapWriter::SetTo(MediaBlockMap* to) 
-{
-	fMap = to;
-}
-
-
-MediaBlockMap*
-MediaBlockMapWriter::Current() const
-{
-	return fMap;
-}
-
-
-status_t
-MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount,
-	int64 start, bool overWrite)
-{
-	MediaBlock* block = NULL;
-
-	if (start == -1)
-		block = fMap->LastBlock();
-
-	BFile* destFile = NULL;
-
-	if (block == NULL)
-		destFile = StorageManager::BlockFileRequested();
-	else
-		destFile = block->GetFile();
-
-	if (block == NULL)
-		fMap->AddBlock(new MediaBlock(destFile));
+	return size;
 }

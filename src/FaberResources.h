@@ -20,6 +20,9 @@
 #ifndef FABER_RESOURCES_H
 #define FABER_RESOURCES_H
 
+#define FABER_SIGNATURE "application/x-vnd.Faber"
+#define FABER_PROJECT_MIME "application/vnd-FaberProject"
+
 enum {
 	kPlayIcon = 0,
 	kNewDocumentIcon,

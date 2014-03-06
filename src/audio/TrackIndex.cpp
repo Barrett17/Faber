@@ -21,9 +21,43 @@
 
 
 TrackIndex::TrackIndex()
+	:
+	BArchivable()
 {
 	fInitErr = B_OK;
 	fChannels = new BObjectList<MediaBlockMap>(true);
+}
+
+
+TrackIndex::TrackIndex(BMessage* from)
+	:
+	BArchivable(from)
+{
+
+}
+
+
+TrackIndex::~TrackIndex()
+{
+	delete fChannels;
+}
+
+
+status_t
+TrackIndex::Archive(BMessage* into, bool deep) const
+{
+	BArchivable::Archive(into, deep);
+	return B_OK;
+}
+
+
+BArchivable*
+TrackIndex::Instantiate(BMessage* archive)
+{
+	if (!validate_instantiation(archive, "TrackIndex"))
+		return NULL;
+
+	return new TrackIndex(archive);
 }
 
 

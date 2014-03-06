@@ -17,9 +17,11 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "Faber.h"
 
 #include "FaberDefs.h"
+#include "FaberResources.h"
 #include "FaberWindow.h"
 #include "WindowsManager.h"
 
@@ -37,12 +39,13 @@ int main()
 
 FaberApp::FaberApp()
 	:
-	BApplication(FABER_MIMETYPE)
+	BApplication(FABER_SIGNATURE)
 {
 	fFaberWindow = WindowsManager::MainWindow();
 	fFaberWindow->Show();
 
 	fProjectManager = ProjectManager::Get();
+	fProjectManager->SetName(B_TRANSLATE("Untitled"));
 }
 
 

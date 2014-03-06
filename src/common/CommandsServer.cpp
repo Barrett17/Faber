@@ -27,19 +27,6 @@
 #include "ParameterWindow.h"
 
 
-CommandsServer* CommandsServer::fInstance = NULL;
-
-
-CommandsServer*
-CommandsServer::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new CommandsServer();
-
-	return fInstance;	
-}
-
-
 CommandsServer::CommandsServer()
 	:
 	BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE)

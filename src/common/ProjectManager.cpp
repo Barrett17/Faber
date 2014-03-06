@@ -17,11 +17,13 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "ProjectManager.h"
 
 #include "AudioGate.h"
 #include "AutoDeleter.h"
 #include "FaberDefs.h"
+#include "StorageUtils.h"
 #include "TrackIO.h"
 
 
@@ -41,6 +43,7 @@ ProjectManager::ProjectManager()
 	:
 	fWasSaved(false)
 {
+	fProjectPath = StorageUtils::TemporaryProjectDirRequested();
 }
 
 
@@ -126,6 +129,7 @@ ProjectManager::LoadFile(entry_ref ref)
 {
 	// TODO maybe use B_MEDIA_FILE_BIG_BUFFERS !?
 	BMediaFile* mediaFile = new BMediaFile(&ref);
+	ObjectDeleter<BMediaFile> deleter(mediaFile);
 
 	if (mediaFile->InitCheck() == B_OK)
 		return LoadMediaFile(mediaFile, ref.name);
@@ -137,9 +141,6 @@ ProjectManager::LoadFile(entry_ref ref)
 status_t
 ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 {
-
-	ObjectDeleter<BMediaFile> deleter(mediaFile);
-
 	AudioTrack* track = TrackIO::ImportAudio(mediaFile, name);
 
 	if (track == NULL)
@@ -158,6 +159,13 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
   	WindowsManager::MainWindow()->MainView()->AddTrack(track);
 
 	return B_OK;
+}
+
+
+BPath
+ProjectManager::GetProjectPath() const
+{
+	return fProjectPath;
 }
 
 

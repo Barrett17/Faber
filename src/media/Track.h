@@ -24,65 +24,74 @@
 #include <String.h>
 
 
-class Track {
+class Track : public BArchivable {
 public:
-							Track();
-	virtual 				~Track();
+									Track();
+									Track(BMessage* from);
 
-	virtual	bigtime_t		Duration() const;
+	virtual 						~Track();
 
-	virtual bool			IsAudio() const = 0;
-			//bool			IsMIDI() const = 0;
+	virtual	status_t 				Archive(BMessage* into,
+										bool deep = true) const;
 
-	virtual const BString&	Name() const;
-	virtual void 			SetName(const char* name);
+	// Note BArchivable::Instantiate is leaved for derived classes
+	// because the Track is pure virtual.
 
-	virtual float			Volume() const;
-	virtual void			SetVolume(float volume);
+	virtual	bigtime_t				Duration() const;
 
-	virtual void			SetBalance(float balance);
-	virtual float			Balance() const;
+	virtual bool					IsAudio() const = 0;
+			//bool					IsMIDI() const = 0;
 
-	virtual bool			IsPlaying() const;
-	virtual void			SetPlaying(bool playing);
+	virtual const BString&			Name() const;
+	virtual void 					SetName(const char* name);
 
-	virtual void			SetRecording(bool solo);
-	virtual bool			IsRecording() const;
+	virtual float					Volume() const;
+	virtual void					SetVolume(float volume);
 
-	virtual void	 		MuteTrack(bool mute);
-	virtual bool 			IsMute() const;
+	virtual void					SetBalance(float balance);
+	virtual float					Balance() const;
 
-	virtual void			SetSolo(bool solo);
-	virtual bool			IsSolo() const;
+	virtual bool					IsPlaying() const;
+	virtual void					SetPlaying(bool playing);
 
-	virtual bool			HasChanged() const;
-	virtual bool			HasUndo() const;
-	virtual bool			HasRedo() const;
+	virtual void					SetRecording(bool solo);
+	virtual bool					IsRecording() const;
 
-	virtual uint32			ID();
+	virtual void	 				MuteTrack(bool mute);
+	virtual bool 					IsMute() const;
+
+	virtual void					SetSolo(bool solo);
+	virtual bool					IsSolo() const;
+
+	virtual bool					HasChanged() const;
+	virtual bool					HasUndo() const;
+	virtual bool					HasRedo() const;
+
+	virtual uint32					ID();
 
 protected:
-			bigtime_t		fDuration;
+			friend class 			AudioGate;
 
-	virtual void			SetID(uint32 id);
-			friend class 	AudioGate;
+			bigtime_t				fDuration;
+
+	virtual void					SetID(uint32 id);
 
 private:
-			BString			fName;
+			BString					fName;
 
-			bool			fMuted;
-			bool			fSolo;
-			bool			fRecording;
-			bool			fPlaying;
+			bool					fMuted;
+			bool					fSolo;
+			bool					fRecording;
+			bool					fPlaying;
 
-			bool			fHasChanged;
-			bool			fHasUndo;
-			bool			fHasRedo;
+			bool					fHasChanged;
+			bool					fHasUndo;
+			bool					fHasRedo;
 
-			float			fVolume;
-			float			fBalance;
+			float					fVolume;
+			float					fBalance;
 
-			uint32			fID;
+			uint32					fID;
 };
 
 #endif

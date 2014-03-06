@@ -33,7 +33,7 @@ FaberWindow::FaberWindow(BRect rect)
 {
 	fFaberView = new FaberView();
 
-	AddFilter(CommandsServer::Get());
+	AddFilter(new CommandsServer());
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(fFaberView)

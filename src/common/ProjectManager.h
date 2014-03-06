@@ -58,6 +58,8 @@ public:
 			BString						Name() const;
 			void						SetName(const char* name);
 
+			BPath						GetProjectPath() const;
+
 			static status_t				RegisterTrack(Track* track);
 			static status_t				UnregisterTrack(Track* track);
 

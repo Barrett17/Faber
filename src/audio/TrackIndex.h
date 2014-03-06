@@ -16,37 +16,44 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _TRACK_INDEX_H
 #define _TRACK_INDEX_H
+
 
 #include <Archivable.h>
 #include <MediaDefs.h>
 #include <ObjectList.h>
 
-#include "MediaBlock.h"
+#include "MediaBlockMap.h"
 
 
 class TrackIndex : public BArchivable {
 public:
-										TrackIndex();
+											TrackIndex();
+											TrackIndex(BMessage* from);
+	virtual 								~TrackIndex();
 
-		status_t						InitCheck() const;
+	virtual	status_t 						Archive(BMessage* into,
+												bool deep = true) const;
 
-		uint32							CountChannels() const;
-		void							AddChannel(MediaBlockMap* tree);
-		MediaBlockMap*					GetChannel(int32 index) const;
+			static 	BArchivable*			Instantiate(BMessage* archive);
 
-		BObjectList<MediaBlockMap>&		GetChannels() const;
+			status_t						InitCheck() const;
 
-		// The following method will detach and remove ownership of the channel
-		// from the index.
-		MediaBlockMap*					ExtractChannel(int32 index);
+			uint32							CountChannels() const;
+			void							AddChannel(MediaBlockMap* tree);
+			MediaBlockMap*					GetChannel(int32 index) const;
+
+			BObjectList<MediaBlockMap>&		GetChannels() const;
+
+			// The following method will detach and remove ownership of the channel
+			// from the index.
+			MediaBlockMap*					ExtractChannel(int32 index);
 
 private:
-		BObjectList<MediaBlockMap>*		fChannels;
-		media_format					fOutputFormat;
-		status_t						fInitErr;
+			BObjectList<MediaBlockMap>*		fChannels;
+			media_format					fOutputFormat;
+			status_t						fInitErr;
 };
 
 #endif

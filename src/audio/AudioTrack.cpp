@@ -40,9 +40,37 @@ AudioTrack::AudioTrack(const char* name, TrackIndex* index)
 }
 
 
+AudioTrack::AudioTrack(BMessage* from)
+	:
+	Track(from)
+{
+
+}
+
+
 AudioTrack::~AudioTrack()
 {
 	delete fTrackIndex;
+}
+
+
+status_t
+AudioTrack::Archive(BMessage* into, bool deep) const
+{
+	Track::Archive(into, deep);
+
+	return B_OK;
+}
+
+
+
+BArchivable*
+AudioTrack::Instantiate(BMessage* archive)
+{
+	if (!validate_instantiation(archive, "Track"))
+		return NULL;
+
+	return new AudioTrack(archive);      
 }
 
 

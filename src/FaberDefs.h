@@ -16,9 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef FABER_DEFS_H
 #define FABER_DEFS_H
+
 
 #include <SupportDefs.h>
 #include <Locale.h>
@@ -32,8 +32,6 @@
 
 #include <stdio.h>
 
-
-#define FABER_MIMETYPE "application/x-vnd.Faber"
 
 #define FABER_HELP_HOMEPAGE "http://www.versut.com/Faber"
 
