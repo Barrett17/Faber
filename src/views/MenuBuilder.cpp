@@ -161,12 +161,6 @@ MenuBuilder::BuildTrackContextualMenu(BView* target)
 }
 
 
-void
-MenuBuilder::UpdateMenu()
-{
-}
-
-
 BMenu*
 MenuBuilder::_BuildMenu(KeyBind* bind)
 {

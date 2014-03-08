@@ -26,8 +26,6 @@
 
 #include "DataBlock.h"
 
-#define BLOCK_SIZE_LIMIT 1024200
-
 
 class MediaBlock : public DataBlock {
 public:

@@ -52,8 +52,6 @@ public:
 
 	//BMenu*				BuildLiveNodesMenu(node_type type);
 
-	static void				UpdateMenu();
-
 private:
 	BMenu*					_BuildMenu(KeyBind* bind);
 

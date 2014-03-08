@@ -21,6 +21,7 @@
 #include "StorageUtils.h"
 
 #include <stdio.h>
+#include <string.h>
 
 
 MediaBlockMap::MediaBlockMap()
@@ -154,6 +155,8 @@ MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount,
 		printf("Creating a new block\n");
 		destEntry = StorageUtils::BlockFileRequested();
 		destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
+		status_t ret = destFile->InitCheck();
+		printf("%s\n", strerror(ret));
 		addBlock = true;
 	} else {
 		printf("Get a block\n");

@@ -218,8 +218,6 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 		ret = fTrackViews.AddItem(track, index);
 	}
 
-	MenuBuilder::UpdateMenu();
-
 	return ret;
 }
 

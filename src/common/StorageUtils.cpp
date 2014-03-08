@@ -37,13 +37,15 @@ StorageUtils::BlockFileRequested()
 {
 	BPath path = ProjectManager::Get()->GetProjectPath();
 
-	BString str(path.Path());
+	BString str;
 
-	str << "/" << DEFAULT_BLOCK_FILENAME;
+	str << DEFAULT_BLOCK_FILENAME;
 
 	fLastCode += 1;
 
 	str << fLastCode;
+
+	path.Append(str.String());
 
 	return new BEntry(path.Path());
 }
