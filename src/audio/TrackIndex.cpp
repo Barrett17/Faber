@@ -17,7 +17,9 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "TrackIndex.h"
+#include "AudioProtocolDefs.h"
 
 
 TrackIndex::TrackIndex()
@@ -47,6 +49,16 @@ status_t
 TrackIndex::Archive(BMessage* into, bool deep) const
 {
 	BArchivable::Archive(into, deep);
+
+	for (int i = 0; i < fChannels->CountItems(); i++) {
+		MediaBlockMap* channel = fChannels->ItemAt(i);
+
+		BMessage* msg = new BMessage(SAVE_TRACK_CHANNEL);
+		channel->Archive(msg);
+
+		into->AddMessage(SAVE_TRACK_CHANNEL_NAME, msg);
+	}
+
 	return B_OK;
 }
 
