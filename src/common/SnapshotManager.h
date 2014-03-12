@@ -17,6 +17,7 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 class SnapshotManager {
 public:
 									SnapshotManager();

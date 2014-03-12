@@ -16,9 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _MEDIA_GATE_H
 #define _MEDIA_GATE_H
+
 
 #include <SupportDefs.h>
 

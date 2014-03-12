@@ -16,16 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _EFFECTS_MANAGER_H_
 #define _EFFECTS_MANAGER_H_
+
 
 #include "AudioEffects.h"
 #include "FaberEffect.h"
 
 
-class EffectsManager
-{
+class EffectsManager {
 public:
 								EffectsManager();
 	virtual 					~EffectsManager();

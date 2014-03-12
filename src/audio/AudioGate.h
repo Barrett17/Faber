@@ -16,9 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _AUDIO_GATE_H
 #define _AUDIO_GATE_H
+
 
 #include <MediaDefs.h>
 #include <MediaRoster.h>
@@ -39,6 +39,15 @@ public:
 
 	virtual status_t 				Start();
 	virtual status_t 				Stop();
+
+	virtual status_t				ConnectProducer(const media_node& node, 
+										const media_output* output = NULL, 
+										const media_format* format = NULL);
+
+	virtual status_t				ConnectConsumer(AudioTrack* track,
+										const media_node& node, 
+										const media_output* output = NULL, 
+										const media_format* format = NULL);
 
 			// Tracks Management
 

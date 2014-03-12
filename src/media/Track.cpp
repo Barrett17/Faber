@@ -17,7 +17,9 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "Track.h"
+
 
 Track::Track()
 	:
@@ -52,16 +54,6 @@ Track::Archive(BMessage* into, bool deep) const
 
 	return B_OK;
 }
-
-/*
-BArchivable*
-Track::Instantiate(BMessage* archive)
-{
-	if (!validate_instantiation(archive, "Track"))
-		return NULL;
-
-	return new Track(archive);      
-}*/
 
 
 bigtime_t

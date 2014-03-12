@@ -16,15 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _FABER_EFFECT_H_
 #define _FABER_EFFECT_H_
+
 
 #include <MenuItem.h>
 #include <ObjectList.h>
 #include <ParameterWeb.h>
 
 #include "AudioTrack.h"
+
 
 // Effects kind flags
 const uint32 FABER_AUDIO_EFFECT		= 0x80000000UL;
@@ -39,8 +40,7 @@ const uint32 FABER_REALTIME_EFFECT	= 0x01000000UL;
 #define CONTROL_CHANGED	'chgd'
 
 
-class FaberEffect
-{
+class FaberEffect {
 public:
 							FaberEffect(const char* name, uint32 flags);
 	virtual 				~FaberEffect();

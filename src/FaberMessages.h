@@ -16,9 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef FABER_MESSAGES_H
 #define FABER_MESSAGES_H
+
 
 class MessageBuilder {
 public:

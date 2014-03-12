@@ -16,9 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _DATA_BLOCK_H
 #define _DATA_BLOCK_H
+
 
 #include <DataIO.h>
 

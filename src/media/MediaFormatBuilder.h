@@ -16,9 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef MEDIA_FORMAT_BUILDER_H
 #define MEDIA_FORMAT_BUILDER_H
+
 
 #include <MediaDefs.h>
 
@@ -26,10 +26,6 @@
 class MediaFormatBuilder {
 public:
 	static void BuildAudioBlockRawFormat(media_format* format);
-
-	static void BuildAudioBlockEncodedFormat(media_format* format);
-
-	static void BuildAudioBlockFormat(media_format* format);
 
 	static void BuildAudioGateFormat(media_format* format);
 };

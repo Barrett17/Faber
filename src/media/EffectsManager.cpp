@@ -17,9 +17,11 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "EffectsManager.h"
 
 #include <String.h>
+
 
 EffectsManager* EffectsManager::fInstance = NULL;
 
