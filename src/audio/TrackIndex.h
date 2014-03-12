@@ -36,7 +36,7 @@ public:
 	virtual	status_t 						Archive(BMessage* into,
 												bool deep = true) const;
 
-			static 	TrackIndex*				Instantiate(BMessage* archive);
+			static 	BArchivable*			Instantiate(BMessage* archive);
 
 			status_t						InitCheck() const;
 

@@ -130,3 +130,19 @@ AudioGate::Node()
 {
 	return fAudioEngine->Node();
 }
+
+
+status_t
+AudioGate::ConnectProducer(AudioTrack* track, const media_node& node, 
+	const media_output* output, const media_format* format)
+{
+
+}
+
+
+status_t
+AudioGate::ConnectConsumer(const media_node& node, 
+	const media_input* input, const media_format* format)
+{
+
+}

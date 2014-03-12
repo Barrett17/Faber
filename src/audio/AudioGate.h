@@ -40,13 +40,14 @@ public:
 	virtual status_t 				Start();
 	virtual status_t 				Stop();
 
-	virtual status_t				ConnectProducer(const media_node& node, 
+	virtual status_t				ConnectProducer(AudioTrack* track,
+										const media_node& node, 
 										const media_output* output = NULL, 
 										const media_format* format = NULL);
 
-	virtual status_t				ConnectConsumer(AudioTrack* track,
+	virtual status_t				ConnectConsumer(
 										const media_node& node, 
-										const media_output* output = NULL, 
+										const media_input* input = NULL, 
 										const media_format* format = NULL);
 
 			// Tracks Management
@@ -57,13 +58,14 @@ public:
 			static status_t			RegisterTrack(AudioTrack* track);
 			static status_t			UnregisterTrack(AudioTrack* track);
 
+			static BMessage*		ArchiveTracks();
+
 			media_node				Node();
 
 protected:
 			friend class			AudioEngine;
 
 			const MediaEndPointMap&	GetInputs();
-
 			const MediaEndPointMap&	GetOutputs();
 
 private:

@@ -19,7 +19,9 @@
 
 
 #include "TrackIndex.h"
+
 #include "AudioProtocolDefs.h"
+#include "FaberDefs.h"
 
 
 TrackIndex::TrackIndex()
@@ -53,9 +55,7 @@ TrackIndex::Archive(BMessage* into, bool deep) const
 	for (int i = 0; i < fChannels->CountItems(); i++) {
 		MediaBlockMap* channel = fChannels->ItemAt(i);
 
-		BMessage* msg = new BMessage(SAVE_TRACK_CHANNEL);
-		channel->Archive(msg);
-
+		BMessage* msg = MessageBuilder(SAVE_TRACK_CHANNEL, channel);
 		into->AddMessage(SAVE_TRACK_CHANNEL_NAME, msg);
 	}
 

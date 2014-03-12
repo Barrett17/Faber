@@ -20,22 +20,36 @@
 #define FABER_MESSAGES_H
 
 
+#include <Archivable.h>
+
+
 class MessageBuilder {
 public:
 
-	MessageBuilder()
-	{
-		this->code = 0;
-	}
-
 	MessageBuilder(uint32 what)
 	{
-		this->code = what;
+		msg = new BMessage(what);
+		code = what;
+	}
+
+	MessageBuilder(uint32 what, BArchivable* archivable)
+	{
+		msg = new BMessage(what);
+		code = what;
+
+		archivable->Archive(msg);
+	}
+
+	void SetTo(uint32 what)
+	{
+		delete msg;
+		msg = new BMessage(what);
+		code = what;
 	}
 
 	BMessage* ToMessage() const
 	{
-		return new BMessage(code);
+		return msg;
 	}
 
 	operator BMessage* () const
@@ -64,6 +78,7 @@ public:
 		return false;
 	}
 
+	BMessage* msg;
 	uint32 code;
 };
 

@@ -104,6 +104,11 @@ status_t
 ProjectManager::SaveProject()
 {
 
+	/*BMessage* msg = AudioGate::ArchiveTracks();
+
+	msg->Flatten(fProjectFile);
+
+	delete msg;*/
 
 	fWasSaved = true;
 	return B_OK;
@@ -113,13 +118,7 @@ ProjectManager::SaveProject()
 status_t
 ProjectManager::LoadProject(entry_ref ref)
 {
-	/*
-	ProjectFile* project = new ProjectFile(ref);
-	if (project->InitCheck() != B_OK)
-		return B_ERROR;
 
-	
-	*/
 	return B_ERROR;
 }
 

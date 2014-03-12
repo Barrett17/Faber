@@ -17,6 +17,7 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "WindowsManager.h"
 
 #include <Application.h>
@@ -162,7 +163,7 @@ BFilePanel*
 WindowsManager::GetOpenPanel()
 {
 	if (Get()->fOpenPanel == NULL) {
-		Get()->fOpenPanel = new BFilePanel(B_OPEN_PANEL, new BMessenger(be_app),
+		Get()->fOpenPanel = new BFilePanel(B_OPEN_PANEL, WindowsManager::MainWinMessenger(),
 			NULL, true, new BMessage(FABER_FILE_OPEN));
 
 		Get()->fOpenPanel->Window()->SetTitle(B_TRANSLATE("Open file(s)"));	
@@ -175,8 +176,10 @@ BFilePanel*
 WindowsManager::GetSavePanel()
 {
 	if (Get()->fSavePanel == NULL) {
-		Get()->fSavePanel = new BFilePanel(B_SAVE_PANEL, new BMessenger(be_app),
-		NULL, false, new BMessage(FABER_SAVE_PROJECT));
+
+		Get()->fSavePanel = new BFilePanel(B_SAVE_PANEL, WindowsManager::MainWinMessenger(),
+			NULL, false, new BMessage(FABER_SAVE_PROJECT));
+
 		Get()->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save Project"));
 	}
 

@@ -19,6 +19,7 @@
 
 #include "AudioTrack.h"
 
+#include "AudioProtocolDefs.h"
 #include "FaberDefs.h"
 
 
@@ -58,6 +59,10 @@ status_t
 AudioTrack::Archive(BMessage* into, bool deep) const
 {
 	Track::Archive(into, deep);
+
+	BMessage* msg = MessageBuilder(SAVE_AUDIOTRACK_INDEX, fTrackIndex);
+
+	into->AddMessage(SAVE_AUDIOTRACK_INDEX_NAME, msg);
 
 	return B_OK;
 }

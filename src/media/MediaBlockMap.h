@@ -37,7 +37,7 @@ public:
 	virtual	status_t 				Archive(BMessage* into,
 										bool deep = true) const;
 
-			static MediaBlockMap*	Instantiate(BMessage* archive);
+			static BArchivable*		Instantiate(BMessage* archive);
 
 			int32					CountBlocks() const;
 

@@ -71,7 +71,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 		{
 			
 			WindowsManager::GetOpenPanel()->Show();
-
 			skip = true;
 			break;
 		}
@@ -79,7 +78,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 		case FABER_EXPORT_PROJECT:
 		{
 			WindowsManager::GetExportPanel()->Show();
-
 			skip = true;
 			break;
 		}
@@ -104,7 +102,7 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 			}
 
 			if (fProjectManager->HasChanged()) {
-				
+				ProjectManager::Get()->SaveProject();	
 			}
 
 			break;
@@ -115,6 +113,12 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 			WindowsManager::GetSavePanel()->Show();
 
 			skip = true;
+			break;
+		}
+
+		case B_SAVE_REQUESTED:
+		{
+			printf("Save requested\n");
 			break;
 		}
 

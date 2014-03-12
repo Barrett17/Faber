@@ -69,6 +69,7 @@ private:
 			BString						fName;
 			bool						fWasSaved;
 			BPath						fProjectPath;
+			BFile*						fProjectFile;
 
 			FaberView*					fFaberView;
 };
