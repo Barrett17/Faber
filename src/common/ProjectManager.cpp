@@ -44,6 +44,7 @@ ProjectManager::ProjectManager()
 	fWasSaved(false)
 {
 	fProjectPath = StorageUtils::TemporaryProjectDirRequested();
+	fProjectFile = StorageUtils::GetProjectFile(fProjectPath, true);
 }
 
 
@@ -103,12 +104,11 @@ ProjectManager::WasSaved() const
 status_t
 ProjectManager::SaveProject()
 {
-
-	/*BMessage* msg = AudioGate::ArchiveTracks();
+	BMessage* msg = AudioGate::ArchiveTracks();
 
 	msg->Flatten(fProjectFile);
 
-	delete msg;*/
+	delete msg;
 
 	fWasSaved = true;
 	return B_OK;
@@ -118,7 +118,20 @@ ProjectManager::SaveProject()
 status_t
 ProjectManager::LoadProject(entry_ref ref)
 {
+	_Cleanup();
 
+	BPath path(ref.name);
+
+	fProjectPath.SetTo(path.Path());
+	fProjectFile = new BFile(&ref, B_READ_WRITE);
+
+	BMessage* msg = new BMessage();
+
+	if (msg->Unflatten(fProjectFile) == B_OK
+		&& AudioGate::UnarchiveTracks(msg) != B_OK) {
+		fWasSaved = true;
+		return B_OK;
+	}
 	return B_ERROR;
 }
 
@@ -133,6 +146,7 @@ ProjectManager::LoadFile(entry_ref ref)
 	if (mediaFile->InitCheck() == B_OK)
 		return LoadMediaFile(mediaFile, ref.name);
 
+	printf("Loading project\n");
 	return LoadProject(ref);
 }
 
@@ -209,4 +223,11 @@ ProjectManager::SetName(const char* name)
 		win->SetTitle(title);
 		win->Unlock();
 	}
+}
+
+
+void
+ProjectManager::_Cleanup()
+{
+
 }

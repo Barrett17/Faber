@@ -28,6 +28,8 @@ class StorageUtils {
 public:
 		static BEntry*			BlockFileRequested();
 
+		static BFile*			GetProjectFile(BPath path, bool create);
+
 		static BPath			TemporaryProjectDirRequested();
 		static status_t			DeleteDirectory(BPath path);
 

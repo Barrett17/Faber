@@ -57,20 +57,6 @@ KeyBind kEditMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 0, "Zero Cross", 0, 0, 0, 0, FABER_ITEM_START },
-
-    { 1,"Zero In",            0, 0,                               0, 0,                         FABER_ZERO_IN },
-    { 1,"Zero Out",           0, 0,                               0, 0,                         FABER_ZERO_OUT },
-    { 1,"Zero LL",            0, 0,                               0, 0,                         FABER_ZERO_LL },
-    { 1,"Zero LR",            0, 0,                               0, 0,                         FABER_ZERO_LR },
-    { 1,"Zero RL",            0, 0,                               0, 0,                         FABER_ZERO_RL },
-    { 1,"Zero RR",            0, 0,                               0, 0,                         FABER_ZERO_RR },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
-
-	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
-	//{ 1,"Set frequency",      0, 0,                               0, 0,                       FABER_SET_FREQUENCY },
-
 	{ 1,"Clear",              'B', B_COMMAND_KEY,            B_DELETE, 0,                       FABER_CLEAR },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
@@ -159,12 +145,14 @@ KeyBind kProjectMenu[] {
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
-	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER }, 
+	{ 0, "Zoom", 0, 0, 0, 0, FABER_ITEM_START },
 
     { 0,"Zoom In",                    B_UP_ARROW, 0,                0,0,                       FABER_ZOOM_IN },
     { 0,"Zoom Out",                   B_DOWN_ARROW, 0,              0,0,                       FABER_ZOOM_OUT },
     { 0,"Zoom Full",                  B_UP_ARROW, B_SHIFT_KEY,      0,0,                       FABER_ZOOM_FULL },
     { 0,"Zoom to Selection",          B_DOWN_ARROW, B_SHIFT_KEY,    0,0,                       FABER_ZOOM_SELECTION },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 

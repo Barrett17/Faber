@@ -16,8 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #include "AudioGate.h"
+#include "AudioProtocolDefs.h"
+
 
 AudioGate* AudioGate::fInstance = NULL;
 
@@ -146,3 +147,25 @@ AudioGate::ConnectConsumer(const media_node& node,
 {
 
 }
+
+BMessage*
+AudioGate::ArchiveTracks()
+{
+	BMessage* msg = new BMessage();
+
+	for (int i = 0; i < Get()->fTracks.CountItems(); i++) {
+		BMessage* track = new BMessage(SAVE_AUDIOTRACK);
+		Get()->fTracks.ItemAt(i)->Archive(track);
+		msg->AddMessage(SAVE_AUDIOTRACK_NAME, track);
+	}
+
+	return msg;
+}
+
+
+status_t
+AudioGate::UnarchiveTracks(BMessage* msg)
+{
+
+}
+

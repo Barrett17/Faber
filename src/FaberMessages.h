@@ -133,15 +133,6 @@ const uint32 FABER_EFFECT_ABORT			=	'feab';
 
 const uint32 FABER_SET_FREQUENCY		=	'setf';
 
-// TODO those will be effects, remove them
-
-const uint32 FABER_ZERO_IN				=	'zrin';
-const uint32 FABER_ZERO_OUT				=	'zrot';
-const uint32 FABER_ZERO_LL				=	'zrll';
-const uint32 FABER_ZERO_LR				=	'zrlr';
-const uint32 FABER_ZERO_RL				=	'zrlr';
-const uint32 FABER_ZERO_RR				=	'zrrr';
-
 // Transport
 
 const uint32 FABER_TRANSPORT_REW		=	'trew';

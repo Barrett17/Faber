@@ -66,6 +66,13 @@ StorageUtils::TemporaryProjectDirRequested()
 }
 
 
+BFile*
+StorageUtils::GetProjectFile(BPath path, bool create)
+{
+
+}
+
+
 // NOTE ATM we support only float, also PCM16 and PCM24 are planned.
 int64
 StorageUtils::SizeToFrames(size_t size)
