@@ -64,7 +64,7 @@ public:
 			static status_t				UnregisterTrack(Track* track);
 
 private:
-			void						_Cleanup();
+			void						_NotifyTracksContainer(Track* track);
 
 			static ProjectManager*		fInstance;
 

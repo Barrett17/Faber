@@ -102,11 +102,12 @@ EffectsManager::GetEffect(const char* name) const
 status_t
 EffectsManager::RunEffect(int32 id, AudioTrack* track, size_t size)
 {
-
+	return B_ERROR;
 }
 
 
 status_t
 EffectsManager::RunEffect(FaberEffect* effect, AudioTrack* track, size_t size)
 {
+	return B_ERROR;
 }

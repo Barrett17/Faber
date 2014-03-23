@@ -106,11 +106,15 @@ ProjectManager::SaveProject()
 {
 	BMessage* msg = AudioGate::ArchiveTracks();
 
-	msg->Flatten(fProjectFile);
+	// todo seek at 0
+	if (msg->Flatten(fProjectFile) != B_OK)
+		return B_ERROR;
 
 	delete msg;
 
-	fWasSaved = true;
+	if (fWasSaved == false)
+		fWasSaved = true;
+
 	return B_OK;
 }
 
@@ -118,15 +122,18 @@ ProjectManager::SaveProject()
 status_t
 ProjectManager::LoadProject(entry_ref ref)
 {
-	_Cleanup();
+	BPath path;
+	BEntry entry(&ref);
 
-	BPath path(ref.name);
+	if (entry.GetPath(&path) != B_OK)
+		return B_ERROR;
 
 	fProjectPath.SetTo(path.Path());
 	fProjectFile = new BFile(&ref, B_READ_WRITE);
 
 	BMessage* msg = new BMessage();
 
+	// todo seek
 	if (msg->Unflatten(fProjectFile) == B_OK
 		&& AudioGate::UnarchiveTracks(msg) != B_OK) {
 		fWasSaved = true;
@@ -169,7 +176,7 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 		return ret;
 	}
 
-  	WindowsManager::MainWindow()->MainView()->AddTrack(track);
+  	_NotifyTracksContainer(track);
 
 	return B_OK;
 }
@@ -227,7 +234,7 @@ ProjectManager::SetName(const char* name)
 
 
 void
-ProjectManager::_Cleanup()
+ProjectManager::_NotifyTracksContainer(Track* track)
 {
-
+  	WindowsManager::MainWindow()->MainView()->AddTrack(track);
 }

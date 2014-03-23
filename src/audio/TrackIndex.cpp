@@ -37,7 +37,15 @@ TrackIndex::TrackIndex(BMessage* from)
 	:
 	BArchivable(from)
 {
+	BMessage msg;
+	for (int i = 0; from->FindMessage(SAVE_TRACK_CHANNEL_NAME, i, &msg)
+		== B_OK; i++) {
 
+		MediaBlockMap* channel =
+			(MediaBlockMap*)MediaBlockMap::Instantiate(&msg);
+
+		fChannels->AddItem(channel);
+	}
 }
 
 

@@ -101,9 +101,8 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 				break;
 			}
 
-			if (fProjectManager->HasChanged()) {
-				ProjectManager::Get()->SaveProject();	
-			}
+			BMessenger msg = WindowsManager::MainWinMessenger();
+			msg.SendMessage(new BMessage(B_SAVE_REQUESTED));
 
 			break;
 		}
@@ -119,6 +118,11 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 		case B_SAVE_REQUESTED:
 		{
 			printf("Save requested\n");
+
+			if (fProjectManager->HasChanged()) {
+				ProjectManager::Get()->SaveProject();	
+			}
+
 			break;
 		}
 

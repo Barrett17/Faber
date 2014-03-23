@@ -25,8 +25,6 @@
 
 #include "MediaBlock.h"
 
-#define BLOCK_SIZE_LIMIT 1024200
-
 
 class MediaBlockMap : public BArchivable {
 public:

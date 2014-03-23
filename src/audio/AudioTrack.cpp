@@ -45,7 +45,9 @@ AudioTrack::AudioTrack(BMessage* from)
 	:
 	Track(from)
 {
-
+	BMessage msg;
+	from->FindMessage(SAVE_AUDIOTRACK_INDEX_NAME, &msg);
+	fTrackIndex = (TrackIndex*)TrackIndex::Instantiate(&msg);
 }
 
 
@@ -62,9 +64,7 @@ AudioTrack::Archive(BMessage* into, bool deep) const
 
 	BMessage* msg = MessageBuilder(SAVE_AUDIOTRACK_INDEX, fTrackIndex);
 
-	into->AddMessage(SAVE_AUDIOTRACK_INDEX_NAME, msg);
-
-	return B_OK;
+	return into->AddMessage(SAVE_AUDIOTRACK_INDEX_NAME, msg);
 }
 
 

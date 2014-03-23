@@ -137,7 +137,7 @@ status_t
 AudioGate::ConnectProducer(AudioTrack* track, const media_node& node, 
 	const media_output* output, const media_format* format)
 {
-
+	return B_ERROR;
 }
 
 
@@ -145,8 +145,9 @@ status_t
 AudioGate::ConnectConsumer(const media_node& node, 
 	const media_input* input, const media_format* format)
 {
-
+	return B_ERROR;
 }
+
 
 BMessage*
 AudioGate::ArchiveTracks()
@@ -164,8 +165,15 @@ AudioGate::ArchiveTracks()
 
 
 status_t
-AudioGate::UnarchiveTracks(BMessage* msg)
+AudioGate::UnarchiveTracks(BMessage* from)
 {
+	BMessage msg;
+	for (int i = 0; from->FindMessage(SAVE_AUDIOTRACK_NAME, i, &msg)
+		== B_OK; i++) {
+		AudioTrack* track = (AudioTrack*)AudioTrack::Instantiate(&msg);
+		RegisterTrack(track);
+	}
 
+	return B_OK;
 }
 

@@ -40,7 +40,7 @@ public:
 
 	// It's preferable to use this one instead of
 	// the method returning a pointer.
-	static BMessenger*		MainWinMessenger();
+	static BMessenger&		MainWinMessenger();
 
 	static FaberWindow*		MainWindow();
 

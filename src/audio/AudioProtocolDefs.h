@@ -29,7 +29,7 @@ const uint32 SAVE_TRACK_INDEX				=	'trix';
 #define SAVE_AUDIOTRACK_INDEX_NAME 			"audiotrack_index"
 const uint32 SAVE_AUDIOTRACK_INDEX			=	'atrx';
 
-#define SAVE_AUDIOTRACK_NAME 			"audiotrack_index"
-const uint32 SAVE_AUDIOTRACK			=	'atrx';
+#define SAVE_AUDIOTRACK_NAME 			"audiotrack_name"
+const uint32 SAVE_AUDIOTRACK			=	'atrn';
 
 #endif // AUDIO_PROTOCOL_DEFS_H

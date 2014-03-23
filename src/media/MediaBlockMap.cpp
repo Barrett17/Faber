@@ -23,6 +23,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// This is 1 MiB actually
+#define BLOCK_SIZE_LIMIT 1048576
+
 
 MediaBlockMap::MediaBlockMap()
 	:

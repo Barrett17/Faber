@@ -59,7 +59,7 @@ public:
 			static status_t			UnregisterTrack(AudioTrack* track);
 
 			static BMessage*		ArchiveTracks();
-			static status_t			UnarchiveTracks(BMessage* msg);
+			static status_t			UnarchiveTracks(BMessage* from);
 
 			media_node				Node();
 
