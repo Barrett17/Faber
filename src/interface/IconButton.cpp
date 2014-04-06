@@ -1,13 +1,12 @@
 /*
- * Copyright 2006-2010, Haiku.
+ * Copyright 2006-2011, Haiku.
  * Distributed under the terms of the MIT License.
  *
  * Authors:
  *		Stephan Aßmus <superstippi@gmx.de>
+ *		Axel Dörfler, axeld@pinc-software.de.
  */
 
-// NOTE: this file is a duplicate of the version in Icon-O-Matic/generic
-// it should be placed into a common folder for generic useful stuff
 
 #include "IconButton.h"
 
@@ -19,6 +18,7 @@
 #include <Control.h>
 #include <ControlLook.h>
 #include <Entry.h>
+#include <IconUtils.h>
 #include <Looper.h>
 #include <Message.h>
 #include <Mime.h>
@@ -29,40 +29,44 @@
 #include <TranslationUtils.h>
 #include <Window.h>
 
-#include "IconUtils.h"
 
-using std::nothrow;
+namespace BPrivate {
 
 
-// constructor
-IconButton::IconButton(const char* name, uint32 id, const char* label,
-		BMessage* message, BHandler* target, bool useTheme)
+enum {
+	STATE_NONE			= 0x0000,
+	STATE_PRESSED		= 0x0002,
+	STATE_INSIDE		= 0x0008,
+	STATE_FORCE_PRESSED	= 0x0010,
+};
+
+
+
+BIconButton::BIconButton(const char* name, const char* label,
+	BMessage* message, BHandler* target)
 	:
-	BView(name, B_WILL_DRAW),
-	  BInvoker(message, target),
-	  fButtonState(STATE_ENABLED),
-	  fID(id),
-	  fNormalBitmap(NULL),
-	  fDisabledBitmap(NULL),
-	  fClickedBitmap(NULL),
-	  fDisabledClickedBitmap(NULL),
-	  fLabel(label),
-	  fTargetCache(target),
-	  fUseFaberTheme(useTheme)
+	BControl(name, label, message, B_WILL_DRAW),
+	fButtonState(0),
+	fNormalBitmap(NULL),
+	fDisabledBitmap(NULL),
+	fClickedBitmap(NULL),
+	fDisabledClickedBitmap(NULL),
+	fTargetCache(target)
 {
+	SetTarget(target);
 	SetLowColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	SetViewColor(B_TRANSPARENT_32_BIT);
 }
 
-// destructor
-IconButton::~IconButton()
+
+BIconButton::~BIconButton()
 {
 	_DeleteBitmaps();
 }
 
-// MessageReceived
+
 void
-IconButton::MessageReceived(BMessage* message)
+BIconButton::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
 		default:
@@ -71,9 +75,9 @@ IconButton::MessageReceived(BMessage* message)
 	}
 }
 
-// AttachedToWindow
+
 void
-IconButton::AttachedToWindow()
+BIconButton::AttachedToWindow()
 {
 	rgb_color background = B_TRANSPARENT_COLOR;
 	if (BView* parent = Parent()) {
@@ -83,12 +87,6 @@ IconButton::AttachedToWindow()
 	}
 	if (background == B_TRANSPARENT_COLOR)
 		background = ui_color(B_PANEL_BACKGROUND_COLOR);
-
-	if (fUseFaberTheme) {
-		//rgb_color backColor = {120,120,120};
-		background = B_TRANSPARENT_COLOR;
-	}
-
 	SetLowColor(background);
 
 	SetTarget(fTargetCache);
@@ -96,171 +94,110 @@ IconButton::AttachedToWindow()
 		SetTarget(Window());
 }
 
-// Draw
+
 void
-IconButton::Draw(BRect area)
+BIconButton::Draw(BRect updateRect)
 {
 	rgb_color background = LowColor();
 
 	BRect r(Bounds());
 
-	if (be_control_look != NULL) {
-		uint32 flags = 0;
-		BBitmap* bitmap = fNormalBitmap;
-		if (!IsEnabled()) {
-			flags |= BControlLook::B_DISABLED;
-			bitmap = fDisabledBitmap;
-		}
-		if (_HasFlags(STATE_PRESSED) || _HasFlags(STATE_FORCE_PRESSED))
-			flags |= BControlLook::B_ACTIVATED;
-
-		if (DrawBorder()) {
-			be_control_look->DrawButtonFrame(this, r, area, background,
-				background, flags);
-			be_control_look->DrawButtonBackground(this, r, area, background,
-				flags);
-		} else {
-			SetHighColor(background);
-			FillRect(r);
-		}
-
-		if (bitmap && bitmap->IsValid()) {
-			float x = r.left + floorf((r.Width()
-				- bitmap->Bounds().Width()) / 2.0 + 0.5);
-			float y = r.top + floorf((r.Height()
-				- bitmap->Bounds().Height()) / 2.0 + 0.5);
-			BPoint point(x, y);
-			if (_HasFlags(STATE_PRESSED) || _HasFlags(STATE_FORCE_PRESSED))
-				point += BPoint(1.0, 1.0);
-			if (bitmap->ColorSpace() == B_RGBA32
-				|| bitmap->ColorSpace() == B_RGBA32_BIG) {
-				SetDrawingMode(B_OP_ALPHA);
-				SetBlendingMode(B_PIXEL_ALPHA, B_ALPHA_OVERLAY);
-			}
-			DrawBitmap(bitmap, point);
-		}
-		return;
-	}
-
-	rgb_color lightShadow, shadow, darkShadow, light;
+	uint32 flags = 0;
 	BBitmap* bitmap = fNormalBitmap;
-	// adjust colors and bitmap according to flags
-	if (IsEnabled()) {
-		lightShadow = tint_color(background, B_DARKEN_1_TINT);
-		shadow = tint_color(background, B_DARKEN_2_TINT);
-		darkShadow = tint_color(background, B_DARKEN_4_TINT);
-		light = tint_color(background, B_LIGHTEN_MAX_TINT);
-		SetHighColor(0, 0, 0, 255);
-	} else {
-		lightShadow = tint_color(background, 1.11);
-		shadow = tint_color(background, B_DARKEN_1_TINT);
-		darkShadow = tint_color(background, B_DARKEN_2_TINT);
-		light = tint_color(background, B_LIGHTEN_2_TINT);
+	if (!IsEnabled()) {
+		flags |= BControlLook::B_DISABLED;
 		bitmap = fDisabledBitmap;
-		SetHighColor(tint_color(background, B_DISABLED_LABEL_TINT));
 	}
-	if (_HasFlags(STATE_PRESSED) || _HasFlags(STATE_FORCE_PRESSED)) {
-		if (IsEnabled())  {
-//			background = tint_color(background, B_DARKEN_2_TINT);
-//			background = tint_color(background, B_LIGHTEN_1_TINT);
-			background = tint_color(background, B_DARKEN_1_TINT);
-			bitmap = fClickedBitmap;
-		} else {
-//			background = tint_color(background, B_DARKEN_1_TINT);
-//			background = tint_color(background, (B_NO_TINT + B_LIGHTEN_1_TINT) / 2.0);
-			background = tint_color(background, (B_NO_TINT + B_DARKEN_1_TINT) / 2.0);
-			bitmap = fDisabledClickedBitmap;
-		}
-		// background
-		SetLowColor(background);
-		r.InsetBy(2.0, 2.0);
-		StrokeLine(r.LeftBottom(), r.LeftTop(), B_SOLID_LOW);
-		StrokeLine(r.LeftTop(), r.RightTop(), B_SOLID_LOW);
-		r.InsetBy(-2.0, -2.0);
+	if (_HasFlags(STATE_PRESSED) || _HasFlags(STATE_FORCE_PRESSED))
+		flags |= BControlLook::B_ACTIVATED;
+
+	if (ShouldDrawBorder()) {
+		DrawBorder(r, updateRect, background, flags);
+		DrawBackground(r, updateRect, background, flags);
+	} else {
+		SetHighColor(background);
+		FillRect(r);
 	}
-	// draw frame only if tracking
-	if (DrawBorder()) {
-		if (_HasFlags(STATE_PRESSED) || _HasFlags(STATE_FORCE_PRESSED))
-			DrawPressedBorder(r, background, shadow, darkShadow, lightShadow, light);
-		else
-			DrawNormalBorder(r, background, shadow, darkShadow, lightShadow, light);
-		r.InsetBy(2.0, 2.0);
-	} else
-		_DrawFrame(r, background, background, background, background);
-	float width = Bounds().Width();
-	float height = Bounds().Height();
-	// bitmap
-	BRegion originalClippingRegion;
+
 	if (bitmap && bitmap->IsValid()) {
-		float x = floorf((width - bitmap->Bounds().Width()) / 2.0 + 0.5);
-		float y = floorf((height - bitmap->Bounds().Height()) / 2.0 + 0.5);
-		BPoint point(x, y);
-		if (_HasFlags(STATE_PRESSED) || _HasFlags(STATE_FORCE_PRESSED))
-			point += BPoint(1.0, 1.0);
-		if (bitmap->ColorSpace() == B_RGBA32 || bitmap->ColorSpace() == B_RGBA32_BIG) {
-			FillRect(r, B_SOLID_LOW);
+		if (bitmap->ColorSpace() == B_RGBA32
+			|| bitmap->ColorSpace() == B_RGBA32_BIG) {
 			SetDrawingMode(B_OP_ALPHA);
 			SetBlendingMode(B_PIXEL_ALPHA, B_ALPHA_OVERLAY);
 		}
-		DrawBitmap(bitmap, point);
-		// constrain clipping region
-		BRegion region= originalClippingRegion;
-		GetClippingRegion(&region);
-		region.Exclude(bitmap->Bounds().OffsetByCopy(point));
-		ConstrainClippingRegion(&region);
-	}
-	// background
-	SetDrawingMode(B_OP_COPY);
-	FillRect(r, B_SOLID_LOW);
-	ConstrainClippingRegion(NULL);
-	// label
-	if (fLabel.CountChars() > 0) {
-		SetDrawingMode(B_OP_COPY);
-		font_height fh;
-		GetFontHeight(&fh);
-		float y = Bounds().bottom - 4.0;
-		y -= fh.descent;
-		float x = (width - StringWidth(fLabel.String())) / 2.0;
-		DrawString(fLabel.String(), BPoint(x, y));
+		float x = r.left + floorf((r.Width()
+			- bitmap->Bounds().Width()) / 2.0 + 0.5);
+		float y = r.top + floorf((r.Height()
+			- bitmap->Bounds().Height()) / 2.0 + 0.5);
+		DrawBitmap(bitmap, BPoint(x, y));
 	}
 }
 
-// MouseDown
+
+bool
+BIconButton::ShouldDrawBorder() const
+{
+	return (IsEnabled() && (IsInside() || IsTracking()))
+		|| _HasFlags(STATE_FORCE_PRESSED);
+}
+
+
 void
-IconButton::MouseDown(BPoint where)
+BIconButton::DrawBorder(BRect& frame, const BRect& updateRect,
+	const rgb_color& backgroundColor, uint32 flags)
+{
+	be_control_look->DrawButtonFrame(this, frame, updateRect, backgroundColor,
+		backgroundColor, flags);
+}
+
+
+void
+BIconButton::DrawBackground(BRect& frame, const BRect& updateRect,
+	const rgb_color& backgroundColor, uint32 flags)
+{
+	be_control_look->DrawButtonBackground(this, frame, updateRect,
+		backgroundColor, flags);
+}
+
+
+void
+BIconButton::MouseDown(BPoint where)
 {
 	if (!IsValid())
 		return;
 
-	if (_HasFlags(STATE_ENABLED)/* && !_HasFlags(STATE_FORCE_PRESSED)*/) {
+	if (IsEnabled()) {
 		if (Bounds().Contains(where)) {
 			SetMouseEventMask(B_POINTER_EVENTS, B_LOCK_WINDOW_FOCUS);
-			_AddFlags(STATE_PRESSED | STATE_TRACKING);
+			_SetFlags(STATE_PRESSED, true);
+			_SetTracking(true);
 		} else {
-			_ClearFlags(STATE_PRESSED | STATE_TRACKING);
+			_SetFlags(STATE_PRESSED, false);
+			_SetTracking(false);
 		}
 	}
 }
 
-// MouseUp
+
 void
-IconButton::MouseUp(BPoint where)
+BIconButton::MouseUp(BPoint where)
 {
 	if (!IsValid())
 		return;
 
-//	if (!_HasFlags(STATE_FORCE_PRESSED)) {
-		if (_HasFlags(STATE_ENABLED) && _HasFlags(STATE_PRESSED) && Bounds().Contains(where))
-			Invoke();
-		else if (Bounds().Contains(where))
-			_AddFlags(STATE_INSIDE);
-		_ClearFlags(STATE_PRESSED | STATE_TRACKING);
-//	}
+	if (IsEnabled() && _HasFlags(STATE_PRESSED)
+		&& Bounds().Contains(where)) {
+		Invoke();
+	} else if (Bounds().Contains(where))
+		SetInside(true);
+
+	_SetFlags(STATE_PRESSED, false);
+	_SetTracking(false);
 }
 
-// MouseMoved
+
 void
-IconButton::MouseMoved(BPoint where, uint32 transit, const BMessage* message)
+BIconButton::MouseMoved(BPoint where, uint32 transit, const BMessage* message)
 {
 	if (!IsValid())
 		return;
@@ -272,46 +209,40 @@ IconButton::MouseMoved(BPoint where, uint32 transit, const BMessage* message)
 		MouseUp(where);
 		return;
 	}
-	if (buttons && !_HasFlags(STATE_TRACKING))
+	if (buttons != 0 && !IsTracking())
 		return;
-	if ((transit == B_INSIDE_VIEW || transit == B_ENTERED_VIEW)
-		&& _HasFlags(STATE_ENABLED))
-		_AddFlags(STATE_INSIDE);
-	else 
-		_ClearFlags(STATE_INSIDE);
-	if (_HasFlags(STATE_TRACKING)) {
-		if (Bounds().Contains(where))
-			_AddFlags(STATE_PRESSED);
-		else
-			_ClearFlags(STATE_PRESSED);
-	}
+
+	SetInside((transit == B_INSIDE_VIEW || transit == B_ENTERED_VIEW)
+		&& IsEnabled());
+	if (IsTracking())
+		_SetFlags(STATE_PRESSED, Bounds().Contains(where));
 }
 
-#define MIN_SPACE 15.0
 
-// GetPreferredSize
 void
-IconButton::GetPreferredSize(float* width, float* height)
+BIconButton::GetPreferredSize(float* width, float* height)
 {
-	float minWidth = 0.0;
-	float minHeight = 0.0;
+	float minWidth = 0.0f;
+	float minHeight = 0.0f;
 	if (IsValid()) {
-		minWidth += fNormalBitmap->Bounds().IntegerWidth() + 1.0;
-		minHeight += fNormalBitmap->Bounds().IntegerHeight() + 1.0;
+		minWidth += fNormalBitmap->Bounds().IntegerWidth() + 1.0f;
+		minHeight += fNormalBitmap->Bounds().IntegerHeight() + 1.0f;
 	}
-	if (minWidth < MIN_SPACE)
-		minWidth = MIN_SPACE;
-	if (minHeight < MIN_SPACE)
-		minHeight = MIN_SPACE;
 
-	float hPadding = max_c(6.0, ceilf(minHeight / 4.0));
-	float vPadding = max_c(6.0, ceilf(minWidth / 4.0));
+	const float kMinSpace = 15.0f;
+	if (minWidth < kMinSpace)
+		minWidth = kMinSpace;
+	if (minHeight < kMinSpace)
+		minHeight = kMinSpace;
 
-	if (fLabel.CountChars() > 0) {
+	float hPadding = max_c(6.0f, ceilf(minHeight / 4.0f));
+	float vPadding = max_c(6.0f, ceilf(minWidth / 4.0f));
+
+	if (Label() != NULL && Label()[0] != '\0') {
 		font_height fh;
 		GetFontHeight(&fh);
 		minHeight += ceilf(fh.ascent + fh.descent) + vPadding;
-		minWidth += StringWidth(fLabel.String()) + vPadding;
+		minWidth += StringWidth(Label()) + vPadding;
 	}
 
 	if (width)
@@ -320,58 +251,55 @@ IconButton::GetPreferredSize(float* width, float* height)
 		*height = minHeight + vPadding;
 }
 
-// MinSize
+
 BSize
-IconButton::MinSize()
+BIconButton::MinSize()
 {
 	BSize size;
 	GetPreferredSize(&size.width, &size.height);
 	return size;
 }
 
-// MaxSize
+
 BSize
-IconButton::MaxSize()
+BIconButton::MaxSize()
 {
 	return MinSize();
 }
 
-// Invoke
+
 status_t
-IconButton::Invoke(BMessage* message)
+BIconButton::Invoke(BMessage* message)
 {
-	if (!message)
+	if (message == NULL)
 		message = Message();
-	if (message) {
+	if (message != NULL) {
 		BMessage clone(*message);
 		clone.AddInt64("be:when", system_time());
 		clone.AddPointer("be:source", (BView*)this);
 		clone.AddInt32("be:value", Value());
-		clone.AddInt32("id", ID());
 		return BInvoker::Invoke(&clone);
 	}
 	return BInvoker::Invoke(message);
 }
 
-// SetPressed
+
 void
-IconButton::SetPressed(bool pressed)
+BIconButton::SetPressed(bool pressed)
 {
-	if (pressed)
-		_AddFlags(STATE_FORCE_PRESSED);
-	else
-		_ClearFlags(STATE_FORCE_PRESSED);
+	_SetFlags(STATE_FORCE_PRESSED, pressed);
 }
 
-// IsPressed
+
 bool
-IconButton::IsPressed() const
+BIconButton::IsPressed() const
 {
 	return _HasFlags(STATE_FORCE_PRESSED);
 }
 
+
 status_t
-IconButton::SetIcon(int32 resourceID)
+BIconButton::SetIcon(int32 resourceID)
 {
 	app_info info;
 	status_t status = be_app->GetAppInfo(&info);
@@ -401,9 +329,9 @@ IconButton::SetIcon(int32 resourceID)
 	return B_ERROR;
 }
 
-// SetIcon
+
 status_t
-IconButton::SetIcon(const char* pathToBitmap)
+BIconButton::SetIcon(const char* pathToBitmap)
 {
 	if (pathToBitmap == NULL)
 		return B_BAD_VALUE;
@@ -426,14 +354,22 @@ IconButton::SetIcon(const char* pathToBitmap)
 					status = path.Append(pathToBitmap, true);
 					if (status == B_OK)
 						fileBitmap = BTranslationUtils::GetBitmap(path.Path());
-					else 
-						printf("IconButton::SetIcon() - path.Append() failed: %s\n", strerror(status));
-				} else
-					printf("IconButton::SetIcon() - path.GetParent() failed: %s\n", strerror(status));
-			} else
-				printf("IconButton::SetIcon() - path.InitCheck() failed: %s\n", strerror(status));
-		} else
-			printf("IconButton::SetIcon() - be_app->GetAppInfo() failed: %s\n", strerror(status));
+					else {
+						printf("BIconButton::SetIcon() - path.Append() failed: "
+							"%s\n", strerror(status));
+					}
+				} else {
+					printf("BIconButton::SetIcon() - path.GetParent() failed: "
+						"%s\n", strerror(status));
+				}
+			} else {
+				printf("BIconButton::SetIcon() - path.InitCheck() failed: "
+					"%s\n", strerror(status));
+			}
+		} else {
+			printf("BIconButton::SetIcon() - be_app->GetAppInfo() failed: "
+				"%s\n", strerror(status));
+		}
 	} else
 		fileBitmap = BTranslationUtils::GetBitmap(pathToBitmap);
 	if (fileBitmap) {
@@ -444,9 +380,9 @@ IconButton::SetIcon(const char* pathToBitmap)
 	return status;
 }
 
-// SetIcon
+
 status_t
-IconButton::SetIcon(const BBitmap* bitmap)
+BIconButton::SetIcon(const BBitmap* bitmap, uint32 flags)
 {
 	if (bitmap && bitmap->ColorSpace() == B_CMAP8) {
 		status_t status = bitmap->InitCheck();
@@ -462,50 +398,63 @@ IconButton::SetIcon(const BBitmap* bitmap)
 		return _MakeBitmaps(bitmap);
 }
 
-// SetIcon
+
 status_t
-IconButton::SetIcon(const BMimeType* fileType, bool small)
+BIconButton::SetIcon(const BMimeType* fileType, bool small)
 {
 	status_t status = fileType ? fileType->InitCheck() : B_BAD_VALUE;
 	if (status >= B_OK) {
-		BBitmap* mimeBitmap = new(nothrow) BBitmap(BRect(0.0, 0.0, 15.0, 15.0), B_CMAP8);
+		BBitmap* mimeBitmap = new(std::nothrow) BBitmap(BRect(0.0, 0.0, 15.0,
+			15.0), B_CMAP8);
 		if (mimeBitmap && mimeBitmap->IsValid()) {
-			status = fileType->GetIcon(mimeBitmap, small ? B_MINI_ICON : B_LARGE_ICON);
+			status = fileType->GetIcon(mimeBitmap, small ? B_MINI_ICON
+				: B_LARGE_ICON);
 			if (status >= B_OK) {
 				if (BBitmap* bitmap = _ConvertToRGB32(mimeBitmap)) {
 					status = _MakeBitmaps(bitmap);
 					delete bitmap;
-				} else
-					printf("IconButton::SetIcon() - B_RGB32 bitmap is not valid\n");
-			} else
-				printf("IconButton::SetIcon() - fileType->GetIcon() failed: %s\n", strerror(status));
+				} else {
+					printf("BIconButton::SetIcon() - B_RGB32 bitmap is not "
+						"valid\n");
+				}
+			} else {
+				printf("BIconButton::SetIcon() - fileType->GetIcon() failed: "
+					"%s\n", strerror(status));
+			}
 		} else
-			printf("IconButton::SetIcon() - B_CMAP8 bitmap is not valid\n");
+			printf("BIconButton::SetIcon() - B_CMAP8 bitmap is not valid\n");
 		delete mimeBitmap;
-	} else
-		printf("IconButton::SetIcon() - fileType is not valid: %s\n", strerror(status));
+	} else {
+		printf("BIconButton::SetIcon() - fileType is not valid: %s\n",
+			strerror(status));
+	}
 	return status;
 }
 
-// SetIcon
+
 status_t
-IconButton::SetIcon(const unsigned char* bitsFromQuickRes,
+BIconButton::SetIcon(const unsigned char* bitsFromQuickRes,
 	uint32 width, uint32 height, color_space format, bool convertToBW)
 {
 	status_t status = B_BAD_VALUE;
 	if (bitsFromQuickRes && width > 0 && height > 0) {
-		BBitmap* quickResBitmap = new(nothrow) BBitmap(BRect(0.0, 0.0, width - 1.0, height - 1.0), format);
+		BBitmap* quickResBitmap = new(std::nothrow) BBitmap(BRect(0.0, 0.0,
+			width - 1.0, height - 1.0), format);
 		status = quickResBitmap ? quickResBitmap->InitCheck() : B_ERROR;
 		if (status >= B_OK) {
 			// It doesn't look right to copy BitsLength() bytes, but bitmaps
-			// exported from QuickRes still contain their padding, so it is alright.
-			memcpy(quickResBitmap->Bits(), bitsFromQuickRes, quickResBitmap->BitsLength());
-			if (format != B_RGB32 && format != B_RGBA32 && format != B_RGB32_BIG && format != B_RGBA32_BIG) {
+			// exported from QuickRes still contain their padding, so it is
+			// all right.
+			memcpy(quickResBitmap->Bits(), bitsFromQuickRes,
+				quickResBitmap->BitsLength());
+			if (format != B_RGB32 && format != B_RGBA32
+				&& format != B_RGB32_BIG && format != B_RGBA32_BIG) {
 				// colorspace needs conversion
-				BBitmap* bitmap = new(nothrow) BBitmap(quickResBitmap->Bounds(), B_RGB32, true);
+				BBitmap* bitmap = new(std::nothrow) BBitmap(
+					quickResBitmap->Bounds(), B_RGB32, true);
 				if (bitmap && bitmap->IsValid()) {
 					BView* helper = new BView(bitmap->Bounds(), "helper",
-											  B_FOLLOW_NONE, B_WILL_DRAW);
+						B_FOLLOW_NONE, B_WILL_DRAW);
 					if (bitmap->Lock()) {
 						bitmap->AddChild(helper);
 						helper->SetHighColor(ui_color(B_PANEL_BACKGROUND_COLOR));
@@ -516,8 +465,10 @@ IconButton::SetIcon(const unsigned char* bitsFromQuickRes,
 						bitmap->Unlock();
 					}
 					status = _MakeBitmaps(bitmap);
-				} else
-					printf("IconButton::SetIcon() - B_RGB32 bitmap is not valid\n");
+				} else {
+					printf("BIconButton::SetIcon() - B_RGB32 bitmap is not "
+						"valid\n");
+				}
 				delete bitmap;
 			} else {
 				// native colorspace (32 bits)
@@ -529,7 +480,8 @@ IconButton::SetIcon(const unsigned char* bitsFromQuickRes,
 						uint8* handle = bits;
 						uint8 gray;
 						for (uint32 x = 0; x < width; x++) {
-							gray = uint8((116 * handle[0] + 600 * handle[1] + 308 * handle[2]) / 1024);
+							gray = uint8((116 * handle[0] + 600 * handle[1]
+								+ 308 * handle[2]) / 1024);
 							handle[0] = gray;
 							handle[1] = gray;
 							handle[2] = gray;
@@ -540,23 +492,26 @@ IconButton::SetIcon(const unsigned char* bitsFromQuickRes,
 				}
 				status = _MakeBitmaps(quickResBitmap);
 			}
-		} else
-			printf("IconButton::SetIcon() - error allocating bitmap: %s\n", strerror(status));
+		} else {
+			printf("BIconButton::SetIcon() - error allocating bitmap: "
+				"%s\n", strerror(status));
+		}
 		delete quickResBitmap;
 	}
 	return status;
 }
 
-// ClearIcon
+
 void
-IconButton::ClearIcon()
+BIconButton::ClearIcon()
 {
 	_DeleteBitmaps();
 	_Update();
 }
 
+
 void
-IconButton::TrimIcon(bool keepAspect)
+BIconButton::TrimIcon(bool keepAspect)
 {
 	if (fNormalBitmap == NULL)
 		return;
@@ -565,7 +520,7 @@ IconButton::TrimIcon(bool keepAspect)
 	uint32 bpr = fNormalBitmap->BytesPerRow();
 	uint32 width = fNormalBitmap->Bounds().IntegerWidth() + 1;
 	uint32 height = fNormalBitmap->Bounds().IntegerHeight() + 1;
-	BRect trimmed(LONG_MAX, LONG_MAX, LONG_MIN, LONG_MIN);
+	BRect trimmed(INT32_MAX, INT32_MAX, INT32_MIN, INT32_MIN);
 	for (uint32 y = 0; y < height; y++) {
 		uint8* b = bits + 3;
 		bool rowHasAlpha = false;
@@ -592,8 +547,10 @@ IconButton::TrimIcon(bool keepAspect)
 	if (keepAspect) {
 		float minInset = trimmed.left;
 		minInset = min_c(minInset, trimmed.top);
-		minInset = min_c(minInset, fNormalBitmap->Bounds().right - trimmed.right);
-		minInset = min_c(minInset, fNormalBitmap->Bounds().bottom - trimmed.bottom);
+		minInset = min_c(minInset, fNormalBitmap->Bounds().right
+			- trimmed.right);
+		minInset = min_c(minInset, fNormalBitmap->Bounds().bottom
+			- trimmed.bottom);
 		trimmed = fNormalBitmap->Bounds().InsetByCopy(minInset, minInset);
 	}
 	trimmed = trimmed & fNormalBitmap->Bounds();
@@ -613,15 +570,28 @@ IconButton::TrimIcon(bool keepAspect)
 	SetIcon(&trimmedBitmap);
 }
 
-// Bitmap
+
+bool
+BIconButton::IsValid() const
+{
+	return (fNormalBitmap && fDisabledBitmap && fClickedBitmap
+		&& fDisabledClickedBitmap
+		&& fNormalBitmap->IsValid()
+		&& fDisabledBitmap->IsValid()
+		&& fClickedBitmap->IsValid()
+		&& fDisabledClickedBitmap->IsValid());
+}
+
+
 BBitmap*
-IconButton::Bitmap() const
+BIconButton::Bitmap() const
 {
 	BBitmap* bitmap = NULL;
 	if (fNormalBitmap && fNormalBitmap->IsValid()) {
-		bitmap = new(nothrow) BBitmap(fNormalBitmap);
-		if (bitmap->IsValid()) {
-			// TODO: remove this functionality when we use real transparent bitmaps
+		bitmap = new(std::nothrow) BBitmap(fNormalBitmap);
+		if (bitmap != NULL && bitmap->IsValid()) {
+			// TODO: remove this functionality when we use real transparent
+			// bitmaps
 			uint8* bits = (uint8*)bitmap->Bits();
 			uint32 bpr = bitmap->BytesPerRow();
 			uint32 width = bitmap->Bounds().IntegerWidth() + 1;
@@ -636,7 +606,8 @@ IconButton::Bitmap() const
 						if (bitsHandle[0] == 216
 							&& bitsHandle[1] == 216
 							&& bitsHandle[2] == 216) {
-							bitsHandle[3] = 0;	// make this pixel completely transparent
+							// make this pixel completely transparent
+							bitsHandle[3] = 0;
 						}
 						bitsHandle += 4;
 					}
@@ -651,85 +622,50 @@ IconButton::Bitmap() const
 	return bitmap;
 }
 
-// DrawBorder
+
+void
+BIconButton::SetValue(int32 value)
+{
+	BControl::SetValue(value);
+	_SetFlags(STATE_PRESSED, value != 0);
+}
+
+
+void
+BIconButton::SetEnabled(bool enabled)
+{
+	BControl::SetEnabled(enabled);
+	if (!enabled) {
+		SetInside(false);
+		_SetTracking(false);
+	}
+}
+
+
+// #pragma mark - protected
+
+
 bool
-IconButton::DrawBorder() const
+BIconButton::IsInside() const
 {
-	return ((IsEnabled() && (_HasFlags(STATE_INSIDE)
-		|| _HasFlags(STATE_TRACKING))) || _HasFlags(STATE_FORCE_PRESSED));
+	return _HasFlags(STATE_INSIDE);
 }
 
-// DrawNormalBorder
+
 void
-IconButton::DrawNormalBorder(BRect r, rgb_color background,
-	rgb_color shadow, rgb_color darkShadow,
-	rgb_color lightShadow, rgb_color light)
+BIconButton::SetInside(bool inside)
 {
-	_DrawFrame(r, shadow, darkShadow, light, lightShadow);
-}
-
-// DrawPressedBorder
-void
-IconButton::DrawPressedBorder(BRect r, rgb_color background,
-	rgb_color shadow, rgb_color darkShadow,
-	rgb_color lightShadow, rgb_color light)
-{
-	_DrawFrame(r, shadow, light, darkShadow, background);
-}
-
-// IsValid
-bool
-IconButton::IsValid() const
-{
-	return (fNormalBitmap && fDisabledBitmap && fClickedBitmap
-		&& fDisabledClickedBitmap
-		&& fNormalBitmap->IsValid()
-		&& fDisabledBitmap->IsValid()
-		&& fClickedBitmap->IsValid()
-		&& fDisabledClickedBitmap->IsValid());
-}
-
-// Value
-int32
-IconButton::Value() const
-{
-	return _HasFlags(STATE_PRESSED) ? B_CONTROL_ON : B_CONTROL_OFF;
-}
-
-// SetValue
-void
-IconButton::SetValue(int32 value)
-{
-	if (value)
-		_AddFlags(STATE_PRESSED);
-	else
-		_ClearFlags(STATE_PRESSED);
-}
-
-// IsEnabled
-bool
-IconButton::IsEnabled() const
-{
-	return _HasFlags(STATE_ENABLED) ? B_CONTROL_ON : B_CONTROL_OFF;
-}
-
-// SetEnabled
-void
-IconButton::SetEnabled(bool enabled)
-{
-	if (enabled)
-		_AddFlags(STATE_ENABLED);
-	else
-		_ClearFlags(STATE_ENABLED | STATE_TRACKING | STATE_INSIDE);
+	_SetFlags(STATE_INSIDE, inside);
 }
 
 
+// #pragma mark - private
 
-// _ConvertToRGB32
+
 BBitmap*
-IconButton::_ConvertToRGB32(const BBitmap* bitmap) const
+BIconButton::_ConvertToRGB32(const BBitmap* bitmap) const
 {
-	BBitmap* convertedBitmap = new(nothrow) BBitmap(bitmap->Bounds(),
+	BBitmap* convertedBitmap = new(std::nothrow) BBitmap(bitmap->Bounds(),
 		B_BITMAP_ACCEPTS_VIEWS, B_RGBA32);
 	if (convertedBitmap && convertedBitmap->IsValid()) {
 		memset(convertedBitmap->Bits(), 0, convertedBitmap->BitsLength());
@@ -749,20 +685,20 @@ IconButton::_ConvertToRGB32(const BBitmap* bitmap) const
 	return convertedBitmap;
 }
 
-// _MakeBitmaps
+
 status_t
-IconButton::_MakeBitmaps(const BBitmap* bitmap)
+BIconButton::_MakeBitmaps(const BBitmap* bitmap)
 {
 	status_t status = bitmap ? bitmap->InitCheck() : B_BAD_VALUE;
-	if (status >= B_OK) {
+	if (status == B_OK) {
 		// make our own versions of the bitmap
 		BRect b(bitmap->Bounds());
 		_DeleteBitmaps();
 		color_space format = bitmap->ColorSpace();
-		fNormalBitmap = new(nothrow) BBitmap(b, format);
-		fDisabledBitmap = new(nothrow) BBitmap(b, format);
-		fClickedBitmap = new(nothrow) BBitmap(b, format);
-		fDisabledClickedBitmap = new(nothrow) BBitmap(b, format);
+		fNormalBitmap = new(std::nothrow) BBitmap(b, format);
+		fDisabledBitmap = new(std::nothrow) BBitmap(b, format);
+		fClickedBitmap = new(std::nothrow) BBitmap(b, format);
+		fDisabledClickedBitmap = new(std::nothrow) BBitmap(b, format);
 		if (IsValid()) {
 			// copy bitmaps from file bitmap
 			uint8* nBits = (uint8*)fNormalBitmap->Bits();
@@ -786,9 +722,12 @@ IconButton::_MakeBitmaps(const BBitmap* bitmap)
 						nBits[nOffset + 2] = fBits[fOffset + 2];
 						nBits[nOffset + 3] = 255;
 						// clicked bits are darker (lame method...)
-						cBits[nOffset + 0] = (uint8)((float)nBits[nOffset + 0] * 0.8);
-						cBits[nOffset + 1] = (uint8)((float)nBits[nOffset + 1] * 0.8);
-						cBits[nOffset + 2] = (uint8)((float)nBits[nOffset + 2] * 0.8);
+						cBits[nOffset + 0] = (uint8)((float)nBits[nOffset + 0]
+							* 0.8);
+						cBits[nOffset + 1] = (uint8)((float)nBits[nOffset + 1]
+							* 0.8);
+						cBits[nOffset + 2] = (uint8)((float)nBits[nOffset + 2]
+							* 0.8);
 						cBits[nOffset + 3] = 255;
 						// disabled bits have less contrast (lame method...)
 						uint8 grey = 216;
@@ -857,23 +796,25 @@ IconButton::_MakeBitmaps(const BBitmap* bitmap)
 				}
 			// unsupported format
 			} else {
-				printf("IconButton::_MakeBitmaps() - bitmap has unsupported colorspace\n");
+				printf("BIconButton::_MakeBitmaps() - bitmap has unsupported "
+					"colorspace\n");
 				status = B_MISMATCHED_VALUES;
 				_DeleteBitmaps();
 			}
 		} else {
-			printf("IconButton::_MakeBitmaps() - error allocating local bitmaps\n");
+			printf("BIconButton::_MakeBitmaps() - error allocating local "
+				"bitmaps\n");
 			status = B_NO_MEMORY;
 			_DeleteBitmaps();
 		}
 	} else
-		printf("IconButton::_MakeBitmaps() - bitmap is not valid\n");
+		printf("BIconButton::_MakeBitmaps() - bitmap is not valid\n");
 	return status;
 }
 
-// _DeleteBitmaps
+
 void
-IconButton::_DeleteBitmaps()
+BIconButton::_DeleteBitmaps()
 {
 	delete fNormalBitmap;
 	fNormalBitmap = NULL;
@@ -885,9 +826,9 @@ IconButton::_DeleteBitmaps()
 	fDisabledClickedBitmap = NULL;
 }
 
-// _Update
+
 void
-IconButton::_Update()
+BIconButton::_Update()
 {
 	if (LockLooper()) {
 		Invalidate();
@@ -895,47 +836,40 @@ IconButton::_Update()
 	}
 }
 
-// _AddFlags
+
 void
-IconButton::_AddFlags(uint32 flags)
+BIconButton::_SetFlags(uint32 flags, bool set)
 {
-	if (!(fButtonState & flags)) {
-		fButtonState |= flags;
+	if (_HasFlags(flags) != set) {
+		if (set)
+			fButtonState |= flags;
+		else
+			fButtonState &= ~flags;
+
+		if ((flags & STATE_PRESSED) != 0)
+			SetValueNoUpdate(set ? B_CONTROL_ON : B_CONTROL_OFF);
 		_Update();
 	}
 }
 
-// _ClearFlags
-void
-IconButton::_ClearFlags(uint32 flags)
-{
-	if (fButtonState & flags) {
-		fButtonState &= ~flags;
-		_Update();
-	}
-}
 
-// _HasFlags
 bool
-IconButton::_HasFlags(uint32 flags) const
+BIconButton::_HasFlags(uint32 flags) const
 {
-	return (fButtonState & flags);
+	return (fButtonState & flags) != 0;
 }
 
-// _DrawFrame
+
+//!	This one calls _Update() if needed; BControl::SetTracking() isn't virtual.
 void
-IconButton::_DrawFrame(BRect r, rgb_color col1, rgb_color col2,
-					   rgb_color col3, rgb_color col4)
+BIconButton::_SetTracking(bool tracking)
 {
-	BeginLineArray(8);
-		AddLine(BPoint(r.left, r.bottom), BPoint(r.left, r.top), col1);
-		AddLine(BPoint(r.left + 1.0, r.top), BPoint(r.right, r.top), col1);
-		AddLine(BPoint(r.right, r.top + 1.0), BPoint(r.right, r.bottom), col2);
-		AddLine(BPoint(r.right - 1.0, r.bottom), BPoint(r.left + 1.0, r.bottom), col2);
-		r.InsetBy(1.0, 1.0);
-		AddLine(BPoint(r.left, r.bottom), BPoint(r.left, r.top), col3);
-		AddLine(BPoint(r.left + 1.0, r.top), BPoint(r.right, r.top), col3);
-		AddLine(BPoint(r.right, r.top + 1.0), BPoint(r.right, r.bottom), col4);
-		AddLine(BPoint(r.right - 1.0, r.bottom), BPoint(r.left + 1.0, r.bottom), col4);
-	EndLineArray();
+	if (IsTracking() == tracking)
+		return;
+
+	SetTracking(tracking);
+	_Update();
 }
+
+
+}	// namespace BPrivate

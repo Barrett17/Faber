@@ -45,10 +45,10 @@ FaberWidget::MessageReceived(BMessage* message)
 }
 
 
-IconButton*
+BIconButton*
 FaberWidget::BuildButton(const char* tip, BMessage* message, int32 resourceID)
 {
-	IconButton* button = new IconButton(NULL, 0, NULL, message, this, true);
+	BIconButton* button = new BIconButton(NULL, NULL, message, this);
 	// Well those could go into the constructor, but no reason for now.
 	button->SetToolTip(tip);
 	button->SetIcon(resourceID);

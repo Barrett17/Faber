@@ -46,18 +46,18 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	box->SetExplicitSize(BSize(150, HEIGHT_VAL_REF*track->CountChannels()));
 
-	IconButton* muteButton = new IconButton(NULL, 0, NULL, NULL, this);
+	BIconButton* muteButton = new BIconButton(NULL, NULL, NULL, this);
 	muteButton->SetToolTip(B_TRANSLATE("Mute Track"));
 	muteButton->SetIcon(kMuteIcon);
 	muteButton->TrimIcon();
 	muteButton->SetValue(fAudioTrack->IsMute());
 
-	IconButton* recButton = new IconButton(NULL, 0, NULL, NULL, this);
+	BIconButton* recButton = new BIconButton(NULL, NULL, NULL, this);
 	recButton->SetToolTip(B_TRANSLATE("Disable Recording"));
 	recButton->SetIcon(kMiniRecordIcon);
 	recButton->TrimIcon();
 
-	IconButton* soloButton = new IconButton(NULL, 0, NULL, NULL, this);
+	BIconButton* soloButton = new BIconButton(NULL, NULL, NULL, this);
 	soloButton->SetToolTip(B_TRANSLATE("Solo"));
 	soloButton->SetIcon(kSoloIcon);
 	soloButton->TrimIcon();
@@ -79,7 +79,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	BMessage* closeMsg = MessageBuilder(FABER_REMOVE_TRACK);
 	closeMsg->AddUInt32("track_id", ID());
 
-	IconButton* closeButton = new IconButton(NULL, 0, NULL,
+	BIconButton* closeButton = new BIconButton(NULL, NULL,
 		closeMsg, this);
 
 	closeButton->SetToolTip(B_TRANSLATE("Close"));

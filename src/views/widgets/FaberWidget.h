@@ -34,7 +34,7 @@ public:
 	virtual void			MessageReceived(BMessage* message);
 
 protected:
-			IconButton*		BuildButton(const char* tip, BMessage* message,
+			BIconButton*		BuildButton(const char* tip, BMessage* message,
 								int32 resourceID);
 
 };

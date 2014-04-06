@@ -52,9 +52,9 @@ public:
 
 private:
 
-			IconButton*		fPlayButton;
-			IconButton*		fStopButton;
-			IconButton*		fLoopButton;
+			BIconButton*		fPlayButton;
+			BIconButton*		fStopButton;
+			BIconButton*		fLoopButton;
 
 			bool			fPlaying;
 

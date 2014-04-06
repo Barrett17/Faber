@@ -35,7 +35,7 @@ public:
 			void			SetTool(const uint32 index);
 
 private:
-			IconButton*		fToolButtons[3];
+			BIconButton*	fToolButtons[3];
 
 };
 
