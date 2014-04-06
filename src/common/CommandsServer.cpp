@@ -41,7 +41,7 @@ filter_result
 CommandsServer::Filter(BMessage* message, BHandler **target)
 {
 	filter_result result = B_DISPATCH_MESSAGE;
-	bool skip = false;
+	bool skip = true;
 
 	//message->PrintToStream();
 	switch (message->what)
@@ -49,7 +49,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 
 		case FABER_ABOUT:
 			WindowsManager::ShowAbout();
-			skip = true;
 		break;
 
 		case FABER_OPEN_HOMEPAGE:
@@ -57,28 +56,25 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 			const char* homepage = FABER_HELP_HOMEPAGE;
 			be_roster->Launch("text/html", 1,
 				const_cast<char**>(&homepage));
-			skip = true;
+
 			break;
 		}
 
 		case FABER_SETTINGS:
 			WindowsManager::Get()->ShowSettings();
-
-			skip = true;
 		break;
 
 		case FABER_FILE_OPEN:
 		{
-			
 			WindowsManager::GetOpenPanel()->Show();
-			skip = true;
+
 			break;
 		}
 
 		case FABER_EXPORT_PROJECT:
 		{
 			WindowsManager::GetExportPanel()->Show();
-			skip = true;
+
 			break;
 		}
 
@@ -88,21 +84,20 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 			be_app->GetAppInfo(&info);
 			be_roster->Launch(info.signature);
 
-			skip = true;
 			break;
 		}
 
 		case FABER_SAVE_PROJECT:
 		{
-			skip = true;
-
 			if (!fProjectManager->WasSaved()) {
 				WindowsManager::GetSavePanel()->Show();
 				break;
 			}
 
-			BMessenger msg = WindowsManager::MainWinMessenger();
-			msg.SendMessage(new BMessage(B_SAVE_REQUESTED));
+			if (fProjectManager->HasChanged()) {
+				BMessenger msg = WindowsManager::MainWinMessenger();
+				msg.SendMessage(new BMessage(B_SAVE_REQUESTED));
+			}
 
 			break;
 		}
@@ -111,7 +106,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 		{	
 			WindowsManager::GetSavePanel()->Show();
 
-			skip = true;
 			break;
 		}
 
@@ -119,30 +113,24 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 		{
 			printf("Save requested\n");
 
-			if (fProjectManager->HasChanged()) {
-				ProjectManager::Get()->SaveProject();	
-			}
+			ProjectManager::Get()->SaveProject();	
 
 			break;
 		}
 
 		case FABER_UNDO:
 		{
-
 			if (fProjectManager->HasUndo())
 				fProjectManager->Undo();
 
-			skip = true;
 			break;
 		}
 
 		case FABER_REDO:
 		{
-
 			if (fProjectManager->HasRedo())
 				fProjectManager->Redo();
 
-			skip = true;
 			break;
 		}
 
@@ -150,7 +138,6 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 		{
 			WindowsManager::GetFaberMixer()->Show();
 
-			skip = true;
 			break;
 		}
 
@@ -161,9 +148,11 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 			EffectWindow* win = new EffectWindow(effect);
 			win->Show();
 
-			skip = true;
 			break;
 		}
+
+		default:
+			skip = false;
 	}
 
 	if (skip == true)
@@ -171,6 +160,3 @@ CommandsServer::Filter(BMessage* message, BHandler **target)
 
 	return result;
 }
-
-
-

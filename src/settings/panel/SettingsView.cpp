@@ -43,7 +43,7 @@ SettingsView::SettingsView()
 	BGroupLayoutBuilder(this)
 		.Add(fTabView)
 		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton(B_TRANSLATE("Ok"), new BMessage(FABER_APPLY)))
+			.Add(new BButton(B_TRANSLATE("Apply"), new BMessage(FABER_APPLY)))
 			.Add(new BButton(B_TRANSLATE("Revert"), new BMessage(FABER_REVERT)))
 		.End()
 	.End();

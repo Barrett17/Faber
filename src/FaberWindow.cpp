@@ -17,8 +17,10 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "FaberWindow.h"
 
+#include <Alert.h>
 #include <Application.h>
 #include <LayoutBuilder.h>
 
@@ -44,13 +46,27 @@ FaberWindow::FaberWindow(BRect rect)
 
 FaberWindow::~FaberWindow()
 {
-
 }
 
 
 bool
 FaberWindow::QuitRequested()
 {
+	if (ProjectManager::Get()->HasChanged()) {
+		BAlert* alert = new BAlert("title", "Save changes to ...",
+			"Cancel", "Don't save", "Save",
+			B_WIDTH_AS_USUAL, B_OFFSET_SPACING,
+			B_WARNING_ALERT);
+
+		alert->SetShortcut(0, B_ESCAPE);
+		int32 button_index = alert->Go();
+
+		if (button_index == 2) {
+			BMessenger msg(this);
+			msg.SendMessage(new BMessage(FABER_SAVE_PROJECT));
+		}
+	}
+
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }

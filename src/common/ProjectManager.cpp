@@ -58,7 +58,7 @@ ProjectManager::HasChanged() const
 {
 	//return SnanpshotManager::HasChanged();
 
-	return false;
+	return true;
 }
 
 

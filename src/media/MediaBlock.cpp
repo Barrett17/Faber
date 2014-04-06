@@ -39,20 +39,6 @@ MediaBlock::~MediaBlock()
 }
 
 
-int16*
-MediaBlock::ReadPreview(size_t* size)
-{
-	return NULL;
-}
-
-
-status_t
-MediaBlock::ReadFrames(void* buffer, int64 frameCount)
-{
-	return fData->Read(buffer, StorageUtils::FramesToSize(frameCount));
-}
-
-
 int64
 MediaBlock::CountFrames() const
 {

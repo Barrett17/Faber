@@ -50,8 +50,6 @@ public:
 
 	BPopUpMenu*				BuildTrackContextualMenu(BView* target);
 
-	//BMenu*				BuildLiveNodesMenu(node_type type);
-
 private:
 	BMenu*					_BuildMenu(KeyBind* bind);
 

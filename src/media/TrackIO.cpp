@@ -77,8 +77,6 @@ TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 
 	BObjectList<MediaBlockMap> trackChannels = index->GetChannels();
 
-	MediaBlockMapWriter writer;
-
 	float temp[channels][frames/channels];
 
 	int64 count = 0;
@@ -92,8 +90,8 @@ TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 	}
 
 	for (uint32 j = 0; j < channels; j++) {
-		writer.SetTo(trackChannels.ItemAt(j));
-		writer.WriteFrames(&temp[j][0], frames/channels); 
+		trackChannels.ItemAt(j)->Writer()->WriteFrames(
+			&temp[j][0], frames/channels); 
 	}
 
 	return B_OK;

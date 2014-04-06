@@ -33,11 +33,7 @@ public:
 										BEntry* entry);	
 	virtual 						~MediaBlock();
 
-			int16*					ReadPreview(size_t* size);
-
-			status_t				ReadFrames(void* buffer, int64 frameCount);
 			int64					CountFrames() const;
-
 			status_t				SeekToFrame(int64* frame);
 
 			MediaBlock*				CopyTo(BFile* file);

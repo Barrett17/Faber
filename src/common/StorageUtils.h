@@ -26,13 +26,24 @@
 
 class StorageUtils {
 public:
+		// Get a new BlockFile for the current project
 		static BEntry*			BlockFileRequested();
 
 		static BFile*			GetProjectFile(BPath path, bool create);
 
+		// Get a temporary dir for a new project
 		static BPath			TemporaryProjectDirRequested();
+
+		// Move the current project dir to a new path, used only to move
+		// the temporary files for a new project.
+		static status_t			MoveToPath(BPath old, BPath newPath);
+
+		// Copy the project files to a new location, used by save as.
+		static status_t			CopyToPath(BPath old, BPath newPath);
+
 		static status_t			DeleteDirectory(BPath path);
 
+		// Disk storage / media conversion
 		static size_t			FramesToSize(int64 frames);
 		static int64			SizeToFrames(size_t size);
 private:

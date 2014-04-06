@@ -26,6 +26,51 @@
 #include "MediaBlock.h"
 
 
+class MediaBlockMap;
+
+class MediaBlockMapVisitor {
+protected:
+									MediaBlockMapVisitor(
+										MediaBlockMap* blockMap)
+										:
+										fMap(blockMap)
+										{}
+
+			int64					CountFrames() const;
+			status_t				SeekToFrame(int64* frame);
+
+			friend class			MediaBlockMap;
+
+			MediaBlockMap*			fMap;
+};
+
+
+class MediaBlockMapWriter : public MediaBlockMapVisitor {
+public:
+									MediaBlockMapWriter(
+										MediaBlockMap* blockMap)
+										:
+										MediaBlockMapVisitor(blockMap)
+										{}
+
+			void					WriteFrames(void* buffer, int64 frameCount,
+										int64 from = -1,
+										bool overWrite = false);
+};
+
+
+class MediaBlockMapReader : public MediaBlockMapVisitor {
+public:
+									MediaBlockMapReader(
+										MediaBlockMap* blockMap)
+										:
+										MediaBlockMapVisitor(blockMap)
+										{}
+
+			void					ReadFrames(void* buffer, int64 frameCount);
+};
+
+
 class MediaBlockMap : public BArchivable {
 public:
 									MediaBlockMap(BMessage* from);
@@ -48,29 +93,16 @@ public:
 			MediaBlock*				RemoveBlockAt(int32 index);
 			bool					RemoveBlock(MediaBlock* index);
 
-protected:
-			//MediaBlockWriter*		GetBlockWriter();
-			//PreviewReader*		GetPreviewReader();
-			//MediaBlockReader*		GetBlockReader();
+			MediaBlockMapWriter*	Writer() const;
+			//const MediaBlockMapReader& Reader();
 
+			//PreviewReader&		PreviewReader();
 private:
 			// Well, that will be replaced by an AVL Tree.
 			// For now it's fine anyway.
 			BObjectList<MediaBlock>	fMap;
-};
 
-
-class MediaBlockMapWriter {
-public:
-									MediaBlockMapWriter();
-
-			MediaBlockMap*			Current() const;
-			void					SetTo(MediaBlockMap* to);
-			void					WriteFrames(void* buffer, int64 frameCount,
-									int64 from = -1, bool overWrite = false);
-
-private:
-			mutable MediaBlockMap*	fMap;
+			MediaBlockMapWriter*	fWriter;
 };
 
 #endif

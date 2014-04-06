@@ -31,7 +31,7 @@ MediaBlockMap::MediaBlockMap()
 	:
 	BArchivable()
 {
-
+	fWriter = new MediaBlockMapWriter(this);
 }
 
 
@@ -45,6 +45,7 @@ MediaBlockMap::MediaBlockMap(BMessage* from)
 
 MediaBlockMap::~MediaBlockMap()
 {
+	delete fWriter;
 }
 
 
@@ -119,24 +120,24 @@ MediaBlockMap::RemoveBlock(MediaBlock* block)
 }
 
 
-MediaBlockMapWriter::MediaBlockMapWriter()
-	:
-	fMap(NULL)
+MediaBlockMapWriter*
+MediaBlockMap::Writer() const
 {
+	return fWriter;
 }
 
 
-void
-MediaBlockMapWriter::SetTo(MediaBlockMap* to) 
+int64
+MediaBlockMapVisitor::CountFrames() const
 {
-	fMap = to;
+	return 0;
 }
 
 
-MediaBlockMap*
-MediaBlockMapWriter::Current() const
+status_t
+MediaBlockMapVisitor::SeekToFrame(int64* frame)
 {
-	return fMap;
+	return B_ERROR;
 }
 
 
@@ -170,4 +171,11 @@ MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount,
 
 	if (addBlock)
 		fMap->AddBlock(new MediaBlock(destFile, destEntry));
+}
+
+
+void
+MediaBlockMapReader::ReadFrames(void* buffer, int64 frameCount)
+{
+
 }
