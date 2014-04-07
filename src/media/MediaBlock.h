@@ -27,6 +27,14 @@
 #include "DataBlock.h"
 
 
+/*
+	Audio Block Structure :
+		1 KiB - Reserved for general informations (size, blockstart, path, reference counter etc.)
+		4096 bytes - 16 bit display preview (1048576/256)
+		1 MiB - Audio data (B_AUDIO_FLOAT)
+*/
+
+
 class MediaBlock : public DataBlock {
 public:
 									MediaBlock(BFile* file,
