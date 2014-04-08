@@ -143,7 +143,7 @@ WindowsManager::GetSettingsWindow()
 void
 WindowsManager::ShowAbout()
 {
-	BAboutWindow* box = new BAboutWindow("Faber", "Faber");
+	BAboutWindow* box = new BAboutWindow(FABER_APP_NAME, FABER_SIGNATURE);
 
 	box->AddDescription(FABER_DESCRIPTION);
 	box->AddCopyright(2012, FABER_COPYRIGHT, kCopyrights);
