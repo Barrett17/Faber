@@ -53,7 +53,11 @@ bool
 FaberWindow::QuitRequested()
 {
 	if (ProjectManager::Get()->HasChanged()) {
-		BAlert* alert = new BAlert("title", "Save changes to ...",
+		BString alertText = "Save changes to ";
+		alertText << ProjectManager::Get()->Name();
+		alertText << "?";
+
+		BAlert* alert = new BAlert("Warning!", alertText.String(),
 			"Cancel", "Don't save", "Save",
 			B_WIDTH_AS_USUAL, B_OFFSET_SPACING,
 			B_WARNING_ALERT);
@@ -64,7 +68,9 @@ FaberWindow::QuitRequested()
 		if (button_index == 2) {
 			BMessenger msg(this);
 			msg.SendMessage(new BMessage(FABER_SAVE_PROJECT));
-		}
+			return false;
+		} else if (button_index == 0)
+			return false;
 	}
 
 	be_app->PostMessage(B_QUIT_REQUESTED);
