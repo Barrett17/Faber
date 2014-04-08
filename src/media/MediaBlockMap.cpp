@@ -147,30 +147,31 @@ MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount,
 {
 	MediaBlock* block = NULL;
 
-	if (start == -1)
+	off_t size = 0;
+	if (start == -1 && fMap->CountBlocks() != 0) {
 		block = fMap->LastBlock();
-
-	BFile* destFile = NULL;
-	BEntry* destEntry = NULL;
-
-	bool addBlock = false;
-
-	if (fMap->CountBlocks() == 0 || block->GetSize() >= BLOCK_SIZE_LIMIT) {
-		printf("Creating a new block\n");
-		destEntry = StorageUtils::BlockFileRequested();
-		destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
-		status_t ret = destFile->InitCheck();
-		printf("%s\n", strerror(ret));
-		addBlock = true;
-	} else {
-		printf("Get a block\n");
-		destFile = block->GetFile();
+		block->GetSize(&size);
 	}
 
-	destFile->Write(buffer, StorageUtils::FramesToSize(frameCount));
+	if (size == 0 || size >= BLOCK_SIZE_LIMIT) {
+		printf("Creating a new block\n");
 
-	if (addBlock)
-		fMap->AddBlock(new MediaBlock(destFile, destEntry));
+		BEntry* destEntry = StorageUtils::BlockFileRequested();
+		BFile* destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
+
+		status_t ret = destFile->InitCheck();
+
+		if (ret != B_OK) {
+			printf("%s\n", strerror(ret));
+			return;
+		}
+
+		block = new MediaBlock(destFile, destEntry);
+
+		fMap->AddBlock(block);
+	}
+
+	block->Write(buffer, StorageUtils::FramesToSize(frameCount));
 }
 
 

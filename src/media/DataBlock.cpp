@@ -21,7 +21,7 @@
 #include "DataBlock.h"
 
 
-DataBlock::DataBlock(BDataIO* data, FaberDataBlockKinds kind)
+DataBlock::DataBlock(BPositionIO* data, FaberDataBlockKinds kind)
 	:
 	fData(data),
 	fKind(kind)
@@ -34,4 +34,60 @@ uint32
 DataBlock::Kind() const
 {
 	return fKind;
+}
+
+
+ssize_t
+DataBlock::Read(void* buffer, size_t size)
+{
+	return fData->Read(buffer, size);
+}
+
+
+ssize_t
+DataBlock::Write(const void* buffer, size_t size)
+{
+	return fData->Write(buffer, size);
+}
+
+
+ssize_t
+DataBlock::ReadAt(off_t position, void* buffer, size_t size)
+{
+	return fData->ReadAt(position, buffer, size);
+}
+
+
+ssize_t
+DataBlock::WriteAt(off_t position, const void* buffer, size_t size)
+{
+	return fData->WriteAt(position, buffer, size);
+}
+
+
+off_t
+DataBlock::Seek(off_t position, uint32 seekMode)
+{
+	return fData->Seek(position, seekMode);
+}
+
+
+off_t
+DataBlock::Position() const
+{
+	return fData->Position();
+}
+
+
+status_t
+DataBlock::SetSize(off_t size)
+{
+	return fData->SetSize(size);
+}
+
+
+status_t
+DataBlock::GetSize(off_t* size) const
+{
+	return fData->GetSize(size);
 }

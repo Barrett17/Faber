@@ -43,8 +43,7 @@ int64
 MediaBlock::CountFrames() const
 {
 	off_t size;
-	fData->GetSize(&size);
-
+	GetSize(&size);
 	return StorageUtils::SizeToFrames(size);
 }
 
@@ -68,21 +67,4 @@ const BEntry&
 MediaBlock::GetEntry() const
 {
 	return *fEntry;
-}
-
-
-BFile*
-MediaBlock::GetFile() const
-{
-	return fData;
-}
-
-
-off_t
-MediaBlock::GetSize()
-{
-	off_t size;
-	fData->GetSize(&size);
-
-	return size;
 }

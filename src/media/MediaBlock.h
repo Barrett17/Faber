@@ -54,9 +54,6 @@ public:
 protected:
 			friend class			MediaBlockMapWriter;
 
-			off_t					GetSize();
-			BFile*					GetFile() const;
-
 private:
 			BFile*					fData;
 			BEntry*					fEntry;

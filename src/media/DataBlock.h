@@ -34,24 +34,31 @@ enum FaberDataBlockKinds {
 
 class DataBlock {
 public:
-									DataBlock(BDataIO* data,
+									DataBlock(BPositionIO* data,
 										FaberDataBlockKinds kind);	
 
-	virtual	uint32					Kind() const;
+	virtual	uint32				Kind() const;
 
-	/*
-	virtual ssize_t					Read(void* buffer, size_t numBytes);
-	virtual ssize_t					Read(void* buffer, size_t numBytes);
+protected:
+	// BDataIO
+	virtual	ssize_t				Read(void* buffer, size_t size);
+	virtual	ssize_t				Write(const void* buffer, size_t size);
 
-	virtual ssize_t					ReadAt(off_t position, void* buffer,
-										size_t numBytes);
+	// BPositionIO
+	virtual	ssize_t				ReadAt(off_t position, void* buffer,
+									size_t size);
+	virtual	ssize_t				WriteAt(off_t position, const void* buffer,
+									size_t size);
 
-	virtual off_t					Seek(off_t position, int32 mode);
-	virtual off_t					Position(void) const;*/
+	virtual	off_t				Seek(off_t position, uint32 seekMode);
+	virtual	off_t				Position() const;
+
+	virtual	status_t			SetSize(off_t size);
+	virtual	status_t			GetSize(off_t* size) const;
 
 private:
-			BDataIO*				fData;
-			FaberDataBlockKinds		fKind;
+			BPositionIO*		fData;
+			FaberDataBlockKinds	fKind;
 };
 
 
