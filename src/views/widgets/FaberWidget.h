@@ -16,17 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef FABER_WIDGET
 #define FABER_WIDGET
+
 
 #include <GroupView.h>
 
 #include "IconButton.h"
 
 
-class FaberWidget : public BGroupView
-{
+class FaberWidget : public BGroupView {
 public:
 							FaberWidget(
 								orientation orientation = B_HORIZONTAL);
@@ -34,7 +33,7 @@ public:
 	virtual void			MessageReceived(BMessage* message);
 
 protected:
-			BIconButton*		BuildButton(const char* tip, BMessage* message,
+			BIconButton*	BuildButton(const char* tip, BMessage* message,
 								int32 resourceID);
 
 };

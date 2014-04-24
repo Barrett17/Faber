@@ -37,7 +37,6 @@ public:
 private:
 	void				_AddTab(BView* view, const char* label);
 	BView*				_CreateOptionsBox();
-	BView*				_BuildMixerView();
 	BView*				_BuildInfoView();
 
 

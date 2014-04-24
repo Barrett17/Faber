@@ -19,11 +19,13 @@
 
 #include "MenuBuilder.h"
 
+#include <Application.h>
 #include <MenuItem.h>
 #include <ObjectList.h>
 
 #include "EffectsManager.h"
 #include "FaberEffect.h"
+#include "RecentItems.h"
 
 MenuBuilder* MenuBuilder::fInstance = NULL;
 
@@ -177,16 +179,24 @@ MenuBuilder::_BuildMenu(KeyBind* bind)
 		menu = menuList.ItemAt(menuList.CountItems()-1);
 
 		if (bind[i].message == FABER_ITEM_START) {
-			BMenu* subMenu = new BMenu(bind[i].label);
+			BMenu* subMenu = NULL;
+			subMenu = new BMenu(bind[i].label);
 			menu->AddItem(subMenu);
 			menuList.AddItem(subMenu);
 		}  else if (bind[i].message == FABER_ITEM_END) {
 			if (menuList.CountItems() > 1)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
 		} else {
-			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
-
-			menu->AddItem(item);
+			// NOTE This is a temporarily hack
+			if (bind[i].message == FABER_FILE_OPEN) {
+				printf("a\n");
+				menu->AddItem(new BMenuItem(BRecentFilesList::NewFileListMenu(
+					B_TRANSLATE("Open"B_UTF8_ELLIPSIS), NULL, NULL, be_app, 9, true,
+					NULL, FABER_SIGNATURE), new BMessage(FABER_FILE_OPEN)));
+			} else {
+				BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
+				menu->AddItem(item);
+			}
 		}
 	}
 	return menuList.ItemAt(0);

@@ -37,17 +37,16 @@
 #include <View.h>
 
 
-class KeymapView : public BView
-{
+class KeymapView : public BView {
 public:
 									KeymapView();
 									~KeymapView();
 	virtual void					AttachedToWindow();
-	virtual void					MessageReceived(BMessage*);
+	virtual void					MessageReceived(BMessage* message);
 
 private:
-			BOutlineListView*		list;
-			int32					m_index;
+			BOutlineListView*		fListView;
+			int32					fIndex;
 };
 
 #endif

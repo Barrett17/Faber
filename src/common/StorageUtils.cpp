@@ -27,7 +27,7 @@
 #include "ProjectManager.h"
 
 
-int32 StorageUtils::fLastCode = 342;
+int32 StorageUtils::fLastCode = 00;
 
 #define DEFAULT_BLOCK_FILENAME "block"
 
@@ -69,19 +69,19 @@ StorageUtils::TemporaryProjectDirRequested()
 BFile*
 StorageUtils::GetProjectFile(BPath path, bool create)
 {
-
+	return NULL;
 }
 
 
 // NOTE ATM we support only float, also PCM16 and PCM24 are planned.
 int64
-StorageUtils::SizeToFrames(size_t size)
+StorageUtils::SizeToFrames(ssize_t size)
 {
 	return (int64)size/sizeof(float);
 }
 
 
-size_t
+ssize_t
 StorageUtils::FramesToSize(int64 frames)
 {
 	return (size_t)frames*sizeof(float);

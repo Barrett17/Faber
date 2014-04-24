@@ -14,8 +14,23 @@
 #define _INPUTREQUEST_H
 
 #include <Window.h>  
+#include <Screen.h>
+
 #include "InputRequestView.h"
-#include "ScreenInfo.h"
+
+
+class ScreenInfo : public BScreen
+{
+  public:
+					ScreenInfo();
+			bool 	UpdateInfo();
+			int32 	GetX();
+			int32 	GetY();
+  private:
+    display_mode	mode;
+    int32			x, y;
+
+};
 
 class InputRequest : public BWindow
 {

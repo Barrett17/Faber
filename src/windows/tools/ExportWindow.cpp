@@ -42,7 +42,6 @@ ExportWindow::ExportWindow()
 	fTabView = new BTabView("");
 
 	_AddTab(_CreateOptionsBox(), B_TRANSLATE("Output"));
-	_AddTab(_BuildMixerView(), B_TRANSLATE("Mixer"));
 	_AddTab(_BuildInfoView(), B_TRANSLATE("Additional Info"));
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL)
@@ -81,15 +80,6 @@ ExportWindow::_CreateOptionsBox()
 		.Add(fEncodingMenu)
 		.Add(slider)
 	.End();
-
-	return view;
-}
-
-
-BView*
-ExportWindow::_BuildMixerView()
-{
-	BView* view = new BView("", B_WILL_DRAW);
 
 	return view;
 }

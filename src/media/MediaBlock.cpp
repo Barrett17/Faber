@@ -30,6 +30,8 @@ MediaBlock::MediaBlock(BFile* file, BEntry* entry)
 	fData(file),
 	fEntry(entry)
 {
+	SetSize(MEDIA_BLOCK_DEFAULT_SIZE);
+	Seek(0, SEEK_SET);
 }
 
 
@@ -44,7 +46,12 @@ MediaBlock::CountFrames() const
 {
 	off_t size;
 	GetSize(&size);
-	return StorageUtils::SizeToFrames(size);
+	size -= MEDIA_BLOCK_RESERVED_SIZE - MEDIA_BLOCK_PREVIEW_SIZE;
+
+	if (size < 1)
+		return 0;
+	else
+		return StorageUtils::SizeToFrames(size);
 }
 
 

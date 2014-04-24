@@ -25,24 +25,24 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 /*
  * Copyright 2013 Dario Casalinuovo
  * All rights reserved. Distributed under the terms of the MIT License.
  */
+
+
+#include "Keymap.h"
 
 #include <LayoutBuilder.h>
 #include <ObjectList.h>
 #include <InterfaceKit.h>
 #include <StorageKit.h>
 #include <String.h>
+#include <StringItem.h>
 #include <Path.h>
-#include <TranslationKit.h>
-#include <TranslationUtils.h>
 
 #include "FaberDefs.h"
-#include "Keymap.h"
-#include "FStringItem.h"
+
 
 #define SELECT		'selK'
 
@@ -86,21 +86,21 @@ static const char* _KeyLabel(char in)
 				key = "???";
 				break;
 		}
+
 		return key;
 }
 
 
 // Item
 
-class KeyItem : public StringItem
-{
+class KeyItem : public BStringItem {
 public:
-							KeyItem(const char *ID, char key,
+							KeyItem(const char* ID, char key,
 								int32 mod, char key2, int32 mod2, int32 id);
 
 							~KeyItem();
 	
-	virtual void			DrawItem(BView *owner, BRect rect, bool all);
+	virtual void			DrawItem(BView* owner, BRect rect, bool all);
 			int32			GetCode();
 	
 			void			SetKey(char key);
@@ -109,18 +109,18 @@ public:
 			void			SetModAlt(int32 mod);
 
 private:
-		  	void			DrawMods(BView *view, BRect r, int32 mod);
-		  	void			DrawKey(BView *view, BRect r, const char *c);
+		  	void			DrawMods(BView* view, BRect r, int32 mod);
+		  	void			DrawKey(BView* view, BRect r, const char* c);
 
 			char			m_key, m_key2;
 			int32			m_mod, m_mod2, m_id;
 };
 
 
-KeyItem::KeyItem(const char *ID, char key, int32 mod,
+KeyItem::KeyItem(const char* ID, char key, int32 mod,
 	char key2, int32 mod2, int32 id)
 	:
-	StringItem(ID),
+	BStringItem(ID),
 	m_key(key),
 	m_key2(key2),
 	m_mod(mod),
@@ -171,7 +171,7 @@ KeyItem::SetModAlt(int32 mod)
 
 
 void
-KeyItem::DrawItem(BView *view, BRect rect, bool all)
+KeyItem::DrawItem(BView* view, BRect rect, bool all)
 {
 	BFont font;
 	view->GetFont(&font);
@@ -185,14 +185,14 @@ KeyItem::DrawItem(BView *view, BRect rect, bool all)
 		view->FillRect(rect, B_SOLID_LOW);
 		view->SetHighColor(0,0,0);
 		view->SetFont(be_bold_font);
-		view->DrawString( Label(), BPoint( rect.left +5, rect.top +font.Size() ));
+		view->DrawString( Text(), BPoint( rect.left +5, rect.top +font.Size() ));
 		view->SetFont(&font);
 		return;
 	}
 
-	const char *key;
+	const char* key;
 
-	StringItem::DrawItem(view, rect, all);
+	BStringItem::DrawItem(view, rect, all);
 
 	view->SetHighColor(240,240,240);
 	view->StrokeLine( BPoint(rect.left, rect.bottom), BPoint(rect.right, rect.bottom));
@@ -221,8 +221,9 @@ KeyItem::DrawItem(BView *view, BRect rect, bool all)
 	}
 }
 
+
 void
-KeyItem::DrawMods(BView *view, BRect r, int32 mod)
+KeyItem::DrawMods(BView* view, BRect r, int32 mod)
 {
 	float w = -(r.Width()+2);
 
@@ -248,7 +249,7 @@ KeyItem::DrawMods(BView *view, BRect r, int32 mod)
 }
 
 void
-KeyItem::DrawKey(BView *view, BRect r, const char *c)
+KeyItem::DrawKey(BView* view, BRect r, const char *c)
 {
 	BFont font;
 	view->GetFont(&font);
@@ -277,14 +278,14 @@ KeyItem::DrawKey(BView *view, BRect r, const char *c)
 class KeyControl : public BControl
 {
 public:
-	KeyControl(BRect rect, const char *label, char key, int32 mod,
+	KeyControl(BRect rect, const char* label, char key, int32 mod,
 		bool menu, uint32 r = B_FOLLOW_ALL, uint32 m = B_WILL_DRAW | B_NAVIGABLE);
 
 	~KeyControl();
 
 	virtual void Draw(BRect);
 	virtual void MouseDown(BPoint);
-	virtual void KeyDown(const char *bytes, int32 numBytes);
+	virtual void KeyDown(const char* bytes, int32 numBytes);
 
 	void SetDivider(float x);
 	float Divider();
@@ -296,7 +297,7 @@ public:
 private:
 
   	float DrawMods(BRect r, int32 mod);
-  	void DrawKey(BRect r, const char *c);
+  	void DrawKey(BRect r, const char* c);
 
 	char m_key;
 	int32 m_mod;
@@ -308,7 +309,7 @@ private:
 class SetKeyWindow : public BWindow
 {
 public:
-						SetKeyWindow(BPoint p, int32 index, BView *v);
+						SetKeyWindow(BPoint p, int32 index, BView* v);
 	virtual void		MessageReceived(BMessage*);
 	virtual bool		QuitRequested();
    
@@ -319,11 +320,11 @@ private:
 			int32		mod, mod2;
 			uint32		message;
 			bool		menu;
-			KeyControl*	control1, *control2;
+			KeyControl*	control1,* control2;
 };
 
 
-KeyControl::KeyControl(BRect r, const char *label, char key,
+KeyControl::KeyControl(BRect r, const char* label, char key,
 	int32 mod, bool menu, uint32 rs, uint32 m)
 	:
 	BControl(r, NULL, label, NULL, rs, m),
@@ -340,11 +341,11 @@ KeyControl::~KeyControl()
 
 
 void
-KeyControl::KeyDown(const char *bytes, int32 numBytes)
+KeyControl::KeyDown(const char* bytes, int32 numBytes)
 {
 	int32 key, mod, raw_key;
 	if (numBytes == 1) {
-		BMessage *msg = Window()->CurrentMessage();
+		BMessage* msg = Window()->CurrentMessage();
 		msg->FindInt32("key", &raw_key);
 		msg->FindInt32("modifiers", &mod);
 		msg->FindInt32("raw_char", &key);
@@ -421,7 +422,7 @@ KeyControl::Draw(BRect r)
 	font.GetHeight(&fh);
 	float y = Bounds().bottom - ceil(fh.descent);
 
-	const char *key;
+	const char* key;
 
 	SetHighColor(0,0,0);
 	DrawString( Label(), BPoint(2.0, y));
@@ -449,6 +450,7 @@ KeyControl::Draw(BRect r)
 	}
 }
 
+
 float
 KeyControl::DrawMods(BRect r, int32 mod)
 {
@@ -474,7 +476,7 @@ KeyControl::DrawMods(BRect r, int32 mod)
 
 
 void
-KeyControl::DrawKey(BRect r, const char *c)
+KeyControl::DrawKey(BRect r, const char* c)
 {
 	BFont font;
 	GetFont(&font);
@@ -499,7 +501,7 @@ KeyControl::DrawKey(BRect r, const char *c)
 #define CLEAR2			'clr2'
 
 
-SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v)
+SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	:
 	BWindow(BRect(p.x,p.y,p.x,p.y),
 		B_TRANSLATE("Change Key Binding"), B_TITLED_WINDOW,
@@ -509,12 +511,12 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v)
 	ResizeTo(r.Width(), r.Height());
 	MoveBy(-r.Width()/2, -r.Height()/2);
 
-	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
+	BView* view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	
 	r.InsetBy(8,8);
 	r.bottom = r.top+19;
-	BStringView *st;
+	BStringView* st;
 	r.right = r.left + be_bold_font->StringWidth(B_TRANSLATE("Enter new bindings for:"));
 	view->AddChild(st = new BStringView(r, NULL, B_TRANSLATE("Enter new bindings for:")));
 	st->SetFont(be_bold_font);
@@ -620,10 +622,8 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 }
 
 
-/*******************************************************
-*   Setup the main view. Add in all the niffty components
-*   we have made and get things rolling
-*******************************************************/
+//   Setup the main view. Add in all the niffty components
+//   we have made and get things rolling
 KeymapView::KeymapView()
 	:
 	BView(BRect(0,0,300,100), "Prefs keys", B_FOLLOW_ALL, B_WILL_DRAW)
@@ -631,9 +631,9 @@ KeymapView::KeymapView()
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	// add the prefs list at the left
-	list = new BOutlineListView("key list");
+	fListView = new BOutlineListView("key list");
 
-	BScrollView *sv = new BScrollView("scroll", list,
+	BScrollView* sv = new BScrollView("scroll", fListView,
 		B_FOLLOW_ALL_SIDES, false, true, B_PLAIN_BORDER);
 
 	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
@@ -650,7 +650,7 @@ KeymapView::KeymapView()
 
 		if (code == FABER_ITEM_END || code == FABER_EOF) {
 			//if (item != NULL) {
-				list->Collapse(item);
+				fListView->Collapse(item);
 				items.RemoveItemAt(items.CountItems()-1);
 			//}
 
@@ -661,21 +661,21 @@ KeymapView::KeymapView()
 
 			BListItem* newItem = new KeyItem(gKeyBind->GetLabel(i), 0, 0, 0, 0, -1);
 			if (items.CountItems() > 0) {
-				list->AddUnder(newItem, item);
+				fListView->AddUnder(newItem, item);
 			} else {	
-				list->AddItem(newItem);
+				fListView->AddItem(newItem);
 			}
 			items.AddItem(newItem);
 
 		} else if (item != NULL) {
-			list->AddUnder(new KeyItem(gKeyBind->GetLabel(i),
+			fListView->AddUnder(new KeyItem(gKeyBind->GetLabel(i),
 				gKeyBind->GetKey(code),
 				gKeyBind->GetMod(code), gKeyBind->GetKeyAlt(code),
 				gKeyBind->GetModAlt(code), i), item);
 		}
 	}
 
-	m_index = -1;
+	fIndex = -1;
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 1)
 		.Add(sv, 0)
@@ -691,30 +691,30 @@ KeymapView::~KeymapView()
 void
 KeymapView::AttachedToWindow()
 {
-	list->SetTarget(this);
-	list->SetInvocationMessage(new BMessage(SELECT));
+	fListView->SetTarget(this);
+	fListView->SetInvocationMessage(new BMessage(SELECT));
 }
 
 
 void
-KeymapView::MessageReceived(BMessage *msg)
+KeymapView::MessageReceived(BMessage* msg)
 {
 	char s[255];
 	int32 code, index;
 	BScreen screen;
 	BPoint p;
-	BListItem *it = NULL;
+	BListItem* it = NULL;
 
 	switch(msg->what)
 	{
 		case SELECT:
 		{
-			index = list->FullListCurrentSelection();
+			index = fListView->FullListCurrentSelection();
 			if (index < 0)
 				// nothing selected
 				break;
 
-			it = list->FullListItemAt(index);
+			it = fListView->FullListItemAt(index);
 			if (it) {
 				// needed to convert the outline numbers, they are inverted !
 				code = ((KeyItem*)it)->GetCode();
@@ -722,7 +722,7 @@ KeymapView::MessageReceived(BMessage *msg)
 					sprintf(s, "item: %s", gKeyBind->GetLabel(code));
 					p.x =  (screen.Frame().left+screen.Frame().right)/2;
 					p.y =  (screen.Frame().top+screen.Frame().bottom)/2;
-					m_index = index;
+					fIndex = index;
 					(new SetKeyWindow(p, code, this));
 				}
 			}

@@ -44,8 +44,8 @@ public:
 		static status_t			DeleteDirectory(BPath path);
 
 		// Disk storage / media conversion
-		static size_t			FramesToSize(int64 frames);
-		static int64			SizeToFrames(size_t size);
+		static ssize_t			FramesToSize(int64 frames);
+		static int64			SizeToFrames(ssize_t size);
 private:
 		// TODO randomize
 		static int32			fLastCode;

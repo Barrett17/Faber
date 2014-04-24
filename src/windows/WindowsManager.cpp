@@ -44,9 +44,9 @@ const char* kThanks[] = {
 };
 
 const char* kAdditionalCode[] {
-	"Frans van Nispen - BeAE effects and Shortcut view",
-	"Libwalter devs - Spinner Widget",
-	"Stephan Aßmus - GUI Widgets",
+	"BeAE - Effects and Shortcut view",
+	"Libwalter - Spinner Widget",
+	"Haiku - GUI Widgets and other support classes",
 	NULL
 };
 
@@ -60,7 +60,7 @@ WindowsManager::WindowsManager()
 	fFaberMixer(NULL),
 	fSystemMixer(NULL)
 {
-	fProgress = new ProgressWindow(BRect(0, 0, 300, 40));
+	fProgress = new ProgressWindow();
 }
 
 
@@ -146,13 +146,16 @@ WindowsManager::ShowAbout()
 	BAboutWindow* box = new BAboutWindow(FABER_APP_NAME, FABER_SIGNATURE);
 
 	box->AddDescription(FABER_DESCRIPTION);
+	box->AddText("Faber is released under the terms of the GPL v3 license.", NULL);
+
 	box->AddCopyright(2012, FABER_COPYRIGHT, kCopyrights);
 	box->SetVersion(FABER_VERSION);
 	box->AddAuthors(kAuthors);
-	box->AddSpecialThanks(kThanks);
-	box->AddText("Faber contains code from :", kAdditionalCode);
-	box->AddExtraInfo(FABER_HELP_HOMEPAGE);
 
+	box->AddText("Faber contain code from :", kAdditionalCode);
+
+	box->AddSpecialThanks(kThanks);
+	box->AddExtraInfo(FABER_HELP_HOMEPAGE);
 	box->Show();
 	box->MoveTo(_CalculateWindowPoint());
 }
@@ -238,30 +241,23 @@ WindowsManager::GetFaberMixer()
 void
 WindowsManager::StartProgress(const char *label, int32 max)
 {
-	fProgress->MoveTo(_CalculateWindowPoint());
-	fProgress->StartProgress(label, max);
-
+	fProgress->Show();
+	fProgress->SetTitle(label);
+	fProgress->Start(MainWindow(), true);
 }
 
 
 void
 WindowsManager::ProgressUpdate(int32 delta)
 {
-	fProgress->SetProgress(delta);
-}
-
-
-void
-WindowsManager::SetProgressName(const char *name)
-{
-	fProgress->SetProgressName(name);
+	//fProgress->SetProgress(delta);
 }
 
 
 void
 WindowsManager::HideProgress()
 {
-	fProgress->HideProgress();
+	fProgress->Stop();
 }
 
 

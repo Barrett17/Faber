@@ -29,10 +29,34 @@
 
 /*
 	Audio Block Structure :
-		1 KiB - Reserved for general informations (size, blockstart, path, reference counter etc.)
+
+		1 KiB - Reserved for general informations (size, blockstart,
+			reference counter, etc)
+
 		4096 bytes - 16 bit display preview (1048576/256)
+
 		1 MiB - Audio data (B_AUDIO_FLOAT)
 */
+
+#define MEDIA_BLOCK_PREVIEW_DETAIL 256
+
+#define MEDIA_BLOCK_RAW_SIZE 1048576
+
+#define MEDIA_BLOCK_RESERVED_SIZE 1024
+
+#define MEDIA_BLOCK_PREVIEW_START MEDIA_BLOCK_RESERVED_SIZE
+
+#define MEDIA_BLOCK_RAW_DATA_START MEDIA_BLOCK_PREVIEW_START + MEDIA_BLOCK_PREVIEW_SIZE
+
+#define MEDIA_BLOCK_DEFAULT_SIZE MEDIA_BLOCK_RESERVED_SIZE + MEDIA_BLOCK_PREVIEW_SIZE
+
+#define MEDIA_BLOCK_SIZE_LIMIT MEDIA_BLOCK_DEFAULT_SIZE + MEDIA_BLOCK_RAW_SIZE
+
+#define MEDIA_BLOCK_RAW_FRAMES MEDIA_BLOCK_RAW_SIZE/sizeof(float)
+
+#define MEDIA_BLOCK_PREVIEW_SIZE (MEDIA_BLOCK_RAW_FRAMES/MEDIA_BLOCK_PREVIEW_DETAIL)*2
+
+#define MEDIA_BLOCK_PREVIEW_FRAMES MEDIA_BLOCK_PREVIEW_SIZE*sizeof(int16)
 
 
 class MediaBlock : public DataBlock {
@@ -41,8 +65,10 @@ public:
 										BEntry* entry);	
 	virtual 						~MediaBlock();
 
+			int64					BeginFrame();
 			int64					CountFrames() const;
 			status_t				SeekToFrame(int64* frame);
+			int64					CurrentFrame() const;
 
 			MediaBlock*				CopyTo(BFile* file);
 
@@ -51,8 +77,12 @@ public:
 
 			const BEntry&			GetEntry() const;
 
+			size_t					RawDataSize() const;
+
 protected:
 			friend class			MediaBlockMapWriter;
+			friend class			MediaBlockMapReader;
+			friend class			PreviewReader;
 
 private:
 			BFile*					fData;

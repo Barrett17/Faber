@@ -176,7 +176,6 @@ FaberShortcut::AddKeyBind(KeyBind* keybind)
 void
 FaberShortcut::_CopyObj(KeyBind* bind, KeyBind* from)
 {
-
 	bind->isMenuItem = from->isMenuItem;
 	bind->label = from->label;
 	bind->key = from->key;

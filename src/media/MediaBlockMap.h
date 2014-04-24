@@ -31,17 +31,28 @@ class MediaBlockMap;
 class MediaBlockMapVisitor {
 protected:
 									MediaBlockMapVisitor(
-										MediaBlockMap* blockMap)
+										MediaBlockMap* blockMap,
+										off_t position)
 										:
-										fMap(blockMap)
+										fMap(blockMap),
+										fPosition(position)
 										{}
 
 			int64					CountFrames() const;
 			status_t				SeekToFrame(int64* frame);
+			int64					CurrentFrame() const;
 
 			friend class			MediaBlockMap;
 
 			MediaBlockMap*			fMap;
+
+protected:
+			// This will find the block containing the specified frame
+			status_t				FindNearestBlock(int64 start,
+										MediaBlock* block,
+										int32* index);
+
+			off_t					fPosition;
 };
 
 
@@ -50,12 +61,19 @@ public:
 									MediaBlockMapWriter(
 										MediaBlockMap* blockMap)
 										:
-										MediaBlockMapVisitor(blockMap)
+										MediaBlockMapVisitor(blockMap,
+											MEDIA_BLOCK_RAW_DATA_START)
 										{}
 
 			void					WriteFrames(void* buffer, int64 frameCount,
 										int64 from = -1,
 										bool overWrite = false);
+
+private:
+			int16*					_RenderPreview(void* buffer,
+										int64 frameCount, ssize_t* size);
+
+			int16					fFramesAverage;
 };
 
 
@@ -64,10 +82,25 @@ public:
 									MediaBlockMapReader(
 										MediaBlockMap* blockMap)
 										:
-										MediaBlockMapVisitor(blockMap)
+										MediaBlockMapVisitor(blockMap,
+											MEDIA_BLOCK_RAW_DATA_START)
 										{}
 
 			void					ReadFrames(void* buffer, int64 frameCount);
+};
+
+
+class PreviewReader : public MediaBlockMapVisitor {
+public:
+									PreviewReader(
+										MediaBlockMap* blockMap)
+										:
+										MediaBlockMapVisitor(blockMap,
+											MEDIA_BLOCK_PREVIEW_START)
+										{}
+
+			int16*					ReadPreview(size_t* size,
+										int64 start, int64 frameCount);
 };
 
 
@@ -94,15 +127,15 @@ public:
 			bool					RemoveBlock(MediaBlock* index);
 
 			MediaBlockMapWriter*	Writer() const;
-			//const MediaBlockMapReader& Reader();
-
-			//PreviewReader&		PreviewReader();
+			MediaBlockMapReader*	Reader() const;
+			PreviewReader*			Preview() const;
 private:
-			// Well, that will be replaced by an AVL Tree.
-			// For now it's fine anyway.
+			// TODO will be replaced by an AVL Tree.
 			BObjectList<MediaBlock>	fMap;
 
 			MediaBlockMapWriter*	fWriter;
+			MediaBlockMapReader*	fReader;
+			PreviewReader*			fPreview;
 };
 
 #endif

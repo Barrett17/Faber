@@ -55,7 +55,7 @@ public:
 
 	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
 
-	// TODO well probably is better to make it a BArchivable
+	// TODO it's probably better to make it a BArchivable
 
 	status_t				ArchiveSettings(BMessage* message);
 	status_t				UnarchiveSettings(BMessage* message);

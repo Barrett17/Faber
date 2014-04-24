@@ -32,18 +32,21 @@ ToolsWidget::ToolsWidget()
 	fToolButtons[0] = BuildButton(B_TRANSLATE("Selection Tool"),
 		MessageBuilder(FABER_SELECTION_TOOL), kSelectionToolIcon);
 
+	fToolButtons[0]->SetPressed(true);
+	fToolButtons[0]->SetEnabled(false);
+
 	//fToolButtons[1] = BuildButton(B_TRANSLATE("Drawing Tool"),
 	//	MessageBuilder(FABER_DRAW_TOOL), kDrawingToolIcon);
 
-	fToolButtons[2] = BuildButton(B_TRANSLATE("Playing Tool"),
-		MessageBuilder(FABER_PLAY_TOOL), kPlayingToolIcon);
+	//fToolButtons[2] = BuildButton(B_TRANSLATE("Playing Tool"),
+	//	MessageBuilder(FABER_PLAY_TOOL), kPlayingToolIcon);
 
 	WidgetFrame* toolsView = new WidgetFrame(NULL);
 	BLayoutBuilder::Group<>(toolsView, B_HORIZONTAL, 0)
 			.AddStrut(5.0f)
 			.Add(fToolButtons[0])
 			//.Add(fToolButtons[1])
-			.Add(fToolButtons[2])
+			//.Add(fToolButtons[2])
 			.AddStrut(5.0f)
 		.End();
 

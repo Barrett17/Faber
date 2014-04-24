@@ -1,62 +1,53 @@
 /*
-	Copyright (c) 2003, Xentronix
-	Author: Frans van Nispen (frans@xentronix.com)
-	All rights reserved.
-
-	Redistribution and use in source and binary forms, with or without modification,
-	are permitted provided that the following conditions are met:
-
-	Redistributions of source code must retain the above copyright notice, this list
-	of conditions and the following disclaimer. Redistributions in binary form must
-	reproduce the above copyright notice, this list of conditions and the following
-	disclaimer in the documentation and/or other materials provided with the distribution.
-
-	Neither the name of Xentronix nor the names of its contributors may be used
-	to endorse or promote products derived from this software without specific prior
-	written permission.
-
-	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-	EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-	OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-	SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-	INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright 2007-2010, Axel Dörfler, axeld@pinc-software.de.
+ * Distributed under the terms of the MIT License.
  */
+
 
 #include "ProgressWindow.h"
 
-#include <View.h>
+#include <stdio.h>
+#include <string.h>
 
-#include "FaberDefs.h"
+#include <Autolock.h>
+#include <Catalog.h>
+#include <Locale.h>
+#include <MessageRunner.h>
+#include <Screen.h>
+#include <StatusBar.h>
 
 
-ProgressWindow::ProgressWindow(BRect frame)
+static const uint32 kMsgShow = 'show';
+
+#undef B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT "ProgressWindow"
+
+
+ProgressWindow::ProgressWindow()
 	:
-	BWindow(frame, "Progress",
-		B_MODAL_WINDOW_LOOK,
-		B_MODAL_APP_WINDOW_FEEL, 
-		B_NOT_RESIZABLE	| B_NOT_CLOSABLE
-		| B_NOT_ZOOMABLE | B_NOT_MOVABLE)
+	BWindow(BRect(0, 0, 250, 100), B_TRANSLATE("Progress monitor"),
+		B_MODAL_WINDOW_LOOK, B_NORMAL_WINDOW_FEEL,// B_FLOATING_APP_WINDOW_FEEL,
+		// TODO: a bug in the app_server prevents an initial floating-app feel
+		// to work correctly; the window will then not be visible for the first
+		// image, even though it's later set to normal feel in that case.
+		B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS),
+	fRunner(NULL)
 {
-	Looper()->SetName("Progress Window");
+	BRect rect = Bounds();
 
-	BView *view = new BView(frame, "ProgressView",
-		B_FOLLOW_ALL, B_WILL_DRAW | B_NOT_CLOSABLE);
-
-	frame.InsetBy(2,2);
-
-	fBar = new BStatusBar(frame, NULL, NULL, NULL);
-
-	rgb_color barColor = { 120, 120, 120 };
-	fBar->SetBarColor(barColor);
-
-	view->AddChild(fBar);
-	view->SetViewColor(216,216,216);
-
+	BView* view = new BView(rect, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
+	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	AddChild(view);
+
+	rect = view->Bounds().InsetByCopy(5, 5);
+	fStatusBar = new BStatusBar(rect, "status", NULL, NULL);
+	float width, height;
+	fStatusBar->GetPreferredSize(&width, &height);
+	fStatusBar->ResizeTo(rect.Width(), height);
+	fStatusBar->SetResizingMode(B_FOLLOW_TOP | B_FOLLOW_LEFT_RIGHT);
+	view->AddChild(fStatusBar);
+
+	ResizeTo(Bounds().Width(), height + 9);
 
 	Run();
 }
@@ -64,65 +55,86 @@ ProgressWindow::ProgressWindow(BRect frame)
 
 ProgressWindow::~ProgressWindow()
 {
+	delete fRunner;
 }
 
 
 void
-ProgressWindow::MessageReceived(BMessage *message)
+ProgressWindow::Start(BWindow* referenceWindow, bool center)
+{
+	BAutolock _(this);
+
+	BScreen screen(referenceWindow);
+	if (!center) {
+		BMessage settings;
+		GetDecoratorSettings(&settings);
+
+		int32 borderWidth;
+		if (settings.FindInt32("border width", &borderWidth) != B_OK)
+			borderWidth = 5;
+
+		MoveTo(screen.Frame().left + borderWidth,
+			screen.Frame().bottom - Bounds().Height() - borderWidth);
+	} else
+		CenterIn(screen.Frame());
+
+	SetFeel(referenceWindow->IsHidden()
+		? B_NORMAL_WINDOW_FEEL : B_FLOATING_APP_WINDOW_FEEL);
+
+	fRetrievedUpdate = false;
+	fRetrievedShow = false;
+	delete fRunner;
+
+	BMessage show(kMsgShow);
+	fRunner = new BMessageRunner(this, &show, 1000000, 1);
+}
+
+
+void
+ProgressWindow::Stop()
+{
+	BAutolock _(this);
+
+	delete fRunner;
+	fRunner = NULL;
+
+	if (!IsHidden())
+		Hide();
+}
+
+
+void
+ProgressWindow::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
+		case kMsgShow:
+			if (fRetrievedUpdate && IsHidden()) {
+				Show();
+				Minimize(false);
+			}
+
+			fRetrievedShow = true;
+			break;
+
+		case kMsgProgressUpdate:
+			float percent;
+			if (message->FindFloat("percent", &percent) == B_OK)
+				fStatusBar->Update(percent - fStatusBar->CurrentValue());
+
+			const char* text;
+			if (message->FindString("message", &text) == B_OK)
+				fStatusBar->SetText(text);
+
+			fRetrievedUpdate = true;
+
+			if (fRetrievedShow && IsHidden()) {
+				Show();
+				Minimize(false);
+			}
+			break;
+
 		default:
 			BWindow::MessageReceived(message);
 	}
 }
 
-
-void
-ProgressWindow::StartProgress(const char *label, int32 max)
-{
-	if (Lock()) {
-		fBar->Reset();
-		fBar->SetText(B_TRANSLATE(label));
-
-		fBar->SetMaxValue(max);
-
-		ResizeTo(300,40);
-		//MoveTo( Prefs.frame.Width()/2 -150 + Prefs.frame.left,
-		//		Prefs.frame.Height()/2 -15 + Prefs.frame.top);
-
-		if (IsHidden())
-			Show();
-		Unlock();
-	}
-}
-
-
-void
-ProgressWindow::SetProgress(int32 p)
-{
-	if (Lock()) {
-		fBar->Update(p);
-		Unlock();
-	}
-}
-
-
-void
-ProgressWindow::SetProgressName(const char *name)
-{
-	if (Lock()) {
-		fBar->SetText(name);
-		Unlock();
-	}
-}
-
-
-void
-ProgressWindow::HideProgress()
-{
-	if (Lock()) {
-		if (!IsHidden())
-			Hide();
-		Unlock();
-	}
-}

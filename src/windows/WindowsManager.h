@@ -79,7 +79,6 @@ public:
 	void					StartProgress(const char *label,
 								int32 max = 100);
 	void					HideProgress();
-	void					SetProgressName(const char *name);
 
 	// Util method which you can use to see if 
 	// a window is already opened / valid or not.

@@ -17,6 +17,7 @@
 #include <AppFileInfo.h>
 #include <Bitmap.h>
 #include <Button.h>
+#include <Catalog.h>
 #include <File.h>
 #include <Font.h>
 #include <GroupLayoutBuilder.h>
@@ -32,13 +33,22 @@
 #include <Size.h>
 #include <String.h>
 #include <StringView.h>
-#include <SystemCatalog.h>
+//#include <SystemCatalog.h>
 #include <TextView.h>
 #include <View.h>
 #include <Window.h>
 
 
 static const float kStripeWidth = 30.0;
+
+#include <Catalog.h>
+
+namespace BPrivate {
+
+extern BCatalog gSystemCatalog;
+
+}	// namespace BPrivate
+
 
 using BPrivate::gSystemCatalog;
 

@@ -80,7 +80,6 @@ Application Faber :
 	AboutWindow.cpp
 	InputRequest.cpp
 	InputRequestView.cpp
-	ScreenInfo.cpp
 	EffectWindow.cpp
 	ParameterWindow.cpp
 	ParameterView.cpp
@@ -105,7 +104,6 @@ Application Faber :
 	Engine.cpp
 	Interface.cpp
 	Keymap.cpp
-	FStringItem.cpp
 
 	# Audio and Media internal API
 	Track.cpp
@@ -131,10 +129,8 @@ Application Faber :
 	# Media Nodes
 	AudioEngine.cpp
 
-	# media_kit improvement-API
+	# Media_kit improvement-API
 	MediaEndPoint.cpp
-	#MediaRecorder.cpp
-	#MediaRecorderNode.cpp
 
 	# Effects
 	#SimpleEffects.cpp

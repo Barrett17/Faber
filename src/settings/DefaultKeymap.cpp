@@ -12,15 +12,9 @@ KeyBind kFileMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1,"Open",             'O', B_COMMAND_KEY,                 'O', 0,                      FABER_FILE_OPEN },
+	{ 1,"Open...",             'O', B_COMMAND_KEY,                 'O', 0,                      FABER_FILE_OPEN },
 	{ 1,"Save",             'S', B_COMMAND_KEY,                   0, 0,                      	FABER_SAVE_PROJECT },
 	{ 1,"Save As",             'S', B_COMMAND_KEY | B_SHIFT_KEY,  0, 0,                      FABER_SAVE_AS_PROJECT },
-
-	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
-
-	{ 0, "Recents", 0, 0, 0, 0, FABER_ITEM_START },
-
-	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
@@ -70,7 +64,7 @@ KeyBind kTracksMenu[] {
     { 1, "New Track",                  0, 0,                           0, 0,                     FABER_ITEM_START },
 
     { 1, "Audio Track",             0, 0,                           0, 0,                     FABER_NEW_AUDIO_TRACK },
-    { 1, "Label Track",           0, 0,                           0, 0,                     FABER_NEW_LABEL_TRACK },
+    //{ 1, "Label Track",           0, 0,                           0, 0,                     FABER_NEW_LABEL_TRACK },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
@@ -137,20 +131,22 @@ KeyBind kEngineMenu[] {
 KeyBind kProjectMenu[] {
 	{ 0, "Project", 0, 0, 0, 0, FABER_ITEM_START },
 
+	/*
 	{ 0, "Tools", 0, 0, 0, 0, FABER_ITEM_START },
 
-    { 0,"Selection Tool",                 0, 0,                 '1', 0,                        FABER_SELECTION_TOOL },
-    //{ 0,"Draw tool",                      0, 0,                 '2', 0,                        FABER_DRAW_TOOL },
-    { 0,"Play tool",                      0, 0,                 '3', 0,                        FABER_PLAY_TOOL },
+	{ 0,"Selection Tool",                 0, 0,                 '1', 0,                        FABER_SELECTION_TOOL },
+	{ 0,"Draw tool",                      0, 0,                 '2', 0,                        FABER_DRAW_TOOL },
+	{ 0,"Play tool",                      0, 0,                 '3', 0,                        FABER_PLAY_TOOL },
+
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
-
+*/
 	{ 0, "Zoom", 0, 0, 0, 0, FABER_ITEM_START },
 
-    { 0,"Zoom In",                    B_UP_ARROW, 0,                0,0,                       FABER_ZOOM_IN },
-    { 0,"Zoom Out",                   B_DOWN_ARROW, 0,              0,0,                       FABER_ZOOM_OUT },
-    { 0,"Zoom Full",                  B_UP_ARROW, B_SHIFT_KEY,      0,0,                       FABER_ZOOM_FULL },
-    { 0,"Zoom to Selection",          B_DOWN_ARROW, B_SHIFT_KEY,    0,0,                       FABER_ZOOM_SELECTION },
+    { 0,"In",                    B_UP_ARROW, 0,                0,0,                       FABER_ZOOM_IN },
+    { 0,"Out",                   B_DOWN_ARROW, 0,              0,0,                       FABER_ZOOM_OUT },
+    { 0,"Full",                  B_UP_ARROW, B_SHIFT_KEY,      0,0,                       FABER_ZOOM_FULL },
+    { 0,"Selection",          B_DOWN_ARROW, B_SHIFT_KEY,    0,0,                       FABER_ZOOM_SELECTION },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
