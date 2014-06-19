@@ -57,7 +57,7 @@ public:
 			int64			TrackStart() const;
 
 private:
-			void			_RenderChannel(float* buffer, float center);
+			void			_RenderChannel(MediaBlockMap* channelMap, float center);
 			void			_RenderTrack(BRect rect);
 			void			_RenderPointers(BRect rect);
 

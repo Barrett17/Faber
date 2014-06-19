@@ -33,7 +33,6 @@
 #include <Size.h>
 #include <String.h>
 #include <StringView.h>
-//#include <SystemCatalog.h>
 #include <TextView.h>
 #include <View.h>
 #include <Window.h>

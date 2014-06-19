@@ -20,6 +20,7 @@
 #include "WaveRender.h"
 
 #include "FaberDefs.h"
+#include "TracksCommon.h"
 
 #include <stdio.h>
 
@@ -35,7 +36,7 @@ WaveRender::WaveRender(AudioTrack* track)
 	fSelectionEnd(-1),
 	fZoomFactor(20)
 {
-	//fEnd = fTrack->CountFrames()/fTrack->CountChannels();
+	fEnd = GetCoords()->start/fTrack->CountChannels();
 
 	SetViewColor(60,60,60);
 }	
@@ -60,22 +61,23 @@ WaveRender::_RenderTrack(BRect rect)
 	SetDrawingMode(B_OP_ALPHA);
 	SetHighColor(155,157,162);
 
-	/*int32 channels = fTrack->CountChannels();
+	TrackIndex* index = fTrack->GetIndex();
+	int32 channels = index->CountChannels();
 
 	float center = Bounds().Height()/(channels*2);
 
 	for (int32 i = 0; i < channels; i++) {
-		float* buffer = fWavePeak->Preview()->ItemAt(i);
-		_RenderChannel(buffer, center);
+		MediaBlockMap* channelMap = index->GetChannel(i);
+		_RenderChannel(channelMap, center);
 		center += center*2;
-	}*/
+	}
 }
 
 
 void
-WaveRender::_RenderChannel(float* buffer, float center)
+WaveRender::_RenderChannel(MediaBlockMap* map, float center)
 {
-	int64 end = Bounds().right;
+	/*int64 end = Bounds().right;
 
 	printf("%ld %ld %ld\n", fStart, fEnd);
 
@@ -100,7 +102,7 @@ WaveRender::_RenderChannel(float* buffer, float center)
 		StrokeLine(pointMin, pointMax);
 
 		count+=2*fZoomFactor;
-	}
+	}*/
 
 }
 

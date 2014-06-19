@@ -52,6 +52,8 @@ Application Faber :
 	WindowsManager.cpp
 
 	TracksContainer.cpp
+	TracksCommon.cpp
+
 	ToolBar.cpp
 	InfoToolBar.cpp
 	FaberScrollBar.cpp

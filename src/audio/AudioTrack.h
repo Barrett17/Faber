@@ -49,6 +49,7 @@ public:
 
 			int32					CountChannels() const;
 
+			TrackIndex*				GetIndex() const;
 			// TODO generalize a bit this notion creating a base type
 			// of objects suited to modify the track, FaberEffect
 			// will be derived from it.

@@ -37,6 +37,9 @@ TrackIndex::TrackIndex(BMessage* from)
 	:
 	BArchivable(from)
 {
+	fInitErr = B_OK;
+	fChannels = new BObjectList<MediaBlockMap>(true);
+
 	BMessage msg;
 	for (int i = 0; from->FindMessage(SAVE_TRACK_CHANNEL_NAME, i, &msg)
 		== B_OK; i++) {
@@ -91,6 +94,7 @@ TrackIndex::InitCheck() const
 uint32
 TrackIndex::CountChannels() const
 {
+	printf("test\n");
 	return fChannels->CountItems();
 }
 

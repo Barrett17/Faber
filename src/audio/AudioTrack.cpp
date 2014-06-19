@@ -112,3 +112,10 @@ AudioTrack::InitCheck() const
 {
 	return fTrackIndex->InitCheck();
 }
+
+
+TrackIndex*
+AudioTrack::GetIndex() const
+{
+	return fTrackIndex;
+}

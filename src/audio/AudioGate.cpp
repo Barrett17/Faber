@@ -17,7 +17,9 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "AudioGate.h"
+
 #include "AudioProtocolDefs.h"
+#include "FaberDefs.h"
 
 
 AudioGate* AudioGate::fInstance = NULL;
@@ -155,7 +157,7 @@ AudioGate::ArchiveTracks()
 	BMessage* msg = new BMessage();
 
 	for (int i = 0; i < Get()->fTracks.CountItems(); i++) {
-		BMessage* track = new BMessage(SAVE_AUDIOTRACK);
+		BMessage* track = MessageBuilder(SAVE_AUDIOTRACK);
 		Get()->fTracks.ItemAt(i)->Archive(track);
 		msg->AddMessage(SAVE_AUDIOTRACK_NAME, track);
 	}

@@ -20,6 +20,9 @@
 #ifndef TRACKS_COMMON
 #define TRACKS_COMMON
 
+#include <SupportDefs.h>
+
+
 class TracksCommon
 {
 public:
@@ -28,18 +31,24 @@ public:
 
 			static TracksCommon*		Get();
 
+			int64						pointer;
+
+			int64						start;
+			int64						end;
+
+			int64						selectionStart;
+			int64						selectionEnd;
+
+			int64						duration;
+
 private:
 			static TracksCommon*		fInstance;
-
-			static int64				fPointer;
-
-			static int64				fStart;
-			static int64				fEnd;
-
-			static int64				fSelectionStart;
-			static int64				fSelectionEnd;
-
-			static int64				fDuration;
 };
+
+static TracksCommon* GetCoords()
+{
+	return TracksCommon::Get();
+}
+
 
 #endif

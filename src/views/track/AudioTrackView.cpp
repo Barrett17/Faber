@@ -44,7 +44,11 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	BBox* box = new BBox("box");
 
-	box->SetExplicitSize(BSize(150, HEIGHT_VAL_REF*track->CountChannels()));
+	int32 size = HEIGHT_VAL_REF;
+	if (fAudioTrack->CountChannels() > 0)
+		size *= fAudioTrack->CountChannels();
+
+	box->SetExplicitSize(BSize(150, size));
 
 	BIconButton* muteButton = new BIconButton(NULL, NULL, NULL, this);
 	muteButton->SetToolTip(B_TRANSLATE("Mute Track"));
