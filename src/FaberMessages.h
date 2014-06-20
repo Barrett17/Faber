@@ -131,7 +131,7 @@ const uint32 FABER_EFFECT_CALL			=	'fecl';
 const uint32 FABER_EFFECT_EXECUTE		=	'feex';
 const uint32 FABER_EFFECT_ABORT			=	'feab';
 
-const uint32 FABER_SET_FREQUENCY		=	'setf';
+const uint32 FABER_SET_PROJECT_FREQ		=	'setf';
 
 // Transport
 

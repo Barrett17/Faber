@@ -114,6 +114,13 @@ AudioTrack::InitCheck() const
 }
 
 
+int64
+AudioTrack::CountFrames() const
+{
+	return fTrackIndex->CountFrames();
+}
+
+
 TrackIndex*
 AudioTrack::GetIndex() const
 {

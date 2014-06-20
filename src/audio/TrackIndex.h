@@ -46,6 +46,8 @@ public:
 
 			BObjectList<MediaBlockMap>&		GetChannels() const;
 
+			int64							CountFrames() const;
+
 			// The following method will detach and remove ownership of the channel
 			// from the index.
 			MediaBlockMap*					ExtractChannel(int32 index);

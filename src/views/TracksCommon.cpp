@@ -17,47 +17,25 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRACKS_COMMON
-#define TRACKS_COMMON
+#include "TracksCommon.h"
 
-#include <SupportDefs.h>
+TracksCommon* TracksCommon::fInstance = NULL;
 
-
-class TracksCommon
+TracksCommon*
+TracksCommon::Get()
 {
-public:
-										TracksCommon();
-	virtual								~TracksCommon();
+	if (fInstance == NULL)
+		fInstance = new TracksCommon();
 
-			static TracksCommon*		Get();
-
-			int64						pointer;
-			int64						playPointer;
-
-			int64						start;
-			int64						end;
-
-			int64						selectionStart;
-			int64						selectionEnd;
-
-			int64						duration;
-
-			int32						zoomFactor;
-
-			bool						primaryButton;
-			bool						secondaryButton;
-			bool						scrollButton;
-
-			bool						isSelected;
-
-private:
-			static TracksCommon*		fInstance;
-};
-
-static TracksCommon& GetCoords()
-{
-	return *TracksCommon::Get();
+	return fInstance;	
 }
 
 
-#endif
+TracksCommon::TracksCommon()
+{
+}
+
+
+TracksCommon::~TracksCommon()
+{
+}

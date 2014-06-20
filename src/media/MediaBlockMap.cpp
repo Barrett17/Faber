@@ -69,6 +69,20 @@ MediaBlockMap::Instantiate(BMessage* archive)
 }
 
 
+// TODO various optimizations possible
+int64
+MediaBlockMap::CountFrames() const
+{
+	int64 ret = 0;
+	for (int32 i = 0; i < CountBlocks(); i++) {
+		MediaBlock* block = BlockAt(i);
+		ret += block->CountFrames();
+	}
+
+	return ret;
+}
+
+
 int32
 MediaBlockMap::CountBlocks() const
 {
@@ -77,7 +91,7 @@ MediaBlockMap::CountBlocks() const
 
 
 MediaBlock*
-MediaBlockMap::BlockAt(int32 index)
+MediaBlockMap::BlockAt(int32 index) const
 {
 	return fMap.ItemAt(index);
 }
@@ -142,20 +156,6 @@ MediaBlockMap::Preview() const
 }
 
 
-// TODO various optimizations possible
-int64
-MediaBlockMapVisitor::CountFrames() const
-{
-	int64 ret = 0;
-	for (int32 i = 0; i < fMap->CountBlocks(); i++) {
-		MediaBlock* block = fMap->BlockAt(i);
-		ret += block->CountFrames();
-	}
-
-	return ret;
-}
-
-
 status_t
 MediaBlockMapVisitor::SeekToFrame(int64* frame)
 {
@@ -168,7 +168,7 @@ status_t
 MediaBlockMapVisitor::FindNearestBlock(int64 start,
 	MediaBlock* block, int32* index)
 {
-	if (start < 0 || start > CountFrames())
+	if (start < 0 || start > fMap->CountFrames())
 		return B_ERROR;
 
 	int64 frame = 0;

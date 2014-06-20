@@ -48,6 +48,7 @@ public:
 			status_t				InitCheck() const;
 
 			int32					CountChannels() const;
+			int64					CountFrames() const;
 
 			TrackIndex*				GetIndex() const;
 			// TODO generalize a bit this notion creating a base type

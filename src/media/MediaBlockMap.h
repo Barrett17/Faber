@@ -38,7 +38,6 @@ protected:
 										fPosition(position)
 										{}
 
-			int64					CountFrames() const;
 			status_t				SeekToFrame(int64* frame);
 			int64					CurrentFrame() const;
 
@@ -115,9 +114,11 @@ public:
 
 			static BArchivable*		Instantiate(BMessage* archive);
 
+			int64					CountFrames() const;
+
 			int32					CountBlocks() const;
 
-			MediaBlock*				BlockAt(int32 index);
+			MediaBlock*				BlockAt(int32 index) const;
 			MediaBlock*				LastBlock();
 
 			status_t				AddBlock(MediaBlock* block, int32 index);

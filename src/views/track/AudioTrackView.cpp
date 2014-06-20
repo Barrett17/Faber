@@ -212,7 +212,7 @@ AudioTrackView::Unselect()
 int64
 AudioTrackView::Pointer() const
 {
-	return fWaveRender->fPointer;
+	//return fWaveRender->fPointer;
 }
 
 
@@ -240,5 +240,5 @@ AudioTrackView::Select(int64 start, int64 end)
 void
 AudioTrackView::SetPointer(int64 pointer)
 {
-	fWaveRender->fPointer = pointer;
+	//fWaveRender->fPointer = pointer;
 }

@@ -126,3 +126,17 @@ TrackIndex::ExtractChannel(int32 index)
 	// Unimplemented right now.
 	return NULL;
 }
+
+
+int64
+TrackIndex::CountFrames() const
+{
+	int64 frames = 0;
+
+	for (int i = 0; i < fChannels->CountItems(); i++) {
+		MediaBlockMap* channel = fChannels->ItemAt(i);
+		if (channel->CountFrames() > frames)
+			frames = channel->CountFrames();
+	}
+	return frames;
+}
