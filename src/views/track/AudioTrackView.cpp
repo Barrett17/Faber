@@ -19,6 +19,7 @@
 
 #include "AudioTrackView.h"
 
+#include <Application.h>
 #include <Box.h>
 #include <LayoutBuilder.h>
 #include <MediaTrack.h>
@@ -45,7 +46,10 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	BBox* box = new BBox("box");
 
 	int32 size = HEIGHT_VAL_REF;
-	if (fAudioTrack->CountChannels() > 0)
+
+	if (fAudioTrack->CountChannels() == 1)
+		size += 20;
+	else if (fAudioTrack->CountChannels() > 0)
 		size *= fAudioTrack->CountChannels();
 
 	box->SetExplicitSize(BSize(150, size));
@@ -74,7 +78,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	ToolButton* toolButton = new ToolButton(NULL, trackName.String(), NULL);
 	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
-	toolButton->SetIcon(kStopIcon);
 
 	// Track menu
 	BPopUpMenu* trackMenu = MenuBuilder::Get()->BuildTrackContextualMenu(this);
@@ -153,92 +156,44 @@ AudioTrackView::GetTrack() const
 
 
 void
-AudioTrackView::UpdateScroll(float newValue, float min, float max)
+AudioTrackView::UpdateRequested()
 {
-	fWaveRender->ScrollBy(-2000);
+	UpdateRequested(fWaveRender->Bounds());
+}
+
+
+void
+AudioTrackView::UpdateRequested(BRect rect)
+{
+	fWaveRender->Invalidate(rect);
 }
 
 
 bool
 AudioTrackView::IsSelected() const
 {
-	return fWaveRender->IsSelected();
-}
-
-
-void
-AudioTrackView::ZoomIn()
-{
-	fWaveRender->ZoomIn();
-}
-
-
-void
-AudioTrackView::ZoomOut()
-{
-	fWaveRender->ZoomOut();
-}
-
-
-void
-AudioTrackView::ZoomFull()
-{
-	fWaveRender->ZoomFull();
-
-}
-
-
-void
-AudioTrackView::ZoomSelection()
-{
-	fWaveRender->ZoomSelection();
 }
 
 
 void
 AudioTrackView::SelectAll()
 {
-	fWaveRender->SelectAll();
 }
 
 
 void
 AudioTrackView::Unselect()
 {
-	fWaveRender->Unselect();
-}
-
-
-int64
-AudioTrackView::Pointer() const
-{
-	//return fWaveRender->fPointer;
 }
 
 
 void
 AudioTrackView::CurrentSelection(int64* start, int64* end) const
 {
-	fWaveRender->CurrentSelection(start, end);
-}
-
-
-void
-AudioTrackView::ScrollBy(int64 value)
-{
-	fWaveRender->ScrollBy(value);
 }
 
 
 void
 AudioTrackView::Select(int64 start, int64 end)
 {
-	fWaveRender->Select(start, end);
-}
-
-
-void
-AudioTrackView::SetPointer(int64 pointer)
-{
-	//fWaveRender->fPointer = pointer;
 }

@@ -93,6 +93,7 @@ Application Faber :
 	IconButton.cpp
 	ToolButton.cpp
 	Spinner.cpp
+	#LiveNodesMenu.cpp
 
 	# Settings
 	Settings.cpp

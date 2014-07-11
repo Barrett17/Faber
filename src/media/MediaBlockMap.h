@@ -29,77 +29,76 @@
 class MediaBlockMap;
 
 class MediaBlockMapVisitor {
+public:
+			status_t				SeekToFrame(int64 frame);
+			int64					CurrentFrame() const;
+			MediaBlock*				CurrentBlock() const;
+
 protected:
+			friend class			MediaBlockMap;
+
 									MediaBlockMapVisitor(
 										MediaBlockMap* blockMap,
 										off_t position)
 										:
 										fMap(blockMap),
-										fPosition(position)
+										fCurrentFrame(0),
+										fCurrentBlock(NULL)
 										{}
 
-			status_t				SeekToFrame(int64* frame);
-			int64					CurrentFrame() const;
-
-			friend class			MediaBlockMap;
+			// This will find the block containing the specified frame
+			status_t				FindNearestBlock(int64 start,
+										MediaBlock** block,
+										int32* index);
 
 			MediaBlockMap*			fMap;
 
-protected:
-			// This will find the block containing the specified frame
-			status_t				FindNearestBlock(int64 start,
-										MediaBlock* block,
-										int32* index);
-
-			off_t					fPosition;
+			MediaBlock*				fCurrentBlock;
+			int64					fCurrentFrame;
 };
 
 
 class MediaBlockMapWriter : public MediaBlockMapVisitor {
 public:
+			void					WriteFrames(void* buffer, size_t size,
+										int64 from = -1,
+										bool overWrite = false);
+
+			// This is used to get sure the audio data
+			// and preview will get written.and calculated
+			void					Flush();
+
+protected:
+			friend class			MediaBlockMap;
+
 									MediaBlockMapWriter(
 										MediaBlockMap* blockMap)
 										:
 										MediaBlockMapVisitor(blockMap,
 											MEDIA_BLOCK_RAW_DATA_START)
 										{}
-
-			void					WriteFrames(void* buffer, int64 frameCount,
-										int64 from = -1,
-										bool overWrite = false);
-
 private:
-			int16*					_RenderPreview(void* buffer,
-										int64 frameCount, ssize_t* size);
+			void					_AddBlock();
 
-			int16					fFramesAverage;
+			float					fFramesAverage;
 };
 
 
 class MediaBlockMapReader : public MediaBlockMapVisitor {
 public:
+			void					ReadFrames(void* buffer, size_t size);
+
+			//float*				ReadPreview(int64 start, int64 end);
+			size_t					ReadPreview(float** ret);
+protected:
+			friend class			MediaBlockMap;
+
 									MediaBlockMapReader(
 										MediaBlockMap* blockMap)
 										:
 										MediaBlockMapVisitor(blockMap,
 											MEDIA_BLOCK_RAW_DATA_START)
 										{}
-
-			void					ReadFrames(void* buffer, int64 frameCount);
-};
-
-
-class PreviewReader : public MediaBlockMapVisitor {
-public:
-									PreviewReader(
-										MediaBlockMap* blockMap)
-										:
-										MediaBlockMapVisitor(blockMap,
-											MEDIA_BLOCK_PREVIEW_START)
-										{}
-
-			int16*					ReadPreview(size_t* size,
-										int64 start, int64 frameCount);
 };
 
 
@@ -116,10 +115,15 @@ public:
 
 			int64					CountFrames() const;
 
-			int32					CountBlocks() const;
+			off_t					Size() const;
 
+			size_t					ReservedSize() const;
+			size_t					PreviewSize() const;
+			size_t					AudioDataSize() const;
+
+			int32					CountBlocks() const;
 			MediaBlock*				BlockAt(int32 index) const;
-			MediaBlock*				LastBlock();
+			MediaBlock*				LastBlock() const;
 
 			status_t				AddBlock(MediaBlock* block, int32 index);
 			status_t				AddBlock(MediaBlock* block);
@@ -129,14 +133,13 @@ public:
 
 			MediaBlockMapWriter*	Writer() const;
 			MediaBlockMapReader*	Reader() const;
-			PreviewReader*			Preview() const;
+
 private:
 			// TODO will be replaced by an AVL Tree.
 			BObjectList<MediaBlock>	fMap;
 
 			MediaBlockMapWriter*	fWriter;
 			MediaBlockMapReader*	fReader;
-			PreviewReader*			fPreview;
 };
 
 #endif

@@ -112,20 +112,23 @@ private:
 		  	void			DrawMods(BView* view, BRect r, int32 mod);
 		  	void			DrawKey(BView* view, BRect r, const char* c);
 
-			char			m_key, m_key2;
-			int32			m_mod, m_mod2, m_id;
+			char			fKey;
+			char			fKeyAlt;
+			int32			fMod;
+			int32			fModAlt;
+			int32			fId;
 };
 
 
 KeyItem::KeyItem(const char* ID, char key, int32 mod,
-	char key2, int32 mod2, int32 id)
+	char keyAlt, int32 modAlt, int32 id)
 	:
 	BStringItem(ID),
-	m_key(key),
-	m_key2(key2),
-	m_mod(mod),
-	m_mod2(mod2),
-	m_id(id)
+	fKey(key),
+	fKeyAlt(keyAlt),
+	fMod(mod),
+	fModAlt(modAlt),
+	fId(id)
 {
 }
 
@@ -138,35 +141,35 @@ KeyItem::~KeyItem()
 int32
 KeyItem::GetCode()
 {
-	return m_id;
+	return fId;
 }
 
 
 void
 KeyItem::SetKey(char key)
 {
-	m_key = key;
+	fKey = key;
 }
 
 
 void
 KeyItem::SetKeyAlt(char key)
 {
-	m_key2 = key;
+	fKeyAlt = key;
 }
 
 
 void
 KeyItem::SetMod(int32 mod)
 {
-	m_mod = mod;
+	fMod = mod;
 }
 
 
 void
 KeyItem::SetModAlt(int32 mod)
 {
-	m_mod2 = mod;
+	fModAlt = mod;
 }
 
 
@@ -176,7 +179,7 @@ KeyItem::DrawItem(BView* view, BRect rect, bool all)
 	BFont font;
 	view->GetFont(&font);
 
-	if (m_id == -1) {				// Draw the Outline
+	if (fId == -1) {				// Draw the Outline
 		if (IsSelected())
 			view->SetLowColor(150,190,230);
 		else
@@ -185,7 +188,7 @@ KeyItem::DrawItem(BView* view, BRect rect, bool all)
 		view->FillRect(rect, B_SOLID_LOW);
 		view->SetHighColor(0,0,0);
 		view->SetFont(be_bold_font);
-		view->DrawString( Text(), BPoint( rect.left +5, rect.top +font.Size() ));
+		view->DrawString(Text(), BPoint(rect.left+5, rect.top+font.Size()));
 		view->SetFont(&font);
 		return;
 	}
@@ -195,28 +198,28 @@ KeyItem::DrawItem(BView* view, BRect rect, bool all)
 	BStringItem::DrawItem(view, rect, all);
 
 	view->SetHighColor(240,240,240);
-	view->StrokeLine( BPoint(rect.left, rect.bottom), BPoint(rect.right, rect.bottom));
+	view->StrokeLine(BPoint(rect.left, rect.bottom), BPoint(rect.right, rect.bottom));
 	view->SetHighColor(0,0,0);
 
 	float x = rect.left + rect.Width()/2 +(font.Size()+4)*3;	// max 3 combinations
 
-	DrawMods(view, BRect( x - font.Size() - 6, rect.top+1, x -4, rect.bottom-1), m_mod);
+	DrawMods(view, BRect( x - font.Size() - 6, rect.top+1, x -4, rect.bottom-1), fMod);
 
-	if (m_key >' ' && m_key < 'a') {
-		view->DrawChar( m_key, BPoint( x, rect.top +font.Size() ));
-	} else if (m_key) {
-		key = _KeyLabel(m_key);
+	if (fKey >' ' && fKey < 'a') {
+		view->DrawChar( fKey, BPoint( x, rect.top +font.Size() ));
+	} else if (fKey) {
+		key = _KeyLabel(fKey);
 		DrawKey(view, BRect(x-2, rect.top+1, x+font.StringWidth(key)+2, rect.bottom-1), key);
 	}
 
 	x = rect.right - 32;
 
-	DrawMods(view, BRect( x - font.Size() - 6, rect.top+1, x -4, rect.bottom-1), m_mod2);
+	DrawMods(view, BRect( x - font.Size() - 6, rect.top+1, x -4, rect.bottom-1), fModAlt);
 
-	if (m_key2 >' ' && m_key2 < 'a') {
-		view->DrawChar( m_key2, BPoint( x, rect.top +font.Size() ));
-	} else if (m_key2) {
-		key = _KeyLabel(m_key2);
+	if (fKeyAlt >' ' && fKeyAlt < 'a') {
+		view->DrawChar( fKeyAlt, BPoint( x, rect.top +font.Size() ));
+	} else if (fKeyAlt) {
+		key = _KeyLabel(fKeyAlt);
 		DrawKey(view, BRect(x-2, rect.top+1, x+font.StringWidth(key)+2, rect.bottom-1), key);
 	}
 }
@@ -255,17 +258,23 @@ KeyItem::DrawKey(BView* view, BRect r, const char *c)
 	view->GetFont(&font);
 
 	view->SetHighColor(240,240,240);
-	view->StrokeLine( BPoint( r.left, r.top ), BPoint( r.right-1, r.top ));
-	view->StrokeLine( BPoint( r.left, r.top+1 ), BPoint( r.left, r.bottom ));
+	view->StrokeLine(BPoint(r.left, r.top), BPoint(r.right-1, r.top));
+	view->StrokeLine(BPoint(r.left, r.top+1), BPoint(r.left, r.bottom));
 	view->SetHighColor(128,128,128);
-	view->StrokeLine( BPoint( r.left+1, r.bottom ), BPoint( r.right, r.bottom ));
-	view->StrokeLine( BPoint( r.right, r.bottom-1 ), BPoint( r.right, r.top ));
+
+	view->StrokeLine(BPoint(r.left+1, r.bottom),
+		BPoint(r.right, r.bottom));
+
+	view->StrokeLine(BPoint(r.right, r.bottom-1 ), BPoint(r.right, r.top));
 	view->SetHighColor(192,192,192);
+
 	r.InsetBy(1,1);
+
 	view->FillRect(r);
 	view->SetHighColor(0,0,0);
 	view->SetLowColor(192,192,192);
-	view->DrawString(c, BPoint( (r.left+r.right)/2.0 - font.StringWidth(c)/2.0 +1, r.top+font.Size()-2) );
+	view->DrawString(c, BPoint((r.left+r.right)/2.0f
+		- font.StringWidth(c)/2.0f +1.0f, r.top+font.Size()-2.0f) );
 
 	if (IsSelected())
 		view->SetLowColor(150,190,230);
@@ -279,7 +288,8 @@ class KeyControl : public BControl
 {
 public:
 	KeyControl(BRect rect, const char* label, char key, int32 mod,
-		bool menu, uint32 r = B_FOLLOW_ALL, uint32 m = B_WILL_DRAW | B_NAVIGABLE);
+		bool menu, uint32 r = B_FOLLOW_ALL,
+		uint32 m = B_WILL_DRAW | B_NAVIGABLE);
 
 	~KeyControl();
 
@@ -299,28 +309,10 @@ private:
   	float DrawMods(BRect r, int32 mod);
   	void DrawKey(BRect r, const char* c);
 
-	char m_key;
-	int32 m_mod;
+	char fKey;
+	int32 fMod;
 	bool m_menu;
 	float m_div;
-};
-
-
-class SetKeyWindow : public BWindow
-{
-public:
-						SetKeyWindow(BPoint p, int32 index, BView* v);
-	virtual void		MessageReceived(BMessage*);
-	virtual bool		QuitRequested();
-   
-private:
-			int32		index;
-			BView*		parent;
-			char		key, key2;
-			int32		mod, mod2;
-			uint32		message;
-			bool		menu;
-			KeyControl*	control1,* control2;
 };
 
 
@@ -328,8 +320,8 @@ KeyControl::KeyControl(BRect r, const char* label, char key,
 	int32 mod, bool menu, uint32 rs, uint32 m)
 	:
 	BControl(r, NULL, label, NULL, rs, m),
-	m_key(key),
-	m_mod(mod),
+	fKey(key),
+	fMod(mod),
 	m_menu(menu)
 {
 }
@@ -351,17 +343,21 @@ KeyControl::KeyDown(const char* bytes, int32 numBytes)
 		msg->FindInt32("raw_char", &key);
 
 		// now do some conversions for combinations
-		if (key == B_FUNCTION_KEY) {
+		if (key == B_FUNCTION_KEY)
 			key = 12+raw_key;
-		} else if (key>='a' && key<='z')
+		else if (key>='a' && key<='z')
 			key -= ('a'-'A');
-		
-		mod = mod & (B_SHIFT_KEY | B_CONTROL_KEY | B_COMMAND_KEY | B_OPTION_KEY);		// mask left / right stuff
-		if (m_menu)	mod = mod | B_COMMAND_KEY;
+
+		// mask left / right stuff
+		mod = mod & (B_SHIFT_KEY | B_CONTROL_KEY
+			| B_COMMAND_KEY | B_OPTION_KEY);
+
+		if (m_menu)
+			mod = mod | B_COMMAND_KEY;
 		
 		if (!m_menu || (m_menu && key>=' ' && key<'z')) {
-			m_mod = mod ;
-			m_key = key;
+			fMod = (char)mod ;
+			fKey = (char)key;
 			Invalidate();
 		}
 	}
@@ -392,23 +388,26 @@ KeyControl::Divider()
 int32
 KeyControl::GetMod()
 {
-	return m_mod;
+	return fMod;
 }
 
 
 char
 KeyControl::GetKey()
 {
-	return m_key;
+	return fKey;
 }
 
 
 void
 KeyControl::SetBinding(char key, int32 mod)
 {
-	m_mod = mod;
-	if (m_menu)	m_mod = m_mod | B_COMMAND_KEY;
-	m_key = key;
+	fMod = mod;
+
+	if (m_menu)
+		fMod = fMod | B_COMMAND_KEY;
+
+	fKey = key;
 	Invalidate();
 }
 
@@ -420,7 +419,7 @@ KeyControl::Draw(BRect r)
 	GetFont(&font);
 	font_height fh;
 	font.GetHeight(&fh);
-	float y = Bounds().bottom - ceil(fh.descent);
+	float y = Bounds().bottom - (float)ceil(fh.descent);
 
 	const char* key;
 
@@ -429,6 +428,7 @@ KeyControl::Draw(BRect r)
 
 	r = Bounds();
 	r.left = Divider();
+
 	if (IsFocus())
 		SetHighColor(ui_color(B_KEYBOARD_NAVIGATION_COLOR));
 	else
@@ -441,11 +441,13 @@ KeyControl::Draw(BRect r)
 	SetHighColor(0,0,0);
 	r.InsetBy(1,1);
 
-	float x = DrawMods(BRect( r.left, r.top+1, r.left +font.Size()+6, r.bottom-1), m_mod);
-	if (m_key >' ' && m_key < 'a') {
-		DrawChar( m_key, BPoint( x, r.bottom - ceil(fh.descent)));
-	} else if (m_key) {
-		key = _KeyLabel(m_key);
+	float x = DrawMods(
+		BRect(r.left, r.top+1, r.left+font.Size()+6, r.bottom-1), fMod);
+
+	if (fKey >' ' && fKey < 'a')
+		DrawChar( fKey, BPoint( x, r.bottom - (float)ceil(fh.descent)));
+	else if (fKey) {
+		key = _KeyLabel(fKey);
 		DrawKey(BRect(x-2, r.top+1, x+font.StringWidth(key)+2, r.bottom-1), key);
 	}
 }
@@ -482,30 +484,66 @@ KeyControl::DrawKey(BRect r, const char* c)
 	GetFont(&font);
 
 	SetHighColor(240,240,240);
-	StrokeLine( BPoint( r.left, r.top ), BPoint( r.right-1, r.top ));
-	StrokeLine( BPoint( r.left, r.top+1 ), BPoint( r.left, r.bottom ));
+
+	StrokeLine(BPoint(r.left, r.top), BPoint(r.right-1, r.top));
+	StrokeLine(BPoint(r.left, r.top+1), BPoint(r.left, r.bottom));
 	SetHighColor(128,128,128);
-	StrokeLine( BPoint( r.left+1, r.bottom ), BPoint( r.right, r.bottom ));
-	StrokeLine( BPoint( r.right, r.bottom-1 ), BPoint( r.right, r.top ));
+
+	StrokeLine(BPoint(r.left+1, r.bottom), BPoint(r.right, r.bottom));
+	StrokeLine(BPoint(r.right, r.bottom-1), BPoint(r.right, r.top));
 	SetHighColor(192,192,192);
+
 	r.InsetBy(1,1);
+	
 	FillRect(r);
 	SetHighColor(0,0,0);
 	SetLowColor(192,192,192);
-	DrawString(c, BPoint( (r.left+r.right)/2.0 - font.StringWidth(c)/2.0 +1, r.top+font.Size()) );
+
+	DrawString(c,
+		BPoint((r.left+r.right)/2.0f-font.StringWidth(c)/2.0f +1.0f,
+		r.top+font.Size()));
+
 	SetLowColor(255,255,255);
 }
+
 
 #define SET				'setF'
 #define CLEAR1			'clr1'
 #define CLEAR2			'clr2'
 
 
+class SetKeyWindow : public BWindow
+{
+public:
+						SetKeyWindow(BPoint p, int32 index, BView* v);
+	virtual void		MessageReceived(BMessage*);
+	virtual bool		QuitRequested();
+   
+private:
+			int32		index;
+			BView*		parent;
+
+			char		key;
+			char		key2;
+
+			int32		mod;
+			int32		mod2;
+
+			uint32		message;
+
+			bool		menu;
+
+			KeyControl*	control1;
+			KeyControl* control2;
+};
+
+
 SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	:
-	BWindow(BRect(p.x,p.y,p.x,p.y),
-		B_TRANSLATE("Change Key Binding"), B_TITLED_WINDOW,
-		B_NOT_RESIZABLE|B_NOT_ZOOMABLE), index(i), parent(v)
+	BWindow(BRect(p.x,p.y,p.x,p.y), B_TRANSLATE("Change Key Binding"),
+		B_TITLED_WINDOW, B_NOT_RESIZABLE|B_NOT_ZOOMABLE),
+		index(i),
+		parent(v)
 {
 	BRect r(0,0,300,150);
 	ResizeTo(r.Width(), r.Height());
@@ -517,14 +555,20 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	r.InsetBy(8,8);
 	r.bottom = r.top+19;
 	BStringView* st;
-	r.right = r.left + be_bold_font->StringWidth(B_TRANSLATE("Enter new bindings for:"));
-	view->AddChild(st = new BStringView(r, NULL, B_TRANSLATE("Enter new bindings for:")));
+
+	r.right = r.left + be_bold_font->StringWidth(
+		B_TRANSLATE("Enter new bindings for:"));
+
+	view->AddChild(st = new BStringView(r, NULL,
+		B_TRANSLATE("Enter new bindings for:")));
+
 	st->SetFont(be_bold_font);
 	r.left = r.right+8;
 	r.right = Bounds().right-8;
 
 	uint32 code = gKeyBind->GetCode(index);
-	view->AddChild(new BStringView(r, NULL, B_TRANSLATE(gKeyBind->GetLabel(code))));
+	view->AddChild(new BStringView(r, NULL,
+		B_TRANSLATE(gKeyBind->GetLabel(code))));
 	
 	// request the installed message
 	key = gKeyBind->GetKey(code);
@@ -545,17 +589,20 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 		key, mod, menu));
 
 	control1->SetDivider(x);
-	view->AddChild(new BButton(BRect(r.right+8, r.top, Bounds().right-8, r.bottom),
-		NULL, B_TRANSLATE("CLEAR"), new BMessage(CLEAR1)) );
+	view->AddChild(new BButton(BRect(r.right+8, r.top,
+		Bounds().right-8, r.bottom), NULL, B_TRANSLATE("CLEAR"),
+		new BMessage(CLEAR1)));
 
 	r.OffsetBy(0,30);
 
-	view->AddChild(control2 = new KeyControl(r, B_TRANSLATE("Alternate"), key2, mod2, false));
+	view->AddChild(control2 = new KeyControl(r, B_TRANSLATE("Alternate"),
+		key2, mod2, false));
 
 	control2->SetDivider(x);
 
-	view->AddChild(new BButton(BRect(r.right+8, r.top, Bounds().right-8, r.bottom),
-		NULL, B_TRANSLATE("CLEAR"), new BMessage(CLEAR2)) );
+	view->AddChild(new BButton(BRect(r.right+8, r.top,
+		Bounds().right-8, r.bottom), NULL, B_TRANSLATE("CLEAR"),
+		new BMessage(CLEAR2)));
 
 	r = Bounds();
 	r.InsetBy(8,8);
@@ -563,9 +610,13 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	r.top = r.bottom - 23;
 	r.left = r.right - 80;
 
-	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Apply"), new BMessage(SET)) );
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Apply"),
+		new BMessage(SET)));
+
 	r.OffsetBy(-(r.Width()+8), 0);
-	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED)) );
+
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Cancel"),
+		new BMessage(B_QUIT_REQUESTED)));
 
 	AddChild(view);
 	Run();
@@ -649,24 +700,20 @@ KeymapView::KeymapView()
 		BListItem* item = items.ItemAt(items.CountItems()-1);
 
 		if (code == FABER_ITEM_END || code == FABER_EOF) {
-			//if (item != NULL) {
 				fListView->Collapse(item);
 				items.RemoveItemAt(items.CountItems()-1);
-			//}
-
 			continue;
 		}
 
 		if (code == FABER_ITEM_START) {
-
 			BListItem* newItem = new KeyItem(gKeyBind->GetLabel(i), 0, 0, 0, 0, -1);
-			if (items.CountItems() > 0) {
-				fListView->AddUnder(newItem, item);
-			} else {	
-				fListView->AddItem(newItem);
-			}
-			items.AddItem(newItem);
 
+			if (items.CountItems() > 0)
+				fListView->AddUnder(newItem, item);
+			else	
+				fListView->AddItem(newItem);
+
+			items.AddItem(newItem);
 		} else if (item != NULL) {
 			fListView->AddUnder(new KeyItem(gKeyBind->GetLabel(i),
 				gKeyBind->GetKey(code),

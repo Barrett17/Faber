@@ -35,22 +35,11 @@ public:
 
 	void				MessageReceived(BMessage* message);
 
-	void				SetFrames(int64 duration);
-
-	bigtime_t			Duration() const;
-	int64				Frames() const;
-
-	void				SetStart(int64 frame);
-	void				SetEnd(int64 frame);
-
 	int32 				CountTracks() const;
 	TrackView*			TrackAt(int32 index) const;
 	TrackView*			TrackByID(uint32 id);
 
-	uint32				IndexToID(int32 index);
-	int32				IDToIndex(uint32 id);
-
-	status_t 			AddTrack(TrackView* track, int32 index = 0);
+	status_t 			AddTrack(TrackView* track, int32 index = -1);
 	status_t			AddTrack(Track* track);
 
 	status_t			RemoveTrack(int32 index);
@@ -81,8 +70,6 @@ public:
 	void				ZoomFull();
 	void				ZoomSelection();
 
-	int32				CalcZoomLevel() const;
-
 	// NOTE this will not update the scroll bar
 	// don't use it, use the following method instead.
 	void				UpdateTracksScroll(float newValue);
@@ -90,18 +77,17 @@ public:
 	/*void				SetHorizontalScroll(float newValue);
 	void				SetVerticalScroll(float newValue);*/
 
-private:
+	void				UpdateRequested();
+	void				UpdateRequested(BRect rect);
 
+private:
 	BGroupView*			fView;
 	BGroupLayout*		fLayout;
-	TrackViewList		fTrackViews;
 
 	BScrollBar*			fVerticalScroll;
 	BScrollBar*			fHorizontalScroll;
 
-	int64				fStart;
-	int64				fEnd;
-	int64				fDuration;
+	TrackViewList		fTrackViews;
 };
 
 #endif

@@ -59,35 +59,29 @@ MediaEndPoint::Node() const
 }
 
 
-status_t
+void
 MediaEndPoint::SetOutput(media_output* out)
 {
-	if (out == NULL)
-		return B_ERROR;
-
 	fOutput = *out;
 }
 
 
 media_output
-MediaEndPoint::Output() const
+MediaEndPoint::GetOutput() const
 {
 	return fOutput;
 }
 
 
-status_t
+void
 MediaEndPoint::SetInput(media_input* in)
 {
-	if (in == NULL)
-		return B_ERROR;
-
 	fInput = *in;
 }
 
 
 media_input
-MediaEndPoint::Input() const
+MediaEndPoint::GetInput() const
 {
 	return fInput;
 }
@@ -107,7 +101,7 @@ MediaEndPoint::IsOutput() const
 }
 
 
-status_t
+void
 MediaEndPoint::SetSource(media_source& source)
 {
 	fMediaSource = source;
@@ -121,7 +115,7 @@ MediaEndPoint::Source() const
 }
 
 
-status_t
+void
 MediaEndPoint::SetDestination(media_destination& dest)
 {
 	fMediaDestination = dest;
@@ -135,15 +129,10 @@ MediaEndPoint::Destination() const
 }
 
 
-status_t
+void
 MediaEndPoint::SetFormat(media_format* format)
 {
-	if (format == NULL)
-		return B_MEDIA_BAD_FORMAT;
-
 	fFormat = *format;
-
-	return B_OK;
 }
 
 

@@ -26,6 +26,8 @@ FaberWidget::FaberWidget(orientation orientation)
 	:
 	BGroupView(orientation)
 {
+	rgb_color backgroundColor = {120,120,120};
+	SetViewColor(backgroundColor);
 }
 
 
@@ -48,7 +50,7 @@ FaberWidget::MessageReceived(BMessage* message)
 BIconButton*
 FaberWidget::BuildButton(const char* tip, BMessage* message, int32 resourceID)
 {
-	BIconButton* button = new BIconButton(NULL, NULL, message, this);
+	BIconButton* button = new BIconButton(NULL, NULL, message, this, true);
 	// Well those could go into the constructor, but no reason for now.
 	button->SetToolTip(tip);
 	button->SetIcon(resourceID);

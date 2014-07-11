@@ -392,8 +392,7 @@ ToolButton::SetIcon(int32 resourceID)
 	const void* data = resources.LoadResource(B_VECTOR_ICON_TYPE, resourceID,
 		&size);
 	if (data != NULL) {
-		BBitmap* bitmap = new BBitmap(BRect(0, 0, 31, 31),
-			B_BITMAP_NO_SERVER_LINK, B_RGBA32);
+		BBitmap* bitmap = new BBitmap(BRect(0, 0, 31, 31), B_RGBA32);
 		status = bitmap->InitCheck();
 		if (status != B_OK)
 			return status;
@@ -402,7 +401,7 @@ ToolButton::SetIcon(int32 resourceID)
 		if (status != B_OK)
 			return status;
 
-		SetBitmap(fBitmap);
+		SetBitmap(bitmap);
 
 		return B_OK;
 	}

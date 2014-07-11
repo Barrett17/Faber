@@ -53,6 +53,94 @@ MenuBuilder::~MenuBuilder()
 }
 
 
+BMenu*
+MenuBuilder::BuildMenu(KeyBind* bind, BView* target)
+{
+	if (bind == NULL)
+		return NULL;
+
+	// The first item describe the menu
+	BMenu* menu = new BMenu(bind[0].label);
+	BObjectList<BMenu> menuList(false);
+	menuList.AddItem(menu);
+
+	for (int i = 1; bind[i].message != FABER_EOF; i++) {
+
+		menu = menuList.ItemAt(menuList.CountItems()-1);
+
+		if (bind[i].message == FABER_ITEM_START) {
+			BMenu* subMenu = NULL;
+			subMenu = new BMenu(bind[i].label);
+			menu->AddItem(subMenu);
+			menuList.AddItem(subMenu);
+		}  else if (bind[i].message == FABER_ITEM_END) {
+			if (menuList.CountItems() > 1)
+				menuList.RemoveItemAt(menuList.CountItems()-1);
+		} else {
+			// NOTE This is a temporarily hack
+			if (bind[i].message == FABER_FILE_OPEN) {
+				printf("a\n");
+				menu->AddItem(new BMenuItem(BRecentFilesList::NewFileListMenu(
+					B_TRANSLATE("Open"B_UTF8_ELLIPSIS), NULL, NULL, be_app, 9, true,
+					NULL, FABER_SIGNATURE), new BMessage(FABER_FILE_OPEN)));
+			} else {
+				BMenuItem* item = BuildMenuItem(bind[i].message, bind[i].label);
+				if (target != NULL)
+					item->SetTarget(target);
+
+				menu->AddItem(item);
+			}
+		}
+	}
+	return menuList.ItemAt(0);
+}
+
+
+BPopUpMenu*
+MenuBuilder::BuildPopUpMenu(KeyBind* bind, BView* target)
+{
+	if (bind == NULL)
+		return NULL;
+
+	// The first item describe the menu
+	BPopUpMenu* menu = new BPopUpMenu(bind[0].label);
+	BObjectList<BPopUpMenu> menuList(false);
+	menuList.AddItem(menu);
+
+	for (int i = 1; bind[i].message != FABER_EOF; i++) {
+
+		menu = menuList.ItemAt(menuList.CountItems()-1);
+
+		if (bind[i].message == FABER_ITEM_START) {
+			BPopUpMenu* subMenu = new BPopUpMenu(bind[i].label);
+			menu->AddItem(subMenu);
+			menuList.AddItem(subMenu);
+		}  else if (bind[i].message == FABER_ITEM_END) {
+			if (menuList.CountItems() > 1)
+				menuList.RemoveItemAt(menuList.CountItems()-1);
+		} else {
+			BMenuItem* item = BuildMenuItem(bind[i].message, bind[i].label);
+			if (target != NULL)
+				item->SetTarget(target);
+
+			menu->AddItem(item);
+		}
+	}
+	return menuList.ItemAt(0);
+}
+
+
+BMenuItem*
+MenuBuilder::BuildMenuItem(uint32 message, const char* label)
+{
+	if (message == FABER_SPLITTER)
+		return new BSeparatorItem();
+	else
+		return new BMenuItem(label, MessageBuilder(message),
+			fKeyBind->GetKey(message), fKeyBind->GetMod(message));
+}
+
+
 BMenuBar*
 MenuBuilder::BuildMainMenuBar()
 {
@@ -74,7 +162,7 @@ MenuBuilder::BuildMainMenuBar()
 BMenu*
 MenuBuilder::BuildFileMenu()
 {
-	return _BuildMenu(kFileMenu);
+	return BuildMenu(kFileMenu);
 }
 
 
@@ -88,14 +176,14 @@ MenuBuilder::BuildRecentMenu()
 BMenu*
 MenuBuilder::BuildEditMenu()
 {
-	return _BuildMenu(kEditMenu);
+	return BuildMenu(kEditMenu);
 }
 
 
 BMenu*
 MenuBuilder::BuildTracksMenu()
 {
-	return _BuildMenu(kTracksMenu);
+	return BuildMenu(kTracksMenu);
 }
 
 
@@ -138,111 +226,26 @@ MenuBuilder::BuildGenerateMenu()
 BMenu*
 MenuBuilder::BuildEngineMenu()
 {
-	return _BuildMenu(kEngineMenu);
+	return BuildMenu(kEngineMenu);
 }
 
 
 BMenu*
 MenuBuilder::BuildProjectMenu()
 {
-	return _BuildMenu(kProjectMenu);
+	return BuildMenu(kProjectMenu);
 }
 
 
 BMenu*
 MenuBuilder::BuildHelpMenu()
 {
-	return _BuildMenu(kHelpMenu);
+	return BuildMenu(kHelpMenu);
 }
 
 
 BPopUpMenu*
 MenuBuilder::BuildTrackContextualMenu(BView* target)
 {
-	return _BuildPopUpMenu(kTrackContextualMenu, target);
-}
-
-
-BMenu*
-MenuBuilder::_BuildMenu(KeyBind* bind)
-{
-	if (bind == NULL)
-		return NULL;
-
-	// The first item describe the menu
-	BMenu* menu = new BMenu(bind[0].label);
-	BObjectList<BMenu> menuList(false);
-	menuList.AddItem(menu);
-
-	for (int i = 1; bind[i].message != FABER_EOF; i++) {
-
-		menu = menuList.ItemAt(menuList.CountItems()-1);
-
-		if (bind[i].message == FABER_ITEM_START) {
-			BMenu* subMenu = NULL;
-			subMenu = new BMenu(bind[i].label);
-			menu->AddItem(subMenu);
-			menuList.AddItem(subMenu);
-		}  else if (bind[i].message == FABER_ITEM_END) {
-			if (menuList.CountItems() > 1)
-				menuList.RemoveItemAt(menuList.CountItems()-1);
-		} else {
-			// NOTE This is a temporarily hack
-			if (bind[i].message == FABER_FILE_OPEN) {
-				printf("a\n");
-				menu->AddItem(new BMenuItem(BRecentFilesList::NewFileListMenu(
-					B_TRANSLATE("Open"B_UTF8_ELLIPSIS), NULL, NULL, be_app, 9, true,
-					NULL, FABER_SIGNATURE), new BMessage(FABER_FILE_OPEN)));
-			} else {
-				BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
-				menu->AddItem(item);
-			}
-		}
-	}
-	return menuList.ItemAt(0);
-}
-
-
-BPopUpMenu*
-MenuBuilder::_BuildPopUpMenu(KeyBind* bind, BView* target)
-{
-	if (bind == NULL)
-		return NULL;
-
-	// The first item describe the menu
-	BPopUpMenu* menu = new BPopUpMenu(bind[0].label);
-	BObjectList<BPopUpMenu> menuList(false);
-	menuList.AddItem(menu);
-
-	for (int i = 1; bind[i].message != FABER_EOF; i++) {
-
-		menu = menuList.ItemAt(menuList.CountItems()-1);
-
-		if (bind[i].message == FABER_ITEM_START) {
-			BPopUpMenu* subMenu = new BPopUpMenu(bind[i].label);
-			menu->AddItem(subMenu);
-			menuList.AddItem(subMenu);
-		}  else if (bind[i].message == FABER_ITEM_END) {
-			if (menuList.CountItems() > 1)
-				menuList.RemoveItemAt(menuList.CountItems()-1);
-		} else {
-			BMenuItem* item = _BuildMenuItem(bind[i].message, bind[i].label);
-			if (target != NULL)
-				item->SetTarget(target);
-
-			menu->AddItem(item);
-		}
-	}
-	return menuList.ItemAt(0);
-}
-
-
-BMenuItem*
-MenuBuilder::_BuildMenuItem(uint32 message, const char* label)
-{
-	if (message == FABER_SPLITTER)
-		return new BSeparatorItem();
-	else
-		return new BMenuItem(label, MessageBuilder(message),
-			fKeyBind->GetKey(message), fKeyBind->GetMod(message));
+	return BuildPopUpMenu(kTrackContextualMenu, target);
 }

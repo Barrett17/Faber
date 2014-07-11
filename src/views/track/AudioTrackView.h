@@ -57,23 +57,11 @@ public:
 			void			CurrentSelection(int64* start, int64* end) const;
 			void			Select(int64 start, int64 end);
 
-			void			ScrollBy(int64 value);
-
-			void			SetPointer(int64 pointer);
-			int64			Pointer() const;
-
 			bigtime_t		Duration() const;
 			int64			Frames() const;
 
-			// GUI interaction
-			void			ZoomIn();
-			void			ZoomOut();
-			void			ZoomFull();
-			void			ZoomSelection();
-
-			void			UpdateScroll(float newValue,
-								float max, float min);
-
+			void			UpdateRequested();
+			void			UpdateRequested(BRect rect);
 private:
 			AudioTrack*		fAudioTrack;
 			WaveRender*		fWaveRender;

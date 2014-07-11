@@ -75,10 +75,10 @@ public:
 	static ParameterWindow*	GetSystemMixer();
 
 	// Progress window methods
-	void					ProgressUpdate(int32 delta);
-	void					StartProgress(const char *label,
-								int32 max = 100);
-	void					HideProgress();
+	static void				ProgressUpdate(float percent, const char* text);
+
+	static void				StartProgress(const char *label, int32 max = 100);
+	static void				HideProgress();
 
 	// Util method which you can use to see if 
 	// a window is already opened / valid or not.

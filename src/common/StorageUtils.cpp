@@ -51,6 +51,13 @@ StorageUtils::BlockFileRequested()
 }
 
 
+BFile*
+StorageUtils::GetProjectFile(BPath path, bool create)
+{
+	return NULL;
+}
+
+
 BPath
 StorageUtils::TemporaryProjectDirRequested()
 {
@@ -66,22 +73,37 @@ StorageUtils::TemporaryProjectDirRequested()
 }
 
 
-BFile*
-StorageUtils::GetProjectFile(BPath path, bool create)
+status_t
+StorageUtils::MoveToPath(BPath old, BPath newPath)
 {
-	return NULL;
+	return B_ERROR;
 }
 
 
-// NOTE ATM we support only float, also PCM16 and PCM24 are planned.
+status_t
+StorageUtils::CopyToPath(BPath old, BPath newPath)
+{
+	return B_ERROR;
+}
+
+
+status_t
+StorageUtils::DeleteDirectory(BPath path)
+{
+	return B_ERROR;
+}
+
+
+// NOTE ATM we support only float (PCM16), also double (PCM32)
+// and int are planned.
 int64
-StorageUtils::SizeToFrames(ssize_t size)
+StorageUtils::SizeToFrames(size_t size)
 {
 	return (int64)size/sizeof(float);
 }
 
 
-ssize_t
+size_t
 StorageUtils::FramesToSize(int64 frames)
 {
 	return (size_t)frames*sizeof(float);

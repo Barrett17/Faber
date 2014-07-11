@@ -46,11 +46,6 @@ public:
 	virtual void			CurrentSelection(int64* start, int64* end) const = 0;
 	virtual void			Select(int64 start, int64 end) = 0;
 
-	virtual void			ScrollBy(int64 value) = 0;
-
-	virtual void			SetPointer(int64 pointer) = 0;
-	virtual int64			Pointer() const = 0;
-
 			bigtime_t		Duration() const;
 			int64			Frames() const;
 
@@ -75,14 +70,12 @@ public:
 			void			SetSolo(bool solo);
 			bool			IsSolo() const;
 
-	virtual void			ZoomIn() = 0;
-	virtual void			ZoomOut() = 0;
-	virtual void			ZoomFull() = 0;
-	virtual void			ZoomSelection() = 0;
-
 	virtual bool			HasChanged() const;
 	virtual bool			HasUndo() const;
 	virtual bool			HasRedo() const;
+
+	virtual void			UpdateRequested() = 0;
+	virtual void			UpdateRequested(BRect bounds) = 0;
 
 protected:
 			Track*			fTrack;

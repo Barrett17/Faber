@@ -20,7 +20,7 @@
 
 #include "MediaFormatBuilder.h"
 
-#define FABER_BUFFER_SIZE 2048
+#define FABER_BUFFER_SIZE 4096
 
 
 void

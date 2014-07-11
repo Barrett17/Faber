@@ -122,6 +122,8 @@ ProjectManager::SaveProject()
 status_t
 ProjectManager::LoadProject(entry_ref ref)
 {
+	WindowsManager::ProgressUpdate(1.0f, "Loading project");
+
 	BPath path;
 	BEntry entry(&ref);
 
@@ -139,6 +141,9 @@ ProjectManager::LoadProject(entry_ref ref)
 		fWasSaved = true;
 		return B_OK;
 	}
+
+	WindowsManager::ProgressUpdate(2.0f, "Error loading project!");
+
 	return B_ERROR;
 }
 
@@ -146,33 +151,49 @@ ProjectManager::LoadProject(entry_ref ref)
 status_t
 ProjectManager::LoadFile(entry_ref ref)
 {
+	WindowsManager::StartProgress("Loading File");
+
 	// TODO maybe use B_MEDIA_FILE_BIG_BUFFERS !?
 	BMediaFile* mediaFile = new BMediaFile(&ref);
 	ObjectDeleter<BMediaFile> deleter(mediaFile);
+	status_t ret = B_ERROR;
 
-	if (mediaFile->InitCheck() == B_OK)
-		return LoadMediaFile(mediaFile, ref.name);
+	if (mediaFile->InitCheck() == B_OK) {
+		ret = LoadMediaFile(mediaFile, ref.name);
+		WindowsManager::Get()->HideProgress();
+		return ret;
+	}
 
-	printf("Loading project\n");
-	return LoadProject(ref);
+	ret = LoadProject(ref);
+
+	WindowsManager::ProgressUpdate(100.0f, "Operation complete!\n");
+
+	WindowsManager::HideProgress();
+
+	return ret;
 }
 
 
 status_t
 ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 {
+	BString str("Loading media file ");
+	str << name;
+	WindowsManager::ProgressUpdate(1.0f, str);
+
 	AudioTrack* track = TrackIO::ImportAudio(mediaFile, name);
 
 	if (track == NULL)
 		return B_ERROR;
 
-	printf("Faber: Loading media file %s\n", name);
-
 	status_t ret = track->InitCheck();
 
 	if (ret != B_OK) {
+		BString err("Error loading track: ");
+		err << strerror(ret);
+		WindowsManager::ProgressUpdate(0.0f, err);
+
 		delete track;
-		printf("Error loading track: %s\n", strerror(ret));
 		return ret;
 	}
 
@@ -192,9 +213,8 @@ ProjectManager::GetProjectPath() const
 status_t
 ProjectManager::RegisterTrack(Track* track)
 {
-	if (track->IsAudio()) {
+	if (track->IsAudio())
 		return AudioGate::RegisterTrack((AudioTrack*)track);
-	}
 
 	return B_ERROR;
 }
@@ -203,9 +223,8 @@ ProjectManager::RegisterTrack(Track* track)
 status_t
 ProjectManager::UnregisterTrack(Track* track)
 {
-	if (track->IsAudio()) {
+	if (track->IsAudio())
 		return AudioGate::UnregisterTrack((AudioTrack*)track);
-	}
 
 	return B_ERROR;
 }

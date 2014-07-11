@@ -146,7 +146,9 @@ WindowsManager::ShowAbout()
 	BAboutWindow* box = new BAboutWindow(FABER_APP_NAME, FABER_SIGNATURE);
 
 	box->AddDescription(FABER_DESCRIPTION);
-	box->AddText("Faber is released under the terms of the GPL v3 license.", NULL);
+	box->AddText("Faber is a Versut product, it's released under the terms of the GPL v3 license.", NULL);
+
+	box->AddExtraInfo(FABER_HELP_HOMEPAGE);
 
 	box->AddCopyright(2012, FABER_COPYRIGHT, kCopyrights);
 	box->SetVersion(FABER_VERSION);
@@ -155,7 +157,7 @@ WindowsManager::ShowAbout()
 	box->AddText("Faber contain code from :", kAdditionalCode);
 
 	box->AddSpecialThanks(kThanks);
-	box->AddExtraInfo(FABER_HELP_HOMEPAGE);
+
 	box->Show();
 	box->MoveTo(_CalculateWindowPoint());
 }
@@ -239,25 +241,31 @@ WindowsManager::GetFaberMixer()
 
 
 void
-WindowsManager::StartProgress(const char *label, int32 max)
+WindowsManager::StartProgress(const char* label, int32 max)
 {
-	fProgress->Show();
-	fProgress->SetTitle(label);
-	fProgress->Start(MainWindow(), true);
+	Get()->fProgress->Show();
+	Get()->fProgress->SetTitle(label);
+	Get()->fProgress->Start(MainWindow(), true);
 }
 
 
 void
-WindowsManager::ProgressUpdate(int32 delta)
+WindowsManager::ProgressUpdate(float percent, const char* text)
 {
-	//fProgress->SetProgress(delta);
+	BMessenger mess(Get()->fProgress);
+	if (mess.IsValid()) {
+		BMessage* msg = new BMessage(kMsgProgressUpdate);
+		msg->AddString("message", text);
+		msg->AddFloat("percent", percent);
+		mess.SendMessage(msg);
+	}
 }
 
 
 void
 WindowsManager::HideProgress()
 {
-	fProgress->Stop();
+	Get()->fProgress->Stop();
 }
 
 

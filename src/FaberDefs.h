@@ -39,7 +39,7 @@
 
 #define FABER_VERSION "R1 Alpha1"
 
-#define FABER_COPYRIGHT "Versut"
+#define FABER_COPYRIGHT "Dario Casalinuovo"
 
 // Debug
 

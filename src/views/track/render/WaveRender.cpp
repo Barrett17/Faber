@@ -19,7 +19,10 @@
 
 #include "WaveRender.h"
 
+#include <Window.h>
+
 #include "FaberDefs.h"
+#include "StorageUtils.h"
 #include "TracksCommon.h"
 
 #include <stdio.h>
@@ -28,9 +31,10 @@
 WaveRender::WaveRender(AudioTrack* track)
 	: 
 	BView("", B_WILL_DRAW),
-	fTrack(track),
-	fUpdate(true)
+	fTrack(track)
 {
+	GetCoords().end = fTrack->CountFrames()/fTrack->CountChannels();
+
 	SetViewColor(60,60,60);
 }	
 
@@ -60,27 +64,37 @@ WaveRender::_RenderTrack(BRect rect)
 	float center = Bounds().Height()/(channels*2);
 
 	for (int32 i = 0; i < channels; i++) {
+		float* preview = NULL;
 		MediaBlockMap* channelMap = index->GetChannel(i);
-		_RenderChannel(channelMap, center);
+		MediaBlockMapReader* reader = channelMap->Reader();
+		size_t size = reader->ReadPreview(&preview);
+		if (preview == NULL) {
+			printf("error\n");
+			return;
+		}
+		_RenderChannel(preview, size, center);
 		center += center*2;
+		delete preview;
 	}
 }
 
 
 void
-WaveRender::_RenderChannel(MediaBlockMap* channelMap, float center)
+WaveRender::_RenderChannel(float* buffer, size_t size, float center)
 {
-	PreviewReader* reader = channelMap->Preview();
+	int64 end = (int64)Bounds().right;
 
-	int64 end = Bounds().right;
+	//printf("%ld %ld %ld\n", GetCoords().start, GetCoords().end);
 
-	printf("%ld %ld\n", GetCoords().start, GetCoords().end);
-
-	int64 count = _FrameToScreen(GetCoords().start);
+	int64 count = 0;
 
 	for (int64 i = 0; i < end; i++) {
+		if (count >= size) {
+			printf("Reached end of preview\n");
+			return;
+		}
 
-		if (IsSelected() && i >= _FrameToScreen(GetCoords().selectionStart)
+		if (GetCoords().IsSelected() && i >= _FrameToScreen(GetCoords().selectionStart)
 			&& i <= _FrameToScreen(GetCoords().selectionEnd)) {
 			SetHighColor(255,255,255);
 			SetLowColor(200,200,200);
@@ -88,18 +102,18 @@ WaveRender::_RenderChannel(MediaBlockMap* channelMap, float center)
 			SetHighColor(155,157,162);
 		}
 
-		//float max = buffer[count];
-		//float min = buffer[count+1];
+		float max = buffer[count];
+		float min = buffer[count+1];
 
-		float max = 1;
-		float min = -1;
+		max = center+max*100.0f;
+		min = center+min*100.0f;
 
-		BPoint pointMin(i, center-max*30.0f);
-		BPoint pointMax(i, center-min*30.0f);
+		BPoint pointMax(i, max);
+		BPoint pointMin(i, min);
 
 		StrokeLine(pointMin, pointMax);
 
-		count+=2/**fZoomFactor*/;
+		count+=2*GetCoords().zoomFactor;
 	}
 }
 
@@ -115,8 +129,8 @@ WaveRender::_RenderPointers(BRect rect)
 			BPoint(pointer, 0));
 	}
 
-	if (IsSelected()) {
-		printf("rendering\n");
+	if (GetCoords().IsSelected()) {
+		//printf("rendering\n");
 		int64 point;
 
 		if(GetCoords().selectionStart < GetCoords().pointer)
@@ -146,7 +160,7 @@ WaveRender::MouseDown(BPoint point)
 	message->FindInt32("clicks", (int32*)&click);
 
 	if (button == B_PRIMARY_MOUSE_BUTTON) {
-		GetCoords().pointer = _ScreenToFrame(point.x);
+		GetCoords().pointer = GetCoords().start+_ScreenToFrame(point.x);
 
 		if (GetCoords().isSelected) {
 			GetCoords().isSelected = false;
@@ -157,11 +171,12 @@ WaveRender::MouseDown(BPoint point)
 			GetCoords().primaryButton = true;
 		}
 
-		Invalidate();
+		
 
 	} else if (button == B_SECONDARY_MOUSE_BUTTON) {
 
 	}
+	Invalidate();
 }
 
 
@@ -182,13 +197,14 @@ WaveRender::MouseMoved(BPoint point, uint32, const BMessage* message)
 	if (GetCoords().primaryButton) {
 		GetCoords().isSelected = true;
 
-		int64 frame = _ScreenToFrame(point.x);
+		int64 frame = GetCoords().start+_ScreenToFrame(point.x);
 
 		if (frame < GetCoords().pointer)
-			Select(frame, GetCoords().pointer);
+			GetCoords().Select(frame, GetCoords().pointer);
 		else if (frame > GetCoords().pointer)
-			Select(GetCoords().pointer, frame);
+			GetCoords().Select(GetCoords().pointer, frame);
 
+		Invalidate();
 	}
 }
 
@@ -203,149 +219,9 @@ void
 WaveRender::MakeFocus(bool focused)
 {
 	if (focused == false)
-		Unselect();
+		GetCoords().Unselect();
 
 	BView::MakeFocus(focused);
-}
-
-
-void
-WaveRender::ScrollBy(int64 value)
-{
-	if (GetCoords().end+value > fTrack->CountFrames()
-		|| GetCoords().pointer+value < 0)
-		return;
-
-	GetCoords().pointer += value;
-	GetCoords().end += value;
-
-	Invalidate();
-}
-
-
-void
-WaveRender::Select(int64 start, int64 end)
-{
-	BRect rect = Bounds();
-
-	if (start < GetCoords().selectionStart)
-		rect.left = _FrameToScreen(start);
-	else
-		rect.left = _FrameToScreen(GetCoords().selectionStart);
-
-	if (end < GetCoords().selectionEnd)
-		rect.right = _FrameToScreen(GetCoords().selectionEnd);
-	else
-		rect.right = _FrameToScreen(end);
-
-	GetCoords().selectionStart = start;
-	GetCoords().selectionEnd = end;
-	GetCoords().isSelected = true;
-
-	Invalidate(rect);
-}
-
-
-bool
-WaveRender::IsSelected()
-{
-	return GetCoords().isSelected;
-}
-
-
-void
-WaveRender::CurrentSelection(int64* start, int64* end)
-{
-	*start = GetCoords().selectionStart;
-	*end = GetCoords().selectionEnd;
-}
-
-
-void
-WaveRender::SelectAll()
-{
-	Select(GetCoords().pointer, GetCoords().end);
-
-	Invalidate();
-}
-
-
-void
-WaveRender::Unselect()
-{
-	GetCoords().selectionStart = -1;
-	GetCoords().selectionEnd = -1;
-	GetCoords().isSelected = false;
-	Invalidate();
-}
-
-
-int64
-WaveRender::Pointer()
-{
-	return GetCoords().pointer;
-}
-
-
-void
-WaveRender::ZoomIn()
-{
-	/*fZoomFactor /= 2;
-
-	if (fZoomFactor < 1) {
-		fZoomFactor = 1;
-		return;
-	}
-
-	Invalidate();*/
-}
-
-
-void
-WaveRender::ZoomOut()
-{
-	/*fZoomFactor *= 2;
-
-	if (fZoomFactor > 40) {
-		fZoomFactor = 40;
-		return;
-	}
-
-	Invalidate();*/
-}
-
-
-void
-WaveRender::ZoomFull()
-{
-	/*GetCoords().pointer = TrackStart();
-	GetCoords().end = TrackEnd();
-	fZoomFactor = 20;
-
-	Invalidate();*/
-}
-
-
-void
-WaveRender::ZoomSelection()
-{
-	/*if (!IsSelected())
-		return;
-
-	printf("%ld %ld\n", GetCoords().selectionStart, GetCoords().selectionEnd); 
-	GetCoords().pointer = GetCoords().selectionStart;
-	GetCoords().end = GetCoords().selectionEnd;
-
-	fZoomFactor = _DisplaySize()/Bounds().right;
-
-	Invalidate();*/
-}
-
-
-int64
-WaveRender::_DisplaySize()
-{
-	return GetCoords().end-GetCoords().pointer;
 }
 
 

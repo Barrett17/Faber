@@ -28,7 +28,8 @@ public:
 								BIconButton(const char* name,
 									const char* label = NULL,
 									BMessage* message = NULL,
-									BHandler* target = NULL);
+									BHandler* target = NULL,
+									bool customBackground = false);
 	virtual						~BIconButton();
 
 	// BView interface
@@ -107,6 +108,9 @@ private:
 			BBitmap*			fDisabledClickedBitmap;
 
 			BHandler*			fTargetCache;
+
+			// NOTE This is an edit to allow a black button
+			bool				fCustomBackground;
 };
 
 

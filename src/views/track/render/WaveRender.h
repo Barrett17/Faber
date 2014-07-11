@@ -38,22 +38,8 @@ public:
 
 	virtual	void			MakeFocus(bool focused = true);
 
-			void			ScrollBy(int64 value);
-
-			bool			IsSelected();
-			void			CurrentSelection(int64* start, int64* end);
-			void			Select(int64 start, int64 end);
-			void			SelectAll();
-			void			Unselect();
-
-			int64			Pointer();
-
-			void			ZoomIn();
-			void			ZoomOut();
-			void			ZoomFull();
-			void			ZoomSelection();
 private:
-			void			_RenderChannel(MediaBlockMap* channelMap, float center);
+			void			_RenderChannel(float* buffer, size_t size, float center);
 			void			_RenderTrack(BRect rect);
 			void			_RenderPointers(BRect rect);
 
@@ -62,7 +48,6 @@ private:
 			int64			_FrameToScreen(int64 value);
 
 			AudioTrack*		fTrack;
-			bool			fUpdate;
 
 			friend class	AudioTrackView;
 };

@@ -31,6 +31,21 @@ public:
 
 			static TracksCommon*		Get();
 
+			void						ScrollBy(int64 value);
+
+			int64						Pointer();
+
+			bool						IsSelected();
+			void						CurrentSelection(int64* start, int64* end);
+			void						Select(int64 start, int64 end);
+			void						SelectAll();
+			void						Unselect();
+
+			void						ZoomIn();
+			void						ZoomOut();
+			void						ZoomFull();
+			void						ZoomSelection();
+
 			int64						pointer;
 			int64						playPointer;
 
@@ -49,10 +64,14 @@ public:
 			bool						scrollButton;
 
 			bool						isSelected;
+			bool						multipleSelection;
 
 private:
+			int64						_DisplaySize();
+
 			static TracksCommon*		fInstance;
 };
+
 
 static TracksCommon& GetCoords()
 {

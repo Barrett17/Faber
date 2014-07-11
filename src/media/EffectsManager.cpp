@@ -69,6 +69,7 @@ EffectsManager::StandardEffects()
 FaberEffectList&
 EffectsManager::EffectsByFlag(int32 flag)
 {
+	return *new FaberEffectList();
 }
 
 

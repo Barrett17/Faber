@@ -111,6 +111,8 @@ const uint32 FABER_DROP_PASTE			=	'drps';
 
 const uint32 FABER_COPY_SILENCE			=	'cpsl';
 
+const uint32 FABER_INVERT_SELECTION		=	'unsl';
+
 const uint32 FABER_UNSELECT_ALL			=	'unsl';
 const uint32 FABER_CLEAR				=	'cler';
 
@@ -122,8 +124,12 @@ const uint32 FABER_SORT_BY_DURATION		=	'srbd';
 
 // Track contextual menu
 
-const uint32 FABER_TRACK_SET_NAME		=	'trsn';
-const uint32 FABER_TRACK_GET_INFO		=	'trgi';
+const uint32 FABER_TRACK_SET_NAME		=	'Trsn';
+const uint32 FABER_TRACK_GET_INFO		=	'Trgi';
+
+const uint32 FABER_TRACK_SPLIT_MONO		=	'Trsm';
+const uint32 FABER_TRACK_SPLIT_CHAN		=	'Trsc';
+const uint32 FABER_TRACK_MERGE_WITH		=	'Trmw';
 
 // Effects and audio manipulation
 

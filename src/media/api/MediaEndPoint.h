@@ -50,22 +50,22 @@ public:
 
 			const media_node&		Node() const;
 
-			status_t				SetOutput(media_output* out);
-			media_output			Output() const;
+			void					SetOutput(media_output* out);
+			media_output			GetOutput() const;
 
-			status_t				SetInput(media_input* in);
-			media_input				Input() const;
+			void					SetInput(media_input* input);
+			media_input				GetInput() const;
 
 			bool					IsInput() const;
 			bool					IsOutput() const;
 
-			status_t				SetSource(media_source& source);
+			void					SetSource(media_source& source);
 			const media_source&		Source() const;
 
-			status_t				SetDestination(media_destination& dest);
+			void					SetDestination(media_destination& dest);
 			const media_destination& Destination() const;
 
-			status_t				SetFormat(media_format* format);
+			void					SetFormat(media_format* format);
 			const media_format&		Format() const;
 
 			void					SetDataStatus(int32 status);

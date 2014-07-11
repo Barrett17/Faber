@@ -43,7 +43,7 @@ enum {
 
 
 BIconButton::BIconButton(const char* name, const char* label,
-	BMessage* message, BHandler* target)
+	BMessage* message, BHandler* target, bool customBackground)
 	:
 	BControl(name, label, message, B_WILL_DRAW),
 	fButtonState(0),
@@ -51,7 +51,8 @@ BIconButton::BIconButton(const char* name, const char* label,
 	fDisabledBitmap(NULL),
 	fClickedBitmap(NULL),
 	fDisabledClickedBitmap(NULL),
-	fTargetCache(target)
+	fTargetCache(target),
+	fCustomBackground(customBackground)
 {
 	SetTarget(target);
 	SetLowColor(ui_color(B_PANEL_BACKGROUND_COLOR));
@@ -98,7 +99,11 @@ BIconButton::AttachedToWindow()
 void
 BIconButton::Draw(BRect updateRect)
 {
-	rgb_color background = LowColor();
+	rgb_color background;
+	if (fCustomBackground)
+		background = {120,120,120};
+	else
+		background = LowColor();
 
 	BRect r(Bounds());
 

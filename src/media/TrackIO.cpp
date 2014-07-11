@@ -21,6 +21,7 @@
 
 #include <MediaFile.h>
 
+#include "FaberDefs.h"
 #include "MediaFormatBuilder.h"
 
 #include <stdio.h>
@@ -52,36 +53,45 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 		index->AddChannel(channel);
 	}
 
+	WindowsManager::ProgressUpdate(10.0f, "Loading audio data");
+
 	int64 frames = 0;
 
-	float buffer[format.u.raw_audio.buffer_size 
+	size_t size = (format.u.raw_audio.buffer_size 
 		/ (format.u.raw_audio.format 
-		& media_raw_audio_format::B_AUDIO_SIZE_MASK)];
+		& media_raw_audio_format::B_AUDIO_SIZE_MASK))*2;
+
+	float buffer[size];
 
 	while (track->ReadFrames(buffer, &frames) == B_OK) {
-		_BuildBlocks((float*)buffer, frames, index,
+		_BuildBlocks((float*)buffer, size, index,
 			format.u.raw_audio.channel_count);
 	}
 
+	WindowsManager::ProgressUpdate(50.0f, "Flushing data and preview");
+
 	mediaFile->ReleaseTrack(track);
+
+	// This is done to optimize writes, it currently only write
+	// the preview, in future the whole data will have a caching mechanism.
+	for (uint32 j = 0; j < index->CountChannels(); j++)
+		index->GetChannels().ItemAt(j)->Writer()->Flush();
 
 	return new AudioTrack(name, index);
 }
 
 
 status_t
-TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
+TrackIO::_BuildBlocks(float* buffer, size_t size, TrackIndex* index,
 	uint32 channels)
 {
-	//printf("Writing data\n");
-
 	BObjectList<MediaBlockMap> trackChannels = index->GetChannels();
 
-	float temp[channels][frames/channels];
+	float temp[channels][size/channels];
 
 	int64 count = 0;
 
-	for (int64 i = 0; i < frames;) {
+	for (size_t i = 0; i < size;) {
 		for (uint32 j = 0; j < channels; j++) {
 			temp[j][count] = buffer[i];
 			i++;
@@ -91,7 +101,7 @@ TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 
 	for (uint32 j = 0; j < channels; j++) {
 		trackChannels.ItemAt(j)->Writer()->WriteFrames(
-			&temp[j][0], frames/channels); 
+			(void*)&temp[j][0], size/channels);
 	}
 
 	return B_OK;

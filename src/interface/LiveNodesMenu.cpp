@@ -20,6 +20,7 @@
 #include "LiveNodesMenu.h"
 #include "NodeMenu.h"
 
+#include <MediaRoster.h>
 #include <Window.h>
 
 
@@ -40,8 +41,6 @@ void
 LiveNodesMenu::Pulse()
 {
 	Window()->BeginViewTransaction();
-
-	//
 
 	Window()->EndViewTransaction();
 	Window()->Flush();

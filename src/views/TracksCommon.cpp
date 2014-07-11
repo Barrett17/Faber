@@ -19,7 +19,10 @@
 
 #include "TracksCommon.h"
 
+#include <stdio.h>
+
 TracksCommon* TracksCommon::fInstance = NULL;
+
 
 TracksCommon*
 TracksCommon::Get()
@@ -32,10 +35,131 @@ TracksCommon::Get()
 
 
 TracksCommon::TracksCommon()
+	:
+	pointer(0),
+	playPointer(0),
+	start(0),
+	end(0),
+	selectionStart(-1),
+	selectionEnd(-1),
+	duration(0),
+	zoomFactor(20),
+	primaryButton(false),
+	secondaryButton(false),
+	scrollButton(false),
+	isSelected(false),
+	multipleSelection(false)
 {
 }
 
 
 TracksCommon::~TracksCommon()
 {
+}
+
+
+void
+TracksCommon::ScrollBy(int64 value)
+{
+}
+
+
+void
+TracksCommon::Select(int64 start, int64 end)
+{
+	selectionStart = start;
+	selectionEnd = end;
+	isSelected = true;
+}
+
+
+bool
+TracksCommon::IsSelected()
+{
+	return isSelected;
+}
+
+
+void
+TracksCommon::CurrentSelection(int64* start, int64* end)
+{
+	*start = selectionStart;
+	*end = selectionEnd;
+}
+
+
+void
+TracksCommon::SelectAll()
+{
+	Select(start, end);
+}
+
+
+void
+TracksCommon::Unselect()
+{
+	selectionStart = -1;
+	selectionEnd = -1;
+	isSelected = false;
+}
+
+
+void
+TracksCommon::ZoomIn()
+{
+	zoomFactor /= 2;
+
+	if (zoomFactor < 1) {
+		zoomFactor = 1;
+		return;
+	}
+}
+
+
+void
+TracksCommon::ZoomOut()
+{
+	zoomFactor *= 2;
+
+	if (zoomFactor > 40) {
+		zoomFactor = 40;
+		return;
+	}
+}
+
+
+void
+TracksCommon::ZoomFull()
+{
+	/*pointer = 0;
+	end = fTrack->CountFrames()/fTrack->CountChannels();
+	zoomFactor = 20;*/
+}
+
+
+void
+TracksCommon::ZoomSelection()
+{
+	if (!IsSelected())
+		return;
+
+	printf("%ld %ld\n", selectionStart, selectionEnd); 
+	pointer = selectionStart;
+	end = selectionEnd;
+
+	zoomFactor = 20;
+}
+
+
+int64
+TracksCommon::Pointer()
+{
+	return pointer;
+}
+
+
+int64
+TracksCommon::_DisplaySize()
+{
+	return end-pointer;
 }

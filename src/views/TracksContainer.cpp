@@ -30,6 +30,7 @@
 #include "ProjectManager.h"
 #include "TimeBar.h"
 #include "AudioGate.h"
+#include "TracksCommon.h"
 #include "TrackView.h"
 #include "WidgetFrame.h"
 
@@ -37,10 +38,7 @@
 TracksContainer::TracksContainer()
 	:
 	BGroupView(B_VERTICAL, 0),
-	fTrackViews(false),
-	fStart(0),
-	fEnd(0),
-	fDuration(0)
+	fTrackViews(false)
 {
 	// TODO fix color schemes
 	rgb_color backgroundColor = {120,120,120};
@@ -211,10 +209,13 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 		Looper()->Unlock();
 	}
 
+	if (index == -1)	
+		index = CountTracks();
+
 	status_t ret;
 
 	if (track->GetTrack()->IsAudio()) {
-		fLayout->AddView(track);
+		fLayout->AddView(index, track);
 		ret = fTrackViews.AddItem(track, index);
 	}
 
@@ -312,7 +313,7 @@ TracksContainer::CurrentFocus()
 TrackViewList&
 TracksContainer::SelectedTracks()
 {
-	TrackViewList* tracks = new TrackViewList(false);
+	/*TrackViewList* tracks = new TrackViewList(false);
 
 	for (int i = 0; i < CountTracks(); i++) {
 		TrackView* track = TrackAt(i);
@@ -320,7 +321,7 @@ TracksContainer::SelectedTracks()
 			tracks->AddItem(track);
 	}
 
-	return *tracks;
+	return *tracks;*/
 }
 
 
@@ -333,77 +334,6 @@ TracksContainer::HasChanged()
 			return true;
 	}
 	return false;
-}
-
-
-void
-TracksContainer::SelectAll()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->SelectAll();
-	}
-}
-
-
-void
-TracksContainer::UnselectAll()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->Unselect();
-	}
-}
-
-
-void
-TracksContainer::ZoomIn()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->ZoomIn();
-	}
-
-	if (Looper()->Lock()) {
-		float max, min;
-		fHorizontalScroll->GetRange(&min, &max);
-		if (max == 0)
-			max = 2;
-
-		max *= 4;
-		fHorizontalScroll->SetRange(min, max);
-		Looper()->Unlock();
-	}
-}
-
-
-void
-TracksContainer::ZoomOut()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->ZoomOut();
-	}
-}
-
-
-void
-TracksContainer::ZoomFull()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->ZoomFull();
-	}	
-}
-
-
-void
-TracksContainer::ZoomSelection()
-{
-	for (int i = 0; i < CountTracks(); i++) {
-		TrackView* track = TrackAt(i);
-		track->ZoomSelection();
-	}
 }
 
 
@@ -421,6 +351,22 @@ void
 TracksContainer::ReorderTracks(int order)
 {
 
+}
+
+
+void
+TracksContainer::UpdateRequested()
+{
+	for (int i = 0; i < CountTracks(); i++)
+		TrackAt(i)->UpdateRequested();
+}
+
+
+void
+TracksContainer::UpdateRequested(BRect rect)
+{
+	for (int i = 0; i < CountTracks(); i++)
+		TrackAt(i)->UpdateRequested(rect);
 }
 
 
@@ -460,14 +406,50 @@ TracksContainer::Clear()
 
 
 void
+TracksContainer::SelectAll()
+{
+}
+
+
+void
+TracksContainer::UnselectAll()
+{
+}
+
+
+void
 TracksContainer::UpdateTracksScroll(float newValue)
 {
-	printf("UpdateScroll\n");
-	float max, min;
-	fVerticalScroll->GetRange(&min, &max);
+}
 
-	for (int i = 0; i < CountTracks(); i++) {
-		AudioTrackView* track = (AudioTrackView*) TrackAt(i);
-		track->UpdateScroll(newValue, max, min);
-	}
+
+void
+TracksContainer::ZoomIn()
+{
+	GetCoords().ZoomIn();
+	UpdateRequested();
+}
+
+
+void
+TracksContainer::ZoomOut()
+{
+	GetCoords().ZoomOut();
+	UpdateRequested();
+}
+
+
+void
+TracksContainer::ZoomFull()
+{
+	GetCoords().ZoomFull();
+	UpdateRequested();
+}
+
+
+void
+TracksContainer::ZoomSelection()
+{
+	GetCoords().ZoomSelection();
+	UpdateRequested();
 }

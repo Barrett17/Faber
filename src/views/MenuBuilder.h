@@ -36,6 +36,12 @@ public:
 
 	static MenuBuilder*		Get();
 
+	BMenu*					BuildMenu(KeyBind* bind,
+								BView* target = NULL);
+	BPopUpMenu*				BuildPopUpMenu(KeyBind* bind,
+								BView* target = NULL);
+	BMenuItem*				BuildMenuItem(uint32 message, const char* label);
+
 	BMenuBar*				BuildMainMenuBar();
 
 	BMenu*					BuildFileMenu();
@@ -51,13 +57,6 @@ public:
 	BPopUpMenu*				BuildTrackContextualMenu(BView* target);
 
 private:
-	BMenu*					_BuildMenu(KeyBind* bind);
-
-	BPopUpMenu*				_BuildPopUpMenu(KeyBind* bind,
-								BView* target = NULL);
-
-	BMenuItem*				_BuildMenuItem(uint32 message, const char* label);
-
 	static MenuBuilder*		fInstance;
 	FaberShortcut*			fKeyBind;
 };

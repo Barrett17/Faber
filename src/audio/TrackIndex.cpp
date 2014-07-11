@@ -94,7 +94,6 @@ TrackIndex::InitCheck() const
 uint32
 TrackIndex::CountChannels() const
 {
-	printf("test\n");
 	return fChannels->CountItems();
 }
 

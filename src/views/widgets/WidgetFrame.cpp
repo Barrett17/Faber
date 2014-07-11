@@ -65,8 +65,6 @@ WidgetFrame::Draw(BRect rect)
 
 	SetHighColor(shadowColor);
 
-
-
 	SetDrawingMode(B_OP_ALPHA);
 	BGradientRadialFocus frameGradient;
 	frameGradient.AddColor(black, 0);
