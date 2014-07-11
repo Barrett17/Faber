@@ -408,12 +408,16 @@ TracksContainer::Clear()
 void
 TracksContainer::SelectAll()
 {
+	GetCoords().SelectAll();
+	UpdateRequested();
 }
 
 
 void
 TracksContainer::UnselectAll()
 {
+	GetCoords().Unselect();
+	UpdateRequested();
 }
 
 

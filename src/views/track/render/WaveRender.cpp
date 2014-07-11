@@ -33,7 +33,10 @@ WaveRender::WaveRender(AudioTrack* track)
 	BView("", B_WILL_DRAW),
 	fTrack(track)
 {
-	GetCoords().end = fTrack->CountFrames()/fTrack->CountChannels();
+	if (fTrack->CountChannels() == 0)
+		GetCoords().end = 0; 
+	else
+		GetCoords().end = fTrack->CountFrames()/fTrack->CountChannels();
 
 	SetViewColor(60,60,60);
 }	
@@ -65,7 +68,7 @@ WaveRender::_RenderTrack(BRect rect)
 
 	for (int32 i = 0; i < channels; i++) {
 		float* preview = NULL;
-		MediaBlockMap* channelMap = index->GetChannel(i);
+		MediaBlockMap* channelMap = index->ChannelAt(i);
 		MediaBlockMapReader* reader = channelMap->Reader();
 		size_t size = reader->ReadPreview(&preview);
 		if (preview == NULL) {
@@ -105,8 +108,8 @@ WaveRender::_RenderChannel(float* buffer, size_t size, float center)
 		float max = buffer[count];
 		float min = buffer[count+1];
 
-		max = center+max*100.0f;
-		min = center+min*100.0f;
+		max = center+max*150.0f;
+		min = center+min*150.0f;
 
 		BPoint pointMax(i, max);
 		BPoint pointMin(i, min);

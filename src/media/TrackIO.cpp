@@ -75,7 +75,7 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 	// This is done to optimize writes, it currently only write
 	// the preview, in future the whole data will have a caching mechanism.
 	for (uint32 j = 0; j < index->CountChannels(); j++)
-		index->GetChannels().ItemAt(j)->Writer()->Flush();
+		index->ChannelAt(j)->Writer()->Flush();
 
 	return new AudioTrack(name, index);
 }
@@ -85,8 +85,6 @@ status_t
 TrackIO::_BuildBlocks(float* buffer, size_t size, TrackIndex* index,
 	uint32 channels)
 {
-	BObjectList<MediaBlockMap> trackChannels = index->GetChannels();
-
 	float temp[channels][size/channels];
 
 	int64 count = 0;
@@ -100,7 +98,7 @@ TrackIO::_BuildBlocks(float* buffer, size_t size, TrackIndex* index,
 	}
 
 	for (uint32 j = 0; j < channels; j++) {
-		trackChannels.ItemAt(j)->Writer()->WriteFrames(
+		index->ChannelAt(j)->Writer()->WriteFrames(
 			(void*)&temp[j][0], size/channels);
 	}
 

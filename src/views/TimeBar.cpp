@@ -28,8 +28,7 @@
 TimeBar::TimeBar()
 	:
 	BView("TimeBar", B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE),
-	fSpacing(15),
-	fScale(1)
+	fSpacing(15.0f)
 {
 	rgb_color backgroundColor = {120,120,120};
 
@@ -60,16 +59,13 @@ void
 TimeBar::Draw(BRect rect)
 {
 	static rgb_color textColor = {0,0,0};
-	int32 start = (int32)Bounds().left * fScale;
-	int32 end = (int32)Bounds().right * fScale;
+	float start = Bounds().left/fSpacing;
+	float end = Bounds().right/fSpacing;
 
-	start /= fSpacing;
-	end /= fSpacing;
-
-	int32 countdown = 0;
-	int32 position = 0;
-	int minutes = 0;
-	int seconds = 0;
+	float countdown = 0;
+	float position = 0;
+	float minutes = 0;
+	float seconds = 0;
 
 	char* drawString = new char[20];
 
@@ -78,9 +74,9 @@ TimeBar::Draw(BRect rect)
 	StrokeLine(BPoint(Bounds().left, Bounds().bottom-1),
 		BPoint(Bounds().right, Bounds().bottom-1));
 
-	int32 prop = fSpacing / fScale;
+	float prop = fSpacing;
 
-	for (int32 index = start; index <= end; index++) {
+	for (float index = start; index <= end; index++) {
 		position = index * prop;
 
 		if(countdown > 0) {
@@ -97,9 +93,9 @@ TimeBar::Draw(BRect rect)
 			seconds = 10 * (index - minutes * 6);
 
 			if (minutes == 0)
-				sprintf(drawString, "%.2d", seconds);
+				sprintf(drawString, "%.2d", (int)seconds);
 			else {
-				sprintf(drawString, "%d:%.2d", minutes, seconds);
+				sprintf(drawString, "%d:%.2d", (int)minutes, (int)seconds);
 				position -= 10;
 				if (minutes > 9)
 					position -= 6;
@@ -112,16 +108,4 @@ TimeBar::Draw(BRect rect)
 	}
 
 	delete[] drawString;
-}
-
-
-void
-TimeBar::SetFrames(int64 frames)
-{
-}
-
-
-bigtime_t
-TimeBar::Duration() const
-{
 }

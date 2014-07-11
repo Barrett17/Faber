@@ -25,9 +25,9 @@
 
 AudioTrack::AudioTrack()
 	:
-	Track(),
-	fTrackIndex()
+	Track()
 {
+	fTrackIndex = new TrackIndex();
 	SetName(B_TRANSLATE("Empty Audio Track"));
 }
 

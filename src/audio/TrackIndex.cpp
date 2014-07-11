@@ -106,7 +106,7 @@ TrackIndex::AddChannel(MediaBlockMap* tree)
 
 
 MediaBlockMap*
-TrackIndex::GetChannel(int32 index) const
+TrackIndex::ChannelAt(int32 index) const
 {
 	return fChannels->ItemAt(index);
 }
@@ -132,7 +132,7 @@ TrackIndex::CountFrames() const
 {
 	int64 frames = 0;
 
-	for (int i = 0; i < fChannels->CountItems(); i++) {
+	for (int i = 0; i < CountChannels(); i++) {
 		MediaBlockMap* channel = fChannels->ItemAt(i);
 		if (channel->CountFrames() > frames)
 			frames = channel->CountFrames();

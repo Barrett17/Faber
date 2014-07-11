@@ -42,7 +42,7 @@ public:
 
 			uint32							CountChannels() const;
 			void							AddChannel(MediaBlockMap* tree);
-			MediaBlockMap*					GetChannel(int32 index) const;
+			MediaBlockMap*					ChannelAt(int32 index) const;
 
 			BObjectList<MediaBlockMap>&		GetChannels() const;
 

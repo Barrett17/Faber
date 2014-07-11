@@ -177,13 +177,14 @@ KeyBind kTrackContextualMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-    { 1,"Split to two mono tracks",           0, 0,                           0, 0,       FABER_TRACK_SPLIT_MONO },
+    { 1,"Split To Two mono tracks",           0, 0,                           0, 0,       FABER_TRACK_SPLIT_MONO },
     { 1,"Split channels",           0, 0,                           0, 0,                 FABER_TRACK_SPLIT_CHAN },
     { 1,"Merge with track...",           0, 0,                           0, 0,            FABER_TRACK_MERGE_WITH },
+    { 1,"Add channel",           0, 0,                           0, 0,            		  0},
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1, "Set Input Node", 0, 0, 0, 0, FABER_ITEM_START },
+	{ 1, "Set Input", 0, 0, 0, 0, FABER_ITEM_START },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
