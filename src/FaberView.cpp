@@ -19,9 +19,11 @@
 
 #include "FaberView.h"
 
+#include <Application.h>
 #include <LayoutBuilder.h>
 #include <StringView.h>
 
+#include "EffectsManager.h"
 #include "FaberDefs.h"
 #include "MenuBuilder.h"
 
@@ -31,7 +33,6 @@ FaberView::FaberView()
 	BGroupView(B_VERTICAL, 0)
 {
 	fToolBar = new ToolBar();
-	//fToolBar->SetTool(SettingsManager::GetLatestTool());
 
 	fTracksContainer = new TracksContainer();
 
@@ -39,8 +40,10 @@ FaberView::FaberView()
 
 	rgb_color backgroundColor = {120,120,120};
 
+	fMenuBar = BuildMainMenuBar();
+
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
-		.Add(MenuBuilder::Get()->BuildMainMenuBar())
+		.Add(fMenuBar)
 		.Add(fToolBar)
 		.AddStrut(0.0f)
 			.AddGroup(B_VERTICAL, 0)
@@ -60,17 +63,6 @@ FaberView::~FaberView()
 }
 
 
-void
-FaberView::MessageReceived(BMessage* message)
-{
-	switch (message->what)
-	{
-		default:
-			BGroupView::MessageReceived(message);
-	}
-}
-
-
 TracksContainer*
 FaberView::Container() const
 {
@@ -82,4 +74,107 @@ status_t
 FaberView::AddTrack(Track* track)
 {
 	return fTracksContainer->AddTrack(track);
+}
+
+
+BMenuBar*
+FaberView::BuildMainMenuBar()
+{
+	BMenuBar* menuBar = new BMenuBar("MainMenuBar");
+
+	menuBar->AddItem(BuildFileMenu());
+	menuBar->AddItem(BuildEditMenu());
+	menuBar->AddItem(BuildProjectMenu());
+	menuBar->AddItem(BuildTracksMenu());
+	menuBar->AddItem(BuildEffectsMenu());
+	menuBar->AddItem(BuildGenerateMenu());
+	menuBar->AddItem(BuildEngineMenu());
+	menuBar->AddItem(BuildHelpMenu());
+
+	return menuBar;
+}
+
+
+BMenu*
+FaberView::BuildFileMenu()
+{
+	return MenuBuilder::BuildMenu(kFileMenu);
+}
+
+
+BMenu*
+FaberView::BuildRecentMenu()
+{
+	return NULL;
+}
+
+
+BMenu*
+FaberView::BuildEditMenu()
+{
+	return MenuBuilder::BuildMenu(kEditMenu);
+}
+
+
+BMenu*
+FaberView::BuildTracksMenu()
+{
+	return MenuBuilder::BuildMenu(kTracksMenu);
+}
+
+
+BMenu*
+FaberView::BuildEffectsMenu()
+{
+	BMenu* menu = new BMenu(B_TRANSLATE("Effects"));
+	EffectsManager* effectsManager = EffectsManager::Get();
+
+	for (int i = 0; i < effectsManager->CountEffects(); i++) {
+		FaberEffect* effect = effectsManager->GetEffect(i);
+		if (effect->Flags() & FABER_FILTER) {
+			BMenuItem* item = effect->BuildItem();
+			menu->AddItem(item);
+		}
+	}
+
+	return menu;
+}
+
+
+BMenu*
+FaberView::BuildGenerateMenu()
+{
+	BMenu* menu = new BMenu(B_TRANSLATE("Generate"));
+	EffectsManager* effectsManager = EffectsManager::Get();
+
+	for (int i = 0; i < effectsManager->CountEffects(); i++) {
+		FaberEffect* effect = effectsManager->GetEffect(i);
+		if (effect->Flags() & FABER_PRODUCER) {
+			BMenuItem* item = effect->BuildItem();
+			menu->AddItem(item);
+		}
+	}
+
+	return menu;
+}
+
+
+BMenu*
+FaberView::BuildEngineMenu()
+{
+	return MenuBuilder::MenuBuilder::BuildMenu(kEngineMenu);
+}
+
+
+BMenu*
+FaberView::BuildProjectMenu()
+{
+	return MenuBuilder::MenuBuilder::BuildMenu(kProjectMenu);
+}
+
+
+BMenu*
+FaberView::BuildHelpMenu()
+{
+	return MenuBuilder::MenuBuilder::BuildMenu(kHelpMenu);
 }

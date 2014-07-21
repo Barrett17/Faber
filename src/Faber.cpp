@@ -66,6 +66,7 @@ FaberApp::QuitRequested()
 void
 FaberApp::MessageReceived(BMessage* message)
 {
+	message->PrintToStream();
 	switch (message->what)
 	{
 		case FABER_DROP_PASTE:

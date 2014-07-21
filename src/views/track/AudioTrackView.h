@@ -62,9 +62,13 @@ public:
 
 			void			UpdateRequested();
 			void			UpdateRequested(BRect rect);
+
+			BMenu* 			BuildTrackContextualMenu();
+
 private:
 			AudioTrack*		fAudioTrack;
 			WaveRender*		fWaveRender;
+			BMenu*			fTrackMenu;
 };
 
 #endif

@@ -48,8 +48,10 @@ ExportWindow::ExportWindow()
 		.SetInsets(kPadding)
 		.Add(fTabView)
 		.AddGroup(B_HORIZONTAL)
-			.Add(new BButton(B_TRANSLATE("Export"), MessageBuilder(FABER_EXPORT_PROJECT)))
-			.Add(new BButton(B_TRANSLATE("Cancel"), MessageBuilder(FABER_CANCEL)))
+			.Add(new BButton(B_TRANSLATE("Export"),
+				MessageBuilder(FABER_EXPORT_PROJECT)))
+			.Add(new BButton(B_TRANSLATE("Cancel"),
+				MessageBuilder(FABER_CANCEL)))
 		.End()
 	.End();
 }
@@ -65,8 +67,8 @@ ExportWindow::_CreateOptionsBox()
 	slider->SetLabel(B_TRANSLATE("Audio Quality"));
 	slider->SetLimitLabels(B_TRANSLATE("Low"), B_TRANSLATE("High"));
 
-	BMenuField* fFormatMenu = new BMenuField(NULL, B_TRANSLATE("File Format:"), 
-				new BPopUpMenu(""));
+	BMenuField* fFormatMenu = new BMenuField(NULL,
+		B_TRANSLATE("File Format:"), new BPopUpMenu(""));
 
 	fFormatMenu->SetExplicitSize(BSize(200, B_SIZE_UNSET));
 

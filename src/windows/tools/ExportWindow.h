@@ -30,17 +30,16 @@
 class ExportWindow : public BWindow
 {
 public:
-					ExportWindow();
+						ExportWindow();
 
-	virtual void			MessageReceived(BMessage*);
+	virtual void		MessageReceived(BMessage*);
 
 private:
-	void				_AddTab(BView* view, const char* label);
-	BView*				_CreateOptionsBox();
-	BView*				_BuildInfoView();
+			void		_AddTab(BView* view, const char* label);
+			BView*		_CreateOptionsBox();
+			BView*		_BuildInfoView();
 
-
-	BTabView*			fTabView;
+			BTabView*	fTabView;
 };
 
 #endif

@@ -127,7 +127,6 @@ const uint32 FABER_SORT_BY_DURATION		=	'srbd';
 const uint32 FABER_TRACK_SET_NAME		=	'Trsn';
 const uint32 FABER_TRACK_GET_INFO		=	'Trgi';
 
-const uint32 FABER_TRACK_SPLIT_MONO		=	'Trsm';
 const uint32 FABER_TRACK_SPLIT_CHAN		=	'Trsc';
 const uint32 FABER_TRACK_MERGE_WITH		=	'Trmw';
 

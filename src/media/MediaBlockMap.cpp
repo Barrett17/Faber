@@ -108,7 +108,13 @@ MediaBlockMap::ReservedSize() const
 size_t
 MediaBlockMap::PreviewSize() const
 {
-	return CountBlocks()*MEDIA_BLOCK_PREVIEW_SIZE;
+	size_t size = 0;
+	for (int32 i = 0; i < CountBlocks(); i++) {
+		MediaBlock* block = BlockAt(i);
+		size += block->PreviewSize();
+	}
+
+	return size;
 }
 
 

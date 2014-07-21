@@ -22,6 +22,8 @@
 
 #include <GroupLayout.h>
 #include <GroupView.h>
+#include <Menu.h>
+#include <MenuItem.h>
 
 #include "InfoToolBar.h"
 #include "ToolBar.h"
@@ -34,15 +36,27 @@ public:
 								FaberView();
 	virtual 					~FaberView();
 
-			void				MessageReceived(BMessage* message);
-
 			TracksContainer*	Container() const;
 
 			status_t 			AddTrack(Track* track);
+
+			BMenuBar*			BuildMainMenuBar();
+
+			BMenu*				BuildFileMenu();
+			BMenu*				BuildRecentMenu();
+			BMenu*				BuildEditMenu();
+			BMenu*				BuildTracksMenu();
+			BMenu*				BuildEffectsMenu();
+			BMenu*				BuildGenerateMenu();
+			BMenu*				BuildEngineMenu();
+			BMenu*				BuildProjectMenu();
+			BMenu*				BuildHelpMenu();
 private:
 			TracksContainer*	fTracksContainer;
 			ToolBar*			fToolBar;
 			InfoToolBar*		fInfoToolBar;
+
+			BMenuBar*			fMenuBar;
 };
 
 

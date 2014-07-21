@@ -16,34 +16,37 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef _MENUBUILDER_H_
-#define _MENUBUILDER_H_
-
-#include <Menu.h>
-#include <MenuBar.h>
-#include <PopUpMenu.h>
-
-#include "DefaultKeymap.h"
-#include "FaberDefs.h"
+#ifndef COMMAND_SERVER_H
+#define COMMAND_SERVER_H
 
 
-class MenuBuilder {
+#include <MessageFilter.h>
+#include <ObjectList.h>
+
+#include "AudioGate.h"
+#include "FaberView.h"
+#include "ProjectManager.h"
+
+
+class CommandServer : public BMessageFilter {
 public:
-							MenuBuilder();
-	virtual					~MenuBuilder();
+								CommandServer();
 
-	static BMenu*			BuildMenu(KeyBind* bind,
-								BHandler* target = NULL);
+	virtual	filter_result		Filter(BMessage* message,
+									BHandler** target);
 
-	static BPopUpMenu*		BuildPopUpMenu(KeyBind* bind,
-								BHandler* target = NULL);
+			static void			AddCommandListener(
+									CommandListener* listener);
 
-	static BMenuItem*		BuildMenuItem(uint32 message,
-								const char* label);
+			static void			RemoveCommandListener(
+									CommandListener* listener);	
+
 private:
-	static MenuBuilder*		fInstance;
-	static FaberShortcut*	fKeyBind;
+			FaberView*			fFaberView;
+			ProjectManager*		fProjectManager;
+			AudioGate*			fAudioGate;
+
+			static BObjectList<CommandListener> fExecutors;
 };
 
-#endif	// _MenuBuilder_H_
+#endif

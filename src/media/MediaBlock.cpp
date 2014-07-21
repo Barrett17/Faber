@@ -97,6 +97,7 @@ size_t
 MediaBlock::PreviewSize() const
 {
 	return MEDIA_BLOCK_PREVIEW_SIZE;
+	//return fPreviewSize;
 }
 
 

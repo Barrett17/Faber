@@ -24,6 +24,7 @@
 #include <StringView.h>
 
 #include "AudioTrackView.h"
+#include "CommandServer.h"
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
 #include "MenuBuilder.h"
@@ -40,6 +41,8 @@ TracksContainer::TracksContainer()
 	BGroupView(B_VERTICAL, 0),
 	fTrackViews(false)
 {
+	CommandServer::AddCommandListener(this);
+
 	// TODO fix color schemes
 	rgb_color backgroundColor = {120,120,120};
 
@@ -94,8 +97,8 @@ TracksContainer::~TracksContainer()
 }
 
 
-void
-TracksContainer::MessageReceived(BMessage* message)
+status_t
+TracksContainer::HandleCommand(BMessage* message)
 {
 	message->PrintToStream();
 
@@ -191,9 +194,10 @@ TracksContainer::MessageReceived(BMessage* message)
 			break;
 
 		default:
-			BGroupView::MessageReceived(message);
-
+			return B_ERROR;
 	}
+
+	return B_OK;
 }
 
 

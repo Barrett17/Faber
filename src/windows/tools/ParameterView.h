@@ -23,8 +23,7 @@
 #include <ParameterWeb.h>
 #include <GroupView.h>
 
-class ParameterView : public BGroupView
-{
+class ParameterView : public BGroupView {
 public:
 								ParameterView(live_node_info& nodeInfo);
 

@@ -23,13 +23,13 @@
 #include <Box.h>
 #include <LayoutBuilder.h>
 #include <MediaTrack.h>
+#include <MenuBar.h>
 #include <PopUpMenu.h>
 #include <StringView.h>
 
 #include "FaberDefs.h"
 #include "IconButton.h"
 #include "MenuBuilder.h"
-#include "ToolButton.h"
 #include "VolumeSlider.h"
 
 #define HEIGHT_VAL_REF 110
@@ -71,17 +71,19 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	soloButton->TrimIcon();
 
 	BString trackName(track->Name());
-	if (trackName.Length() > 15) {
-		trackName.Truncate(12);
+	if (trackName.Length() > 13) {
+		trackName.Truncate(9);
 		trackName.Append("...");
 	}
 
-	ToolButton* toolButton = new ToolButton(NULL, trackName.String(), NULL);
-	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
-
 	// Track menu
-	BPopUpMenu* trackMenu = MenuBuilder::Get()->BuildTrackContextualMenu(this);
-	toolButton->SetMenu(trackMenu);
+	fTrackMenu = BuildTrackContextualMenu();
+	fTrackMenu->SetTargetForItems(this);
+	fTrackMenu->SetName(trackName.String());
+
+	BMenuBar* toolButton = new BMenuBar(trackName.String());
+	toolButton->AddItem(fTrackMenu);
+	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
 
 	BMessage* closeMsg = MessageBuilder(FABER_REMOVE_TRACK);
 	closeMsg->AddUInt32("track_id", ID());
@@ -127,6 +129,13 @@ AudioTrackView::~AudioTrackView()
 }
 
 
+BMenu*
+AudioTrackView::BuildTrackContextualMenu()
+{
+	return MenuBuilder::BuildMenu(kTrackContextualMenu, NULL);
+}
+
+
 void
 AudioTrackView::MessageReceived(BMessage* message)
 {
@@ -142,8 +151,28 @@ AudioTrackView::MessageReceived(BMessage* message)
 			Unselect();
 			break;
 
+		case FABER_TRACK_SET_NAME:
+		{
+		}
+		break;
+
+		case FABER_TRACK_GET_INFO:
+		{
+		}
+		break;
+
+		case FABER_TRACK_SPLIT_CHAN:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MERGE_WITH:
+		{
+		}
+		break;
+
 		default:
-			BGroupView::MessageReceived(message);
+			TrackView::MessageReceived(message);
 	}
 }
 

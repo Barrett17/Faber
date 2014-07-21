@@ -45,7 +45,7 @@ Application Faber :
 	FaberWindow.cpp
 	FaberView.cpp
 
-	CommandsServer.cpp
+	CommandServer.cpp
 
 	StorageUtils.cpp
 	ProjectManager.cpp
@@ -91,7 +91,6 @@ Application Faber :
 	PeakView.cpp
 	VolumeSlider.cpp
 	IconButton.cpp
-	ToolButton.cpp
 	Spinner.cpp
 	#LiveNodesMenu.cpp
 

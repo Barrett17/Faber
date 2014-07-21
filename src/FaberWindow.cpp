@@ -24,9 +24,9 @@
 #include <Application.h>
 #include <LayoutBuilder.h>
 
-#include "CommandsServer.h"
+#include "CommandServer.h"
 #include "FaberDefs.h"
-#include "FaberView.h"
+#include "ProjectManager.h"
 
 
 FaberWindow::FaberWindow(BRect rect)
@@ -35,7 +35,7 @@ FaberWindow::FaberWindow(BRect rect)
 {
 	fFaberView = new FaberView();
 
-	AddFilter(new CommandsServer());
+	AddFilter(new CommandServer());
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(fFaberView)
@@ -68,6 +68,7 @@ FaberWindow::QuitRequested()
 		if (button_index == 2) {
 			BMessenger msg(this);
 			msg.SendMessage(new BMessage(FABER_SAVE_PROJECT));
+			//msg.AddBool("faber:quit", true);
 			return false;
 		} else if (button_index == 0)
 			return false;
@@ -83,37 +84,14 @@ FaberWindow::QuitRequested()
 void
 FaberWindow::MessageReceived(BMessage* message)
 {
-	//message->PrintToStream();
+	message->PrintToStream();
+
 	switch (message->what)
 	{
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:
 			be_app->PostMessage(message);
 			break;
-
-		case FABER_NEW_AUDIO_TRACK:
-		case FABER_NEW_LABEL_TRACK:
-		case FABER_REMOVE_TRACK:
-		case FABER_MUTE_ALL:
-		case FABER_UNMUTE_ALL:
-		case FABER_SORT_BY_DURATION:
-		case FABER_SORT_BY_NAME:
-		case B_SELECT_ALL:
-		case FABER_UNSELECT_ALL:
-		case B_COPY:
-		case FABER_COPY_SILENCE:
-		case B_CUT:
-		case B_PASTE:
-		case FABER_DROP_PASTE:
-		case FABER_ZOOM_IN:
-		case FABER_ZOOM_OUT:
-		case FABER_ZOOM_FULL:
-		case FABER_ZOOM_SELECTION:
-		{
-			BMessenger mess(fFaberView->Container());
-			mess.SendMessage(message);
-		}
-		break;
 
 		default:
 			BWindow::MessageReceived(message);

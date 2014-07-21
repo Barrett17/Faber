@@ -16,28 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef COMMANDS_SERVER_H
-#define COMMANDS_SERVER_H
+#ifndef COMMAND_LISTENER_H
+#define COMMAND_LISTENER_H
 
-
-#include <MessageFilter.h>
-
-#include "AudioGate.h"
-#include "FaberView.h"
-#include "ProjectManager.h"
-
-
-class CommandsServer : public BMessageFilter {
+class CommandListener {
 public:
-										CommandsServer();
+	virtual status_t 			HandleCommand(BMessage* command) = 0;				
 
-	virtual	filter_result				Filter(BMessage* message,
-											BHandler** target);				
-private:
-			FaberView*					fFaberView;
-			ProjectManager*				fProjectManager;
-			AudioGate*					fAudioGate;
-			
 };
 
 #endif

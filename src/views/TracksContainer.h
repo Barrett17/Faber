@@ -24,70 +24,74 @@
 #include <GroupView.h>
 #include <ScrollBar.h>
 
+#include "CommandListener.h"
 #include "TrackView.h"
 
 
-class TracksContainer : public BGroupView
-{
+class TracksContainer : public BGroupView, public CommandListener {
 public:
-						TracksContainer();
-	virtual 			~TracksContainer();
+								TracksContainer();
+	virtual 					~TracksContainer();
 
-	void				MessageReceived(BMessage* message);
+	// CommandListener
+	virtual status_t			HandleCommand(BMessage* msg);
 
-	int32 				CountTracks() const;
-	TrackView*			TrackAt(int32 index) const;
-	TrackView*			TrackByID(uint32 id);
 
-	status_t 			AddTrack(TrackView* track, int32 index = -1);
-	status_t			AddTrack(Track* track);
+	// TracksContainer API
 
-	status_t			RemoveTrack(int32 index);
-	status_t			RemoveTrack(TrackView* track = NULL);
+			int32 				CountTracks() const;
+			TrackView*			TrackAt(int32 index) const;
+			TrackView*			TrackByID(uint32 id);
 
-	void				SelectAll();
-	void				UnselectAll();
+			status_t 			AddTrack(TrackView* track, int32 index = -1);
+			status_t			AddTrack(Track* track);
 
-	void				MoveUp(int32 id);
-	void				MoveDown(int32 id);
+			status_t			RemoveTrack(int32 index);
+			status_t			RemoveTrack(TrackView* track = NULL);
 
-	TrackView*			CurrentFocus();
-	TrackViewList&		SelectedTracks();
+			void				SelectAll();
+			void				UnselectAll();
 
-	bool 				HasChanged();
+			void				MoveUp(int32 id);
+			void				MoveDown(int32 id);
 
-	void	 			MuteAllTracks(bool mute);
-	void				ReorderTracks(int reorder);
-
-	void				CopyAndSilence();
-	void				Copy();
-	void				Cut();
-	void				Paste();
-	void				Clear();
-
-	void				ZoomIn();
-	void				ZoomOut();
-	void				ZoomFull();
-	void				ZoomSelection();
-
-	// NOTE this will not update the scroll bar
-	// don't use it, use the following method instead.
-	void				UpdateTracksScroll(float newValue);
-
-	/*void				SetHorizontalScroll(float newValue);
-	void				SetVerticalScroll(float newValue);*/
-
-	void				UpdateRequested();
-	void				UpdateRequested(BRect rect);
+			TrackView*			CurrentFocus();
+			TrackViewList&		SelectedTracks();
+		
+			bool 				HasChanged();
+		
+			void	 			MuteAllTracks(bool mute);
+			void				ReorderTracks(int reorder);
+		
+			void				CopyAndSilence();
+			void				Copy();
+			void				Cut();
+			void				Paste();
+			void				Clear();
+		
+			void				ZoomIn();
+			void				ZoomOut();
+			void				ZoomFull();
+			void				ZoomSelection();
+		
+			// NOTE this will not update the scroll bar
+			// don't use it, use the following method instead.
+			void				UpdateTracksScroll(float newValue);
+		
+			/*void				SetHorizontalScroll(float newValue);
+			void				SetVerticalScroll(float newValue);*/
+		
+			void				UpdateRequested();
+			void				UpdateRequested(BRect rect);
 
 private:
-	BGroupView*			fView;
-	BGroupLayout*		fLayout;
-
-	BScrollBar*			fVerticalScroll;
-	BScrollBar*			fHorizontalScroll;
-
-	TrackViewList		fTrackViews;
+			BGroupView*			fView;
+			BGroupLayout*		fLayout;
+		
+			BScrollBar*			fVerticalScroll;
+			BScrollBar*			fHorizontalScroll;
+		
+			TrackViewList		fTrackViews;
 };
 
 #endif

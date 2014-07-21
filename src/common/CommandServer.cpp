@@ -18,7 +18,7 @@
 */
 
 
-#include "CommandsServer.h"
+#include "CommandServer.h"
 
 #include <Application.h>
 #include <Roster.h>
@@ -26,9 +26,26 @@
 #include "EffectWindow.h"
 #include "FaberDefs.h"
 #include "ParameterWindow.h"
+#include "WindowsManager.h"
+
+BObjectList<CommandListener> CommandServer::fExecutors;
 
 
-CommandsServer::CommandsServer()
+void
+CommandServer::AddCommandListener(CommandListener* listener)
+{
+	fExecutors.AddItem(listener);
+}
+
+
+void
+CommandServer::RemoveCommandListener(CommandListener* listener)
+{
+	fExecutors.RemoveItem(listener);
+}
+
+
+CommandServer::CommandServer()
 	:
 	BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE)
 {
@@ -38,12 +55,36 @@ CommandsServer::CommandsServer()
 
 
 filter_result
-CommandsServer::Filter(BMessage* message, BHandler **target)
+CommandServer::Filter(BMessage* message, BHandler **target)
 {
 	filter_result result = B_DISPATCH_MESSAGE;
-	bool skip = true;
 
-	//message->PrintToStream();
+	switch (message->what) {
+		case B_PULSE:
+		case _MENUS_DONE_:
+		case B_LAYOUT_WINDOW:
+		case _UPDATE_:
+		case B_QUIT_REQUESTED:
+		case B_WINDOW_ACTIVATED:
+			return result;
+		break;
+	}
+
+	bool skip = true;
+	bool executed = false;
+
+	message->PrintToStream();
+
+	for (int32 i = 0; i < fExecutors.CountItems(); i++) {
+		if (fExecutors.ItemAt(i)->HandleCommand(message) == B_OK)
+			executed = true;
+	}
+
+	if (executed == true) {
+		//printf("Command intercepted\n");
+		return B_SKIP_MESSAGE;
+	}
+
 	switch (message->what)
 	{
 

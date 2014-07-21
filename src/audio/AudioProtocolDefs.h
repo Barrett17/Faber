@@ -21,15 +21,15 @@
 
 
 #define SAVE_TRACK_CHANNEL_NAME 			"track_channel"
-const uint32 SAVE_TRACK_CHANNEL				=	'stch';
+const uint32 SAVE_TRACK_CHANNEL			=	'stch';
 
 #define SAVE_TRACK_INDEX_NAME 				"track_index"
-const uint32 SAVE_TRACK_INDEX				=	'trix';
+const uint32 SAVE_TRACK_INDEX			=	'trix';
 
 #define SAVE_AUDIOTRACK_INDEX_NAME 			"audiotrack_index"
-const uint32 SAVE_AUDIOTRACK_INDEX			=	'atrx';
+const uint32 SAVE_AUDIOTRACK_INDEX		=	'atrx';
 
-#define SAVE_AUDIOTRACK_NAME 			"audiotrack_name"
+#define SAVE_AUDIOTRACK_NAME 				"audiotrack_name"
 const uint32 SAVE_AUDIOTRACK			=	'atrn';
 
 #endif // AUDIO_PROTOCOL_DEFS_H
