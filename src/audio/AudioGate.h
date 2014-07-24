@@ -26,11 +26,12 @@
 
 #include "AudioEngine.h"
 #include "AudioTrack.h"
+#include "CommandListener.h"
 #include "MediaEndPoint.h"
 #include "MediaGate.h"
 
 
-class AudioGate : public MediaGate {
+class AudioGate : public MediaGate, public CommandListener {
 public:
 									AudioGate();
 			virtual					~AudioGate();
@@ -49,6 +50,9 @@ public:
 										const media_node& node, 
 										const media_input* input = NULL, 
 										const media_format* format = NULL);
+
+			// CommandListener
+	virtual status_t				HandleCommand(BMessage* msg);
 
 			// Tracks Management
 

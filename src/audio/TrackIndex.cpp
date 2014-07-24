@@ -22,6 +22,7 @@
 
 #include "AudioProtocolDefs.h"
 #include "FaberDefs.h"
+#include "MessageBuilder.h"
 
 
 TrackIndex::TrackIndex()

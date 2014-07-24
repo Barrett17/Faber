@@ -23,24 +23,13 @@
 #include <MenuItem.h>
 #include <ObjectList.h>
 
+#include "CommandBuilder.h"
 #include "EffectsManager.h"
+#include "FaberShortcut.h"
 #include "RecentItems.h"
 
-MenuBuilder* MenuBuilder::fInstance = new MenuBuilder();
-FaberShortcut* MenuBuilder::fKeyBind = NULL;
 
-
-MenuBuilder::MenuBuilder()
-{
-	fKeyBind = FaberShortcut::Get();
-	fKeyBind->CreateDefaultKeys();
-}
-
-
-MenuBuilder::~MenuBuilder()
-{
-
-}
+FaberShortcut* gBind = FaberShortcut::Get();
 
 
 BMenu*
@@ -71,7 +60,7 @@ MenuBuilder::BuildMenu(KeyBind* bind, BHandler* target)
 			if (bind[i].message == FABER_FILE_OPEN) {
 				menu->AddItem(new BMenuItem(BRecentFilesList::NewFileListMenu(
 					B_TRANSLATE("Open"B_UTF8_ELLIPSIS), NULL, NULL, be_app, 9, true,
-					NULL, FABER_SIGNATURE), new BMessage(FABER_FILE_OPEN)));
+					NULL, FABER_SIGNATURE), CommandBuilder(FABER_FILE_OPEN)));
 			} else {
 				BMenuItem* item = BuildMenuItem(bind[i].message, bind[i].label);
 				if (target != NULL)
@@ -128,6 +117,6 @@ MenuBuilder::BuildMenuItem(uint32 message, const char* label)
 	if (message == FABER_SPLITTER)
 		return new BSeparatorItem();
 	else
-		return new BMenuItem(label, MessageBuilder(message),
-			fKeyBind->GetKey(message), fKeyBind->GetMod(message));
+		return new BMenuItem(label, CommandBuilder(message),
+			gBind->GetKey(message), gBind->GetMod(message));
 }

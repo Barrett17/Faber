@@ -19,6 +19,7 @@
 
 #include "ZoomWidget.h"
 
+#include "CommandBuilder.h"
 #include "FaberDefs.h"
 #include "WidgetFrame.h"
 
@@ -34,16 +35,16 @@ ZoomWidget::ZoomWidget()
 	BLayoutBuilder::Group<>(zoomView, B_HORIZONTAL, 0.5f)
 		.AddStrut(7.0f)
 		.Add(BuildButton(B_TRANSLATE("Zoom in"), 
-			MessageBuilder(FABER_ZOOM_IN), kZoomInIcon))
+			CommandBuilder(FABER_ZOOM_IN), kZoomInIcon))
 
 		.Add(BuildButton(B_TRANSLATE("Zoom out"),
-			MessageBuilder(FABER_ZOOM_OUT), kZoomOutIcon))
+			CommandBuilder(FABER_ZOOM_OUT), kZoomOutIcon))
 
 		.Add(BuildButton(B_TRANSLATE("Zoom to selection"),
-			MessageBuilder(FABER_ZOOM_SELECTION), kZoomToSelectionIcon))
+			CommandBuilder(FABER_ZOOM_SELECTION), kZoomToSelectionIcon))
 
 		.Add(BuildButton(B_TRANSLATE("Zoom full wave"),
-			MessageBuilder(FABER_ZOOM_FULL), kZoomFullWaveIcon))
+			CommandBuilder(FABER_ZOOM_FULL), kZoomFullWaveIcon))
 		.AddStrut(7.0f)
 	.End();
 

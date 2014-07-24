@@ -29,10 +29,6 @@ public:
 
 	virtual void		MessageReceived(BMessage* message);
 	virtual void		Draw(BRect rect);
-
-private:
-	float				fSpacing;
-
 };
 
 #endif

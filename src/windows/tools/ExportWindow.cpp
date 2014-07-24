@@ -26,6 +26,7 @@
 #include <PopUpMenu.h>
 #include <StringView.h>
 
+#include "CommandBuilder.h"
 #include "FaberDefs.h"
 #include "VolumeSlider.h"
 
@@ -49,9 +50,9 @@ ExportWindow::ExportWindow()
 		.Add(fTabView)
 		.AddGroup(B_HORIZONTAL)
 			.Add(new BButton(B_TRANSLATE("Export"),
-				MessageBuilder(FABER_EXPORT_PROJECT)))
+				CommandBuilder(FABER_EXPORT_PROJECT)))
 			.Add(new BButton(B_TRANSLATE("Cancel"),
-				MessageBuilder(FABER_CANCEL)))
+				CommandBuilder(FABER_CANCEL)))
 		.End()
 	.End();
 }

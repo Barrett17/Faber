@@ -43,7 +43,7 @@ TracksCommon::TracksCommon()
 	selectionStart(-1),
 	selectionEnd(-1),
 	duration(0),
-	zoomFactor(20),
+	zoomFactor(1),
 	primaryButton(false),
 	secondaryButton(false),
 	scrollButton(false),

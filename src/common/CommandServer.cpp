@@ -23,6 +23,7 @@
 #include <Application.h>
 #include <Roster.h>
 
+#include "CommandBuilder.h"
 #include "EffectWindow.h"
 #include "FaberDefs.h"
 #include "ParameterWindow.h"
@@ -57,33 +58,30 @@ CommandServer::CommandServer()
 filter_result
 CommandServer::Filter(BMessage* message, BHandler **target)
 {
+	if (message->what != FABER_COMMAND)
+		return B_DISPATCH_MESSAGE;
+
+	uint32 commandCode;
+	if (message->FindUInt32(FABER_COMMAND_CODE, &commandCode) != B_OK)
+		return B_SKIP_MESSAGE;
+
+	message->what = commandCode;
+
+	//printf("Command intercepted\n");
+
 	filter_result result = B_DISPATCH_MESSAGE;
-
-	switch (message->what) {
-		case B_PULSE:
-		case _MENUS_DONE_:
-		case B_LAYOUT_WINDOW:
-		case _UPDATE_:
-		case B_QUIT_REQUESTED:
-		case B_WINDOW_ACTIVATED:
-			return result;
-		break;
-	}
-
 	bool skip = true;
 	bool executed = false;
 
-	message->PrintToStream();
+	//message->PrintToStream();
 
 	for (int32 i = 0; i < fExecutors.CountItems(); i++) {
 		if (fExecutors.ItemAt(i)->HandleCommand(message) == B_OK)
 			executed = true;
 	}
 
-	if (executed == true) {
-		//printf("Command intercepted\n");
+	if (executed == true)
 		return B_SKIP_MESSAGE;
-	}
 
 	switch (message->what)
 	{

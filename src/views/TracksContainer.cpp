@@ -100,7 +100,7 @@ TracksContainer::~TracksContainer()
 status_t
 TracksContainer::HandleCommand(BMessage* message)
 {
-	message->PrintToStream();
+	//message->PrintToStream();
 
 	switch (message->what)
 	{

@@ -20,67 +20,7 @@
 #define FABER_MESSAGES_H
 
 
-#include <Archivable.h>
-
-
-class MessageBuilder {
-public:
-
-	MessageBuilder(uint32 what)
-	{
-		msg = new BMessage(what);
-		code = what;
-	}
-
-	MessageBuilder(uint32 what, BArchivable* archivable)
-	{
-		msg = new BMessage(what);
-		code = what;
-
-		archivable->Archive(msg);
-	}
-
-	void SetTo(uint32 what)
-	{
-		delete msg;
-		msg = new BMessage(what);
-		code = what;
-	}
-
-	BMessage* ToMessage() const
-	{
-		return msg;
-	}
-
-	operator BMessage* () const
-	{
-    	return this->ToMessage();
-	}
-
-	operator uint32 () const
-	{
-    	return this->code;
-	}
-
-	bool operator!=(const MessageBuilder& from)
-  	{
-		if (this->code != from.code)
-			return true;
-
-		return false;
-	}
-
-	bool operator==(const MessageBuilder& from)
-  	{
-		if (this->code == from.code)
-			return true;
-
-		return false;
-	}
-
-	BMessage* msg;
-	uint32 code;
-};
+const uint32 FABER_COMMAND				= 	'FBCm';
 
 // GUI
 
@@ -128,7 +68,12 @@ const uint32 FABER_TRACK_SET_NAME		=	'Trsn';
 const uint32 FABER_TRACK_GET_INFO		=	'Trgi';
 
 const uint32 FABER_TRACK_SPLIT_CHAN		=	'Trsc';
+const uint32 FABER_TRACK_ADD_CHAN		=	'Tadc';
+const uint32 FABER_TRACK_RM_CHAN		=	'Trmc';
+
 const uint32 FABER_TRACK_MERGE_WITH		=	'Trmw';
+const uint32 FABER_TRACK_MOVE_UP		=	'Trmu';
+const uint32 FABER_TRACK_MOVE_DOWN		=	'Trmd';
 
 // Effects and audio manipulation
 

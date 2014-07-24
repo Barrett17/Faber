@@ -19,16 +19,20 @@
 #include "AudioGate.h"
 
 #include "AudioProtocolDefs.h"
+#include "CommandServer.h"
+#include "CommandBuilder.h"
 #include "FaberDefs.h"
 
-
 AudioGate* AudioGate::fInstance = NULL;
+
 
 AudioGate::AudioGate()
 	:
 	MediaGate(),
 	fLastID(-1)
 {
+	CommandServer::AddCommandListener(this);
+
 	fAudioEngine = new AudioEngine(this);
 
 	fRoster = BMediaRoster::Roster();
@@ -52,6 +56,19 @@ AudioGate::Get()
 		fInstance = new AudioGate();
 
 	return fInstance;	
+}
+
+
+status_t
+AudioGate::HandleCommand(BMessage* message)
+{
+	//message->PrintToStream();
+
+	switch (message->what)
+	{
+		default:
+			return B_ERROR;
+	}
 }
 
 
@@ -157,7 +174,7 @@ AudioGate::ArchiveTracks()
 	BMessage* msg = new BMessage();
 
 	for (int i = 0; i < Get()->fTracks.CountItems(); i++) {
-		BMessage* track = MessageBuilder(SAVE_AUDIOTRACK);
+		BMessage* track = CommandBuilder(SAVE_AUDIOTRACK);
 		Get()->fTracks.ItemAt(i)->Archive(track);
 		msg->AddMessage(SAVE_AUDIOTRACK_NAME, track);
 	}

@@ -42,6 +42,7 @@
 #include <Path.h>
 
 #include "FaberDefs.h"
+#include "CommandBuilder.h"
 
 
 #define SELECT		'selK'
@@ -644,7 +645,7 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 			key->altKey = control2->GetKey();
 			key->altMod = control2->GetMod();
 			key->label = gKeyBind->GetLabel(index);
-			key->message = MessageBuilder(message);
+			key->message = message;
 			key->isMenuItem = menu;
 	
 			gKeyBind->AddKeyBind(key);
@@ -772,12 +773,11 @@ KeymapView::MessageReceived(BMessage* msg)
 					fIndex = index;
 					(new SetKeyWindow(p, code, this));
 				}
-			}
-			break;
+			}	
 		}
+		break;
 
 		default:
 			BView::MessageReceived(msg);
-			break;   
 	}
 }

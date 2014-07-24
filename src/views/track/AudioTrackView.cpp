@@ -27,6 +27,7 @@
 #include <PopUpMenu.h>
 #include <StringView.h>
 
+#include "CommandBuilder.h"
 #include "FaberDefs.h"
 #include "IconButton.h"
 #include "MenuBuilder.h"
@@ -85,7 +86,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	toolButton->AddItem(fTrackMenu);
 	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
 
-	BMessage* closeMsg = MessageBuilder(FABER_REMOVE_TRACK);
+	BMessage* closeMsg = CommandBuilder(FABER_REMOVE_TRACK);
 	closeMsg->AddUInt32("track_id", ID());
 
 	BIconButton* closeButton = new BIconButton(NULL, NULL,

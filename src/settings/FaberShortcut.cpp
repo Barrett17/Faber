@@ -38,7 +38,7 @@ FaberShortcut::FaberShortcut()
 	:
 	fBinds(true)
 {
-
+	CreateDefaultKeys();
 }
 
 
@@ -78,6 +78,7 @@ FaberShortcut::GetLabel(int32 index)
 char
 FaberShortcut::GetKey(uint32 code)
 {
+
 	KeyBind* bind = FindKeyBind(code);
 	if (bind == NULL)
 		return '\0';

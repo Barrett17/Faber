@@ -19,6 +19,7 @@
 
 #include "ToolsWidget.h"
 
+#include "CommandBuilder.h"
 #include "FaberDefs.h"
 #include "WidgetFrame.h"
 
@@ -30,16 +31,16 @@ ToolsWidget::ToolsWidget()
 	FaberWidget(B_HORIZONTAL)
 {
 	fToolButtons[0] = BuildButton(B_TRANSLATE("Selection Tool"),
-		MessageBuilder(FABER_SELECTION_TOOL), kSelectionToolIcon);
+		CommandBuilder(FABER_SELECTION_TOOL), kSelectionToolIcon);
 
 	fToolButtons[0]->SetPressed(true);
 	fToolButtons[0]->SetEnabled(false);
 
 	//fToolButtons[1] = BuildButton(B_TRANSLATE("Drawing Tool"),
-	//	MessageBuilder(FABER_DRAW_TOOL), kDrawingToolIcon);
+	//	CommandBuilder(FABER_DRAW_TOOL), kDrawingToolIcon);
 
 	//fToolButtons[2] = BuildButton(B_TRANSLATE("Playing Tool"),
-	//	MessageBuilder(FABER_PLAY_TOOL), kPlayingToolIcon);
+	//	CommandBuilder(FABER_PLAY_TOOL), kPlayingToolIcon);
 
 	WidgetFrame* toolsView = new WidgetFrame(NULL);
 	BLayoutBuilder::Group<>(toolsView, B_HORIZONTAL, 0)

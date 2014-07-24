@@ -16,29 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-#ifndef _MENUBUILDER_H_
-#define _MENUBUILDER_H_
-
-#include <Menu.h>
-#include <MenuBar.h>
-#include <PopUpMenu.h>
-
-#include "DefaultKeymap.h"
-#include "FaberDefs.h"
+#ifndef FABER_MESSAGE_BUILDER_H
+#define FABER_MESSAGE_BUILDER_H
 
 
-class MenuBuilder {
+#include <Archivable.h>
+
+
+class MessageBuilder {
 public:
 
-	static BMenu*			BuildMenu(KeyBind* bind,
-								BHandler* target = NULL);
+	MessageBuilder(uint32 what)
+	{
+		msg = new BMessage(what);
+	}
 
-	static BPopUpMenu*		BuildPopUpMenu(KeyBind* bind,
-								BHandler* target = NULL);
+	MessageBuilder(uint32 what, BArchivable* archivable)
+	{
+		msg = new BMessage(what);
+		archivable->Archive(msg);
+	}
 
-	static BMenuItem*		BuildMenuItem(uint32 message,
-								const char* label);
+	BMessage* ToMessage() const
+	{
+		return msg;
+	}
+
+	operator BMessage* () const
+	{
+    	return this->ToMessage();
+	}
+
+	BMessage* msg;
 };
 
-#endif	// _MenuBuilder_H_
+#endif

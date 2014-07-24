@@ -18,7 +18,7 @@ KeyBind kFileMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1,"Export Project",           'E', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,              FABER_EXPORT_PROJECT },
+	{ 1,"Export",           'E', B_COMMAND_KEY | B_SHIFT_KEY,     0, 0,              FABER_EXPORT_PROJECT },
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
@@ -179,10 +179,26 @@ KeyBind kTrackContextualMenu[] {
 
 	{ 0, "Edit", 0, 0, 0, 0, FABER_ITEM_START },
 
+    { 1,"Add channel",           0, 0,                           0, 0,            		  FABER_TRACK_ADD_CHAN },
+
+    { 0,"Remove channel...",           0, 0,                           0, 0, FABER_ITEM_START},
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
+
+	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
+
     { 1,"Split channels",           0, 0,                           0, 0,                 FABER_TRACK_SPLIT_CHAN },
-    { 1,"Merge channels with...",           0, 0,                           0, 0,         FABER_TRACK_MERGE_WITH },
-    { 1,"Add channel",           0, 0,                           0, 0,            		  0},
-    { 1,"Remove channel...",           0, 0,                           0, 0,              0},
+
+    { 1,"Merge channels with...",           0, 0,                           0, 0,		  FABER_ITEM_START },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
+
+	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
+
+	{ 1, "Export", 0, 0, 0, 0, FABER_ITEM_START },
+
+    { 1,"To file...",           0, 0,                           0, 0,              0},
+    { 1,"To new project...",           0, 0,                           0, 0,              0},
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 
@@ -194,8 +210,8 @@ KeyBind kTrackContextualMenu[] {
 
 	{ 0, "", 0, 0, 0, 0, FABER_SPLITTER },
 
-	{ 1, "Move Up", 0, 0, 0, 0, 0 },
-	{ 1, "Move Down", 0, 0, 0, 0, 0 },
+	{ 1, "Move Up", 0, 0, 0, 0, FABER_TRACK_MOVE_UP },
+	{ 1, "Move Down", 0, 0, 0, 0, FABER_TRACK_MOVE_DOWN },
 
 	{ 0, NULL, 0, 0, 0, 0, FABER_ITEM_END },
 

@@ -24,6 +24,7 @@
 #include <Application.h>
 #include <LayoutBuilder.h>
 
+#include "CommandBuilder.h"
 #include "CommandServer.h"
 #include "FaberDefs.h"
 #include "ProjectManager.h"
@@ -67,7 +68,7 @@ FaberWindow::QuitRequested()
 
 		if (button_index == 2) {
 			BMessenger msg(this);
-			msg.SendMessage(new BMessage(FABER_SAVE_PROJECT));
+			msg.SendMessage(CommandBuilder(FABER_SAVE_PROJECT));
 			//msg.AddBool("faber:quit", true);
 			return false;
 		} else if (button_index == 0)
@@ -84,7 +85,7 @@ FaberWindow::QuitRequested()
 void
 FaberWindow::MessageReceived(BMessage* message)
 {
-	message->PrintToStream();
+	//message->PrintToStream();
 
 	switch (message->what)
 	{

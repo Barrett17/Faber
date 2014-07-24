@@ -30,4 +30,5 @@ MediaFormatBuilder::BuildAudioBlockRawFormat(media_format* format)
 	format->u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
 	format->type = B_MEDIA_RAW_AUDIO;
 	//*format.u.raw_audio.framerate = SettingsManager::GetProjectFramerate();
+	format->u.raw_audio.frame_rate = 192000;
 }
