@@ -145,7 +145,7 @@ Application Faber :
 	#Reverb.cpp
 	Delay.cpp
 
-	: be media $(TARGET_LIBSTDC++) tracker translation localestub
+	: be media $(TARGET_LIBSTDC++) tracker translation localestub 
 	: Faber.rdef ToolBarIcons.rdef
 ;
 

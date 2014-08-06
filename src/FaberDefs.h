@@ -32,14 +32,10 @@
 
 #include <stdio.h>
 
-
-#define FABER_HELP_HOMEPAGE "http://www.versut.com/Faber"
-
 #define FABER_DESCRIPTION "Faber is a multitrack audio editor for Haiku."
-
 #define FABER_VERSION "R1 Alpha1"
-
 #define FABER_COPYRIGHT "Dario Casalinuovo"
+#define FABER_HELP_HOMEPAGE "http://www.versut.com/Faber"
 
 // Debug
 

@@ -59,6 +59,7 @@ TracksContainer::TracksContainer()
 
 	BScrollView* verticalScrollView = new BScrollView("scrollviewV",
 		fView, B_FOLLOW_NONE, false, true);
+
 	// This is needed to stop the vertical scrollview to go out of the window
 	verticalScrollView->SetExplicitMinSize(BSize(B_SIZE_UNSET, 200));
 
@@ -104,10 +105,31 @@ TracksContainer::HandleCommand(BMessage* message)
 
 	switch (message->what)
 	{
-		case FABER_NEW_AUDIO_TRACK:
+		case FABER_NEW_MONO_TRACK:
 		{
-			AudioTrack* track = new AudioTrack();
+			AudioTrack* track = new AudioTrack(1);
 			AddTrack(track);
+
+			break;
+		}
+
+		case FABER_NEW_STEREO_TRACK:
+		{
+			AudioTrack* track = new AudioTrack(2);
+			AddTrack(track);
+
+			break;
+		}
+
+		case FABER_NEW_MULTICHANNEL_TRACK:
+		{
+			
+			int32 channels = 0;
+			if (message->FindInt32("channel_count", &channels)
+				== B_OK) {
+				AudioTrack* track = new AudioTrack(channels);
+				AddTrack(track);	
+			}
 
 			break;
 		}
@@ -127,8 +149,6 @@ TracksContainer::HandleCommand(BMessage* message)
 			TrackView* track = TrackByID(id);
 			if (track != NULL)
 				RemoveTrack(track);
-			else
-				// TODO report error
 
 			break;
 		}

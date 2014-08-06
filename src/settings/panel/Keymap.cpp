@@ -567,18 +567,11 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	r.left = r.right+8;
 	r.right = Bounds().right-8;
 
-	uint32 code = gKeyBind->GetCode(index);
-	view->AddChild(new BStringView(r, NULL,
-		B_TRANSLATE(gKeyBind->GetLabel(code))));
-	
-	// request the installed message
-	key = gKeyBind->GetKey(code);
-	key2 = gKeyBind->GetKeyAlt(code);
-	mod = gKeyBind->GetMod(code);
-	mod2 = gKeyBind->GetModAlt(code);
-	message = code;
-	menu = gKeyBind->IsMenuItem(code);
+	KeyBind* bind = gKeyBind->KeyBindAt(index);
 
+	view->AddChild(new BStringView(r, NULL,
+		B_TRANSLATE(bind->label)));
+	
 	r.OffsetBy(0,30);
 	r.left = 8;
 	float x = 8 + MAX( be_plain_font->StringWidth(B_TRANSLATE("Primary")),
@@ -587,7 +580,7 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	r.right = Bounds().right -96;
 
 	view->AddChild(control1 = new KeyControl(r, B_TRANSLATE("Primary"),
-		key, mod, menu));
+		bind->key, bind->mod, menu));
 
 	control1->SetDivider(x);
 	view->AddChild(new BButton(BRect(r.right+8, r.top,
@@ -597,7 +590,7 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	r.OffsetBy(0,30);
 
 	view->AddChild(control2 = new KeyControl(r, B_TRANSLATE("Alternate"),
-		key2, mod2, false));
+		bind->altKey, bind->altMod, false));
 
 	control2->SetDivider(x);
 
@@ -644,9 +637,10 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 			key->mod = control1->GetMod();
 			key->altKey = control2->GetKey();
 			key->altMod = control2->GetMod();
-			key->label = gKeyBind->GetLabel(index);
-			key->message = message;
-			key->isMenuItem = menu;
+			key->label = gKeyBind->KeyBindAt(index)->label;
+			key->message = gKeyBind->KeyBindAt(index)->message;
+			key->itemType = gKeyBind->KeyBindAt(index)->itemType;
+			
 	
 			gKeyBind->AddKeyBind(key);
 	
@@ -693,21 +687,23 @@ KeymapView::KeymapView()
 
 	BObjectList<BListItem> items(false);
 
-	for (int32 i=0; i<gKeyBind->CountKeys(); i++) {
-		uint32 code = gKeyBind->GetCode(i);
-		if (code == FABER_SPLITTER)
+	for (int32 i=0; i < gKeyBind->CountKeys(); i++) {
+		KeyBind* bind = gKeyBind->KeyBindAt(i);
+		if (bind->itemType == FABER_SPLITTER)
 			continue;
+
+		printf("Key %p %c\n", bind, bind->message);
 
 		BListItem* item = items.ItemAt(items.CountItems()-1);
 
-		if (code == FABER_ITEM_END || code == FABER_EOF) {
+		if (bind->itemType == FABER_ITEM_END || bind->itemType == FABER_EOF) {
 				fListView->Collapse(item);
 				items.RemoveItemAt(items.CountItems()-1);
 			continue;
-		}
-
-		if (code == FABER_ITEM_START) {
-			BListItem* newItem = new KeyItem(gKeyBind->GetLabel(i), 0, 0, 0, 0, -1);
+		} 
+		
+		if (bind->itemType == FABER_ITEM_START) {
+			BListItem* newItem = new KeyItem(bind->label, 0, 0, 0, 0, -1);
 
 			if (items.CountItems() > 0)
 				fListView->AddUnder(newItem, item);
@@ -716,10 +712,10 @@ KeymapView::KeymapView()
 
 			items.AddItem(newItem);
 		} else if (item != NULL) {
-			fListView->AddUnder(new KeyItem(gKeyBind->GetLabel(i),
-				gKeyBind->GetKey(code),
-				gKeyBind->GetMod(code), gKeyBind->GetKeyAlt(code),
-				gKeyBind->GetModAlt(code), i), item);
+			fListView->AddUnder(new KeyItem(bind->label,
+				bind->key,
+				bind->mod, bind->altKey,
+				bind->altMod, i), item);
 		}
 	}
 
@@ -767,7 +763,7 @@ KeymapView::MessageReceived(BMessage* msg)
 				// needed to convert the outline numbers, they are inverted !
 				code = ((KeyItem*)it)->GetCode();
 				if (code > 0) {
-					sprintf(s, "item: %s", gKeyBind->GetLabel(code));
+					sprintf(s, "item: %s", gKeyBind->FindKeyBind(code)->label);
 					p.x =  (screen.Frame().left+screen.Frame().right)/2;
 					p.y =  (screen.Frame().top+screen.Frame().bottom)/2;
 					fIndex = index;

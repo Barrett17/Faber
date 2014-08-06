@@ -42,8 +42,11 @@ public:
 
 			BMenuBar*			BuildMainMenuBar();
 
-			BMenu*				BuildFileMenu();
-			BMenu*				BuildRecentMenu();
+			void				UpdateMenu();
+
+			static void			BuildRecentsMenu(BMenu* menu,
+									uint32 message);
+
 			BMenu*				BuildEditMenu();
 			BMenu*				BuildTracksMenu();
 			BMenu*				BuildEffectsMenu();
@@ -57,6 +60,14 @@ private:
 			InfoToolBar*		fInfoToolBar;
 
 			BMenuBar*			fMenuBar;
+
+			BMenu*				fFileMenu;
+			BMenu*				fEditMenu;
+			BMenu*				fProjectMenu;
+			BMenu*				fTracksMenu;
+			BMenu*				fEffectsMenu;
+			BMenu*				fGenerateMenu;
+			BMenu*				fEngineMenu;
 };
 
 

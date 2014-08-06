@@ -51,6 +51,8 @@ public:
 										const media_input* input = NULL, 
 										const media_format* format = NULL);
 
+			media_node				Node();
+
 			// CommandListener
 	virtual status_t				HandleCommand(BMessage* msg);
 
@@ -64,8 +66,6 @@ public:
 
 			static BMessage*		ArchiveTracks();
 			static status_t			UnarchiveTracks(BMessage* from);
-
-			media_node				Node();
 
 protected:
 			friend class			AudioEngine;
@@ -82,6 +82,7 @@ private:
 
 			AudioEngine*			fAudioEngine;
 
+			// Tracks Management
 			MediaEndPointMap*		fInputs;
 			MediaEndPointMap*		fOutputs;
 

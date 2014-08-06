@@ -28,13 +28,15 @@
 
 class KeyBind {
 public:
-	bool			isMenuItem;
 	const char*		label;
+
 	char			key;
 	int32			mod;
 	char			altKey;
 	int32			altMod;
+
 	uint32			message;
+	uint32			itemType;
 };
 
 class FaberShortcut {
@@ -44,25 +46,12 @@ public:
 
 	static FaberShortcut* 	Get();
 
+	void					AddKeyBind(KeyBind* bind);
 	KeyBind*				FindKeyBind(uint32 code);
-
-	const char*				GetLabel(uint32 code);
-	const char*				GetLabel(int32 index);
-
-	char					GetKey(uint32 code);
-	char					GetMod(uint32 code);
-
-	char					GetKeyAlt(uint32 code);
-	char					GetModAlt(uint32 code);
-
-	uint32					GetCode(int32 index);
-
-	bool					IsMenuItem(uint32 code);
+	KeyBind*				KeyBindAt(int32 index);
 	int32					CountKeys();
 
 	void					CreateDefaultKeys();
-
-	void					AddKeyBind(KeyBind* bind);
 
 private:
 	void					_CopyObj(KeyBind* bind, KeyBind* from);

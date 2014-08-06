@@ -106,7 +106,7 @@ TimeBar::Draw(BRect rect)
 		samples += 128*2;
 	}
 
-	printf("%f\n", index);
+	//printf("%f\n", index);
 
 	delete[] drawString;
 }

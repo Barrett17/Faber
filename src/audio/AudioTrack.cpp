@@ -24,11 +24,14 @@
 #include "MessageBuilder.h"
 
 
-AudioTrack::AudioTrack()
+AudioTrack::AudioTrack(int32 channels)
 	:
 	Track()
 {
 	fTrackIndex = new TrackIndex();
+	for (int32 i = 0; i < channels; i++)
+		fTrackIndex->AddChannel(new MediaBlockMap());
+
 	SetName(B_TRANSLATE("Empty Audio Track"));
 }
 

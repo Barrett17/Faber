@@ -30,6 +30,8 @@
 #include "WaveRender.h"
 
 
+class TrackMenuUpdater;
+
 class AudioTrackView : public TrackView
 {
 public:
@@ -63,11 +65,14 @@ public:
 			void			UpdateRequested();
 			void			UpdateRequested(BRect rect);
 
-			BMenu* 			BuildTrackContextualMenu();
+protected:
+			void			AddDefaultAttributes(BMessage* message);
 
+			friend class	TrackMenuUpdater;
 private:
 			AudioTrack*		fAudioTrack;
 			WaveRender*		fWaveRender;
+
 			BMenu*			fTrackMenu;
 };
 

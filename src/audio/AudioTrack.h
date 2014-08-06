@@ -31,7 +31,7 @@
 
 class AudioTrack : public Track {
 public:
-									AudioTrack();
+									AudioTrack(int32 channels = 1);
 
 									AudioTrack(const char* name,
 										TrackIndex* index);

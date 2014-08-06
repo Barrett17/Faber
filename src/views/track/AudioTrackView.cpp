@@ -36,6 +36,27 @@
 #define HEIGHT_VAL_REF 110
 
 
+class TrackMenuUpdater : public MenuFilter {
+public:
+	TrackMenuUpdater(AudioTrackView* owner)
+		:
+		fOwner(owner)
+		{}
+
+	void FilterMenu(BMenu* menu, uint32 message)
+	{
+	}
+
+	void FilterItem(BMenuItem* item, uint32 message)
+	{
+		item->Message()->AddUInt32("track_id", fOwner->ID());
+	}
+
+private:
+	AudioTrackView* fOwner;
+};
+
+
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	uint32 resizingMode)
 	:
@@ -77,8 +98,11 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 		trackName.Append("...");
 	}
 
+	TrackMenuUpdater filter(this);
+
 	// Track menu
-	fTrackMenu = BuildTrackContextualMenu();
+	fTrackMenu = MenuBuilder::BuildMenu(kTrackContextualMenu, &filter);
+
 	fTrackMenu->SetTargetForItems(this);
 	fTrackMenu->SetName(trackName.String());
 
@@ -87,7 +111,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
 
 	BMessage* closeMsg = CommandBuilder(FABER_REMOVE_TRACK);
-	closeMsg->AddUInt32("track_id", ID());
+	AddDefaultAttributes(closeMsg);
 
 	BIconButton* closeButton = new BIconButton(NULL, NULL,
 		closeMsg, this);
@@ -127,13 +151,6 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 AudioTrackView::~AudioTrackView()
 {
-}
-
-
-BMenu*
-AudioTrackView::BuildTrackContextualMenu()
-{
-	return MenuBuilder::BuildMenu(kTrackContextualMenu, NULL);
 }
 
 
@@ -226,4 +243,11 @@ AudioTrackView::CurrentSelection(int64* start, int64* end) const
 void
 AudioTrackView::Select(int64 start, int64 end)
 {
+}
+
+
+void
+AudioTrackView::AddDefaultAttributes(BMessage* message)
+{
+	message->AddUInt32("track_id", ID());
 }

@@ -23,9 +23,24 @@
 #include <LayoutBuilder.h>
 #include <StringView.h>
 
+#include "CommandBuilder.h"
 #include "EffectsManager.h"
 #include "FaberDefs.h"
 #include "MenuBuilder.h"
+#include "RecentItems.h"
+
+
+class RecentsMenuBuilder : public CustomMenuCreator {
+	BMenu* CreateCustomMenu(uint32 message)
+	{
+		if (message == FABER_RECENTS_MENU) {
+			return BRecentFilesList::NewFileListMenu(
+				B_TRANSLATE("Recents"B_UTF8_ELLIPSIS),
+				NULL, NULL, be_app, 9, true,
+				NULL, FABER_SIGNATURE);
+		}
+	}
+};
 
 
 FaberView::FaberView()
@@ -82,7 +97,11 @@ FaberView::BuildMainMenuBar()
 {
 	BMenuBar* menuBar = new BMenuBar("MainMenuBar");
 
-	menuBar->AddItem(BuildFileMenu());
+	RecentsMenuBuilder builder;
+	fFileMenu = MenuBuilder::BuildMenu(kFileMenu, NULL, &builder);
+
+	menuBar->AddItem(fFileMenu);
+
 	menuBar->AddItem(BuildEditMenu());
 	menuBar->AddItem(BuildProjectMenu());
 	menuBar->AddItem(BuildTracksMenu());
@@ -92,20 +111,6 @@ FaberView::BuildMainMenuBar()
 	menuBar->AddItem(BuildHelpMenu());
 
 	return menuBar;
-}
-
-
-BMenu*
-FaberView::BuildFileMenu()
-{
-	return MenuBuilder::BuildMenu(kFileMenu);
-}
-
-
-BMenu*
-FaberView::BuildRecentMenu()
-{
-	return NULL;
 }
 
 

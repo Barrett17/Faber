@@ -44,7 +44,25 @@ FaberShortcut::FaberShortcut()
 
 FaberShortcut::~FaberShortcut()
 {
+}
 
+
+void
+FaberShortcut::CreateDefaultKeys()
+{
+	for (int i = 0; kDefaultKeymap[i] != NULL; i++) {
+		KeyBind* items = kDefaultKeymap[i];
+		for (int j = 0; items[j].itemType != FABER_EOF; j++) {
+			KeyBind* bind = new KeyBind();
+
+			if (items[j].itemType == FABER_SPLITTER)
+				continue;
+
+			_CopyObj(bind, &items[j]);
+
+			fBinds.AddItem(bind);
+		}
+	}
 }
 
 
@@ -60,70 +78,10 @@ FaberShortcut::FindKeyBind(uint32 code)
 }
 
 
-const char*
-FaberShortcut::GetLabel(uint32 code)
+KeyBind*
+FaberShortcut::KeyBindAt(int32 index)
 {
-	KeyBind* bind = FindKeyBind(code);
-	return bind->label;
-}
-
-
-const char*
-FaberShortcut::GetLabel(int32 index)
-{
-	return fBinds.ItemAt(index)->label;
-}
-
-
-char
-FaberShortcut::GetKey(uint32 code)
-{
-
-	KeyBind* bind = FindKeyBind(code);
-	if (bind == NULL)
-		return '\0';
-
-	return bind->key;
-}
-
-
-char
-FaberShortcut::GetMod(uint32 code)
-{
-	KeyBind* bind = FindKeyBind(code);
-	if (bind == NULL)
-		return '\0';
-
-	return bind->mod;
-}
-
-
-char
-FaberShortcut::GetKeyAlt(uint32 code)
-{
-	KeyBind* bind = FindKeyBind(code);
-	if (bind == NULL)
-		return '\0';
-
-	return bind->altKey;
-}
-
-
-char
-FaberShortcut::GetModAlt(uint32 code)
-{
-	KeyBind* bind = FindKeyBind(code);
-	if (bind == NULL)
-		return '\0';
-
-	return bind->altMod;
-}
-
-
-uint32
-FaberShortcut::GetCode(int32 index)
-{
-	return fBinds.ItemAt(index)->message;
+	return fBinds.ItemAt(index);
 }
 
 
@@ -131,33 +89,6 @@ int32
 FaberShortcut::CountKeys()
 {
 	return fBinds.CountItems();
-}
-
-
-bool
-FaberShortcut::IsMenuItem(uint32 code)
-{
-	KeyBind* bind = FindKeyBind(code);
-	return bind->isMenuItem;
-}
-
-
-void
-FaberShortcut::CreateDefaultKeys()
-{
-	for (int i = 0; kDefaultKeymap[i] != NULL; i++) {
-		KeyBind* items = kDefaultKeymap[i];
-		for (int j = 0; items[j].message != FABER_EOF; j++) {
-			KeyBind* bind = new KeyBind();
-
-			if (items[j].message == FABER_SPLITTER)
-				continue;
-
-			_CopyObj(bind, &items[j]);
-
-			fBinds.AddItem(bind);
-		}
-	}
 }
 
 
@@ -177,11 +108,11 @@ FaberShortcut::AddKeyBind(KeyBind* keybind)
 void
 FaberShortcut::_CopyObj(KeyBind* bind, KeyBind* from)
 {
-	bind->isMenuItem = from->isMenuItem;
 	bind->label = from->label;
 	bind->key = from->key;
 	bind->mod = from->mod;
 	bind->altMod = from->altMod;
 	bind->altKey = from->altKey;
 	bind->message = from->message;
+	bind->itemType = from->itemType;
 }

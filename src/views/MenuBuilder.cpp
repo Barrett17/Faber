@@ -26,97 +26,77 @@
 #include "CommandBuilder.h"
 #include "EffectsManager.h"
 #include "FaberShortcut.h"
-#include "RecentItems.h"
 
 
 FaberShortcut* gBind = FaberShortcut::Get();
 
 
 BMenu*
-MenuBuilder::BuildMenu(KeyBind* bind, BHandler* target)
+MenuBuilder::BuildMenu(KeyBind* bind, MenuFilter* filter,
+	 CustomMenuCreator* custom)
 {
 	if (bind == NULL)
 		return NULL;
 
 	// The first item describe the menu
 	BMenu* menu = new BMenu(bind[0].label);
+
+	if (filter != NULL)
+		filter->FilterMenu(menu, bind[0].message);
+
 	BObjectList<BMenu> menuList;
 	menuList.AddItem(menu);
 
-	for (int i = 1; bind[i].message != FABER_EOF; i++) {
-
+	for (int i = 1; bind[i].itemType != FABER_EOF; i++) {
 		menu = menuList.ItemAt(menuList.CountItems()-1);
 
-		if (bind[i].message == FABER_ITEM_START) {
+		if (bind[i].itemType == FABER_ITEM_START) {
 			BMenu* subMenu = NULL;
 			subMenu = new BMenu(bind[i].label);
+
+			if (filter != NULL)
+				filter->FilterMenu(subMenu, bind[i].message);
+
 			menu->AddItem(subMenu);
 			menuList.AddItem(subMenu);
-		}  else if (bind[i].message == FABER_ITEM_END) {
+
+		} else if (bind[i].itemType == FABER_ITEM_END) {
 			if (menuList.CountItems() > 1)
 				menuList.RemoveItemAt(menuList.CountItems()-1);
-		} else {
-			// NOTE This is a temporarily hack
-			if (bind[i].message == FABER_FILE_OPEN) {
-				menu->AddItem(new BMenuItem(BRecentFilesList::NewFileListMenu(
-					B_TRANSLATE("Open"B_UTF8_ELLIPSIS), NULL, NULL, be_app, 9, true,
-					NULL, FABER_SIGNATURE), CommandBuilder(FABER_FILE_OPEN)));
-			} else {
-				BMenuItem* item = BuildMenuItem(bind[i].message, bind[i].label);
-				if (target != NULL)
-					item->SetTarget(target);
+		} else if (bind[i].itemType == FABER_CUSTOM_ITEM) {
+			if (custom == NULL)
+				continue;
 
-				menu->AddItem(item);
-			}
-		}
-	}
-	return menuList.ItemAt(0);
-}
+			BMenu* customMenu = custom->CreateCustomMenu(bind[i].message);
+			menu->AddItem(customMenu);
 
-
-BPopUpMenu*
-MenuBuilder::BuildPopUpMenu(KeyBind* bind, BHandler* target)
-{
-	if (bind == NULL)
-		return NULL;
-
-	// The first item describe the menu
-	BPopUpMenu* firstMenu = new BPopUpMenu(bind[0].label);
-	BObjectList<BMenu> menuList;
-	menuList.AddItem((BMenu*)firstMenu);
-
-	BMenu* menu = NULL;
-
-	for (int i = 1; bind[i].message != FABER_EOF; i++) {
-
-		menu = menuList.ItemAt(menuList.CountItems()-1);
-
-		if (bind[i].message == FABER_ITEM_START) {
-			BMenu* subMenu = new BMenu(bind[i].label);
-			menu->AddItem(subMenu);
-			menuList.AddItem(subMenu);
-		}  else if (bind[i].message == FABER_ITEM_END) {
-			if (menuList.CountItems() > 1)
-				menuList.RemoveItemAt(menuList.CountItems()-1);
-		} else {
+		} else if (bind[i].itemType == FABER_SUBITEM) {
 			BMenuItem* item = BuildMenuItem(bind[i].message, bind[i].label);
-			if (target != NULL)
-				item->SetTarget(target);
+
+			if (filter != NULL)
+				filter->FilterItem(item, bind[i].message);
 
 			menu->AddItem(item);
-		}
+		} else if (bind[i].itemType == FABER_SPLITTER)
+			menu->AddItem(new BSeparatorItem());
 	}
-
-	return (BPopUpMenu*) menuList.ItemAt(0);
+	return menuList.ItemAt(0);
 }
 
 
 BMenuItem*
 MenuBuilder::BuildMenuItem(uint32 message, const char* label)
 {
-	if (message == FABER_SPLITTER)
-		return new BSeparatorItem();
-	else
-		return new BMenuItem(label, CommandBuilder(message),
-			gBind->GetKey(message), gBind->GetMod(message));
+	KeyBind* bind = gBind->FindKeyBind(message);
+
+	char key = 0;
+	char mod = 0;
+
+	if (bind != NULL) {
+		key = bind->key;
+		mod = bind->mod;	
+	}
+
+	return new BMenuItem(label, CommandBuilder(message),
+		key, mod);
 }

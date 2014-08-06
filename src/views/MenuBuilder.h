@@ -28,17 +28,32 @@
 #include "FaberDefs.h"
 
 
+class CustomMenuCreator {
+public:
+	virtual BMenu*				CreateCustomMenu(uint32 message) {};
+};
+
+class MenuFilter {
+public:
+	virtual void				FilterMenu(BMenu* menu,
+									uint32 message) {};
+
+	virtual void				FilterItem(BMenuItem* item,
+									uint32 message) {};
+};
+
 class MenuBuilder {
 public:
 
-	static BMenu*			BuildMenu(KeyBind* bind,
-								BHandler* target = NULL);
+			static BMenu*		BuildMenu(KeyBind* bind,
+									MenuFilter* filter = NULL,
+									CustomMenuCreator* custom = NULL);
 
-	static BPopUpMenu*		BuildPopUpMenu(KeyBind* bind,
-								BHandler* target = NULL);
+			static void			FilterMenu(BMenu* target,
+									MenuFilter* filter = NULL);
 
-	static BMenuItem*		BuildMenuItem(uint32 message,
-								const char* label);
+			static BMenuItem*	BuildMenuItem(uint32 message,
+									const char* label);
 };
 
 #endif	// _MenuBuilder_H_
