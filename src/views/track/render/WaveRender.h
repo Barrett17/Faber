@@ -17,12 +17,15 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "AudioTrack.h"
+#ifndef _WAVE_RENDER
+#define _WAVE_RENDER
+
 #include <View.h>
 
+#include "AudioTrack.h"
 
-class WaveRender : public BView
-{
+
+class WaveRender : public BView {
 public:
 							WaveRender(AudioTrack* track);	
 			 				~WaveRender();
@@ -52,3 +55,4 @@ private:
 			friend class	AudioTrackView;
 };
 
+#endif

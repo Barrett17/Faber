@@ -27,6 +27,7 @@
 #include "CommandServer.h"
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
+#include "InputRequest.h"
 #include "MenuBuilder.h"
 #include "ProjectManager.h"
 #include "TimeBar.h"
@@ -109,109 +110,198 @@ TracksContainer::HandleCommand(BMessage* message)
 		{
 			AudioTrack* track = new AudioTrack(1);
 			AddTrack(track);
-
-			break;
 		}
+		break;
 
 		case FABER_NEW_STEREO_TRACK:
 		{
 			AudioTrack* track = new AudioTrack(2);
 			AddTrack(track);
-
-			break;
 		}
+		break;
 
 		case FABER_NEW_MULTICHANNEL_TRACK:
 		{
-			
-			int32 channels = 0;
-			if (message->FindInt32("channel_count", &channels)
-				== B_OK) {
+			InputRequest* request = new InputRequest(
+				B_TRANSLATE("Set Channel Count"),
+				B_TRANSLATE("Channels:"),
+				"8",
+				B_TRANSLATE("Ok"),
+				B_TRANSLATE("Cancel"));
+
+			char* input = NULL;
+			int32 ret = request->Go(&input);
+
+			if (ret == 0) {
+				/*int32 channels = 
 				AudioTrack* track = new AudioTrack(channels);
-				AddTrack(track);	
+				AddTrack(track);*/			
 			}
 
-			break;
+			delete[] input;
 		}
+		break;
 
 		case FABER_NEW_LABEL_TRACK:
 		{
 			//LabelTrack* track = new LabelTrack();
 			//AddTrack(track);
-
-			break;
 		}
+		break;
 
 		case FABER_REMOVE_TRACK:
 		{
-			uint32 id;
-			message->FindUInt32("track_id", &id);
-			TrackView* track = TrackByID(id);
+			TrackView* track = _FindTrack(message);
+
 			if (track != NULL)
 				RemoveTrack(track);
-
-			break;
 		}
+		break;
 
 		case FABER_MUTE_ALL:
 			MuteAllTracks(true);
-			break;
+		break;
 
 		case FABER_UNMUTE_ALL:
 			MuteAllTracks(false);
-			break;
+		break;
 
 		case FABER_SORT_BY_NAME:
 			ReorderTracks(0);
-			break;
+		break;
 
 		case FABER_SORT_BY_DURATION:
 			ReorderTracks(1);
-			break;
+		break;
 
 		case B_SELECT_ALL:
 			SelectAll();
-			break;
+		break;
 		
 		case FABER_UNSELECT_ALL:
 			UnselectAll();
-			break;
+		break;
 
 		case B_COPY:
 			Copy();
-			break;
+		break;
 
 		case FABER_COPY_SILENCE:
 			CopyAndSilence();
-			break;
+		break;
 
 		case B_CUT:
 			Cut();
-			break;
+		break;
 
 		case B_PASTE:
 			Paste();
-			break;
+		break;
 
 		case FABER_CLEAR:
 			Clear();
-			break;
+		break;
 
 		case FABER_ZOOM_IN:
 			ZoomIn();
-			break;
+		break;
 	
 		case FABER_ZOOM_OUT:
 			ZoomOut();
-			break;
+		break;
 	
 		case FABER_ZOOM_FULL:
 			ZoomFull();
-			break;
+		break;
 
 		case FABER_ZOOM_SELECTION:
 			ZoomSelection();
-			break;
+		break;
+
+		// Track related commands
+		case FABER_TRACK_SET_NAME:
+		{
+			AudioTrackView* track = _FindAudioTrack(message);
+			if (track == NULL)
+				break;
+
+			InputRequest* request = new InputRequest(
+				B_TRANSLATE("Set Name"),
+				B_TRANSLATE("Name:"),
+				track->Name(),
+				B_TRANSLATE("Ok"),
+				B_TRANSLATE("Cancel"));
+
+			char* input = NULL;
+			int32 ret = request->Go(&input);
+
+			if (ret == 0)
+				track->SetName(input);
+
+			delete[] input;
+		}
+		break;
+
+		case FABER_TRACK_GET_INFO:
+		{
+		}
+		break;
+
+		case FABER_TRACK_SPLIT_CHAN:
+		{
+			AudioTrackView* track = _FindAudioTrack(message);
+			if (track == NULL)
+				break;
+
+			for (int32 i = 0; i < track->CountChannels(); i++) {
+				MediaBlockMap* chan = track->RemoveChannelAt(i, false);
+				AudioTrack* audioTrack = new AudioTrack();
+				audioTrack->GetIndex()->AddChannel(chan);
+				AddTrack(audioTrack);
+			}
+
+		}
+		break;
+
+		case FABER_TRACK_ADD_CHAN:
+		{
+			AudioTrackView* track = _FindAudioTrack(message);
+			if (track == NULL)
+				break;
+
+			track->AddChannel(new MediaBlockMap());
+		}
+		break;
+
+		case FABER_TRACK_RM_CHAN:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MUP_CHAN:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MDOWN_CHAN:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MERGE_WITH:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MOVE_UP:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MOVE_DOWN:
+		{
+		}
+		break;
 
 		default:
 			return B_ERROR;
@@ -236,14 +326,9 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 	if (index == -1)	
 		index = CountTracks();
 
-	status_t ret;
+	fLayout->AddView(index, track);
 
-	if (track->GetTrack()->IsAudio()) {
-		fLayout->AddView(index, track);
-		ret = fTrackViews.AddItem(track, index);
-	}
-
-	return ret;
+	return fTrackViews.AddItem(track, index);
 }
 
 
@@ -267,9 +352,7 @@ TracksContainer::AddTrack(Track* track)
 status_t
 TracksContainer::RemoveTrack(int32 index)
 {
-	TrackView* track = TrackAt(index);
-
-	return RemoveTrack(track);
+	return RemoveTrack(TrackAt(index));
 }
 
 
@@ -480,4 +563,27 @@ TracksContainer::ZoomSelection()
 {
 	GetCoords().ZoomSelection();
 	UpdateRequested();
+}
+
+
+TrackView*
+TracksContainer::_FindTrack(BMessage* message)
+{
+	uint32 id;
+	if (message->FindUInt32("track_id", &id) != B_OK)
+		return NULL;
+
+	return TrackByID(id);
+}
+
+
+AudioTrackView*
+TracksContainer::_FindAudioTrack(BMessage* message)
+{
+	TrackView* track = _FindTrack(message);
+
+	if (track->GetTrack()->IsAudio())
+		return (AudioTrackView*) track;
+
+	return NULL;
 }

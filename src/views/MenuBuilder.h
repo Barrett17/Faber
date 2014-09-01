@@ -30,16 +30,16 @@
 
 class CustomMenuCreator {
 public:
-	virtual BMenu*				CreateCustomMenu(uint32 message) {};
+	virtual BMenu*				CreateCustomMenu(uint32 message) = 0;
 };
 
 class MenuFilter {
 public:
 	virtual void				FilterMenu(BMenu* menu,
-									uint32 message) {};
+									uint32 message) = 0;
 
 	virtual void				FilterItem(BMenuItem* item,
-									uint32 message) {};
+									uint32 message) = 0;
 };
 
 class MenuBuilder {

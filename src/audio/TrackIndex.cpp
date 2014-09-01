@@ -121,10 +121,9 @@ TrackIndex::GetChannels() const
 
 
 MediaBlockMap*
-TrackIndex::ExtractChannel(int32 index)
+TrackIndex::RemoveChannelAt(int32 index) const
 {
-	// Unimplemented right now.
-	return NULL;
+	return fChannels->RemoveItemAt(index);
 }
 
 

@@ -173,9 +173,9 @@ KeyBind kTrackContextualMenu[] {
 
 	{ "Edit", 0, 0, 0, 0, 0, FABER_ITEM_START },
 
-	{ "Add channel",           0, 0,                           0, 0,            		  FABER_TRACK_ADD_CHAN, FABER_SUBITEM },
+	{ "Add channel",           0, 0,                           0, 0,            		FABER_TRACK_ADD_CHAN, FABER_SUBITEM },
 
-    { "Remove channel...",           0, 0,                     0, 0, 0, FABER_ITEM_START},
+    { "Remove channel...",           0, 0,                     0, 0,					FABER_TRACK_RM_CHAN, FABER_ITEM_START},
 
 	{ NULL, 0, 0, 0, 0, 0, FABER_ITEM_END },
 
@@ -191,14 +191,14 @@ KeyBind kTrackContextualMenu[] {
 
 	{ "Export", 0, 0, 0, 0, 0, FABER_ITEM_START },
 
-	{ "To file...",           0, 0,                           0, 0,              0, FABER_SUBITEM },
-	{ "To new project...",           0, 0,                           0, 0,       0, FABER_SUBITEM },
+	{ "To file...",           0, 0,                           0, 0,              FABER_TRACK_EXPORT_NFILE, FABER_SUBITEM },
+	{ "To new project...",           0, 0,                           0, 0,       FABER_TRACK_EXPORT_NPROJ, FABER_SUBITEM },
 
 	{ NULL, 0, 0, 0, 0, 0, FABER_ITEM_END },
 
 	{ "", 0, 0, 0, 0, 0, FABER_SPLITTER },
 
-	{  "Set Input", 0, 0, 0, 0, 0, FABER_ITEM_START },
+	{ "Set Input", 0, 0, 0, 0, 0, FABER_ITEM_START },
 
 	{ NULL, 0, 0, 0, 0, 0, FABER_ITEM_END },
 

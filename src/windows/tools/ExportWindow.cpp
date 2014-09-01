@@ -77,10 +77,15 @@ ExportWindow::_CreateOptionsBox()
 				new BPopUpMenu(""));
 	fEncodingMenu->SetExplicitSize(BSize(200, B_SIZE_UNSET));
 
+	BMenuField*	fChannelsMenu = new BMenuField(NULL, B_TRANSLATE("Channels:"), 
+				new BPopUpMenu(""));
+	fChannelsMenu->SetExplicitSize(BSize(200, B_SIZE_UNSET));
+
 	BLayoutBuilder::Group<>(view, B_VERTICAL)
 		.SetInsets(kPadding)
 		.Add(fFormatMenu)
 		.Add(fEncodingMenu)
+		.Add(fChannelsMenu)
 		.Add(slider)
 	.End();
 

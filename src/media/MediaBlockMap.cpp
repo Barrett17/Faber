@@ -264,7 +264,7 @@ MediaBlockMapWriter::WriteFrames(void* buffer, size_t size,
 	while (remaining != 0) {
 		//printf("%ld %ld\n", remaining, freeSize);
  		if (block == NULL || block->IsFull()) {
- 			printf("add block\n");
+ 			//printf("add block\n");
 			BEntry* destEntry = StorageUtils::BlockFileRequested();
 			BFile* destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
 

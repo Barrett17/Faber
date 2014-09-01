@@ -34,7 +34,6 @@ SpinSlider::~SpinSlider()
 
 void SpinSlider::MessageReceived(BMessage* msg)
 {
-	msg->PrintToStream();
 	switch(msg->what)
 	{
 		// This is a custom message sent from seekslider

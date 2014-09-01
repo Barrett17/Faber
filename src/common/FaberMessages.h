@@ -20,7 +20,7 @@
 #define FABER_MESSAGES_H
 
 
-const uint32 FABER_COMMAND				= 	'FBCm';
+const uint32 FABER_COMMAND					= 	'FBCm';
 
 // GUI
 
@@ -72,9 +72,14 @@ const uint32 FABER_SORT_BY_DURATION			=	'srbd';
 const uint32 FABER_TRACK_SET_NAME			=	'Trsn';
 const uint32 FABER_TRACK_GET_INFO			=	'Trgi';
 
-const uint32 FABER_TRACK_SPLIT_CHAN			=	'Trsc';
-const uint32 FABER_TRACK_ADD_CHAN			=	'Tadc';
-const uint32 FABER_TRACK_RM_CHAN			=	'Trmc';
+const uint32 FABER_TRACK_SPLIT_CHAN			=	'TrsC';
+const uint32 FABER_TRACK_ADD_CHAN			=	'TadC';
+const uint32 FABER_TRACK_RM_CHAN			=	'TrmC';
+const uint32 FABER_TRACK_MUP_CHAN			=	'TruC';
+const uint32 FABER_TRACK_MDOWN_CHAN			=	'TrdC';
+
+const uint32 FABER_TRACK_EXPORT_NFILE		=	'Tref';
+const uint32 FABER_TRACK_EXPORT_NPROJ		=	'Tren';
 
 const uint32 FABER_TRACK_MERGE_WITH			=	'Trmw';
 const uint32 FABER_TRACK_MOVE_UP			=	'Trmu';

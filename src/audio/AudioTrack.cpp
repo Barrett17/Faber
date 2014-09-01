@@ -90,6 +90,13 @@ AudioTrack::IsAudio() const
 }
 
 
+int64
+AudioTrack::CountFrames() const
+{
+	return fTrackIndex->CountFrames();
+}
+
+
 int32
 AudioTrack::CountChannels() const
 {
@@ -115,13 +122,6 @@ status_t
 AudioTrack::InitCheck() const
 {
 	return fTrackIndex->InitCheck();
-}
-
-
-int64
-AudioTrack::CountFrames() const
-{
-	return fTrackIndex->CountFrames();
 }
 
 

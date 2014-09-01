@@ -68,7 +68,9 @@ MenuBuilder::BuildMenu(KeyBind* bind, MenuFilter* filter,
 				continue;
 
 			BMenu* customMenu = custom->CreateCustomMenu(bind[i].message);
-			menu->AddItem(customMenu);
+
+			if (customMenu != NULL)
+				menu->AddItem(customMenu);
 
 		} else if (bind[i].itemType == FABER_SUBITEM) {
 			BMenuItem* item = BuildMenuItem(bind[i].message, bind[i].label);
@@ -90,7 +92,7 @@ MenuBuilder::BuildMenuItem(uint32 message, const char* label)
 	KeyBind* bind = gBind->FindKeyBind(message);
 
 	char key = 0;
-	char mod = 0;
+	int32 mod = 0;
 
 	if (bind != NULL) {
 		key = bind->key;

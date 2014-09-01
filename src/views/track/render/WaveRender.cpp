@@ -93,7 +93,7 @@ WaveRender::_RenderChannel(float* buffer, size_t size, float center)
 
 	for (int64 i = 0; i < end; i++) {
 		if (count >= size) {
-			printf("Reached end of preview\n");
+			//printf("Reached end of preview\n");
 			return;
 		}
 

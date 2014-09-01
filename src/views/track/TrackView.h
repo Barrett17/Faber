@@ -73,8 +73,13 @@ public:
 	virtual bool			HasUndo() const;
 	virtual bool			HasRedo() const;
 
+			// Update hooks for derived classes.
+			// The following methods redraw the data.
 	virtual void			UpdateRequested() = 0;
 	virtual void			UpdateRequested(BRect bounds) = 0;
+
+			// Should update the menu but not the track data itself
+	virtual void			MenuUpdateRequested() = 0;
 
 protected:
 			Track*			fTrack;

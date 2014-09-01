@@ -19,13 +19,8 @@
 
 #include "AudioTrackView.h"
 
-#include <Application.h>
-#include <Box.h>
 #include <LayoutBuilder.h>
-#include <MediaTrack.h>
 #include <MenuBar.h>
-#include <PopUpMenu.h>
-#include <StringView.h>
 
 #include "CommandBuilder.h"
 #include "FaberDefs.h"
@@ -38,16 +33,16 @@
 
 class TrackMenuUpdater : public MenuFilter {
 public:
-	TrackMenuUpdater(AudioTrackView* owner)
-		:
-		fOwner(owner)
-		{}
+			TrackMenuUpdater(AudioTrackView* owner)
+				:
+				fOwner(owner)
+				{}
 
-	void FilterMenu(BMenu* menu, uint32 message)
+	void	FilterMenu(BMenu* menu, uint32 message)
 	{
 	}
 
-	void FilterItem(BMenuItem* item, uint32 message)
+	void	FilterItem(BMenuItem* item, uint32 message)
 	{
 		item->Message()->AddUInt32("track_id", fOwner->ID());
 	}
@@ -157,7 +152,6 @@ AudioTrackView::~AudioTrackView()
 void
 AudioTrackView::MessageReceived(BMessage* message)
 {
-	message->PrintToStream();
 	switch (message->what)
 	{
 
@@ -216,6 +210,12 @@ AudioTrackView::UpdateRequested(BRect rect)
 }
 
 
+void
+AudioTrackView::MenuUpdateRequested()
+{
+}
+
+
 bool
 AudioTrackView::IsSelected() const
 {
@@ -250,4 +250,32 @@ void
 AudioTrackView::AddDefaultAttributes(BMessage* message)
 {
 	message->AddUInt32("track_id", ID());
+}
+
+
+int32
+AudioTrackView::CountChannels() const
+{
+	return fAudioTrack->CountChannels();
+}
+
+
+void
+AudioTrackView::AddChannel(MediaBlockMap* channel)
+{
+	fAudioTrack->GetIndex()->AddChannel(channel);
+}
+
+
+void
+AudioTrackView::RemoveChannel(MediaBlockMap* channel)
+{
+	//fAudioTrack->GetIndex()->RemoveChannel(channel);
+}
+
+
+MediaBlockMap*
+AudioTrackView::RemoveChannelAt(int32 index, bool erase)
+{
+	return fAudioTrack->GetIndex()->RemoveChannelAt(index);
 }

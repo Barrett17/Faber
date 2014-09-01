@@ -50,7 +50,7 @@ public:
 
 			// The following method will detach and remove ownership of the channel
 			// from the index.
-			MediaBlockMap*					ExtractChannel(int32 index);
+			MediaBlockMap*					RemoveChannelAt(int32 index) const;
 
 private:
 			BObjectList<MediaBlockMap>*		fChannels;

@@ -32,8 +32,7 @@
 
 class TrackMenuUpdater;
 
-class AudioTrackView : public TrackView
-{
+class AudioTrackView : public TrackView {
 public:
 							AudioTrackView(const char* name = "AudioTrackView",
 								AudioTrack* track = NULL,
@@ -44,26 +43,26 @@ public:
 
 			void			MessageReceived(BMessage* message);
 
-			// Utility methods for fast access to the
-			// Track's values
-			int32			CountChannels() const;
-			int32			FrameRate() const;
-
 			AudioTrack*		GetTrack() const;
 
-			bool			IsSelected() const;
+			// Those aren't only get/set methods but interacts with GUI
+			// and update it if needed.
+			int32			CountChannels() const;
+			void			AddChannel(MediaBlockMap* channel);
+			void			RemoveChannel(MediaBlockMap* channel);
+			MediaBlockMap*	RemoveChannelAt(int32 index, bool erase = true);
 
+			// GUI
+			bool			IsSelected() const;
 			void			SelectAll();
 			void			Unselect();
-
 			void			CurrentSelection(int64* start, int64* end) const;
 			void			Select(int64 start, int64 end);
-
-			bigtime_t		Duration() const;
-			int64			Frames() const;
-
+	
 			void			UpdateRequested();
 			void			UpdateRequested(BRect rect);
+
+	virtual void			MenuUpdateRequested();
 
 protected:
 			void			AddDefaultAttributes(BMessage* message);

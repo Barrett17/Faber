@@ -25,7 +25,7 @@
 #include <ScrollBar.h>
 
 #include "CommandListener.h"
-#include "TrackView.h"
+#include "AudioTrackView.h"
 
 
 class TracksContainer : public BGroupView, public CommandListener {
@@ -78,13 +78,13 @@ public:
 			// don't use it, use the following method instead.
 			void				UpdateTracksScroll(float newValue);
 		
-			/*void				SetHorizontalScroll(float newValue);
-			void				SetVerticalScroll(float newValue);*/
-		
 			void				UpdateRequested();
 			void				UpdateRequested(BRect rect);
 
 private:
+			TrackView*			_FindTrack(BMessage* message);
+			AudioTrackView*		_FindAudioTrack(BMessage* message);
+
 			BGroupView*			fView;
 			BGroupLayout*		fLayout;
 		
