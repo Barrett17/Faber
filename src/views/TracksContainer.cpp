@@ -344,7 +344,12 @@ TracksContainer::AddTrack(Track* track)
 		AudioTrackView* trackView =
 			new AudioTrackView("AudioTrack", audioTrack);
 
-		return AddTrack(trackView);
+		status_t ret = AddTrack(trackView);
+
+		WindowsManager::MainWinMessenger()
+			.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
+
+		return ret;
 	}
 	return B_ERROR;
 }

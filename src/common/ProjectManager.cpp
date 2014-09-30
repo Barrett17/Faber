@@ -204,9 +204,6 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 
   	_NotifyTracksContainer(track);
 
-	WindowsManager::MainWinMessenger()
-		.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
-
 	return B_OK;
 }
 
