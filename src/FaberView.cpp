@@ -69,6 +69,7 @@ FaberView::FaberView()
 		.AddStrut(0.5f)
 	.End();
 
+	UpdateMenu();
 	fTracksContainer->SetViewColor(backgroundColor);
 }
 
@@ -99,32 +100,54 @@ FaberView::BuildMainMenuBar()
 
 	RecentsMenuBuilder builder;
 	fFileMenu = MenuBuilder::BuildMenu(kFileMenu, NULL, &builder);
-
 	menuBar->AddItem(fFileMenu);
 
-	menuBar->AddItem(BuildEditMenu());
-	menuBar->AddItem(BuildProjectMenu());
-	menuBar->AddItem(BuildTracksMenu());
-	menuBar->AddItem(BuildEffectsMenu());
-	menuBar->AddItem(BuildGenerateMenu());
-	menuBar->AddItem(BuildEngineMenu());
-	menuBar->AddItem(BuildHelpMenu());
+	fEditMenu = MenuBuilder::MenuBuilder::BuildMenu(kEditMenu);
+	menuBar->AddItem(fEditMenu);
+
+	fProjectMenu = MenuBuilder::MenuBuilder::BuildMenu(kProjectMenu);
+	menuBar->AddItem(fProjectMenu);
+
+	fTracksMenu = MenuBuilder::MenuBuilder::BuildMenu(kTracksMenu);
+	menuBar->AddItem(fTracksMenu);
+
+	fEffectsMenu = BuildEffectsMenu();
+	menuBar->AddItem(fEffectsMenu);
+
+	fGenerateMenu = BuildGenerateMenu();
+	menuBar->AddItem(fGenerateMenu);
+
+	fEngineMenu = MenuBuilder::MenuBuilder::BuildMenu(kEngineMenu);
+	menuBar->AddItem(fEngineMenu);
+
+	menuBar->AddItem(MenuBuilder::MenuBuilder::BuildMenu(kHelpMenu));
 
 	return menuBar;
 }
 
 
-BMenu*
-FaberView::BuildEditMenu()
+void
+FaberView::UpdateMenu()
 {
-	return MenuBuilder::BuildMenu(kEditMenu);
-}
+	bool enableEdit = fTracksContainer->CountTracks() > 0;
 
+	fFileMenu->ItemAt(5)->SetEnabled(enableEdit);
+	fFileMenu->ItemAt(6)->SetEnabled(enableEdit);
+	fFileMenu->ItemAt(8)->SetEnabled(enableEdit);
 
-BMenu*
-FaberView::BuildTracksMenu()
-{
-	return MenuBuilder::BuildMenu(kTracksMenu);
+	fEditMenu->SetEnabled(enableEdit);
+
+	fProjectMenu->ItemAt(0)->SetEnabled(enableEdit);
+
+	fTracksMenu->ItemAt(1)->SetEnabled(enableEdit);
+	fTracksMenu->ItemAt(3)->SetEnabled(enableEdit);
+	fTracksMenu->ItemAt(4)->SetEnabled(enableEdit);
+
+	fEffectsMenu->SetEnabled(enableEdit);
+	fGenerateMenu->SetEnabled(enableEdit);
+		
+	fEngineMenu->ItemAt(2)->SetEnabled(enableEdit);
+	fEngineMenu->ItemAt(4)->SetEnabled(enableEdit);
 }
 
 
@@ -161,25 +184,4 @@ FaberView::BuildGenerateMenu()
 	}
 
 	return menu;
-}
-
-
-BMenu*
-FaberView::BuildEngineMenu()
-{
-	return MenuBuilder::MenuBuilder::BuildMenu(kEngineMenu);
-}
-
-
-BMenu*
-FaberView::BuildProjectMenu()
-{
-	return MenuBuilder::MenuBuilder::BuildMenu(kProjectMenu);
-}
-
-
-BMenu*
-FaberView::BuildHelpMenu()
-{
-	return MenuBuilder::MenuBuilder::BuildMenu(kHelpMenu);
 }

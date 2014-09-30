@@ -47,13 +47,8 @@ public:
 			static void			BuildRecentsMenu(BMenu* menu,
 									uint32 message);
 
-			BMenu*				BuildEditMenu();
-			BMenu*				BuildTracksMenu();
 			BMenu*				BuildEffectsMenu();
 			BMenu*				BuildGenerateMenu();
-			BMenu*				BuildEngineMenu();
-			BMenu*				BuildProjectMenu();
-			BMenu*				BuildHelpMenu();
 private:
 			TracksContainer*	fTracksContainer;
 			ToolBar*			fToolBar;

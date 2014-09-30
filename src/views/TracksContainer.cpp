@@ -24,6 +24,7 @@
 #include <StringView.h>
 
 #include "AudioTrackView.h"
+#include "CommandBuilder.h"
 #include "CommandServer.h"
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
@@ -373,6 +374,9 @@ TracksContainer::RemoveTrack(TrackView* track)
 	fLayout->RemoveView(track);
 	ProjectManager::UnregisterTrack(track->GetTrack());
 	delete track;
+
+	WindowsManager::MainWinMessenger()
+		.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
 
 	return B_OK;
 }

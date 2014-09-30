@@ -86,6 +86,10 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 	switch (message->what)
 	{
 
+		case FABER_UPDATE_MENU:
+			WindowsManager::MainWindow()->MainView()->UpdateMenu();
+		break;
+
 		case FABER_ABOUT:
 			WindowsManager::ShowAbout();
 		break;
@@ -133,10 +137,9 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 				break;
 			}
 
-			if (fProjectManager->HasChanged()) {
-				BMessenger msg = WindowsManager::MainWinMessenger();
-				msg.SendMessage(new BMessage(B_SAVE_REQUESTED));
-			}
+			if (fProjectManager->HasChanged())
+				WindowsManager::MainWinMessenger()
+					.SendMessage(new BMessage(B_SAVE_REQUESTED));
 
 			break;
 		}

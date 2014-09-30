@@ -22,6 +22,7 @@
 
 #include "AudioGate.h"
 #include "AutoDeleter.h"
+#include "CommandBuilder.h"
 #include "FaberDefs.h"
 #include "StorageUtils.h"
 #include "TrackIO.h"
@@ -139,6 +140,10 @@ ProjectManager::LoadProject(entry_ref ref)
 	if (msg->Unflatten(fProjectFile) == B_OK
 		&& AudioGate::UnarchiveTracks(msg) != B_OK) {
 		fWasSaved = true;
+
+		WindowsManager::MainWinMessenger()
+			.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
+
 		return B_OK;
 	}
 
@@ -198,6 +203,9 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 	}
 
   	_NotifyTracksContainer(track);
+
+	WindowsManager::MainWinMessenger()
+		.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
 
 	return B_OK;
 }
