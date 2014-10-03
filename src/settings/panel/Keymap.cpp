@@ -97,7 +97,7 @@ static const char* _KeyLabel(char in)
 class KeyItem : public BStringItem {
 public:
 							KeyItem(const char* ID, char key,
-								int32 mod, char key2, int32 mod2, int32 id);
+								int32 mod, int32 id);
 
 							~KeyItem();
 	
@@ -113,22 +113,17 @@ private:
 		  	void			DrawMods(BView* view, BRect r, int32 mod);
 		  	void			DrawKey(BView* view, BRect r, const char* c);
 
-			char			fKey;
-			char			fKeyAlt;
+			char			fKey; 
 			int32			fMod;
-			int32			fModAlt;
 			int32			fId;
 };
 
 
-KeyItem::KeyItem(const char* ID, char key, int32 mod,
-	char keyAlt, int32 modAlt, int32 id)
+KeyItem::KeyItem(const char* ID, char key, int32 mod, int32 id)
 	:
 	BStringItem(ID),
 	fKey(key),
-	fKeyAlt(keyAlt),
 	fMod(mod),
-	fModAlt(modAlt),
 	fId(id)
 {
 }
@@ -154,23 +149,9 @@ KeyItem::SetKey(char key)
 
 
 void
-KeyItem::SetKeyAlt(char key)
-{
-	fKeyAlt = key;
-}
-
-
-void
 KeyItem::SetMod(int32 mod)
 {
 	fMod = mod;
-}
-
-
-void
-KeyItem::SetModAlt(int32 mod)
-{
-	fModAlt = mod;
 }
 
 
@@ -215,14 +196,14 @@ KeyItem::DrawItem(BView* view, BRect rect, bool all)
 
 	x = rect.right - 32;
 
-	DrawMods(view, BRect( x - font.Size() - 6, rect.top+1, x -4, rect.bottom-1), fModAlt);
+	/*DrawMods(view, BRect( x - font.Size() - 6, rect.top+1, x -4, rect.bottom-1), fModAlt);
 
 	if (fKeyAlt >' ' && fKeyAlt < 'a') {
 		view->DrawChar( fKeyAlt, BPoint( x, rect.top +font.Size() ));
 	} else if (fKeyAlt) {
 		key = _KeyLabel(fKeyAlt);
 		DrawKey(view, BRect(x-2, rect.top+1, x+font.StringWidth(key)+2, rect.bottom-1), key);
-	}
+	}*/
 }
 
 
@@ -588,12 +569,12 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 		new BMessage(CLEAR1)));
 
 	r.OffsetBy(0,30);
-
+/*
 	view->AddChild(control2 = new KeyControl(r, B_TRANSLATE("Alternate"),
 		bind->altKey, bind->altMod, false));
 
 	control2->SetDivider(x);
-
+*/
 	view->AddChild(new BButton(BRect(r.right+8, r.top,
 		Bounds().right-8, r.bottom), NULL, B_TRANSLATE("CLEAR"),
 		new BMessage(CLEAR2)));
@@ -635,8 +616,6 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 	
 			key->key = control1->GetKey();
 			key->mod = control1->GetMod();
-			key->altKey = control2->GetKey();
-			key->altMod = control2->GetMod();
 			key->label = gKeyBind->KeyBindAt(index)->label;
 			key->message = gKeyBind->KeyBindAt(index)->message;
 			key->itemType = gKeyBind->KeyBindAt(index)->itemType;
@@ -702,7 +681,7 @@ KeymapView::KeymapView()
 		} 
 		
 		if (bind->itemType == FABER_ITEM_START) {
-			BListItem* newItem = new KeyItem(bind->label, 0, 0, 0, 0, -1);
+			BListItem* newItem = new KeyItem(bind->label, 0, 0, -1);
 
 			if (items.CountItems() > 0)
 				fListView->AddUnder(newItem, item);
@@ -713,8 +692,7 @@ KeymapView::KeymapView()
 		} else if (item != NULL) {
 			fListView->AddUnder(new KeyItem(bind->label,
 				bind->key,
-				bind->mod, bind->altKey,
-				bind->altMod, i), item);
+				bind->mod, i), item);
 		}
 	}
 

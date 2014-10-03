@@ -32,8 +32,6 @@ public:
 
 	char			key;
 	int32			mod;
-	char			altKey;
-	int32			altMod;
 
 	uint32			message;
 	uint32			itemType;

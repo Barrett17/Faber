@@ -111,8 +111,6 @@ FaberShortcut::_CopyObj(KeyBind* bind, KeyBind* from)
 	bind->label = from->label;
 	bind->key = from->key;
 	bind->mod = from->mod;
-	bind->altMod = from->altMod;
-	bind->altKey = from->altKey;
 	bind->message = from->message;
 	bind->itemType = from->itemType;
 }
