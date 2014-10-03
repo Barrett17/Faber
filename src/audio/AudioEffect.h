@@ -23,11 +23,12 @@
 #include "FaberEffect.h"
 
 
-class AudioEffect : public FaberEffect
-{
+class AudioEffect : public FaberEffect {
 public:
 							AudioEffect(const char* name, uint32 flags);
 	virtual 				~AudioEffect();
+
+	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
 
 	virtual status_t		FilterTrack(AudioTrack* track,
 								int64 start, size_t size);
