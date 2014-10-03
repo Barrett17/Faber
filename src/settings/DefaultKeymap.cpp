@@ -187,8 +187,6 @@ KeyBind kTrackContextualMenu[] {
 
 	{ NULL, 0, 0, 0, 0, 0, FABER_ITEM_END },
 
-	{ NULL, 0, 0, 0, 0, 0, FABER_ITEM_END },
-
 	{ "Export", 0, 0, 0, 0, 0, FABER_ITEM_START },
 
 	{ "To file...",           0, 0,                           0, 0,              FABER_TRACK_EXPORT_NFILE, FABER_SUBITEM },

@@ -679,11 +679,11 @@ KeymapView::KeymapView()
 	// add the prefs list at the left
 	fListView = new BOutlineListView("key list");
 
-	BScrollView* sv = new BScrollView("scroll", fListView,
+	BScrollView* scrollView = new BScrollView("scroll", fListView,
 		B_FOLLOW_ALL_SIDES, false, true, B_PLAIN_BORDER);
 
-	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-	sv->MakeFocus(false);
+	scrollView->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
+	scrollView->MakeFocus(false);
 
 	BObjectList<BListItem> items(false);
 
@@ -692,11 +692,10 @@ KeymapView::KeymapView()
 		if (bind->itemType == FABER_SPLITTER)
 			continue;
 
-		printf("Key %p %c\n", bind, bind->message);
-
 		BListItem* item = items.ItemAt(items.CountItems()-1);
 
-		if (bind->itemType == FABER_ITEM_END || bind->itemType == FABER_EOF) {
+		if (item != NULL && (bind->itemType == FABER_ITEM_END
+			|| bind->itemType == FABER_EOF)) {
 				fListView->Collapse(item);
 				items.RemoveItemAt(items.CountItems()-1);
 			continue;
@@ -722,7 +721,7 @@ KeymapView::KeymapView()
 	fIndex = -1;
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 1)
-		.Add(sv, 0)
+		.Add(scrollView, 0)
 	.End();
 }
 
