@@ -29,8 +29,7 @@
 
 */
 
-class EngineView: public BGroupView
-{
+class EngineView: public BGroupView {
 public:
 								EngineView();
 	virtual 					~EngineView();

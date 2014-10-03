@@ -21,8 +21,7 @@
 
 #include <GroupView.h>
 
-class InterfaceView: public BGroupView
-{
+class InterfaceView: public BGroupView {
 public:
 								InterfaceView();
 	virtual 					~InterfaceView();

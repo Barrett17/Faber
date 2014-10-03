@@ -22,8 +22,7 @@
 #include <Window.h>
 
 
-class SettingsWindow : public BWindow
-{
+class SettingsWindow : public BWindow {
 public:
 							SettingsWindow();
 	virtual					~SettingsWindow();
