@@ -39,6 +39,8 @@ class RecentsMenuBuilder : public CustomMenuCreator {
 				NULL, NULL, be_app, 9, true,
 				NULL, FABER_SIGNATURE);
 		}
+
+		return NULL;
 	}
 };
 
