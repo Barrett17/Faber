@@ -41,6 +41,8 @@ public:
 			static void			RemoveCommandListener(
 									CommandListener* listener);	
 
+			static status_t		SendCommand(BMessage* msg);
+
 private:
 			FaberView*			fFaberView;
 			ProjectManager*		fProjectManager;

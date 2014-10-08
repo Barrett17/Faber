@@ -38,28 +38,7 @@ public:
 
 	static WindowsManager*	Get();
 
-	// It's preferable to use this one instead of
-	// the method returning a pointer.
-	static BMessenger&		MainWinMessenger();
-
 	static FaberWindow*		MainWindow();
-
-	// Extending, it could be good to have methods like those
-	// static void			UpdateMainMenu();
-	// static void			UpdateToolBar();
-	// static void			UpdateInfoToolBar();
-
-	// static void			MessageToMainWin(BMessage* msg);
-
-	// Continuing this way, would be cool to clean the code
-	// by using a function to create alerts, this should
-	// avoid duplication of "new BAlert(..)"*, so imagine something like :
-
-	// static int32			ShowAlert(const char* title, const char* text
-	//							const char* butt1, const char* butt2 = NULL,
-	//							const char* butt3 = NULL,
-	//							button_width width = B_WIDTH_AS_USUAL,
-	//							alert_type type = B_INFO_ALERT);
 
 	void					ShowSettings();
 	SettingsWindow*			GetSettingsWindow();

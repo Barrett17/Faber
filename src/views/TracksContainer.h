@@ -42,9 +42,10 @@ public:
 			int32 				CountTracks() const;
 			TrackView*			TrackAt(int32 index) const;
 			TrackView*			TrackByID(uint32 id);
+			int32				IndexOf(TrackView* track) const;
 
 			status_t 			AddTrack(TrackView* track, int32 index = -1);
-			status_t			AddTrack(Track* track);
+			status_t			AddTrack(Track* track, int32 index = -1);
 
 			status_t			RemoveTrack(int32 index);
 			status_t			RemoveTrack(TrackView* track = NULL);

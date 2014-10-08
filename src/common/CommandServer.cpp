@@ -136,10 +136,8 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 				WindowsManager::GetSavePanel()->Show();
 				break;
 			}
-
 			if (fProjectManager->HasChanged())
-				WindowsManager::MainWinMessenger()
-					.SendMessage(new BMessage(B_SAVE_REQUESTED));
+				SendCommand(new BMessage(B_SAVE_REQUESTED));
 
 			break;
 		}
@@ -201,4 +199,13 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 		result = B_SKIP_MESSAGE;
 
 	return result;
+}
+
+
+status_t
+CommandServer::SendCommand(BMessage* msg)
+{
+	BMessenger mess = WindowsManager::MainWindow();
+
+	return mess.SendMessage(msg);
 }

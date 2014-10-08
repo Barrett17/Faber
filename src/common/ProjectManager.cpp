@@ -23,6 +23,7 @@
 #include "AudioGate.h"
 #include "AutoDeleter.h"
 #include "CommandBuilder.h"
+#include "CommandServer.h"
 #include "FaberDefs.h"
 #include "StorageUtils.h"
 #include "TrackIO.h"
@@ -141,8 +142,8 @@ ProjectManager::LoadProject(entry_ref ref)
 		&& AudioGate::UnarchiveTracks(msg) != B_OK) {
 		fWasSaved = true;
 
-		WindowsManager::MainWinMessenger()
-			.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
+		CommandServer::SendCommand(
+			CommandBuilder(FABER_UPDATE_MENU));
 
 		return B_OK;
 	}

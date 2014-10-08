@@ -24,6 +24,8 @@
 
 #include "Track.h"
 
+#define TRACK_MESSAGE_ID "track_id"
+
 
 class TrackView : public BGroupView
 {
@@ -78,8 +80,7 @@ public:
 	virtual void			UpdateRequested() = 0;
 	virtual void			UpdateRequested(BRect bounds) = 0;
 
-			// Should update the menu but not the track data itself
-	virtual void			MenuUpdateRequested() = 0;
+	virtual void			CommandForTrack(BMessage* msg) = 0;
 
 protected:
 			Track*			fTrack;

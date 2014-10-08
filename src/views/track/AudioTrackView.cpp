@@ -19,13 +19,16 @@
 
 #include "AudioTrackView.h"
 
+#include <Alert.h>
 #include <LayoutBuilder.h>
 #include <MenuBar.h>
 
 #include "CommandBuilder.h"
 #include "FaberDefs.h"
 #include "IconButton.h"
+#include "InputRequest.h"
 #include "MenuBuilder.h"
+#include "TracksContainer.h"
 #include "VolumeSlider.h"
 
 #define HEIGHT_VAL_REF 110
@@ -44,7 +47,7 @@ public:
 
 	void	FilterItem(BMenuItem* item, uint32 message)
 	{
-		item->Message()->AddUInt32("track_id", fOwner->ID());
+		fOwner->AddDefaultAttributes(item->Message());
 	}
 
 private:
@@ -97,13 +100,12 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	// Track menu
 	fTrackMenu = MenuBuilder::BuildMenu(kTrackContextualMenu, &filter);
-
 	fTrackMenu->SetTargetForItems(this);
 	fTrackMenu->SetName(trackName.String());
 
-	BMenuBar* toolButton = new BMenuBar(trackName.String());
-	toolButton->AddItem(fTrackMenu);
-	toolButton->SetToolTip(B_TRANSLATE("Track Options"));
+	fToolButton = new BMenuBar(trackName.String());
+	fToolButton->AddItem(fTrackMenu);
+	fToolButton->SetToolTip(B_TRANSLATE("Track Options"));
 
 	BMessage* closeMsg = CommandBuilder(FABER_REMOVE_TRACK);
 	AddDefaultAttributes(closeMsg);
@@ -124,7 +126,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 			.AddGroup(B_HORIZONTAL, 0)
 				.Add(closeButton)
 				.AddGlue()
-				.Add(toolButton)
+				.Add(fToolButton)
 			.End()
 			.AddGroup(B_HORIZONTAL, 0)
 				.Add(recButton)
@@ -149,31 +151,93 @@ AudioTrackView::~AudioTrackView()
 }
 
 
-void
-AudioTrackView::MessageReceived(BMessage* message)
+AudioTrack*
+AudioTrackView::GetTrack() const
 {
-	switch (message->what)
-	{
+	return fAudioTrack;
+}
 
-		case B_SELECT_ALL:
-			SelectAll();
-			break;
 
-		case FABER_UNSELECT_ALL:
-			Unselect();
-			break;
-
+void
+AudioTrackView::CommandForTrack(BMessage* command)
+{
+	switch (command->what) {
 		case FABER_TRACK_SET_NAME:
 		{
+			InputRequest* request = new InputRequest(
+				B_TRANSLATE("Set Name"),
+				B_TRANSLATE("Name:"),
+				Name(),
+				B_TRANSLATE("Ok"),
+				B_TRANSLATE("Cancel"));
+
+			char* input = NULL;
+			ArrayDeleter<char> del(input);
+			int32 ret = request->Go(&input);
+
+			if (ret == 0)
+				UpdateName(input);
 		}
 		break;
 
 		case FABER_TRACK_GET_INFO:
 		{
+			BString alertText = "Track Informations:\n\n";
+			alertText << "Frames "
+			<< fAudioTrack->CountFrames() << "\n"
+			<< "Channels " << fAudioTrack->CountChannels() << "\n"
+			<< "Size " << "\n";
+
+			BAlert* alert = new BAlert(Name(), alertText.String(),
+				"Ok", NULL, NULL, B_WIDTH_AS_USUAL,
+				B_OFFSET_SPACING, B_INFO_ALERT);
+
+			alert->Go();
 		}
 		break;
 
 		case FABER_TRACK_SPLIT_CHAN:
+		{
+			// TODO should be disabled in menu
+			// for mono tracks.
+			if (CountChannels() < 2)
+				return;
+
+			TracksContainer* container = NULL;
+			if (command->FindPointer("tracks_container",
+				(void**)&container) != B_OK)
+				break;
+
+			for (int32 i = 0; i < CountChannels(); i++) {
+				MediaBlockMap* chan = RemoveChannelAt(i, false);
+				AudioTrack* audioTrack = new AudioTrack();
+				audioTrack->SetName(Name());
+				audioTrack->GetIndex()->AddChannel(chan);
+				
+				container->AddTrack(audioTrack,
+					container->IndexOf(this)+1);
+			}
+
+		}
+		break;
+
+		case FABER_TRACK_ADD_CHAN:
+		{
+			AddChannel(new MediaBlockMap());
+		}
+		break;
+
+		case FABER_TRACK_RM_CHAN:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MUP_CHAN:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MDOWN_CHAN:
 		{
 		}
 		break;
@@ -183,16 +247,17 @@ AudioTrackView::MessageReceived(BMessage* message)
 		}
 		break;
 
-		default:
-			TrackView::MessageReceived(message);
+		case FABER_TRACK_MOVE_UP:
+		{
+		}
+		break;
+
+		case FABER_TRACK_MOVE_DOWN:
+		{
+		}
+		break;
+
 	}
-}
-
-
-AudioTrack*
-AudioTrackView::GetTrack() const
-{
-	return fAudioTrack;
 }
 
 
@@ -211,8 +276,10 @@ AudioTrackView::UpdateRequested(BRect rect)
 
 
 void
-AudioTrackView::MenuUpdateRequested()
+AudioTrackView::UpdateName(const char* name)
 {
+	SetName(name);
+	fToolButton->ItemAt(0)->SetLabel(name);
 }
 
 
@@ -249,7 +316,7 @@ AudioTrackView::Select(int64 start, int64 end)
 void
 AudioTrackView::AddDefaultAttributes(BMessage* message)
 {
-	message->AddUInt32("track_id", ID());
+	message->AddUInt32(TRACK_MESSAGE_ID, ID());
 }
 
 

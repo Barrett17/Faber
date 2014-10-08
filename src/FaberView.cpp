@@ -148,8 +148,7 @@ FaberView::UpdateMenu()
 	fEffectsMenu->SetEnabled(enableEdit);
 	fGenerateMenu->SetEnabled(enableEdit);
 		
-	fEngineMenu->ItemAt(2)->SetEnabled(enableEdit);
-	fEngineMenu->ItemAt(4)->SetEnabled(enableEdit);
+	fEngineMenu->SetEnabled(enableEdit);
 }
 
 

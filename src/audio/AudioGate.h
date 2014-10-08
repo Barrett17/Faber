@@ -67,6 +67,10 @@ public:
 			static BMessage*		ArchiveTracks();
 			static status_t			UnarchiveTracks(BMessage* from);
 
+			// TODO implement a pulse interface for the UI widgets
+			// void RegisterPulseListener(PulseListener* listener,
+			// 		int32 flags, int32 trackID = -1);
+
 protected:
 			friend class			AudioEngine;
 

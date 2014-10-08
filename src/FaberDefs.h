@@ -24,6 +24,7 @@
 #include <Locale.h>
 #include <Catalog.h>
 
+#include "AutoDeleter.h"
 #include "FaberMessages.h"
 #include "FaberResources.h"
 #include "FaberShortcut.h"

@@ -23,6 +23,8 @@
 #include <ScrollView.h>
 #include <StringView.h>
 
+#include <stdlib.h>
+
 #include "AudioTrackView.h"
 #include "CommandBuilder.h"
 #include "CommandServer.h"
@@ -105,6 +107,16 @@ TracksContainer::HandleCommand(BMessage* message)
 {
 	//message->PrintToStream();
 
+	if (message->what != FABER_REMOVE_TRACK) {
+		TrackView* track = _FindTrack(message);
+		if (track != NULL) {
+			if (message->AddPointer("tracks_container", this) == B_OK) {
+				track->CommandForTrack(message);
+				return B_OK;
+			}
+		}
+	}
+
 	switch (message->what)
 	{
 		case FABER_NEW_MONO_TRACK:
@@ -132,14 +144,17 @@ TracksContainer::HandleCommand(BMessage* message)
 
 			char* input = NULL;
 			int32 ret = request->Go(&input);
+			ArrayDeleter<char> del(input);
 
 			if (ret == 0) {
-				/*int32 channels = 
-				AudioTrack* track = new AudioTrack(channels);
-				AddTrack(track);*/			
-			}
+				// TODO check input for non numeric characters
+				int32 channels = (int) strtol(input, (char**) NULL, 10);
+				if (channels < 1)
+					break;
 
-			delete[] input;
+				AudioTrack* track = new AudioTrack(channels);
+				AddTrack(track);
+			}
 		}
 		break;
 
@@ -219,90 +234,6 @@ TracksContainer::HandleCommand(BMessage* message)
 			ZoomSelection();
 		break;
 
-		// Track related commands
-		case FABER_TRACK_SET_NAME:
-		{
-			AudioTrackView* track = _FindAudioTrack(message);
-			if (track == NULL)
-				break;
-
-			InputRequest* request = new InputRequest(
-				B_TRANSLATE("Set Name"),
-				B_TRANSLATE("Name:"),
-				track->Name(),
-				B_TRANSLATE("Ok"),
-				B_TRANSLATE("Cancel"));
-
-			char* input = NULL;
-			int32 ret = request->Go(&input);
-
-			if (ret == 0)
-				track->SetName(input);
-
-			delete[] input;
-		}
-		break;
-
-		case FABER_TRACK_GET_INFO:
-		{
-		}
-		break;
-
-		case FABER_TRACK_SPLIT_CHAN:
-		{
-			AudioTrackView* track = _FindAudioTrack(message);
-			if (track == NULL)
-				break;
-
-			for (int32 i = 0; i < track->CountChannels(); i++) {
-				MediaBlockMap* chan = track->RemoveChannelAt(i, false);
-				AudioTrack* audioTrack = new AudioTrack();
-				audioTrack->GetIndex()->AddChannel(chan);
-				AddTrack(audioTrack);
-			}
-
-		}
-		break;
-
-		case FABER_TRACK_ADD_CHAN:
-		{
-			AudioTrackView* track = _FindAudioTrack(message);
-			if (track == NULL)
-				break;
-
-			track->AddChannel(new MediaBlockMap());
-		}
-		break;
-
-		case FABER_TRACK_RM_CHAN:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MUP_CHAN:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MDOWN_CHAN:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MERGE_WITH:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MOVE_UP:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MOVE_DOWN:
-		{
-		}
-		break;
 
 		default:
 			return B_ERROR;
@@ -334,7 +265,7 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 
 
 status_t
-TracksContainer::AddTrack(Track* track)
+TracksContainer::AddTrack(Track* track, int32 index)
 {
 	if (track->IsAudio()) {
 		AudioTrack* audioTrack = (AudioTrack*) track;
@@ -344,10 +275,12 @@ TracksContainer::AddTrack(Track* track)
 		AudioTrackView* trackView =
 			new AudioTrackView("AudioTrack", audioTrack);
 
-		status_t ret = AddTrack(trackView);
+		if (index == -1)
+			index = CountTracks();
 
-		WindowsManager::MainWinMessenger()
-			.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
+		status_t ret = AddTrack(trackView, index);
+
+		CommandServer::SendCommand(CommandBuilder(FABER_UPDATE_MENU));
 
 		return ret;
 	}
@@ -380,8 +313,7 @@ TracksContainer::RemoveTrack(TrackView* track)
 	ProjectManager::UnregisterTrack(track->GetTrack());
 	delete track;
 
-	WindowsManager::MainWinMessenger()
-		.SendMessage(CommandBuilder(FABER_UPDATE_MENU));
+	CommandServer::SendCommand(CommandBuilder(FABER_UPDATE_MENU));
 
 	return B_OK;
 }
@@ -391,6 +323,13 @@ TrackView*
 TracksContainer::TrackAt(int32 index) const
 {
 	return fTrackViews.ItemAt(index);
+}
+
+
+int32
+TracksContainer::IndexOf(TrackView* track) const
+{
+	return fTrackViews.IndexOf(track);
 }
 
 
@@ -579,7 +518,7 @@ TrackView*
 TracksContainer::_FindTrack(BMessage* message)
 {
 	uint32 id;
-	if (message->FindUInt32("track_id", &id) != B_OK)
+	if (message->FindUInt32(TRACK_MESSAGE_ID, &id) != B_OK)
 		return NULL;
 
 	return TrackByID(id);
@@ -590,6 +529,9 @@ AudioTrackView*
 TracksContainer::_FindAudioTrack(BMessage* message)
 {
 	TrackView* track = _FindTrack(message);
+
+	if (track == NULL)
+		return NULL;
 
 	if (track->GetTrack()->IsAudio())
 		return (AudioTrackView*) track;

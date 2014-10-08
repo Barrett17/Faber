@@ -41,12 +41,8 @@ public:
 
 							~AudioTrackView();
 
-			void			MessageReceived(BMessage* message);
-
 			AudioTrack*		GetTrack() const;
 
-			// Those aren't only get/set methods but interacts with GUI
-			// and update it if needed.
 			int32			CountChannels() const;
 			void			AddChannel(MediaBlockMap* channel);
 			void			RemoveChannel(MediaBlockMap* channel);
@@ -62,7 +58,9 @@ public:
 			void			UpdateRequested();
 			void			UpdateRequested(BRect rect);
 
-	virtual void			MenuUpdateRequested();
+			void			UpdateName(const char* name);
+
+			void			CommandForTrack(BMessage* command);
 
 protected:
 			void			AddDefaultAttributes(BMessage* message);
@@ -72,6 +70,7 @@ private:
 			AudioTrack*		fAudioTrack;
 			WaveRender*		fWaveRender;
 
+			BMenuBar*		fToolButton;
 			BMenu*			fTrackMenu;
 };
 

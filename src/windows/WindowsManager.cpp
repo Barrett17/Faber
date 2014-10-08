@@ -94,14 +94,6 @@ WindowsManager::Get()
 }
 
 
-BMessenger&
-WindowsManager::MainWinMessenger()
-{
-	BMessenger* mess = new BMessenger(Get()->fMainWindow);
-	return *mess;
-}
-
-
 FaberWindow*
 WindowsManager::MainWindow()
 {
@@ -181,7 +173,8 @@ WindowsManager::GetSavePanel()
 {
 	if (Get()->fSavePanel == NULL) {
 
-		Get()->fSavePanel = new BFilePanel(B_SAVE_PANEL, &WindowsManager::MainWinMessenger(),
+		Get()->fSavePanel = new BFilePanel(B_SAVE_PANEL,
+			new BMessenger(Get()->fMainWindow),
 			NULL, false, new BMessage(B_SAVE_REQUESTED));
 
 		Get()->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save Project"));
