@@ -59,19 +59,3 @@ FaberEffect::Flags() const
 {
 	return fFlags;
 }
-
-
-status_t
-FaberEffect::ArchiveSettings(BMessage* message)
-{
-
-	return B_OK;
-}
-
-
-status_t
-FaberEffect::UnarchiveSettings(BMessage* message)
-{
-
-	return B_OK;
-}

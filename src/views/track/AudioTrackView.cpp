@@ -177,6 +177,9 @@ AudioTrackView::CommandForTrack(BMessage* command)
 
 			if (ret == 0)
 				UpdateName(input);
+
+			if (request->LockLooper())
+				request->Quit();
 		}
 		break;
 

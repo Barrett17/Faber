@@ -25,24 +25,31 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
+/*
+ * Copyright 2013-2014 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 #ifndef AMP_FILTER_H
 #define AMP_FILTER_H
 
-#include "AudioTrack.h"
 #include "AudioEffect.h"
-#include "SpinSlider.h"
 
-class AmplifierEffect : public AudioEffect
-{
+
+class AmplifierEffect : public AudioEffect {
 public:
-							AmplifierEffect(
-								uint32 flags = FABER_REALTIME_EFFECT
-									| FABER_FILTER | FABER_GUI_EFFECT);
+				AmplifierEffect();
 
-	BView*					SettingsPanel();
+	BView*		SettingsPanel();
 
-	void					FilterBuffer(float* buffer, size_t size);
+protected:
+	void		FilterBuffer(float* buffer, size_t size);
+
+	status_t	ArchiveSettings(BMessage* msg);
+	status_t	UpdateSettings(BMessage* msg);
+
+private:
+	float		fLevel;
+
 };
 
 #endif

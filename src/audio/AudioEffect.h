@@ -16,7 +16,6 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #ifndef _AUDIO_EFFECT_H_
 #define _AUDIO_EFFECT_H_
 
@@ -28,10 +27,12 @@ public:
 							AudioEffect(const char* name, uint32 flags);
 	virtual 				~AudioEffect();
 
+	virtual status_t		FilterTrack(Track* track,
+								int64 start, int64 end);
+
+protected:
 	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
 
-	virtual status_t		FilterTrack(AudioTrack* track,
-								int64 start, size_t size);
 };
 
 #endif

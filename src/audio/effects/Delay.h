@@ -44,9 +44,9 @@ public:
 
 	void					FilterBuffer(float* buffer, size_t size);
 
-	status_t				FlattenSettings(BMessage* message);
-	status_t				UnflattenSettings(BMessage* message);
-   
+	status_t				ArchiveSettings(BMessage* message);
+	status_t				UpdateSettings(BMessage* message);
+
 private:
 	float*					delay_buffer;
 	int32 					buffer_size;

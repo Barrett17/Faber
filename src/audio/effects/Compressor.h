@@ -48,6 +48,8 @@ public:
 	virtual void 				FilterBuffer(float *, size_t);
 
 	virtual BView*				SettingsPanel();
+			status_t			ArchiveSettings(BMessage* message);
+			status_t			UpdateSettings(BMessage* message);
    
 private:
 	float *delay_buffer;

@@ -303,6 +303,23 @@ MediaBlockMapWriter::WriteFrames(void* buffer, size_t size,
 }
 
 
+int64
+MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount)
+{
+}
+
+
+int64
+MediaBlockMapWriter::WriteFramesAt(void* buffer, int64 start, int64 frameCount)
+{
+	if (start < 0)
+		return 0;
+
+	SeekToFrame(start);
+	return WriteFrames(buffer, frameCount);
+}
+
+
 void
 MediaBlockMapWriter::Flush()
 {
@@ -323,6 +340,23 @@ MediaBlockMapReader::ReadFrames(void* buffer, size_t size)
 	// block->ReadLock();
 
 	// block->ReadUnlock();
+}
+
+
+int64
+MediaBlockMapReader::ReadFrames(void* buffer, int64 frameCount)
+{
+}
+
+
+int64
+MediaBlockMapReader::ReadFramesAt(void* buffer, int64 start, int64 frameCount)
+{
+	if (start < 0)
+		return 0;
+
+	SeekToFrame(start);
+	return ReadFrames(buffer, frameCount);
 }
 
 

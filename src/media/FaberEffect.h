@@ -33,6 +33,7 @@ const uint32 FABER_BUILTIN_EFFECT	= 0x40000000UL;
 const uint32 FABER_CONSUMER			= 0x20000000UL;
 const uint32 FABER_FILTER			= 0x10000000UL;
 const uint32 FABER_GUI_EFFECT		= 0x08000000UL;
+const uint32 FABER_PARAMWEB_EFFECT	= 0x00100000UL;
 const uint32 FABER_MULTIPASS_EFFECT = 0x04000000UL;
 const uint32 FABER_PRODUCER			= 0x02000000UL;	
 const uint32 FABER_REALTIME_EFFECT	= 0x01000000UL;
@@ -47,23 +48,33 @@ public:
 
 	const char*				Name() const;
 
+	// Build the config view of this effect.
+	// Return null if there is no GUI.
+	// NOTE: it's planned to build this GUI
+	// using the BParameterWeb.
 	virtual BView*			SettingsPanel() = 0;
-	BMenuItem*				BuildItem();
-	BParameterWeb*			ParameterWeb();
 
-	int32					Flags() const;
+			BMenuItem*		BuildItem();
 
-	virtual status_t		FilterTrack(AudioTrack* track,
-								int64 start, size_t size) = 0;
+ 
+			BParameterWeb*	ParameterWeb();
 
-	// TODO it's probably better to make it a BArchivable
+			int32			Flags() const;
 
-	status_t				ArchiveSettings(BMessage* message);
-	status_t				UnarchiveSettings(BMessage* message);
+	// This is called by EffectsManager to filter a track.
+	// An effect can reject if some unsupported track is passed.
+	virtual status_t		FilterTrack(Track* track,
+								int64 start, int64 end) = 0;
+
+	// Save the current settings into message.
+	virtual status_t		ArchiveSettings(BMessage* message) = 0;
+
+	// Update effect's settings stored in message.
+	virtual status_t		UpdateSettings(BMessage* message) = 0;
 
 private:
-	uint32					fFlags;
-	const char*				fName;
+			uint32			fFlags;
+			const char*		fName;
 };
 
 typedef BObjectList<FaberEffect> FaberEffectList;

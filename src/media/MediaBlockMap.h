@@ -64,6 +64,14 @@ public:
 										int64 from = -1,
 										bool overWrite = false);
 
+			int64					WriteFrames(void* buffer,
+										int64 frameCount);
+
+			// Seek to start before to read.
+			int64					WriteFramesAt(void* buffer,
+										int64 start,
+										int64 frameCount);
+
 			// This is used to get sure the audio data
 			// and preview will get written.and calculated
 			void					Flush();
@@ -88,8 +96,17 @@ class MediaBlockMapReader : public MediaBlockMapVisitor {
 public:
 			void					ReadFrames(void* buffer, size_t size);
 
-			//float*				ReadPreview(int64 start, int64 end);
+			int64					ReadFrames(void* buffer, int64 frameCount);
+
+			// Seek to start before to read.
+			int64					ReadFramesAt(void* buffer,
+										int64 start, int64 frameCount);
+
+			//int64					ReadPreview(void** buf,
+			//							int64 start, int64 frameCount);
+
 			size_t					ReadPreview(float** ret);
+
 protected:
 			friend class			MediaBlockMap;
 
@@ -135,7 +152,7 @@ public:
 			MediaBlockMapReader*	Reader() const;
 
 private:
-			// TODO will be replaced by an AVL Tree.
+			// TODO will be replaced by an AVL Tree + sentinels.
 			BObjectList<MediaBlock>	fMap;
 
 			MediaBlockMapWriter*	fWriter;

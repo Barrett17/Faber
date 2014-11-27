@@ -25,6 +25,10 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2014 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 
 #include "Amplifier.h"
 
@@ -32,11 +36,14 @@
 #include <LayoutBuilder.h>
 
 #include "FaberDefs.h"
+#include "SpinSlider.h"
 
 
-AmplifierEffect::AmplifierEffect(uint32 flags)
+AmplifierEffect::AmplifierEffect()
 	:
-	AudioEffect(B_TRANSLATE("Amplifier"), flags | FABER_FILTER)
+	AudioEffect(B_TRANSLATE("Amplifier"), FABER_REALTIME_EFFECT
+		| FABER_FILTER | FABER_GUI_EFFECT),
+	fLevel(10)
 {
 
 }
@@ -53,7 +60,7 @@ AmplifierEffect::SettingsPanel()
 	SpinSlider* slider = new SpinSlider("level", B_TRANSLATE("Level (%)"),
 		new BMessage(CONTROL_CHANGED), 1, 300);
 
-	//slider->SetValue(Prefs.filter_amplifier_value);
+	slider->SetValue(fLevel);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL, 0.5)
 		.Add(slider)
@@ -63,29 +70,35 @@ AmplifierEffect::SettingsPanel()
 }
 
 
-/*
 status_t
-AmplifierEffect::FlattenSettings(BMessage* msg)
+AmplifierEffect::ArchiveSettings(BMessage* msg)
 {
-	//Prefs.filter_amplifier_value = value->Value();
+	return msg->AddFloat("GAIN", fLevel);
 }
-*/
+
+
+status_t
+AmplifierEffect::UpdateSettings(BMessage* msg)
+{
+	return msg->FindFloat("GAIN", &fLevel);
+}
 
 
 void
 AmplifierEffect::FilterBuffer(float* buffer, size_t size)
 {
-	/*float amp = Prefs.filter_amplifier_value/100.0;
-	float tmp;
+	float amp = fLevel/100.0;
+	float temp = 0;
 
-	for (size_t i=0; i<size; i++) {
-		tmp = *buffer * amp;
-		if (tmp>1.0)
-			tmp = 1.0;
+	for (size_t i = 0; i < size; i++) {
+		temp = *buffer * amp;
 
-		if (tmp<-1.0)
-			tmp = -1.0;
+		if (temp>1.0)
+			temp = 1.0;
 
-		*buffer++ = tmp;
-	}*/
+		if (temp<-1.0)
+			temp = -1.0;
+
+		*buffer++ = temp;
+	}
 }

@@ -23,6 +23,8 @@
 #include <Button.h>
 #include <LayoutBuilder.h>
 
+#include <stdio.h>
+
 #include "FaberMessages.h"
 
 
@@ -58,17 +60,23 @@ EffectWindow::MessageReceived(BMessage *message)
 {
 	switch (message->what)
 	{
+		case CONTROL_CHANGED:
+		{
+			printf("Control changed:\n");
+		}
+		break;
+
 		case FABER_EFFECT_EXECUTE:
 		{
 
-			break;
 		}
+		break;
 
 		case FABER_EFFECT_ABORT:
 		{
 
-			break;
 		}
+		break;
 
 		default:
 			BWindow::MessageReceived(message);

@@ -94,7 +94,7 @@ StorageUtils::DeleteDirectory(BPath path)
 }
 
 
-// NOTE ATM we support only float (PCM16), also double (PCM32)
+// NOTE ATM we support only float also double
 // and int are planned.
 int64
 StorageUtils::SizeToFrames(size_t size)

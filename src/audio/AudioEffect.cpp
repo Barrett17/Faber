@@ -19,6 +19,8 @@
 
 #include "AudioEffect.h"
 
+#include "StorageUtils.h"
+
 
 AudioEffect::AudioEffect(const char* name, uint32 flags)
 	:
@@ -33,9 +35,38 @@ AudioEffect::~AudioEffect()
 
 
 status_t
-AudioEffect::FilterTrack(AudioTrack* track,
-	int64 start, size_t size)
+AudioEffect::FilterTrack(Track* track, int64 start, int64 end)
 {
+	// TODO investigate the need of an authomatic
+	// conversion mechanism from Track to AudioTrack
+	// using dynamic_casting.
+	AudioTrack* audioTrack = NULL;
+	if (track != NULL && track->IsAudio())
+		audioTrack = (AudioTrack*) track;
+	else
+		return B_ERROR;
+
+	TrackIndex* index = audioTrack->GetIndex();
+
+	int64 frameCount = 44100;
+	float buffer[StorageUtils::FramesToSize(frameCount)];
+
+	for (uint32 i = 0; i < index->CountChannels(); i++) {
+		MediaBlockMap* channel = index->ChannelAt(i);
+		int64 read = 0;
+
+		for (int64 j = start; j < end; j += read) {
+			read = channel->Reader()->ReadFramesAt(buffer, j, frameCount);
+			if (read < 1) {
+				// TODO: Error
+				break;
+			}
+
+			FilterBuffer(buffer, StorageUtils::FramesToSize(read));
+
+			channel->Writer()->WriteFramesAt(buffer, j, read);
+		}
+	}
 
 	return B_OK;
 }

@@ -69,6 +69,21 @@ BassBoostEffect::SettingsPanel()
 	return view;
 }
 
+
+status_t
+BassBoostEffect::ArchiveSettings(BMessage* message)
+{
+	return B_ERROR;
+}
+
+
+status_t
+BassBoostEffect::UpdateSettings(BMessage* message)
+{
+	return B_ERROR;
+}
+
+
 /*
 status_t
 BassBoostEffect::FlattenSettings(BMessage* message)

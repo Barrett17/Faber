@@ -90,11 +90,11 @@ CompressorEffect::SettingsPanel()
 	return view;
 }
 
-/*
+
 status_t
-CompressorEffect::FlattenSettings(BMessage* message)
+CompressorEffect::ArchiveSettings(BMessage* message)
 {
-	Prefs.filter_compressor_rms = rms->Value();
+	/*Prefs.filter_compressor_rms = rms->Value();
 	Prefs.filter_compressor_attac = attac->Value()/1000.0;
 	Prefs.filter_compressor_decay = decay->Value()/1000.0;
 	Prefs.filter_compressor_treshold = treshold->Value();
@@ -102,9 +102,16 @@ CompressorEffect::FlattenSettings(BMessage* message)
 	Prefs.filter_compressor_gain = gain->Value();
 
 	for (int32 i=0; i<buffer_size; i++)
-		delay_buffer[i] = 0;
+		delay_buffer[i] = 0;*/
 }
-*/
+
+
+
+status_t
+CompressorEffect::UpdateSettings(BMessage* msg)
+{
+	return B_ERROR;
+}
 
 
 bool

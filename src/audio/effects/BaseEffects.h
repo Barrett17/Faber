@@ -31,13 +31,6 @@
 
 #include "FaberEffect.h"
 
-void DoTrim();
-void DoResample();
-void ZeroLL();
-void ZeroLR();
-void ZeroRL();
-void ZeroRR();
-
 //===================== Realtime Filter classes without GUI
 
 class SwapFilter : public RealtimeFilter {

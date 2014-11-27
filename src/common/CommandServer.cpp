@@ -83,8 +83,7 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 	if (executed == true)
 		return B_SKIP_MESSAGE;
 
-	switch (message->what)
-	{
+	switch (message->what) {
 
 		case FABER_UPDATE_MENU:
 			WindowsManager::MainWindow()->MainView()->UpdateMenu();

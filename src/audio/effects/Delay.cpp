@@ -80,7 +80,7 @@ DelayEffect::SettingsPanel()
 
 
 status_t
-DelayEffect::FlattenSettings(BMessage* msg)
+DelayEffect::ArchiveSettings(BMessage* msg)
 {
 /*
 	Prefs.filter_delay_delay = delay->Value()/1000.0;
@@ -88,6 +88,13 @@ DelayEffect::FlattenSettings(BMessage* msg)
 
 	for (int32 i=0; i<buffer_size; i++)
 		delay_buffer[i] = 0;*/
+}
+
+
+status_t
+DelayEffect::UpdateSettings(BMessage* message)
+{
+	return B_ERROR;
 }
 
 
