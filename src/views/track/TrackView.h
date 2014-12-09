@@ -80,6 +80,7 @@ public:
 	virtual void			UpdateRequested() = 0;
 	virtual void			UpdateRequested(BRect bounds) = 0;
 
+			// This is used to pass commands strictly related to this track.
 	virtual void			CommandForTrack(BMessage* msg) = 0;
 
 protected:

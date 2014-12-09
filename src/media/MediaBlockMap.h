@@ -30,7 +30,7 @@ class MediaBlockMap;
 
 class MediaBlockMapVisitor {
 public:
-			status_t				SeekToFrame(int64 frame);
+			int64					SeekToFrame(int64 toFrame);
 			int64					CurrentFrame() const;
 			MediaBlock*				CurrentBlock() const;
 
@@ -45,11 +45,6 @@ protected:
 										fCurrentFrame(0),
 										fCurrentBlock(NULL)
 										{}
-
-			// This will find the block containing the specified frame
-			status_t				FindNearestBlock(int64 start,
-										MediaBlock** block,
-										int32* index);
 
 			MediaBlockMap*			fMap;
 
@@ -86,8 +81,6 @@ protected:
 											MEDIA_BLOCK_RAW_DATA_START)
 										{}
 private:
-			void					_AddBlock();
-
 			float					fFramesAverage;
 };
 

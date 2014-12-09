@@ -76,7 +76,6 @@ MediaBlockMap::CountFrames() const
 {
 	int64 ret = 0;
 	for (int32 i = 0; i < CountBlocks(); i++) {
-		//printf("counting blocks %d %ld\n", i, ret);
 		MediaBlock* block = BlockAt(i);
 		ret += block->CountFrames();
 	}
@@ -191,11 +190,24 @@ MediaBlockMap::Reader() const
 }
 
 
-status_t
+int64
 MediaBlockMapVisitor::SeekToFrame(int64 frame)
 {
-	int32 index;
-	return FindNearestBlock(frame, &fCurrentBlock, &index);
+	int64 currentFrame = 0;
+	for (int32 i = 0; i < fMap->CountBlocks(); i++) {
+		MediaBlock* currentBlock = fMap->BlockAt(i);
+		int64 nextFrames = currentFrame+currentBlock->CountFrames();
+
+		if (frame >= currentFrame && frame < nextFrames+1) {
+			fCurrentBlock = currentBlock;
+			fCurrentBlock->SeekToFrame(frame-currentFrame);
+			fCurrentFrame = frame;
+			return frame;
+		}
+		currentFrame = nextFrames;
+	}
+
+	return -1;
 }
 
 
@@ -210,39 +222,6 @@ MediaBlock*
 MediaBlockMapVisitor::CurrentBlock() const
 {
 	return fCurrentBlock;
-}
-
-
-// TODO optimize and seek block
-status_t
-MediaBlockMapVisitor::FindNearestBlock(int64 start,
-	MediaBlock** block, int32* index)
-{
-	if (start > fMap->CountFrames()) {
-		printf("can't find block %ld %ld\n", start, fMap->CountFrames());
-		return B_ERROR;
-	}
-
-	if (start < 0)
-		start = CurrentFrame();
-
-	int64 frame = 0;
-	for (int32 i = 0; i < fMap->CountBlocks(); i++) {
-		//printf("examinating block %d %ld\n", i, frame);
-		MediaBlock* currentBlock = fMap->BlockAt(i);
-
-		if (start >= frame || start <= frame) {
-			*block = currentBlock;
-			*index =  i;
-			printf("return %d\n", i);
-			return B_OK;
-		}
-		frame += currentBlock->CountFrames();
-	}
-
-	*block = NULL;
-
-	return B_ERROR;
 }
 
 
@@ -262,9 +241,7 @@ MediaBlockMapWriter::WriteFrames(void* buffer, size_t size,
 	size_t writeSize = 0;
 
 	while (remaining != 0) {
-		//printf("%ld %ld\n", remaining, freeSize);
  		if (block == NULL || block->IsFull()) {
- 			//printf("add block\n");
 			BEntry* destEntry = StorageUtils::BlockFileRequested();
 			BFile* destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
 
@@ -281,8 +258,6 @@ MediaBlockMapWriter::WriteFrames(void* buffer, size_t size,
 			fCurrentBlock = block;
 			fCurrentFrame = 0;
 		}
-
-		//printf("free %ld\n", block->FreeSpace());
 
 		freeSize = block->FreeSpace();
 
@@ -390,25 +365,4 @@ MediaBlockMapReader::ReadPreview(float** ret)
 	*ret = preview;
 
 	return size;
-}
-
-
-void
-MediaBlockMapWriter::_AddBlock()
-{
-	BEntry* destEntry = StorageUtils::BlockFileRequested();
-	BFile* destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
-
-	status_t ret = destFile->InitCheck();
-
-	if (ret != B_OK) {
-		printf("%s\n", strerror(ret));
-		return;
-	}
-
-	MediaBlock* block = new MediaBlock(destFile, destEntry);
-	block->Seek(MEDIA_BLOCK_RAW_DATA_START, SEEK_SET);
-	fMap->AddBlock(block);
-	fCurrentBlock = block;
-	fCurrentFrame = 0;
 }

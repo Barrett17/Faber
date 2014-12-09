@@ -57,7 +57,7 @@ public:
 	virtual 						~MediaBlock();
 
 			int64					CountFrames() const;
-			status_t				SeekToFrame(int64* frame);
+			int64					SeekToFrame(int64 frame);
 			int64					CurrentFrame() const;
 
 			MediaBlock*				CopyTo(BFile* file);

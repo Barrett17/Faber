@@ -56,10 +56,13 @@ MediaBlock::CountFrames() const
 }
 
 
-status_t
-MediaBlock::SeekToFrame(int64* frame)
+int64
+MediaBlock::SeekToFrame(int64 frame)
 {
-	return B_ERROR;
+	off_t ret = Seek(StorageUtils::FramesToSize(frame)
+		+ReservedSize()+PreviewSize(), SEEK_SET);
+
+	return StorageUtils::SizeToFrames(ret-ReservedSize()-PreviewSize());
 }
 
 

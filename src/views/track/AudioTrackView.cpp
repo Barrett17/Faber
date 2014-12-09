@@ -31,7 +31,7 @@
 #include "TracksContainer.h"
 #include "VolumeSlider.h"
 
-#define HEIGHT_VAL_REF 110
+#define HEIGHT_VAL_REF 80
 
 
 class TrackMenuUpdater : public MenuFilter {
