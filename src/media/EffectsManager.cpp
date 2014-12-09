@@ -59,7 +59,7 @@ EffectsManager::EffectToString(int32 index) const
 }
 
 
-FaberEffectList&
+/*FaberEffectList&
 EffectsManager::StandardEffects()
 {
 	return EffectsByFlag(FABER_BUILTIN_EFFECT);
@@ -69,8 +69,7 @@ EffectsManager::StandardEffects()
 FaberEffectList&
 EffectsManager::EffectsByFlag(int32 flag)
 {
-	return *new FaberEffectList();
-}
+}*/
 
 
 int32
@@ -97,18 +96,4 @@ EffectsManager::GetEffect(const char* name) const
 			return effect;
 	}
 	return NULL;
-}
-
-
-status_t
-EffectsManager::RunEffect(int32 id, AudioTrack* track, size_t size)
-{
-	return B_ERROR;
-}
-
-
-status_t
-EffectsManager::RunEffect(FaberEffect* effect, AudioTrack* track, size_t size)
-{
-	return B_ERROR;
 }

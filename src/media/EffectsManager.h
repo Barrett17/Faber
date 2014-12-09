@@ -32,17 +32,13 @@ public:
 	static EffectsManager*		Get();
 
 	const char*					EffectToString(int32 index) const;
-	FaberEffectList&			StandardEffects();
-	FaberEffectList&			EffectsByFlag(int32 flag);
+	//FaberEffectList&			StandardEffects();
+	//FaberEffectList&			EffectsByFlag(int32 flag);
 
 	int32						CountEffects() const;
 	FaberEffect*				GetEffect(int32 index) const;
 	FaberEffect*				GetEffect(const char* name) const;
 
-	status_t					RunEffect(int32 id, AudioTrack* track,
-									size_t size);
-	status_t					RunEffect(FaberEffect* effect,
-									AudioTrack* track, size_t size);
 private:
 	static EffectsManager*		fInstance;
 
