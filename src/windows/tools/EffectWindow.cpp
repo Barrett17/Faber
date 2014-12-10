@@ -25,6 +25,8 @@
 
 #include <stdio.h>
 
+#include "CommandBuilder.h"
+#include "CommandServer.h"
 #include "FaberMessages.h"
 
 
@@ -46,8 +48,8 @@ EffectWindow::EffectWindow(FaberEffect* effect)
 			.SetInsets(10, 10)
 			.Add(box)
 			.AddGroup(B_HORIZONTAL)
-				.Add(new BButton("Apply"))
-				.Add(new BButton("Cancel"))
+				.Add(new BButton("Apply", new BMessage(FABER_EFFECT_EXECUTE)))
+				.Add(new BButton("Cancel", new BMessage(FABER_EFFECT_ABORT)))
 			.End()
 		.End();
 	}
@@ -68,13 +70,16 @@ EffectWindow::MessageReceived(BMessage *message)
 
 		case FABER_EFFECT_EXECUTE:
 		{
-
+			BMessage* command = CommandBuilder(FABER_EFFECT_EXECUTE);
+			command->AddString("faber_effect_name", fEffect->Name());
+			CommandServer::SendCommand(command);
+			Quit();
 		}
 		break;
 
 		case FABER_EFFECT_ABORT:
 		{
-
+			Quit();
 		}
 		break;
 

@@ -190,6 +190,12 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 			break;
 		}
 
+		case FABER_EFFECT_EXECUTE:
+		{
+	
+			break;
+		}
+
 		default:
 			skip = false;
 	}
