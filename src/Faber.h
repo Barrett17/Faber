@@ -31,7 +31,6 @@ public:
 							FaberApp();
 	virtual void			MessageReceived(BMessage* message);
 	virtual void			RefsReceived(BMessage* message);
-	virtual bool			QuitRequested();
 
 private:
  			FaberWindow*	fFaberWindow;
