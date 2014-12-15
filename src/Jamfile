@@ -126,7 +126,6 @@ Application Faber :
 	EffectsManager.cpp
 	FaberEffect.cpp
 	AudioEffect.cpp
-	AudioUtils.cpp
 
 	# Media Nodes
 	AudioEngine.cpp
