@@ -25,21 +25,11 @@
 #define FABER_PROJECT_MIME "application/vnd-FaberProject"
 
 enum {
+	// Transport toolbar
 	kPlayIcon = 0,
 	kNewDocumentIcon,
 	kOpenDocumentIcon,
 	kDocumentSaveIcon,
-
-	kCutIcon,
-	kCopyIcon,
-	kPasteIcon,
-	kUndoIcon,
-	kRedoIcon,
-
-	kDrawingToolIcon,
-	kSelectionToolIcon,
-	kPlayingToolIcon,
-
 	kStopIcon,
 	kPauseIcon,
 	kRecordIcon,
@@ -49,18 +39,22 @@ enum {
 	kSeekBackwardIcon,
 	kSeekBackwardAllIcon,
 
+	// Zoom toolbar
 	kZoomInIcon,
 	kZoomOutIcon,
 	kZoomToSelectionIcon,
 	kZoomFullWaveIcon,
 
-	// track icons
+	// Track
+	kMiniRecordIcon,
 	kMuteIcon,
 	kSoloIcon,
-	kTrackMenuIcon,
-
 	kCloseTrackIcon,
-	kMiniRecordIcon
+
+	// Editor tools
+	kSelectionToolIcon,
+	kDrawingToolIcon,
+	kPlayingToolIcon
 };
 
 #endif
