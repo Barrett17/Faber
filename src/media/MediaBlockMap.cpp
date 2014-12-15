@@ -18,11 +18,12 @@
 */
 
 #include "MediaBlockMap.h"
-#include "StorageUtils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "StorageUtils.h"
 
 
 MediaBlockMap::MediaBlockMap()
@@ -117,13 +118,6 @@ MediaBlockMap::PreviewSize() const
 }
 
 
-size_t
-MediaBlockMap::AudioDataSize() const
-{
-	return Size()-ReservedSize()-PreviewSize();
-}
-
-
 int32 
 MediaBlockMap::CountBlocks() const
 {
@@ -199,15 +193,15 @@ MediaBlockMapVisitor::SeekToFrame(int64 frame)
 		int64 nextFrames = currentFrame+currentBlock->CountFrames();
 
 		if (frame >= currentFrame && frame < nextFrames+1) {
-			fCurrentBlock = currentBlock;
-			fCurrentBlock->SeekToFrame(frame-currentFrame);
+			fCurrentIndex = i;
+			currentBlock->SeekToFrame(frame-currentFrame);
 			fCurrentFrame = frame;
 			return frame;
 		}
 		currentFrame = nextFrames;
 	}
 
-	return -1;
+	return currentFrame;
 }
 
 
@@ -221,45 +215,45 @@ MediaBlockMapVisitor::CurrentFrame() const
 MediaBlock*
 MediaBlockMapVisitor::CurrentBlock() const
 {
-	return fCurrentBlock;
+	return fMap->BlockAt(fCurrentIndex);
 }
 
 
-void
-MediaBlockMapWriter::WriteFrames(void* buffer, size_t size,
-	int64 start, bool overWrite)
+int64
+MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount)
 {
-	MediaBlock* block = NULL;
+	MediaBlock* block = CurrentBlock();
 
-	if (start > -1)
-		SeekToFrame(start);
-	else if (start == -1)
-		block = CurrentBlock();
-
-	size_t freeSize = 0;
-	size_t remaining = size;
-	size_t writeSize = 0;
+	int64 remaining = frameCount;
+	int64 totalWrite = 0;
 
 	while (remaining != 0) {
- 		if (block == NULL || block->IsFull()) {
-			BEntry* destEntry = StorageUtils::BlockFileRequested();
-			BFile* destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
 
-			status_t ret = destFile->InitCheck();
+ 		if (block == NULL || block->AvailableFrames() == 0) {
+ 			if (fMap->CountBlocks()-1 > fCurrentIndex) {
+ 				block = fMap->BlockAt(fCurrentIndex+1);
+ 				fCurrentIndex += 1;
+ 			} else {
+				BEntry* destEntry = StorageUtils::BlockFileRequested();
+				BFile* destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
 
-			if (ret != B_OK) {
-				printf("%s\n", strerror(ret));
-				return;
-			}
+				status_t ret = destFile->InitCheck();
 
-			block = new MediaBlock(destFile, destEntry);
-			block->Seek(MEDIA_BLOCK_RAW_DATA_START, SEEK_SET);
-			fMap->AddBlock(block);
-			fCurrentBlock = block;
-			fCurrentFrame = 0;
+				if (ret != B_OK) {
+					printf("%s\n", strerror(ret));
+					return -1;
+				}
+
+				block = new MediaBlock(destFile, destEntry);
+				block->SeekToFrame(0);
+
+				fMap->AddBlock(block);
+				fCurrentIndex = fMap->CountBlocks()-1;
+ 			}
 		}
 
-		freeSize = block->FreeSpace();
+		int64 writeSize = 0;
+		int64 freeSize = block->AvailableFrames();
 
 		if (freeSize < remaining) {
 			writeSize = freeSize;
@@ -269,18 +263,13 @@ MediaBlockMapWriter::WriteFrames(void* buffer, size_t size,
 			remaining -= writeSize;
 		}
 
-		block->Write(buffer, writeSize);
-		block->SetFlushed(false);
-		block->fCurrentSize += writeSize;
-		fCurrentFrame += StorageUtils::SizeToFrames(writeSize);
+		totalWrite += block->WriteFrames(buffer, writeSize);
 		buffer += writeSize;
 	}
-}
 
+	fCurrentFrame += totalWrite;
 
-int64
-MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount)
-{
+	return totalWrite;
 }
 
 
@@ -309,18 +298,42 @@ MediaBlockMapWriter::Flush()
 }
 
 
-void
-MediaBlockMapReader::ReadFrames(void* buffer, size_t size)
-{
-	// block->ReadLock();
-
-	// block->ReadUnlock();
-}
-
-
 int64
 MediaBlockMapReader::ReadFrames(void* buffer, int64 frameCount)
 {
+	MediaBlock* block = CurrentBlock();
+
+	int64 remaining = frameCount;
+	int64 readSize = 0;
+	int64 totalRead = 0;
+
+	while (remaining != 0) {
+
+ 		if (block == NULL)
+ 			return -1;
+
+		if (fMap->CountBlocks()-1 > fCurrentIndex) {
+ 			block = fMap->BlockAt(fCurrentIndex+1);
+ 			fCurrentIndex += 1;
+		} else {
+			return -1;
+		}
+
+		int64 freeSize = block->AvailableFrames();
+
+		if (freeSize < remaining) {
+			readSize = freeSize;
+			remaining -= freeSize;
+		} else {
+			readSize = remaining;
+			remaining -= readSize;
+		}
+
+		totalRead += block->ReadFrames(buffer, readSize);
+		buffer += readSize;
+	}
+	fCurrentFrame += totalRead;
+	return totalRead;
 }
 
 
@@ -351,7 +364,7 @@ MediaBlockMapReader::ReadPreview(float** ret)
 
 		block = fMap->BlockAt(i);
 
-		if (block == NULL || block->AudioDataSize() == 0)
+		if (block == NULL || block->MediaDataSize() == 0)
 			break;
 
 		block->ReadPreview(&blockPreview);

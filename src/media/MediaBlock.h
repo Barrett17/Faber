@@ -43,11 +43,10 @@
 #define MEDIA_BLOCK_RESERVED_SIZE 1024
 #define MEDIA_BLOCK_PREVIEW_SIZE (MEDIA_BLOCK_RAW_SIZE/MEDIA_BLOCK_PREVIEW_DETAIL)*2
 
-#define MEDIA_BLOCK_PREVIEW_START MEDIA_BLOCK_RESERVED_SIZE + 1
-#define MEDIA_BLOCK_RAW_DATA_START MEDIA_BLOCK_PREVIEW_START + MEDIA_BLOCK_PREVIEW_SIZE + 1
+#define MEDIA_BLOCK_PREVIEW_START MEDIA_BLOCK_RESERVED_SIZE
+#define MEDIA_BLOCK_RAW_DATA_START MEDIA_BLOCK_PREVIEW_START + MEDIA_BLOCK_PREVIEW_SIZE
 
 #define MEDIA_BLOCK_DEFAULT_SIZE MEDIA_BLOCK_RESERVED_SIZE + MEDIA_BLOCK_PREVIEW_SIZE + MEDIA_BLOCK_RAW_SIZE
-#define MEDIA_BLOCK_SIZE_LIMIT MEDIA_BLOCK_DEFAULT_SIZE + MEDIA_BLOCK_RAW_SIZE
 
 
 class MediaBlock : public DataBlock {
@@ -57,8 +56,8 @@ public:
 	virtual 						~MediaBlock();
 
 			int64					CountFrames() const;
-			int64					SeekToFrame(int64 frame);
 			int64					CurrentFrame() const;
+			int64					AvailableFrames() const;
 
 			MediaBlock*				CopyTo(BFile* file);
 
@@ -73,20 +72,21 @@ public:
 			// Return the various fields size.
 			size_t					ReservedSize() const;
 			size_t					PreviewSize() const;
-			size_t					AudioDataSize() const;
+			size_t					MediaDataSize() const;
 
 protected:
 			size_t					ReadPreview(float** preview);
 			//float*				ReadPreview(int64 start, int64 frameCount);
 
-			void					Flush();
+			int64					SeekToFrame(int64 frame);
+			int64					ReadFrames(void* buffer, int64 frameCount);
+			int64					WriteFrames(void* buffer, int64 frameCount);
 
 			bool					WasFlushed() const;
 			void					SetFlushed(bool flushed);
+			void					Flush();
 
-			size_t					FreeSpace() const;
-			bool					IsFull() const;
-
+			friend class			MediaBlockMapVisitor;
 			friend class			MediaBlockMapWriter;
 			friend class			MediaBlockMapReader;
 
@@ -106,9 +106,7 @@ private:
 			float*					fPreviewCache;
 			size_t					fPreviewSize;
 
-			size_t					fCurrentSize;
-
-			int64					fStartFrame[10];
+			size_t					fCurrentRawSize;
 };
 
 #endif

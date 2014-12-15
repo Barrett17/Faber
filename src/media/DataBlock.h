@@ -58,9 +58,6 @@ protected:
 	virtual	status_t			SetSize(off_t size);
 	virtual	status_t			GetSize(off_t* size) const;
 
-			status_t			_FlattenReservedData();
-			status_t			_LoadReservedData();
-
 private:
 			BPositionIO*		fData;
 			FaberDataBlockKinds	fKind;

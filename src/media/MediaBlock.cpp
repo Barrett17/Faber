@@ -34,16 +34,14 @@ MediaBlock::MediaBlock(BFile* file, BEntry* entry)
 	fFlushed(true),
 	fPreviewCache(NULL),
 	fPreviewSize(0),
-	fCurrentSize(0)
+	fCurrentRawSize(0)
 {
-	SetSize(MEDIA_BLOCK_DEFAULT_SIZE);
 	Seek(0, SEEK_SET);
 }
 
 
 MediaBlock::~MediaBlock()
 {
-	printf("delete\n");
 	delete fData;
 	free(fPreviewCache);
 }
@@ -52,17 +50,52 @@ MediaBlock::~MediaBlock()
 int64
 MediaBlock::CountFrames() const
 {
-	return StorageUtils::SizeToFrames(AudioDataSize());
+	return StorageUtils::SizeToFrames(MediaDataSize());
 }
+
+int64
+MediaBlock::CurrentFrame() const
+{
+	return StorageUtils::SizeToFrames(fCurrentRawSize);
+}
+
+
+int64
+MediaBlock::AvailableFrames() const
+{
+	return StorageUtils::SizeToFrames(MEDIA_BLOCK_RAW_SIZE)-CurrentFrame();	
+}
+
 
 
 int64
 MediaBlock::SeekToFrame(int64 frame)
 {
 	off_t ret = Seek(StorageUtils::FramesToSize(frame)
-		+ReservedSize()+PreviewSize(), SEEK_SET);
+		+MEDIA_BLOCK_RAW_DATA_START, SEEK_SET);
 
 	return StorageUtils::SizeToFrames(ret-ReservedSize()-PreviewSize());
+}
+
+
+int64
+MediaBlock::ReadFrames(void* buffer, int64 frameCount)
+{
+	size_t ret = Read(buffer, StorageUtils::FramesToSize(frameCount));
+	fCurrentRawSize += ret;
+
+	return StorageUtils::SizeToFrames(ret);
+}
+
+
+int64
+MediaBlock::WriteFrames(void* buffer, int64 frameCount)
+{
+	size_t ret = Write(buffer, StorageUtils::FramesToSize(frameCount));
+	fCurrentRawSize += ret;
+	SetFlushed(false);
+
+	return StorageUtils::SizeToFrames(ret);
 }
 
 
@@ -99,15 +132,14 @@ MediaBlock::ReservedSize() const
 size_t
 MediaBlock::PreviewSize() const
 {
-	return MEDIA_BLOCK_PREVIEW_SIZE;
-	//return fPreviewSize;
+	return fPreviewSize;
 }
 
 
 size_t
-MediaBlock::AudioDataSize() const
+MediaBlock::MediaDataSize() const
 {
-	return fCurrentSize;
+	return fCurrentRawSize;
 }
 
 
@@ -118,26 +150,20 @@ MediaBlock::Flush()
 	int64 timer = 0;
 	int64 detail = MEDIA_BLOCK_PREVIEW_DETAIL;
 
-	size_t size = AudioDataSize();
+	size_t size = MediaDataSize();
 
 	float* from = (float*) malloc(size);
 
 	memset(from, 0, size);
 	ReadAt(MEDIA_BLOCK_RAW_DATA_START, from, size);
 
-	size_t previewSize = PreviewSize();
+	size_t previewSize = MEDIA_BLOCK_PREVIEW_SIZE;
 	float* buf = new float[previewSize];
 
 	memset(buf, 0, previewSize);
 
 	for (size_t i = 0; i < size/sizeof(float); i++) {
 		float value = from[i];
-
-		/*if (buf[frames] > value || buf[frames] == 0)
-			buf[frames] = value;
-
-		if (buf[frames+1] < value || buf[frames+1] == 0)
-			buf[frames+1] = value;*/
 
 		if (value > buf[frames])
 			buf[frames] += value;
@@ -153,8 +179,6 @@ MediaBlock::Flush()
 
 			buf[frames] *= 30.0f;
 			buf[frames+1] *= 30.0f;
-
-			//printf("test %f %f\n", buf[frames], buf[frames+1]);
 
 			timer = 0;
 			frames += 2;
@@ -191,11 +215,10 @@ MediaBlock::SetFlushed(bool flushed)
 size_t
 MediaBlock::ReadPreview(float** preview)
 {
+	if (!WasFlushed())
+		printf("Warning block was not flushed.");
+
 	if (fPreviewCache == NULL) {
-
-		if (!WasFlushed())
-			printf("Warning was not flushed.");
-
 		float* buf = (float*)malloc(PreviewSize());
 
 		ReadAt(MEDIA_BLOCK_PREVIEW_START, buf, PreviewSize());
@@ -206,18 +229,4 @@ MediaBlock::ReadPreview(float** preview)
 		*preview = fPreviewCache;
 
 	return PreviewSize();
-}
-
-
-size_t
-MediaBlock::FreeSpace() const
-{
-	return MEDIA_BLOCK_RAW_SIZE - fCurrentSize;
-}
-
-
-bool
-MediaBlock::IsFull() const
-{
-	return FreeSpace() == 0;
 }

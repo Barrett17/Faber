@@ -59,12 +59,13 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 
 	size_t size = (format.u.raw_audio.buffer_size 
 		/ (format.u.raw_audio.format 
-		& media_raw_audio_format::B_AUDIO_SIZE_MASK))*2;
+		& media_raw_audio_format::B_AUDIO_SIZE_MASK))
+			*format.u.raw_audio.channel_count;
 
 	float buffer[size];
 
 	while (track->ReadFrames(buffer, &frames) == B_OK) {
-		_BuildBlocks((float*)buffer, size, index,
+		_BuildBlocks((float*)buffer, frames, index,
 			format.u.raw_audio.channel_count);
 	}
 
@@ -82,14 +83,14 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 
 
 status_t
-TrackIO::_BuildBlocks(float* buffer, size_t size, TrackIndex* index,
+TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 	uint32 channels)
 {
-	float temp[channels][size/channels];
+	float temp[channels][frames/channels];
 
 	int64 count = 0;
 
-	for (size_t i = 0; i < size;) {
+	for (int64 i = 0; i < frames;) {
 		for (uint32 j = 0; j < channels; j++) {
 			temp[j][count] = buffer[i];
 			i++;
@@ -99,7 +100,7 @@ TrackIO::_BuildBlocks(float* buffer, size_t size, TrackIndex* index,
 
 	for (uint32 j = 0; j < channels; j++) {
 		index->ChannelAt(j)->Writer()->WriteFrames(
-			(void*)&temp[j][0], size/channels);
+			(void*)&temp[j][0], frames/channels);
 	}
 
 	return B_OK;

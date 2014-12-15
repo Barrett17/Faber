@@ -43,22 +43,18 @@ protected:
 										:
 										fMap(blockMap),
 										fCurrentFrame(0),
-										fCurrentBlock(NULL)
+										fCurrentIndex(0)
 										{}
 
 			MediaBlockMap*			fMap;
 
-			MediaBlock*				fCurrentBlock;
 			int64					fCurrentFrame;
+			int32					fCurrentIndex;
 };
 
 
 class MediaBlockMapWriter : public MediaBlockMapVisitor {
 public:
-			void					WriteFrames(void* buffer, size_t size,
-										int64 from = -1,
-										bool overWrite = false);
-
 			int64					WriteFrames(void* buffer,
 										int64 frameCount);
 
@@ -87,8 +83,6 @@ private:
 
 class MediaBlockMapReader : public MediaBlockMapVisitor {
 public:
-			void					ReadFrames(void* buffer, size_t size);
-
 			int64					ReadFrames(void* buffer, int64 frameCount);
 
 			// Seek to start before to read.
@@ -129,7 +123,6 @@ public:
 
 			size_t					ReservedSize() const;
 			size_t					PreviewSize() const;
-			size_t					AudioDataSize() const;
 
 			int32					CountBlocks() const;
 			MediaBlock*				BlockAt(int32 index) const;
