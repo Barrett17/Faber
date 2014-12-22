@@ -27,9 +27,6 @@
 enum {
 	// Transport toolbar
 	kPlayIcon = 0,
-	kNewDocumentIcon,
-	kOpenDocumentIcon,
-	kDocumentSaveIcon,
 	kStopIcon,
 	kPauseIcon,
 	kRecordIcon,
