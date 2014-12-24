@@ -63,6 +63,10 @@ public:
 	// a window is already opened / valid or not.
 	static bool				IsWindowValid(BWindow* window);
 
+	// This display just a minimal advice alert
+	static void				SimpleAlert(const char* text);
+	static void				SimpleError(const char* text);
+
 private:
 	static BPoint			_CalculateWindowPoint();
 

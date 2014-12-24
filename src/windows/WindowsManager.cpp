@@ -20,6 +20,7 @@
 
 #include "WindowsManager.h"
 
+#include <Alert.h>
 #include <Application.h>
 
 #include "AboutWindow.h"
@@ -267,6 +268,27 @@ WindowsManager::IsWindowValid(BWindow* window)
 {
 	BMessenger mess(window);
 	return mess.IsValid();
+}
+
+
+void
+WindowsManager::SimpleAlert(const char* text)
+{
+	BAlert* alert = new BAlert("Alert!", text,
+		"Ok", NULL, NULL,
+		B_WIDTH_AS_USUAL, B_OFFSET_SPACING,
+		B_WARNING_ALERT);
+
+	alert->Go();
+}
+
+
+void
+WindowsManager::SimpleError(const char* text)
+{
+	BString err(B_TRANSLATE("Error: "));
+	err << text;
+	SimpleAlert(err.String());
 }
 
 
