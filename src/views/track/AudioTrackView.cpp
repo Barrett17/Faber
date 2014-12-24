@@ -191,11 +191,7 @@ AudioTrackView::CommandForTrack(BMessage* command)
 			<< "Channels " << fAudioTrack->CountChannels() << "\n"
 			<< "Size " << "\n";
 
-			BAlert* alert = new BAlert(Name(), alertText.String(),
-				"Ok", NULL, NULL, B_WIDTH_AS_USUAL,
-				B_OFFSET_SPACING, B_INFO_ALERT);
-
-			alert->Go();
+			WindowsManager::SimpleAlert(alertText.String());
 		}
 		break;
 

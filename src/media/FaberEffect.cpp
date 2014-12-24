@@ -48,7 +48,7 @@ BMenuItem*
 FaberEffect::BuildItem()
 {
 	BMessage* mess = CommandBuilder(FABER_EFFECT_CALL);
-	mess->AddPointer("effect", this);
+	mess->AddPointer("faber:effect_pointer", this);
 
 	return new BMenuItem(Name(), mess, 0, 0);
 }

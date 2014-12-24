@@ -67,8 +67,6 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 
 	message->what = commandCode;
 
-	//printf("Command intercepted\n");
-
 	filter_result result = B_DISPATCH_MESSAGE;
 	bool skip = true;
 	bool executed = false;
@@ -176,23 +174,26 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 		case FABER_OPEN_MIXER:
 		{
 			WindowsManager::GetFaberMixer()->Show();
-
 			break;
 		}
 
 		case FABER_EFFECT_CALL:
 		{
 			FaberEffect* effect;
-			message->FindPointer("effect", (void**)&effect);
+			if (message->FindPointer("faber:effect_pointer",
+				(void**)&effect) != B_OK) {
+				WindowsManager::SimpleError("can't find effect");
+				break;
+			}
+
 			EffectWindow* win = new EffectWindow(effect);
 			win->Show();
-
 			break;
 		}
 
 		case FABER_EFFECT_EXECUTE:
 		{
-	
+			
 			break;
 		}
 
@@ -211,6 +212,5 @@ status_t
 CommandServer::SendCommand(BMessage* msg)
 {
 	BMessenger mess = WindowsManager::MainWindow();
-
 	return mess.SendMessage(msg);
 }

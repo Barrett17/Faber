@@ -71,7 +71,7 @@ EffectWindow::MessageReceived(BMessage *message)
 		case FABER_EFFECT_EXECUTE:
 		{
 			BMessage* command = CommandBuilder(FABER_EFFECT_EXECUTE);
-			command->AddString("faber_effect_name", fEffect->Name());
+			command->AddPointer("faber:effect_pointer", fEffect);
 			CommandServer::SendCommand(command);
 			Quit();
 		}
