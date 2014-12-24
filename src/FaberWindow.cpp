@@ -68,8 +68,10 @@ FaberWindow::QuitRequested()
 
 		if (button_index == 2) {
 			BMessenger msg(this);
-			msg.SendMessage(CommandBuilder(FABER_SAVE_PROJECT));
-			//msg.AddBool("faber:quit", true);
+			// TODO add Builder-like methods to build commands.
+			BMessage* command = CommandBuilder(FABER_SAVE_PROJECT);
+			command->AddBool("faber:quit", true);
+			msg.SendMessage(command);
 			return false;
 		} else if (button_index == 0)
 			return false;
