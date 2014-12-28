@@ -48,7 +48,9 @@ public:
 			status_t			AddTrack(Track* track, int32 index = -1);
 
 			status_t			RemoveTrack(int32 index);
-			status_t			RemoveTrack(TrackView* track = NULL);
+			status_t			RemoveTrack(TrackView* track, bool deep = true);
+
+			status_t			MoveTrack(TrackView* track, int32 index);
 
 			void				SelectAll();
 			void				UnselectAll();

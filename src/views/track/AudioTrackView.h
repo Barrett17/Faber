@@ -46,7 +46,7 @@ public:
 			int32			CountChannels() const;
 			void			AddChannel(MediaBlockMap* channel);
 			void			RemoveChannel(MediaBlockMap* channel);
-			MediaBlockMap*	RemoveChannelAt(int32 index, bool erase = true);
+			MediaBlockMap*	RemoveChannelAt(int32 index);
 
 			// GUI
 			bool			IsSelected() const;

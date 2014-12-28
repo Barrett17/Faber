@@ -208,7 +208,7 @@ AudioTrackView::CommandForTrack(BMessage* command)
 				break;
 
 			for (int32 i = 0; i < CountChannels(); i++) {
-				MediaBlockMap* chan = RemoveChannelAt(i, false);
+				MediaBlockMap* chan = RemoveChannelAt(i);
 				AudioTrack* audioTrack = new AudioTrack();
 				audioTrack->SetName(Name());
 				audioTrack->GetIndex()->AddChannel(chan);
@@ -242,16 +242,6 @@ AudioTrackView::CommandForTrack(BMessage* command)
 		break;
 
 		case FABER_TRACK_MERGE_WITH:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MOVE_UP:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MOVE_DOWN:
 		{
 		}
 		break;
@@ -341,7 +331,7 @@ AudioTrackView::RemoveChannel(MediaBlockMap* channel)
 
 
 MediaBlockMap*
-AudioTrackView::RemoveChannelAt(int32 index, bool erase)
+AudioTrackView::RemoveChannelAt(int32 index)
 {
 	return fAudioTrack->GetIndex()->RemoveChannelAt(index);
 }

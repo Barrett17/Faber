@@ -107,13 +107,10 @@ TracksContainer::HandleCommand(BMessage* message)
 {
 	//message->PrintToStream();
 
-	if (message->what != FABER_REMOVE_TRACK) {
-		TrackView* track = _FindTrack(message);
-		if (track != NULL) {
-			if (message->AddPointer("tracks_container", this) == B_OK) {
-				track->CommandForTrack(message);
-				return B_OK;
-			}
+	TrackView* track = _FindTrack(message);
+	if (track != NULL) {
+		if (message->AddPointer("tracks_container", this) == B_OK) {
+			track->CommandForTrack(message);
 		}
 	}
 
@@ -171,6 +168,38 @@ TracksContainer::HandleCommand(BMessage* message)
 
 			if (track != NULL)
 				RemoveTrack(track);
+		}
+		break;
+
+		case FABER_TRACK_MOVE_UP:
+		{
+			if (CountTracks() <= 1)
+				break;
+
+			TrackView* track = _FindTrack(message);
+
+			int32 index = IndexOf(track);
+
+			if (index == 0)
+				break;
+
+			MoveTrack(track, index-1);
+		}
+		break;
+
+		case FABER_TRACK_MOVE_DOWN:
+		{
+			if (CountTracks() <= 1)
+				break;
+
+			TrackView* track = _FindTrack(message);
+
+			int32 index = IndexOf(track);
+
+			if (CountTracks()-1 == index)
+				break;
+
+			MoveTrack(track, index+1);
 		}
 		break;
 
@@ -279,9 +308,7 @@ TracksContainer::AddTrack(Track* track, int32 index)
 			index = CountTracks();
 
 		status_t ret = AddTrack(trackView, index);
-
 		CommandServer::SendCommand(CommandBuilder(FABER_UPDATE_MENU));
-
 		return ret;
 	}
 	return B_ERROR;
@@ -296,7 +323,7 @@ TracksContainer::RemoveTrack(int32 index)
 
 
 status_t
-TracksContainer::RemoveTrack(TrackView* track)
+TracksContainer::RemoveTrack(TrackView* track, bool deep)
 {
 	float max, min;
 
@@ -310,12 +337,28 @@ TracksContainer::RemoveTrack(TrackView* track)
 
 	fTrackViews.RemoveItem(track);
 	fLayout->RemoveView(track);
-	ProjectManager::UnregisterTrack(track->GetTrack());
-	delete track;
 
+	if (deep) {
+		ProjectManager::UnregisterTrack(track->GetTrack());
+		delete track;
+	}
 	CommandServer::SendCommand(CommandBuilder(FABER_UPDATE_MENU));
 
 	return B_OK;
+}
+
+
+status_t
+TracksContainer::MoveTrack(TrackView* track, int32 index)
+{
+	if (RemoveTrack(track, false) != B_OK)
+		return B_ERROR;
+
+	// TODO investigate crash if the view is not recreated.
+	Track* rawTrack = track->GetTrack();
+	delete track;
+
+	return AddTrack(rawTrack, index);
 }
 
 
