@@ -20,9 +20,7 @@
 #ifndef _TRACKS_CONTAINER
 #define _TRACKS_CONTAINER
 
-#include <GroupLayout.h>
 #include <GroupView.h>
-#include <ScrollBar.h>
 
 #include "CommandListener.h"
 #include "AudioTrackView.h"

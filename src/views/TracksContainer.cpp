@@ -21,22 +21,17 @@
 
 #include <GroupLayoutBuilder.h>
 #include <ScrollView.h>
-#include <StringView.h>
 
 #include <stdlib.h>
 
-#include "AudioTrackView.h"
 #include "CommandBuilder.h"
 #include "CommandServer.h"
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
 #include "InputRequest.h"
-#include "MenuBuilder.h"
 #include "ProjectManager.h"
 #include "TimeBar.h"
-#include "AudioGate.h"
 #include "TracksCommon.h"
-#include "TrackView.h"
 #include "WidgetFrame.h"
 
 
@@ -105,8 +100,6 @@ TracksContainer::~TracksContainer()
 status_t
 TracksContainer::HandleCommand(BMessage* message)
 {
-	//message->PrintToStream();
-
 	TrackView* track = _FindTrack(message);
 	if (track != NULL) {
 		if (message->AddPointer("tracks_container", this) == B_OK) {
@@ -155,13 +148,6 @@ TracksContainer::HandleCommand(BMessage* message)
 		}
 		break;
 
-		case FABER_NEW_LABEL_TRACK:
-		{
-			//LabelTrack* track = new LabelTrack();
-			//AddTrack(track);
-		}
-		break;
-
 		case FABER_REMOVE_TRACK:
 		{
 			TrackView* track = _FindTrack(message);
@@ -200,6 +186,11 @@ TracksContainer::HandleCommand(BMessage* message)
 				break;
 
 			MoveTrack(track, index+1);
+		}
+		break;
+
+		case FABER_TRACK_MERGE_WITH:
+		{
 		}
 		break;
 
@@ -411,7 +402,7 @@ TracksContainer::CurrentFocus()
 TrackViewList&
 TracksContainer::SelectedTracks()
 {
-	/*TrackViewList* tracks = new TrackViewList(false);
+	TrackViewList* tracks = new TrackViewList(false);
 
 	for (int i = 0; i < CountTracks(); i++) {
 		TrackView* track = TrackAt(i);
@@ -419,7 +410,7 @@ TracksContainer::SelectedTracks()
 			tracks->AddItem(track);
 	}
 
-	return *tracks;*/
+	return *tracks;
 }
 
 

@@ -22,7 +22,7 @@
 
 #include "AudioTrackView.h"
 
-#include <PopUpMenu.h>
+#include <Menu.h>
 #include <View.h>
 
 #include "AudioTrack.h"

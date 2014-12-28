@@ -29,7 +29,6 @@
 #include "InputRequest.h"
 #include "MenuBuilder.h"
 #include "TracksContainer.h"
-#include "VolumeSlider.h"
 
 #define HEIGHT_VAL_REF 80
 
@@ -65,12 +64,12 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	BBox* box = new BBox("box");
 
-	int32 size = HEIGHT_VAL_REF;
+	float size = HEIGHT_VAL_REF;
 
 	if (fAudioTrack->CountChannels() == 1)
 		size += 20;
 	else if (fAudioTrack->CountChannels() > 0)
-		size *= fAudioTrack->CountChannels();
+		size *= (float)fAudioTrack->CountChannels();
 
 	box->SetExplicitSize(BSize(150, size));
 
@@ -237,11 +236,6 @@ AudioTrackView::CommandForTrack(BMessage* command)
 		break;
 
 		case FABER_TRACK_MDOWN_CHAN:
-		{
-		}
-		break;
-
-		case FABER_TRACK_MERGE_WITH:
 		{
 		}
 		break;
