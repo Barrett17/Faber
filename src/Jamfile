@@ -52,7 +52,7 @@ Application Faber :
 	WindowsManager.cpp
 
 	TracksContainer.cpp
-	TracksCommon.cpp
+	TracksCoordinator.cpp
 
 	ToolBar.cpp
 	InfoToolBar.cpp

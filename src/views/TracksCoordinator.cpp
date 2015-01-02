@@ -17,24 +17,24 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "TracksCommon.h"
+#include "TracksCoordinator.h"
 
 #include <stdio.h>
 
-TracksCommon* TracksCommon::fInstance = NULL;
+TracksCoordinator* TracksCoordinator::fInstance = NULL;
 
 
-TracksCommon*
-TracksCommon::Get()
+TracksCoordinator*
+TracksCoordinator::Get()
 {
 	if (fInstance == NULL)
-		fInstance = new TracksCommon();
+		fInstance = new TracksCoordinator();
 
 	return fInstance;	
 }
 
 
-TracksCommon::TracksCommon()
+TracksCoordinator::TracksCoordinator()
 	:
 	pointer(0),
 	playPointer(0),
@@ -53,19 +53,19 @@ TracksCommon::TracksCommon()
 }
 
 
-TracksCommon::~TracksCommon()
+TracksCoordinator::~TracksCoordinator()
 {
 }
 
 
 void
-TracksCommon::ScrollBy(int64 value)
+TracksCoordinator::ScrollBy(int64 value)
 {
 }
 
 
 void
-TracksCommon::Select(int64 start, int64 end)
+TracksCoordinator::Select(int64 start, int64 end)
 {
 	selectionStart = start;
 	selectionEnd = end;
@@ -74,14 +74,14 @@ TracksCommon::Select(int64 start, int64 end)
 
 
 bool
-TracksCommon::IsSelected()
+TracksCoordinator::IsSelected()
 {
 	return isSelected;
 }
 
 
 void
-TracksCommon::CurrentSelection(int64* start, int64* end)
+TracksCoordinator::CurrentSelection(int64* start, int64* end)
 {
 	*start = selectionStart;
 	*end = selectionEnd;
@@ -89,14 +89,14 @@ TracksCommon::CurrentSelection(int64* start, int64* end)
 
 
 void
-TracksCommon::SelectAll()
+TracksCoordinator::SelectAll()
 {
 	Select(start, end);
 }
 
 
 void
-TracksCommon::Unselect()
+TracksCoordinator::Unselect()
 {
 	selectionStart = -1;
 	selectionEnd = -1;
@@ -105,7 +105,7 @@ TracksCommon::Unselect()
 
 
 void
-TracksCommon::ZoomIn()
+TracksCoordinator::ZoomIn()
 {
 	zoomFactor /= 2;
 
@@ -117,7 +117,7 @@ TracksCommon::ZoomIn()
 
 
 void
-TracksCommon::ZoomOut()
+TracksCoordinator::ZoomOut()
 {
 	zoomFactor *= 2;
 
@@ -129,7 +129,7 @@ TracksCommon::ZoomOut()
 
 
 void
-TracksCommon::ZoomFull()
+TracksCoordinator::ZoomFull()
 {
 	/*pointer = 0;
 	end = fTrack->CountFrames()/fTrack->CountChannels();
@@ -138,7 +138,7 @@ TracksCommon::ZoomFull()
 
 
 void
-TracksCommon::ZoomSelection()
+TracksCoordinator::ZoomSelection()
 {
 	if (!IsSelected())
 		return;
@@ -152,14 +152,14 @@ TracksCommon::ZoomSelection()
 
 
 int64
-TracksCommon::Pointer()
+TracksCoordinator::Pointer()
 {
 	return pointer;
 }
 
 
 int64
-TracksCommon::_DisplaySize()
+TracksCoordinator::_DisplaySize()
 {
 	return end-pointer;
 }

@@ -31,7 +31,7 @@
 #include "InputRequest.h"
 #include "ProjectManager.h"
 #include "TimeBar.h"
-#include "TracksCommon.h"
+#include "TracksCoordinator.h"
 #include "WidgetFrame.h"
 
 

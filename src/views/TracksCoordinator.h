@@ -23,13 +23,17 @@
 #include <SupportDefs.h>
 
 
-class TracksCommon
+class TracksCoordinator
 {
 public:
-										TracksCommon();
-	virtual								~TracksCommon();
+										TracksCoordinator();
+	virtual								~TracksCoordinator();
 
-			static TracksCommon*		Get();
+			static TracksCoordinator*		Get();
+
+protected:
+			friend class				TracksContainer;
+			friend class				WaveRender;
 
 			void						ScrollBy(int64 value);
 
@@ -45,10 +49,6 @@ public:
 			void						ZoomOut();
 			void						ZoomFull();
 			void						ZoomSelection();
-
-protected:
-			friend class				TracksContainer;
-			friend class				WaveRender;
 
 			int64						pointer;
 			int64						playPointer;
@@ -73,13 +73,13 @@ protected:
 private:
 			int64						_DisplaySize();
 
-			static TracksCommon*		fInstance;
+			static TracksCoordinator*		fInstance;
 };
 
 
-static TracksCommon& GetCoords()
+static TracksCoordinator& GetCoords()
 {
-	return *TracksCommon::Get();
+	return *TracksCoordinator::Get();
 }
 
 
