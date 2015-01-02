@@ -46,6 +46,10 @@ public:
 			void						ZoomFull();
 			void						ZoomSelection();
 
+protected:
+			friend class				TracksContainer;
+			friend class				WaveRender;
+
 			int64						pointer;
 			int64						playPointer;
 
