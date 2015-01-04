@@ -104,13 +104,13 @@ FaberView::BuildMainMenuBar()
 	fFileMenu = MenuBuilder::BuildMenu(kFileMenu, NULL, &builder);
 	menuBar->AddItem(fFileMenu);
 
-	fEditMenu = MenuBuilder::MenuBuilder::BuildMenu(kEditMenu);
+	fEditMenu = MenuBuilder::BuildMenu(kEditMenu);
 	menuBar->AddItem(fEditMenu);
 
-	fProjectMenu = MenuBuilder::MenuBuilder::BuildMenu(kProjectMenu);
+	fProjectMenu = MenuBuilder::BuildMenu(kProjectMenu);
 	menuBar->AddItem(fProjectMenu);
 
-	fTracksMenu = MenuBuilder::MenuBuilder::BuildMenu(kTracksMenu);
+	fTracksMenu = MenuBuilder::BuildMenu(kTracksMenu);
 	menuBar->AddItem(fTracksMenu);
 
 	fEffectsMenu = BuildEffectsMenu();
@@ -119,10 +119,10 @@ FaberView::BuildMainMenuBar()
 	fGenerateMenu = BuildGenerateMenu();
 	menuBar->AddItem(fGenerateMenu);
 
-	fEngineMenu = MenuBuilder::MenuBuilder::BuildMenu(kEngineMenu);
+	fEngineMenu = MenuBuilder::BuildMenu(kEngineMenu);
 	menuBar->AddItem(fEngineMenu);
 
-	menuBar->AddItem(MenuBuilder::MenuBuilder::BuildMenu(kHelpMenu));
+	menuBar->AddItem(MenuBuilder::BuildMenu(kHelpMenu));
 
 	return menuBar;
 }
