@@ -44,11 +44,11 @@ FaberApp::FaberApp()
 	// Load app keys
 	FaberShortcut::LoadKeys();
 
+	ProjectManager::Init(); 
+	ProjectManager::SetName(B_TRANSLATE("Untitled"));
+
 	fFaberWindow = WindowsManager::MainWindow();
 	fFaberWindow->Show();
-
-	fProjectManager = ProjectManager::Get();
-	fProjectManager->SetName(B_TRANSLATE("Untitled"));
 }
 
 
@@ -77,7 +77,7 @@ FaberApp::RefsReceived(BMessage* message)
 	entry_ref ref;
 	int32 count = 0;
 	while (message->FindRef("refs", count, &ref) == B_OK) {
-		fProjectManager->LoadFile(ref);
+		ProjectManager::LoadFile(ref);
 		count++;
 	}
 }

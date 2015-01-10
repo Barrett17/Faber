@@ -28,35 +28,25 @@
 #include "StorageUtils.h"
 #include "TrackIO.h"
 
+BString	ProjectManager::fName;
 
-ProjectManager* ProjectManager::fInstance = NULL;
+bool ProjectManager::fWasSaved = false;
 
+BPath ProjectManager::fProjectPath
+	= StorageUtils::TemporaryProjectDirRequested();
 
-ProjectManager*
-ProjectManager::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new ProjectManager();
-
-	return fInstance;	
-}
-
-ProjectManager::ProjectManager()
-	:
-	fWasSaved(false)
-{
-	fProjectPath = StorageUtils::TemporaryProjectDirRequested();
-	fProjectFile = StorageUtils::GetProjectFile(fProjectPath, true);
-}
+BFile* ProjectManager::fProjectFile
+	= StorageUtils::GetProjectFile(fProjectPath, true);
 
 
-ProjectManager::~ProjectManager()
+void
+ProjectManager::Init()
 {
 }
 
 
 bool
-ProjectManager::HasChanged() const
+ProjectManager::HasChanged()
 {
 	//return SnanpshotManager::HasChanged();
 
@@ -65,7 +55,7 @@ ProjectManager::HasChanged() const
 
 
 bool
-ProjectManager::HasRedo() const
+ProjectManager::HasRedo()
 {
 	//return SnapshotManager::HasRedo();
 
@@ -74,7 +64,7 @@ ProjectManager::HasRedo() const
 
 
 bool
-ProjectManager::HasUndo() const
+ProjectManager::HasUndo()
 {
 	//return SnapshotManager::HasUndo();
 
@@ -97,7 +87,7 @@ ProjectManager::Redo()
 
 
 bool
-ProjectManager::WasSaved() const
+ProjectManager::WasSaved()
 {
 	return fWasSaved;
 }
@@ -210,7 +200,7 @@ ProjectManager::LoadMediaFile(BMediaFile* mediaFile, const char* name)
 
 
 BPath
-ProjectManager::GetProjectPath() const
+ProjectManager::GetProjectPath()
 {
 	return fProjectPath;
 }
@@ -237,7 +227,7 @@ ProjectManager::UnregisterTrack(Track* track)
 
 
 BString
-ProjectManager::Name() const
+ProjectManager::Name()
 {
 	return fName;
 }

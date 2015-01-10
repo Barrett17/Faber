@@ -50,7 +50,6 @@ CommandServer::CommandServer()
 	:
 	BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE)
 {
-	fProjectManager = ProjectManager::Get();
 	fAudioGate = AudioGate::Get();
 }
 
@@ -129,11 +128,11 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 
 		case FABER_SAVE_PROJECT:
 		{
-			if (!fProjectManager->WasSaved()) {
+			if (!ProjectManager::WasSaved()) {
 				WindowsManager::GetSavePanel()->Show();
 				break;
 			}
-			if (fProjectManager->HasChanged())
+			if (ProjectManager::HasChanged())
 				SendCommand(new BMessage(B_SAVE_REQUESTED));
 
 			break;
@@ -150,23 +149,23 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 		{
 			printf("Save requested\n");
 
-			ProjectManager::Get()->SaveProject();	
+			ProjectManager::SaveProject();	
 
 			break;
 		}
 
 		case FABER_UNDO:
 		{
-			if (fProjectManager->HasUndo())
-				fProjectManager->Undo();
+			if (ProjectManager::HasUndo())
+				ProjectManager::Undo();
 
 			break;
 		}
 
 		case FABER_REDO:
 		{
-			if (fProjectManager->HasRedo())
-				fProjectManager->Redo();
+			if (ProjectManager::HasRedo())
+				ProjectManager::Redo();
 
 			break;
 		}

@@ -44,7 +44,6 @@ public:
 			static status_t		SendCommand(BMessage* msg);
 
 private:
-			ProjectManager*		fProjectManager;
 			AudioGate*			fAudioGate;
 
 			static BObjectList<CommandListener> fExecutors;

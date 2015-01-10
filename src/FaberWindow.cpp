@@ -53,9 +53,9 @@ FaberWindow::~FaberWindow()
 bool
 FaberWindow::QuitRequested()
 {
-	if (ProjectManager::Get()->HasChanged()) {
+	if (ProjectManager::HasChanged()) {
 		BString alertText = "Save changes to ";
-		alertText << ProjectManager::Get()->Name();
+		alertText << ProjectManager::Name();
 		alertText << "?";
 
 		BAlert* alert = new BAlert("Warning!", alertText.String(),

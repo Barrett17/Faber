@@ -35,7 +35,7 @@ int32 StorageUtils::fLastCode = 00;
 BEntry*
 StorageUtils::BlockFileRequested()
 {
-	BPath path = ProjectManager::Get()->GetProjectPath();
+	BPath path = ProjectManager::GetProjectPath();
 
 	BString str;
 

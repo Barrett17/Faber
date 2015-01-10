@@ -34,7 +34,6 @@ public:
 
 private:
  			FaberWindow*	fFaberWindow;
- 			ProjectManager* fProjectManager;
 };
 
 #endif

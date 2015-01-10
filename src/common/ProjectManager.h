@@ -34,46 +34,39 @@
 
 class ProjectManager {
 public:
-										ProjectManager();
-	virtual								~ProjectManager();
+			static void					Init();
 
-			static ProjectManager*		Get();
+			static status_t				SaveProject();
+			static status_t				LoadProject(entry_ref ref);
 
-			status_t					SaveProject();
-			status_t					LoadProject(entry_ref ref);
-
-			status_t					LoadFile(entry_ref ref);
-			status_t					LoadMediaFile(BMediaFile* mediaFile,
+			static status_t				LoadFile(entry_ref ref);
+			static status_t				LoadMediaFile(BMediaFile* mediaFile,
 											const char* name);
 
-			bool						HasChanged() const;
-			bool						WasSaved() const;
-			
-			bool						HasRedo() const;
-			bool						HasUndo() const;
+			static bool					HasChanged();
+			static bool					WasSaved();
 
-			void						Undo();
-			void						Redo();
+			static bool					HasRedo();
+			static bool					HasUndo();
 
-			BString						Name() const;
-			void						SetName(const char* name);
+			static void					Undo();
+			static void					Redo();
 
-			BPath						GetProjectPath() const;
+			static BString				Name();
+			static void					SetName(const char* name);
+
+			static BPath				GetProjectPath();
 
 			static status_t				RegisterTrack(Track* track);
 			static status_t				UnregisterTrack(Track* track);
 
 private:
-			void						_NotifyTracksContainer(Track* track);
+			static void					_NotifyTracksContainer(Track* track);
 
-			static ProjectManager*		fInstance;
-
-			BString						fName;
-			bool						fWasSaved;
-			BPath						fProjectPath;
-			BFile*						fProjectFile;
-
-			FaberView*					fFaberView;
+			static BString				fName;
+			static bool					fWasSaved;
+			static BPath				fProjectPath;
+			static BFile*				fProjectFile;
 };
 
 #endif
