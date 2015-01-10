@@ -100,7 +100,7 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 		}
 
 		case FABER_SETTINGS:
-			WindowsManager::Get()->ShowSettings();
+			WindowsManager::ShowSettings();
 		break;
 
 		case FABER_FILE_OPEN:

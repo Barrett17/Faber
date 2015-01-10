@@ -27,9 +27,6 @@
 #include "AudioGate.h"
 #include "FaberDefs.h"
 
-
-WindowsManager*	WindowsManager::fInstance = NULL;
-
 const char* kCopyrights[] = {
 	NULL
 };
@@ -51,58 +48,27 @@ const char* kAdditionalCode[] {
 	NULL
 };
 
-WindowsManager::WindowsManager()
-	:
-	fSavePanel(NULL),
-	fOpenPanel(NULL),
-	fSettingsWindow(NULL),
-	fMainWindow(NULL),
-	fExportWindow(NULL),
-	fFaberMixer(NULL),
-	fSystemMixer(NULL)
-{
-	fProgress = new ProgressWindow();
-}
 
+FaberWindow* WindowsManager::fMainWindow = NULL;
+SettingsWindow* WindowsManager::fSettingsWindow = NULL;
+ProgressWindow* WindowsManager::fProgress = NULL;
 
-WindowsManager::~WindowsManager() 
-{
-	if (fProgress && fProgress->Lock()) {
-		fProgress->Quit();
-		fProgress->Unlock();
-	}
+BFilePanel*	WindowsManager::fOpenPanel = NULL;
+BFilePanel* WindowsManager::fSavePanel = NULL;
+ExportWindow* WindowsManager::fExportWindow = NULL;
 
-	if (fSettingsWindow && fSettingsWindow->Lock()) {
-		fSettingsWindow->Quit();
-		//fSettingsWindow->Unlock();
-	}
-
-	if (fOpenPanel)
-		delete fOpenPanel;
-
-	if (fSavePanel)
-		delete fSavePanel;
-}
-
-
-WindowsManager*
-WindowsManager::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new WindowsManager();
-
-	return fInstance;	
-}
+ParameterWindow* WindowsManager::fFaberMixer = NULL;
+ParameterWindow* WindowsManager::fSystemMixer = NULL;
 
 
 FaberWindow*
 WindowsManager::MainWindow()
 {
-	if (Get()->fMainWindow == NULL) {
+	if (fMainWindow == NULL) {
 		BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
-		Get()->fMainWindow = new FaberWindow(rect);
+		fMainWindow = new FaberWindow(rect);
 	}
-	return Get()->fMainWindow;
+	return fMainWindow;
 }
 
 
@@ -150,47 +116,47 @@ WindowsManager::ShowAbout()
 BFilePanel*
 WindowsManager::GetOpenPanel()
 {
-	if (Get()->fOpenPanel == NULL) {
-		Get()->fOpenPanel = new BFilePanel(B_OPEN_PANEL, new BMessenger(be_app),
+	if (fOpenPanel == NULL) {
+		fOpenPanel = new BFilePanel(B_OPEN_PANEL, new BMessenger(be_app),
 			NULL, true, new BMessage(FABER_FILE_OPEN));
 
-		Get()->fOpenPanel->Window()->SetTitle(B_TRANSLATE("Open file(s)"));	
+		fOpenPanel->Window()->SetTitle(B_TRANSLATE("Open file(s)"));	
 	}
-	return Get()->fOpenPanel;
+	return fOpenPanel;
 }
 
 
 BFilePanel*
 WindowsManager::GetSavePanel()
 {
-	if (Get()->fSavePanel == NULL) {
+	if (fSavePanel == NULL) {
 
-		Get()->fSavePanel = new BFilePanel(B_SAVE_PANEL,
-			new BMessenger(Get()->fMainWindow),
+		fSavePanel = new BFilePanel(B_SAVE_PANEL,
+			new BMessenger(fMainWindow),
 			NULL, false, new BMessage(B_SAVE_REQUESTED));
 
-		Get()->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save Project"));
+		fSavePanel->Window()->SetTitle(B_TRANSLATE("Save Project"));
 	}
 
-	return Get()->fSavePanel;
+	return fSavePanel;
 }
 
 
 ExportWindow*
 WindowsManager::GetExportPanel()
 {
-	if (!IsWindowValid(Get()->fExportWindow))
-		Get()->fExportWindow = new ExportWindow();
+	if (!IsWindowValid(fExportWindow))
+		fExportWindow = new ExportWindow();
 
 
-	return Get()->fExportWindow;
+	return fExportWindow;
 }
 
 
 ParameterWindow*
 WindowsManager::GetSystemMixer()
 {
-	if (!IsWindowValid(Get()->fSystemMixer)) {
+	if (!IsWindowValid(fSystemMixer)) {
 		media_node node;
 		live_node_info info;
 
@@ -198,18 +164,18 @@ WindowsManager::GetSystemMixer()
 		info.node = node;
 
 		strcpy(info.name, B_TRANSLATE("System Mixer"));
-		Get()->fSystemMixer = new ParameterWindow(
+		fSystemMixer = new ParameterWindow(
 			_CalculateWindowPoint(), info);
 	}
 
-	return Get()->fSystemMixer;
+	return fSystemMixer;
 }
 
 
 ParameterWindow*
 WindowsManager::GetFaberMixer()
 {
-	if (!IsWindowValid(Get()->fFaberMixer)) {
+	if (!IsWindowValid(fFaberMixer)) {
 
 		live_node_info info;
 
@@ -217,27 +183,33 @@ WindowsManager::GetFaberMixer()
 
 		strcpy(info.name, B_TRANSLATE("Mixer"));
 
-		Get()->fFaberMixer = new ParameterWindow(
+		fFaberMixer = new ParameterWindow(
 			_CalculateWindowPoint(), info);
 	}
 
-	return Get()->fFaberMixer;
+	return fFaberMixer;
 }
 
 
 void
 WindowsManager::StartProgress(const char* label, int32 max)
 {
-	Get()->fProgress->Show();
-	Get()->fProgress->SetTitle(label);
-	Get()->fProgress->Start(MainWindow(), true);
+	if (fProgress == NULL)
+		fProgress = new ProgressWindow();
+
+	fProgress->Show();
+	fProgress->SetTitle(label);
+	fProgress->Start(MainWindow(), true);
 }
 
 
 void
 WindowsManager::ProgressUpdate(float percent, const char* text)
 {
-	BMessenger mess(Get()->fProgress);
+	if (fProgress == NULL)
+		fProgress = new ProgressWindow();
+
+	BMessenger mess(fProgress);
 	if (mess.IsValid()) {
 		BMessage* msg = new BMessage(kMsgProgressUpdate);
 		msg->AddString("message", text);
@@ -250,7 +222,10 @@ WindowsManager::ProgressUpdate(float percent, const char* text)
 void
 WindowsManager::HideProgress()
 {
-	Get()->fProgress->Stop();
+	if (fProgress == NULL)
+		fProgress = new ProgressWindow();
+
+	fProgress->Stop();
 }
 
 
@@ -265,7 +240,7 @@ WindowsManager::IsWindowValid(BWindow* window)
 void
 WindowsManager::SimpleAlert(const char* text)
 {
-	BAlert* alert = new BAlert("Alert!", text,
+	BAlert* alert = new BAlert(B_TRANSLATE("Alert!"), text,
 		"Ok", NULL, NULL,
 		B_WIDTH_AS_USUAL, B_OFFSET_SPACING,
 		B_WARNING_ALERT);
@@ -286,7 +261,7 @@ WindowsManager::SimpleError(const char* text)
 BPoint
 WindowsManager::_CalculateWindowPoint()
 {
-	BRect frame = Get()->fMainWindow->Frame();
+	BRect frame = fMainWindow->Frame();
 	return BPoint((frame.left + frame.right) / 2,
 		(frame.top + frame.bottom) / 2);
 }

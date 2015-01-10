@@ -156,7 +156,7 @@ ProjectManager::LoadFile(entry_ref ref)
 
 	if (mediaFile->InitCheck() == B_OK) {
 		ret = LoadMediaFile(mediaFile, ref.name);
-		WindowsManager::Get()->HideProgress();
+		WindowsManager::HideProgress();
 		return ret;
 	}
 

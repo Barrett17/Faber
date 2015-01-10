@@ -33,14 +33,11 @@
 
 class WindowsManager {
 public:
-							WindowsManager();
 							~WindowsManager();
-
-	static WindowsManager*	Get();
 
 	static FaberWindow*		MainWindow();
 
-	void					ShowSettings();
+	static void				ShowSettings();
 
 	static void				ShowAbout();
 
@@ -69,18 +66,16 @@ public:
 private:
 	static BPoint			_CalculateWindowPoint();
 
-	static	WindowsManager*	fInstance;
+	static FaberWindow*		fMainWindow;
+	static SettingsWindow*	fSettingsWindow;
+	static ProgressWindow*	fProgress;
 
-	FaberWindow*			fMainWindow;
-	SettingsWindow*			fSettingsWindow;
-	ProgressWindow*			fProgress;
+	static BFilePanel*		fOpenPanel;
+	static BFilePanel*		fSavePanel;
+	static ExportWindow*	fExportWindow;
 
-	BFilePanel*				fOpenPanel;
-	BFilePanel*				fSavePanel;
-	ExportWindow*			fExportWindow;
-
-	ParameterWindow*		fFaberMixer;
-	ParameterWindow*		fSystemMixer;
+	static ParameterWindow*	fFaberMixer;
+	static ParameterWindow*	fSystemMixer;
 };
 
 #endif
