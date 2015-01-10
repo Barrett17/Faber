@@ -47,8 +47,7 @@ SettingsWindow::~SettingsWindow()
 bool
 SettingsWindow::QuitRequested()
 {
-	Hide();
-	return false;
+	return true;
 }
 
 

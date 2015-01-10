@@ -74,7 +74,7 @@ WindowsManager::~WindowsManager()
 
 	if (fSettingsWindow && fSettingsWindow->Lock()) {
 		fSettingsWindow->Quit();
-		fSettingsWindow->Unlock();
+		//fSettingsWindow->Unlock();
 	}
 
 	if (fOpenPanel)
@@ -109,8 +109,9 @@ WindowsManager::MainWindow()
 void
 WindowsManager::ShowSettings()
 {
-	if (fSettingsWindow == NULL)
-		GetSettingsWindow();
+	if (fSettingsWindow == NULL ||
+		!IsWindowValid(fSettingsWindow))
+		fSettingsWindow = new SettingsWindow();
 
 	if (fSettingsWindow->LockLooper()) {
 
@@ -120,16 +121,6 @@ WindowsManager::ShowSettings()
 		fSettingsWindow->Activate();
 		fSettingsWindow->UnlockLooper();
 	}
-}
-
-
-SettingsWindow*
-WindowsManager::GetSettingsWindow()
-{
-	if (fSettingsWindow == NULL)
-		fSettingsWindow = new SettingsWindow();
-
-	return fSettingsWindow;
 }
 
 

@@ -41,7 +41,6 @@ public:
 	static FaberWindow*		MainWindow();
 
 	void					ShowSettings();
-	SettingsWindow*			GetSettingsWindow();
 
 	static void				ShowAbout();
 
