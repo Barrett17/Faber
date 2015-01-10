@@ -47,7 +47,6 @@
 
 #define SELECT		'selK'
 
-FaberShortcut* gKeyBind = FaberShortcut::Get();
 
 static const char* _KeyLabel(char in)
 {
@@ -548,7 +547,7 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView* v)
 	r.left = r.right+8;
 	r.right = Bounds().right-8;
 
-	KeyBind* bind = gKeyBind->KeyBindAt(index);
+	KeyBind* bind = FaberShortcut::KeyBindAt(index);
 
 	view->AddChild(new BStringView(r, NULL,
 		B_TRANSLATE(bind->label)));
@@ -616,12 +615,12 @@ SetKeyWindow::MessageReceived(BMessage* msg)
 	
 			key->key = control1->GetKey();
 			key->mod = control1->GetMod();
-			key->label = gKeyBind->KeyBindAt(index)->label;
-			key->message = gKeyBind->KeyBindAt(index)->message;
-			key->itemType = gKeyBind->KeyBindAt(index)->itemType;
+			key->label = FaberShortcut::KeyBindAt(index)->label;
+			key->message = FaberShortcut::KeyBindAt(index)->message;
+			key->itemType = FaberShortcut::KeyBindAt(index)->itemType;
 			
 	
-			gKeyBind->AddKeyBind(key);
+			FaberShortcut::AddKeyBind(key);
 	
 			if (parent->LockLooper()) {
 				parent->Pulse();
@@ -666,8 +665,8 @@ KeymapView::KeymapView()
 
 	BObjectList<BListItem> items(false);
 
-	for (int32 i=0; i < gKeyBind->CountKeys(); i++) {
-		KeyBind* bind = gKeyBind->KeyBindAt(i);
+	for (int32 i=0; i < FaberShortcut::CountKeys(); i++) {
+		KeyBind* bind = FaberShortcut::KeyBindAt(i);
 		if (bind->itemType == FABER_SPLITTER)
 			continue;
 
@@ -740,7 +739,7 @@ KeymapView::MessageReceived(BMessage* msg)
 				// needed to convert the outline numbers, they are inverted !
 				code = ((KeyItem*)it)->GetCode();
 				if (code > 0) {
-					sprintf(s, "item: %s", gKeyBind->FindKeyBind(code)->label);
+					sprintf(s, "item: %s", FaberShortcut::FindKeyBind(code)->label);
 					p.x =  (screen.Frame().left+screen.Frame().right)/2;
 					p.y =  (screen.Frame().top+screen.Frame().bottom)/2;
 					fIndex = index;

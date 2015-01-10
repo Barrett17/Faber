@@ -41,6 +41,9 @@ FaberApp::FaberApp()
 	:
 	BApplication(FABER_SIGNATURE)
 {
+	// Load app keys
+	FaberShortcut::LoadKeys();
+
 	fFaberWindow = WindowsManager::MainWindow();
 	fFaberWindow->Show();
 

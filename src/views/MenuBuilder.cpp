@@ -28,9 +28,6 @@
 #include "FaberShortcut.h"
 
 
-FaberShortcut* gBind = FaberShortcut::Get();
-
-
 BMenu*
 MenuBuilder::BuildMenu(KeyBind* bind, MenuFilter* filter,
 	 CustomMenuCreator* custom)
@@ -89,7 +86,7 @@ MenuBuilder::BuildMenu(KeyBind* bind, MenuFilter* filter,
 BMenuItem*
 MenuBuilder::BuildMenuItem(uint32 message, const char* label)
 {
-	KeyBind* bind = gBind->FindKeyBind(message);
+	KeyBind* bind = FaberShortcut::FindKeyBind(message);
 
 	char key = 0;
 	int32 mod = 0;

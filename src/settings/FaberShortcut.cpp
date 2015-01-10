@@ -17,33 +17,19 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "FaberShortcut.h"
+
 #include "DefaultKeymap.h"
 
-FaberShortcut* FaberShortcut::fInstance = NULL;
+BObjectList<KeyBind> FaberShortcut::fBinds = BObjectList<KeyBind>(true);
 
 // TODO using HashMap we can go from an O(n) execution time to O(log n)
 
 
-FaberShortcut*
-FaberShortcut::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new FaberShortcut();
-
-	return fInstance;	
-}
-
-
-FaberShortcut::FaberShortcut()
-	:
-	fBinds(true)
+void
+FaberShortcut::LoadKeys()
 {
 	CreateDefaultKeys();
-}
-
-
-FaberShortcut::~FaberShortcut()
-{
 }
 
 

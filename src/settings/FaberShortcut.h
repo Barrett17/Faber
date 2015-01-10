@@ -37,26 +37,23 @@ public:
 	uint32			itemType;
 };
 
+
 class FaberShortcut {
 public:
-							FaberShortcut();
-							~FaberShortcut();
+	static void						LoadKeys();
 
-	static FaberShortcut* 	Get();
-
-	void					AddKeyBind(KeyBind* bind);
-	KeyBind*				FindKeyBind(uint32 code);
-	KeyBind*				KeyBindAt(int32 index);
-	int32					CountKeys();
-
-	void					CreateDefaultKeys();
+	static void						AddKeyBind(KeyBind* bind);
+	static KeyBind*					FindKeyBind(uint32 code);
+	static KeyBind*					KeyBindAt(int32 index);
+	static int32					CountKeys();
 
 private:
-	void					_CopyObj(KeyBind* bind, KeyBind* from);
+	static void						CreateDefaultKeys();
 
-	static FaberShortcut*	fInstance;
+	static void						_CopyObj(KeyBind* bind,
+										KeyBind* from);
 
-	BObjectList<KeyBind>	fBinds;
+	static BObjectList<KeyBind>		fBinds;
 };
 
 #endif

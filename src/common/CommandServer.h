@@ -44,7 +44,6 @@ public:
 			static status_t		SendCommand(BMessage* msg);
 
 private:
-			FaberView*			fFaberView;
 			ProjectManager*		fProjectManager;
 			AudioGate*			fAudioGate;
 
