@@ -28,10 +28,8 @@ ParameterView::ParameterView(live_node_info& nodeInfo)
 	:
 	BGroupView(B_HORIZONTAL, 0)
 {
-	BMediaRoster* roster = BMediaRoster::CurrentRoster();
-
-	if (roster != NULL)
-		roster->GetParameterWebFor(nodeInfo.node, &fParameterWeb);
+	BMediaRoster::Roster()->GetParameterWebFor(nodeInfo.node,
+		&fParameterWeb);
 
 	BView* view = BMediaTheme::ViewFor(fParameterWeb, NULL, NULL);
 

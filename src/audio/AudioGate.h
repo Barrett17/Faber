@@ -82,8 +82,6 @@ private:
 			static AudioGate*		fInstance;
 			media_format			fFormat;
 
-			BMediaRoster*			fRoster;
-
 			AudioEngine*			fAudioEngine;
 
 			// Tracks Management
