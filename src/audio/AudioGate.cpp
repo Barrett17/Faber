@@ -102,26 +102,6 @@ AudioGate::GetOutputs()
 
 
 status_t
-AudioGate::RegisterTrack(Track* track)
-{
-	if (track->IsAudio())
-		return RegisterTrack((AudioTrack*)track);
-
-	return B_ERROR;
-}
-
-
-status_t
-AudioGate::UnregisterTrack(Track* track)
-{
-	if (track->IsAudio())
-		return UnregisterTrack((AudioTrack*)track);
-
-	return B_ERROR;
-}
-
-
-status_t
 AudioGate::RegisterTrack(AudioTrack* track)
 {
 	Get()->fLastID++;

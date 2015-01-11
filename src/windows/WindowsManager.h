@@ -33,8 +33,6 @@
 
 class WindowsManager {
 public:
-							~WindowsManager();
-
 	static FaberWindow*		MainWindow();
 
 	static void				ShowSettings();

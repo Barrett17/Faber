@@ -58,9 +58,6 @@ public:
 
 			// Tracks Management
 
-			static status_t			RegisterTrack(Track* track);
-			static status_t			UnregisterTrack(Track* track);
-
 			static status_t			RegisterTrack(AudioTrack* track);
 			static status_t			UnregisterTrack(AudioTrack* track);
 
