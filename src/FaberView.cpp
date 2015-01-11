@@ -156,10 +156,10 @@ BMenu*
 FaberView::BuildEffectsMenu()
 {
 	BMenu* menu = new BMenu(B_TRANSLATE("Effects"));
-	EffectsManager* effectsManager = EffectsManager::Get();
 
-	for (int i = 0; i < effectsManager->CountEffects(); i++) {
-		FaberEffect* effect = effectsManager->GetEffect(i);
+	for (int i = 0; i < EffectsManager::CountEffects(); i++) {
+		//printf("called\n");
+		FaberEffect* effect = EffectsManager::GetEffect(i);
 		if (effect->Flags() & FABER_FILTER) {
 			BMenuItem* item = effect->BuildItem();
 			menu->AddItem(item);
@@ -174,10 +174,9 @@ BMenu*
 FaberView::BuildGenerateMenu()
 {
 	BMenu* menu = new BMenu(B_TRANSLATE("Generate"));
-	EffectsManager* effectsManager = EffectsManager::Get();
 
-	for (int i = 0; i < effectsManager->CountEffects(); i++) {
-		FaberEffect* effect = effectsManager->GetEffect(i);
+	for (int i = 0; i < EffectsManager::CountEffects(); i++) {
+		FaberEffect* effect = EffectsManager::GetEffect(i);
 		if (effect->Flags() & FABER_PRODUCER) {
 			BMenuItem* item = effect->BuildItem();
 			menu->AddItem(item);

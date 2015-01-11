@@ -77,6 +77,4 @@ private:
 			const char*		fName;
 };
 
-typedef BObjectList<FaberEffect> FaberEffectList;
-
 #endif	// _FABER_EFFECT_H_

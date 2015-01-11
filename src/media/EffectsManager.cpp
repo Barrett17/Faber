@@ -22,40 +22,24 @@
 
 #include <String.h>
 
-
-EffectsManager* EffectsManager::fInstance = NULL;
-
-
-EffectsManager*
-EffectsManager::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new EffectsManager();
-
-	return fInstance;	
-}
+#include <stdio.h>
 
 
-EffectsManager::EffectsManager()
-	:
-	fEffectsList(true)
+BObjectList<FaberEffect> gEffectsList;
+
+void
+EffectsManager::InitEffects()
 {
 	for (int32 i = 0; gStandardAudioEffects[i].effect != NULL; i++) {
-		fEffectsList.AddItem(gStandardAudioEffects[i].effect);
+		gEffectsList.AddItem(gStandardAudioEffects[i].effect);
 	}
 }
 
 
-EffectsManager::~EffectsManager()
-{
-
-}
-
-
 const char*
-EffectsManager::EffectToString(int32 index) const
+EffectsManager::EffectToString(int32 index)
 {
-	return fEffectsList.ItemAt(index)->Name();
+	return gEffectsList.ItemAt(index)->Name();
 }
 
 
@@ -73,21 +57,21 @@ EffectsManager::EffectsByFlag(int32 flag)
 
 
 int32
-EffectsManager::CountEffects() const
+EffectsManager::CountEffects()
 {
-	return fEffectsList.CountItems();
+	return gEffectsList.CountItems();
 }
 
 
 FaberEffect*
-EffectsManager::GetEffect(int32 index) const
+EffectsManager::GetEffect(int32 index)
 {
-	return fEffectsList.ItemAt(index);
+	return gEffectsList.ItemAt(index);
 }
 
 
 FaberEffect*
-EffectsManager::GetEffect(const char* name) const
+EffectsManager::GetEffect(const char* name)
 {
 	for (int32 i = 0; i < CountEffects(); i++) {
 		FaberEffect* effect = GetEffect(i);

@@ -26,23 +26,15 @@
 
 class EffectsManager {
 public:
-								EffectsManager();
-	virtual 					~EffectsManager();
+			static void						InitEffects();
 
-	static EffectsManager*		Get();
+			static const char*				EffectToString(int32 index);
+			//FaberEffectList&				StandardEffects();
+			//FaberEffectList&				EffectsByFlag(int32 flag);
 
-	const char*					EffectToString(int32 index) const;
-	//FaberEffectList&			StandardEffects();
-	//FaberEffectList&			EffectsByFlag(int32 flag);
-
-	int32						CountEffects() const;
-	FaberEffect*				GetEffect(int32 index) const;
-	FaberEffect*				GetEffect(const char* name) const;
-
-private:
-	static EffectsManager*		fInstance;
-
-	FaberEffectList				fEffectsList;
+			static int32					CountEffects();
+			static FaberEffect*				GetEffect(int32 index);
+			static FaberEffect*				GetEffect(const char* name);
 };
 
 #endif	// _EFFECTS_MANAGER_H_
