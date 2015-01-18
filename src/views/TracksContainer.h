@@ -32,7 +32,7 @@ public:
 	virtual 					~TracksContainer();
 
 	// CommandListener
-	virtual status_t			HandleCommand(BMessage* msg);
+	virtual void				HandleCommand(BMessage* msg);
 
 
 	// TracksContainer API

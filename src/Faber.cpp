@@ -20,6 +20,7 @@
 
 #include "Faber.h"
 
+#include "CommandServer.h"
 #include "EffectsManager.h"
 #include "FaberDefs.h"
 #include "FaberResources.h"
@@ -42,6 +43,8 @@ FaberApp::FaberApp()
 	:
 	BApplication(FABER_SIGNATURE)
 {
+	CommandServer::RunCommandServer();
+
 	EffectsManager::InitEffects();
 	// Load app keys
 	FaberShortcut::LoadKeys();

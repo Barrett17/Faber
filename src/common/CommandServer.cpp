@@ -29,20 +29,41 @@
 #include "ParameterWindow.h"
 #include "WindowsManager.h"
 
-BObjectList<CommandListener> CommandServer::fExecutors;
+CommandServer* CommandServer::fInstance = NULL;
 
 
 void
-CommandServer::AddCommandListener(CommandListener* listener)
+CommandServer::RunCommandServer()
 {
-	fExecutors.AddItem(listener);
+	fInstance = new CommandServer();
 }
 
 
-void
+status_t
+CommandServer::AddFilterWindow(BWindow* window)
+{
+	if (fInstance != NULL) {
+		window->AddFilter(fInstance);
+		return B_OK;
+	}
+
+	return B_ERROR;	
+}
+
+
+status_t
+CommandServer::AddCommandListener(CommandListener* listener)
+{
+	fInstance->fListeners.AddItem(listener);
+	return B_OK;
+}
+
+
+status_t
 CommandServer::RemoveCommandListener(CommandListener* listener)
 {
-	fExecutors.RemoveItem(listener);
+	fInstance->fListeners.RemoveItem(listener);
+	return B_OK;
 }
 
 
@@ -50,12 +71,15 @@ CommandServer::CommandServer()
 	:
 	BMessageFilter(B_ANY_DELIVERY, B_ANY_SOURCE)
 {
-	fAudioGate = AudioGate::Get();
+	if (fInstance == NULL)
+		fInstance = this;
+	else
+		printf("Error attempting to create more than one CommandServer");
 }
 
 
 filter_result
-CommandServer::Filter(BMessage* message, BHandler **target)
+CommandServer::Filter(BMessage* message, BHandler** target)
 {
 	if (message->what != FABER_COMMAND)
 		return B_DISPATCH_MESSAGE;
@@ -66,25 +90,12 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 
 	message->what = commandCode;
 
-	filter_result result = B_DISPATCH_MESSAGE;
-	bool skip = true;
-	bool executed = false;
+	filter_result result = B_SKIP_MESSAGE;
 
-	//message->PrintToStream();
-
-	for (int32 i = 0; i < fExecutors.CountItems(); i++) {
-		if (fExecutors.ItemAt(i)->HandleCommand(message) == B_OK)
-			executed = true;
-	}
-
-	if (executed == true)
-		return B_SKIP_MESSAGE;
+	for (int32 i = 0; i < fListeners.CountItems(); i++)
+		fListeners.ItemAt(i)->HandleCommand(message);
 
 	switch (message->what) {
-
-		case FABER_UPDATE_MENU:
-			WindowsManager::MainWindow()->MainView()->UpdateMenu();
-		break;
 
 		case FABER_ABOUT:
 			WindowsManager::ShowAbout();
@@ -104,25 +115,26 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 		break;
 
 		case FABER_FILE_OPEN:
-		{
 			WindowsManager::GetOpenPanel()->Show();
+		break;
 
-			break;
-		}
+		case FABER_SAVE_AS_PROJECT:
+			WindowsManager::GetSavePanel()->Show();
+		break;
 
 		case FABER_EXPORT_PROJECT:
-		{
 			WindowsManager::GetExportPanel()->Show();
+		break;
 
-			break;
-		}
+		case FABER_OPEN_MIXER:
+			WindowsManager::GetFaberMixer()->Show();
+		break;
 
 		case FABER_NEW_PROJECT:
 		{
 			app_info info;
 			be_app->GetAppInfo(&info);
 			be_roster->Launch(info.signature);
-
 			break;
 		}
 
@@ -138,21 +150,9 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 			break;
 		}
 
-		case FABER_SAVE_AS_PROJECT:
-		{	
-			WindowsManager::GetSavePanel()->Show();
-
-			break;
-		}
-
 		case B_SAVE_REQUESTED:
-		{
-			printf("Save requested\n");
-
-			ProjectManager::SaveProject();	
-
-			break;
-		}
+			ProjectManager::SaveProject();
+		break;
 
 		case FABER_UNDO:
 		{
@@ -167,12 +167,6 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 			if (ProjectManager::HasRedo())
 				ProjectManager::Redo();
 
-			break;
-		}
-
-		case FABER_OPEN_MIXER:
-		{
-			WindowsManager::GetFaberMixer()->Show();
 			break;
 		}
 
@@ -197,11 +191,8 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 		}
 
 		default:
-			skip = false;
+			result = B_DISPATCH_MESSAGE;
 	}
-
-	if (skip == true)
-		result = B_SKIP_MESSAGE;
 
 	return result;
 }
@@ -210,6 +201,7 @@ CommandServer::Filter(BMessage* message, BHandler **target)
 status_t
 CommandServer::SendCommand(BMessage* msg)
 {
-	BMessenger mess = WindowsManager::MainWindow();
-	return mess.SendMessage(msg);
+	WindowsManager::PostMessage(msg);
+
+	return B_OK;
 }

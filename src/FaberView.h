@@ -36,10 +36,6 @@ public:
 								FaberView();
 	virtual 					~FaberView();
 
-			TracksContainer*	Container() const;
-
-			status_t 			AddTrack(Track* track);
-
 			BMenuBar*			BuildMainMenuBar();
 
 			void				UpdateMenu();

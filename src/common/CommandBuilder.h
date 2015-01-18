@@ -22,7 +22,7 @@
 #include "FaberMessages.h"
 #include "MessageBuilder.h"
 
-#define FABER_COMMAND_CODE "faber_command_code"
+#define FABER_COMMAND_CODE "faber:command_code"
 
 class CommandBuilder : public MessageBuilder {
 public:

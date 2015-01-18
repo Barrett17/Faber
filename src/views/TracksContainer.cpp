@@ -97,9 +97,10 @@ TracksContainer::~TracksContainer()
 }
 
 
-status_t
+void
 TracksContainer::HandleCommand(BMessage* message)
 {
+	message->PrintToStream();
 	TrackView* track = _FindTrack(message);
 	if (track != NULL) {
 		if (message->AddPointer("tracks_container", this) == B_OK) {
@@ -109,6 +110,15 @@ TracksContainer::HandleCommand(BMessage* message)
 
 	switch (message->what)
 	{
+		case FABER_ADD_TRACK:
+		{
+			Track* track = NULL;
+			if (message->FindPointer("faber:track_pointer",
+				(void**)&track) == B_OK)
+				AddTrack(track);
+		}		
+		break;
+
 		case FABER_NEW_MONO_TRACK:
 		{
 			AudioTrack* track = new AudioTrack(1);
@@ -253,13 +263,7 @@ TracksContainer::HandleCommand(BMessage* message)
 		case FABER_ZOOM_SELECTION:
 			ZoomSelection();
 		break;
-
-
-		default:
-			return B_ERROR;
 	}
-
-	return B_OK;
 }
 
 
@@ -299,7 +303,7 @@ TracksContainer::AddTrack(Track* track, int32 index)
 			index = CountTracks();
 
 		status_t ret = AddTrack(trackView, index);
-		CommandServer::SendCommand(CommandBuilder(FABER_UPDATE_MENU));
+		WindowsManager::PostMessage(MessageBuilder(FABER_UPDATE_MENU));
 		return ret;
 	}
 	return B_ERROR;
@@ -333,7 +337,7 @@ TracksContainer::RemoveTrack(TrackView* track, bool deep)
 		ProjectManager::UnregisterTrack(track->GetTrack());
 		delete track;
 	}
-	CommandServer::SendCommand(CommandBuilder(FABER_UPDATE_MENU));
+	WindowsManager::PostMessage(MessageBuilder(FABER_UPDATE_MENU));
 
 	return B_OK;
 }

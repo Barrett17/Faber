@@ -30,23 +30,27 @@
 
 class CommandServer : public BMessageFilter {
 public:
-								CommandServer();
+											CommandServer();
 
-	virtual	filter_result		Filter(BMessage* message,
-									BHandler** target);
+	virtual	filter_result					Filter(BMessage* message,
+												BHandler** target);
 
-			static void			AddCommandListener(
-									CommandListener* listener);
+			static	void					RunCommandServer();
 
-			static void			RemoveCommandListener(
-									CommandListener* listener);	
+			static	status_t				AddFilterWindow(BWindow* window);
 
-			static status_t		SendCommand(BMessage* msg);
+			static	status_t				AddCommandListener(
+											CommandListener* listener);
+
+			static	status_t				RemoveCommandListener(
+											CommandListener* listener);	
+
+			static	status_t				SendCommand(BMessage* msg);
 
 private:
-			AudioGate*			fAudioGate;
+			static	CommandServer*			fInstance;
 
-			static BObjectList<CommandListener> fExecutors;
+			BObjectList<CommandListener>	fListeners;
 };
 
 #endif

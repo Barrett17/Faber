@@ -73,6 +73,14 @@ WindowsManager::MainWindow()
 
 
 void
+WindowsManager::PostMessage(BMessage* message, BHandler* handler)
+{
+	if (fMainWindow != NULL)
+		fMainWindow->PostMessage(message, handler);
+}
+
+
+void
 WindowsManager::ShowSettings()
 {
 	if (fSettingsWindow == NULL ||

@@ -34,9 +34,9 @@ FaberWindow::FaberWindow(BRect rect)
 	:
 	BWindow(rect, "Faber" , B_TITLED_WINDOW, 0)
 {
-	fFaberView = new FaberView();
+	CommandServer::AddFilterWindow(this);
 
-	AddFilter(new CommandServer());
+	fFaberView = new FaberView();
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 0)
 		.Add(fFaberView)
@@ -94,6 +94,10 @@ FaberWindow::MessageReceived(BMessage* message)
 		case B_SIMPLE_DATA:
 		case B_MIME_DATA:
 			be_app->PostMessage(message);
+			break;
+
+		case FABER_UPDATE_MENU:
+			fFaberView->UpdateMenu();
 			break;
 
 		default:

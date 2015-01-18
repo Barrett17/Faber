@@ -54,7 +54,7 @@ public:
 			media_node				Node();
 
 			// CommandListener
-	virtual status_t				HandleCommand(BMessage* msg);
+	virtual void					HandleCommand(BMessage* msg);
 
 			// Tracks Management
 

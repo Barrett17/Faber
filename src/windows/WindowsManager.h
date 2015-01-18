@@ -35,6 +35,9 @@ class WindowsManager {
 public:
 	static FaberWindow*		MainWindow();
 
+	static void				PostMessage(BMessage* message,
+								BHandler* handler = NULL);
+
 	static void				ShowSettings();
 
 	static void				ShowAbout();

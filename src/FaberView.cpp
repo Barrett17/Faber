@@ -81,20 +81,6 @@ FaberView::~FaberView()
 }
 
 
-TracksContainer*
-FaberView::Container() const
-{
-	return fTracksContainer;
-}
-
-
-status_t
-FaberView::AddTrack(Track* track)
-{
-	return fTracksContainer->AddTrack(track);
-}
-
-
 BMenuBar*
 FaberView::BuildMainMenuBar()
 {

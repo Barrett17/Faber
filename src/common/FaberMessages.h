@@ -41,6 +41,7 @@ const uint32 FABER_REDO						=	'redo';
 
 const uint32 FABER_OPEN_MIXER				=	'fbOM';
 
+const uint32 FABER_ADD_TRACK				=	'FAtr';
 const uint32 FABER_NEW_MONO_TRACK			=   'FNat';
 const uint32 FABER_NEW_STEREO_TRACK			=   'FNst';
 

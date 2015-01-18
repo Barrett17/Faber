@@ -19,10 +19,11 @@
 #ifndef COMMAND_LISTENER_H
 #define COMMAND_LISTENER_H
 
+#include <Message.h>
+
 class CommandListener {
 public:
-	virtual status_t 			HandleCommand(BMessage* command) = 0;				
-
+	virtual void				HandleCommand(BMessage* command) = 0;
 };
 
 #endif

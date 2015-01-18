@@ -31,7 +31,7 @@ AudioGate::AudioGate()
 	MediaGate(),
 	fLastID(-1)
 {
-	CommandServer::AddCommandListener(this);
+	//CommandServer::AddCommandListener(this);
 
 	fAudioEngine = new AudioEngine(this);
 
@@ -58,16 +58,10 @@ AudioGate::Get()
 }
 
 
-status_t
+void
 AudioGate::HandleCommand(BMessage* message)
 {
 	//message->PrintToStream();
-
-	switch (message->what)
-	{
-		default:
-			return B_ERROR;
-	}
 }
 
 
