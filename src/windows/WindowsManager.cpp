@@ -24,7 +24,7 @@
 #include <Application.h>
 
 #include "AboutWindow.h"
-#include "AudioGate.h"
+#include "MediaAgent.h"
 #include "FaberDefs.h"
 
 const char* kCopyrights[] = {
@@ -187,7 +187,7 @@ WindowsManager::GetFaberMixer()
 
 		live_node_info info;
 
-		info.node = AudioGate::Get()->Node();
+		info.node = MediaAgent::GetAudioGate()->Node();
 
 		strcpy(info.name, B_TRANSLATE("Mixer"));
 

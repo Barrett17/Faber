@@ -19,6 +19,8 @@
 #ifndef AUDIO_PROTOCOL_DEFS_H
 #define AUDIO_PROTOCOL_DEFS_H
 
+#include <SupportDefs.h>
+
 
 #define SAVE_TRACK_CHANNEL_NAME 			"track_channel"
 const uint32 SAVE_TRACK_CHANNEL			=	'stch';

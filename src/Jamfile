@@ -118,6 +118,7 @@ Application Faber :
 
 	TrackIO.cpp
 
+	MediaAgent.cpp
 	MediaGate.cpp
 	AudioGate.cpp
 

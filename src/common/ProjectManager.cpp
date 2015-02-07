@@ -20,11 +20,11 @@
 
 #include "ProjectManager.h"
 
-#include "AudioGate.h"
 #include "AutoDeleter.h"
 #include "CommandBuilder.h"
 #include "CommandServer.h"
 #include "FaberDefs.h"
+#include "MediaAgent.h"
 #include "MessageBuilder.h"
 #include "StorageUtils.h"
 #include "TrackIO.h"
@@ -97,7 +97,7 @@ ProjectManager::WasSaved()
 status_t
 ProjectManager::SaveProject()
 {
-	BMessage* msg = AudioGate::ArchiveTracks();
+	BMessage* msg = MediaAgent::ArchiveTracks();
 
 	// todo seek at 0
 	if (msg->Flatten(fProjectFile) != B_OK)
@@ -130,7 +130,7 @@ ProjectManager::LoadProject(entry_ref ref)
 
 	// todo seek
 	if (msg->Unflatten(fProjectFile) == B_OK
-		&& AudioGate::UnarchiveTracks(msg) != B_OK) {
+		&& MediaAgent::UnarchiveTracks(msg) != B_OK) {
 		fWasSaved = true;
 
 		WindowsManager::PostMessage(MessageBuilder(FABER_UPDATE_MENU));
@@ -210,7 +210,7 @@ status_t
 ProjectManager::RegisterTrack(Track* track)
 {
 	if (track->IsAudio())
-		return AudioGate::RegisterTrack((AudioTrack*)track);
+		return MediaAgent::RegisterTrack((AudioTrack*)track);
 
 	return B_ERROR;
 }
@@ -220,7 +220,7 @@ status_t
 ProjectManager::UnregisterTrack(Track* track)
 {
 	if (track->IsAudio())
-		return AudioGate::UnregisterTrack((AudioTrack*)track);
+		return MediaAgent::UnregisterTrack((AudioTrack*)track);
 
 	return B_ERROR;
 }

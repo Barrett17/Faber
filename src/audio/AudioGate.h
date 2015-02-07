@@ -36,8 +36,6 @@ public:
 									AudioGate();
 			virtual					~AudioGate();
 
-			static AudioGate*		Get();
-
 	virtual status_t 				Start();
 	virtual status_t 				Stop();
 
@@ -56,18 +54,6 @@ public:
 			// CommandListener
 	virtual void					HandleCommand(BMessage* msg);
 
-			// Tracks Management
-
-			static status_t			RegisterTrack(AudioTrack* track);
-			static status_t			UnregisterTrack(AudioTrack* track);
-
-			static BMessage*		ArchiveTracks();
-			static status_t			UnarchiveTracks(BMessage* from);
-
-			// TODO implement a pulse interface for the UI widgets
-			// void RegisterPulseListener(PulseListener* listener,
-			// 		int32 flags, int32 trackID = -1);
-
 protected:
 			friend class			AudioEngine;
 
@@ -84,10 +70,6 @@ private:
 			// Tracks Management
 			MediaEndPointMap*		fInputs;
 			MediaEndPointMap*		fOutputs;
-
-			AudioTrackList			fTracks;
-			uint32					fLastID;
-
 };
 
 #endif

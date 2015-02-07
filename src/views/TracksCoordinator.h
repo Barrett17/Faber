@@ -73,7 +73,7 @@ protected:
 private:
 			int64						_DisplaySize();
 
-			static TracksCoordinator*		fInstance;
+			static TracksCoordinator*	fInstance;
 };
 
 

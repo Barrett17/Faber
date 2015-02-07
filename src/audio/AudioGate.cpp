@@ -18,18 +18,14 @@
 */
 #include "AudioGate.h"
 
-#include "AudioProtocolDefs.h"
 #include "CommandServer.h"
 #include "CommandBuilder.h"
 #include "FaberDefs.h"
 
-AudioGate* AudioGate::fInstance = NULL;
-
 
 AudioGate::AudioGate()
 	:
-	MediaGate(),
-	fLastID(-1)
+	MediaGate()
 {
 	//CommandServer::AddCommandListener(this);
 
@@ -45,16 +41,6 @@ AudioGate::~AudioGate()
 {
 	BMediaRoster::Roster()->UnregisterNode(fAudioEngine);
 	BMediaRoster::Roster()->ReleaseNode(fAudioEngine->Node());
-}
-
-
-AudioGate*
-AudioGate::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new AudioGate();
-
-	return fInstance;	
 }
 
 
@@ -95,29 +81,6 @@ AudioGate::GetOutputs()
 }
 
 
-status_t
-AudioGate::RegisterTrack(AudioTrack* track)
-{
-	Get()->fLastID++;
-
-	track->SetID(Get()->fLastID);
-
-	Get()->fTracks.AddItem(track);
-
-	return B_OK;
-}
-
-
-status_t
-AudioGate::UnregisterTrack(AudioTrack* track)
-{
-	Get()->fTracks.RemoveItem(track);
-	delete track;
-
-	return B_OK;
-}
-
-
 media_node
 AudioGate::Node()
 {
@@ -139,33 +102,3 @@ AudioGate::ConnectConsumer(const media_node& node,
 {
 	return B_ERROR;
 }
-
-
-BMessage*
-AudioGate::ArchiveTracks()
-{
-	BMessage* msg = new BMessage();
-
-	for (int i = 0; i < Get()->fTracks.CountItems(); i++) {
-		BMessage* track = CommandBuilder(SAVE_AUDIOTRACK);
-		Get()->fTracks.ItemAt(i)->Archive(track);
-		msg->AddMessage(SAVE_AUDIOTRACK_NAME, track);
-	}
-
-	return msg;
-}
-
-
-status_t
-AudioGate::UnarchiveTracks(BMessage* from)
-{
-	BMessage msg;
-	for (int i = 0; from->FindMessage(SAVE_AUDIOTRACK_NAME, i, &msg)
-		== B_OK; i++) {
-		AudioTrack* track = (AudioTrack*)AudioTrack::Instantiate(&msg);
-		RegisterTrack(track);
-	}
-
-	return B_OK;
-}
-

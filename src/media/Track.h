@@ -70,7 +70,7 @@ public:
 	virtual uint32					ID();
 
 protected:
-			friend class 			AudioGate;
+			friend class 			MediaAgent;
 
 			bigtime_t				fDuration;
 

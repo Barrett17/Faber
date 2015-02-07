@@ -16,31 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _MEDIA_GATE_H
-#define _MEDIA_GATE_H
+#ifndef _MEDIA_AGENT_H
+#define _MEDIA_AGENT_H
+
+#include <ObjectList.h>
+
+#include "AudioGate.h"
 
 
-#include <SupportDefs.h>
-
-#include "Track.h"
-
-
-class MediaGate {
+class MediaAgent {
 public:
-	virtual status_t				Start();
-	virtual status_t				Stop();
+	static AudioGate*				GetAudioGate();
 
-			bool					IsStarted() const;
+	static status_t					RegisterTrack(Track* track);
+	static status_t					UnregisterTrack(Track* track);
 
-			void					SetLoop(bool loop);
-			bool					Loop() const;
 
-			void					SetPause(bool pause);
-			bool					IsPaused() const;
+	static BMessage*				ArchiveTracks();
+	static status_t					UnarchiveTracks(BMessage* from);
+
+			// TODO implement a pulse interface for the UI widgets
+			// void RegisterPulseListener(PulseListener* listener,
+			// 		int32 flags, int32 trackID = -1);
 
 protected:
-			bool					fStarted;
-			bool					fLoop;
+	static AudioGate*				fAudioGate;
+	static BObjectList<Track>		fTracks;
+	static uint32					fLastID;
 };
 
 #endif
