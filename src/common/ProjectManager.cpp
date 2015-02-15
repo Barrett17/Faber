@@ -210,7 +210,7 @@ status_t
 ProjectManager::RegisterTrack(Track* track)
 {
 	if (track->IsAudio())
-		return MediaAgent::RegisterTrack((AudioTrack*)track);
+		return MediaAgent::RegisterTrack(track);
 
 	return B_ERROR;
 }
@@ -220,7 +220,7 @@ status_t
 ProjectManager::UnregisterTrack(Track* track)
 {
 	if (track->IsAudio())
-		return MediaAgent::UnregisterTrack((AudioTrack*)track);
+		return MediaAgent::UnregisterTrack(track);
 
 	return B_ERROR;
 }

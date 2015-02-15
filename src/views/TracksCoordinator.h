@@ -29,7 +29,7 @@ public:
 										TracksCoordinator();
 	virtual								~TracksCoordinator();
 
-			static TracksCoordinator*		Get();
+			static TracksCoordinator*	Get();
 
 protected:
 			friend class				TracksContainer;
