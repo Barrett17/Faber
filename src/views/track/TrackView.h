@@ -23,68 +23,79 @@
 #include <GroupView.h>
 
 #include "Track.h"
+#include "TracksCoordinator.h"
 
 #define TRACK_MESSAGE_ID "track_id"
 
 
+class TracksContainer;
+
 class TrackView : public BGroupView
 {
 public:
-							TrackView(const char* name,
-								Track* track, uint32 resizingMode);
+								// NOTE: the ownership of coordinator and track
+								// is not our.
+								TrackView(const char* name,
+									Track* track,
+									TracksCoordinator* coordinator,
+									uint32 resizingMode = B_FOLLOW_LEFT_RIGHT
+										| B_FRAME_EVENTS);
 
-	virtual 				~TrackView();
+	virtual 					~TrackView();
 
-			uint32			ID() const;
+			uint32				ID() const;
 
-	virtual bool			IsSelected() const = 0;
+	virtual bool				IsSelected() const = 0;
 
-	virtual Track*			GetTrack() const;
+	virtual Track*				GetTrack() const;
 
-	virtual void			SelectAll() = 0;
-	virtual void			Unselect() = 0;
+	virtual void				SelectAll() = 0;
+	virtual void				Unselect() = 0;
 
-	virtual void			CurrentSelection(int64* start, int64* end) const = 0;
-	virtual void			Select(int64 start, int64 end) = 0;
+	virtual void				CurrentSelection(int64* start,
+									int64* end) const = 0;
 
-			bigtime_t		Duration() const;
-			int64			Frames() const;
+	virtual void				Select(int64 start, int64 end) = 0;
 
-			const BString&	Name() const;
-			void 			SetName(const char* name);
+			bigtime_t			Duration() const;
+			int64				Frames() const;
 
-			float			Volume() const;
-			void			SetVolume(float volume);
+			const BString&		Name() const;
+			void 				SetName(const char* name);
 
-			void			SetBalance(float balance);
-			float			Balance() const;
+			float				Volume() const;
+			void				SetVolume(float volume);
 
-			bool			IsPlaying() const;
-			void			SetPlaying(bool playing);
+			void				SetBalance(float balance);
+			float				Balance() const;
 
-			void			SetRecording(bool solo);
-			bool			IsRecording() const;
+			bool				IsPlaying() const;
+			void				SetPlaying(bool playing);
 
-			void	 		MuteTrack(bool mute);
-			bool 			IsMute() const;
+			void				SetRecording(bool solo);
+			bool				IsRecording() const;
 
-			void			SetSolo(bool solo);
-			bool			IsSolo() const;
+			void	 			MuteTrack(bool mute);
+			bool 				IsMute() const;
+	
+			void				SetSolo(bool solo);
+			bool				IsSolo() const;
 
-	virtual bool			HasChanged() const;
-	virtual bool			HasUndo() const;
-	virtual bool			HasRedo() const;
+	virtual bool				HasChanged() const;
+	virtual bool				HasUndo() const;
+	virtual bool				HasRedo() const;
 
 			// Update hooks for derived classes.
 			// The following methods redraw the data.
-	virtual void			UpdateRequested() = 0;
-	virtual void			UpdateRequested(BRect bounds) = 0;
+	virtual void				UpdateRequested() = 0;
+	virtual void				UpdateRequested(BRect bounds) = 0;
 
 			// This is used to pass commands strictly related to this track.
-	virtual void			CommandForTrack(BMessage* msg) = 0;
+	virtual void				CommandForTrack(BMessage* msg) = 0;
 
 protected:
-			Track*			fTrack;
+			TracksCoordinator*	fCoordinator;
+			Track*				fTrack;
 };
 
 

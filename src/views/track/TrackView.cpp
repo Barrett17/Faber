@@ -21,9 +21,10 @@
 
 
 TrackView::TrackView(const char* name,
-	Track* track, uint32 resizingMode)
+	Track* track, TracksCoordinator* coordinator, uint32 resizingMode)
 	:
 	BGroupView(B_HORIZONTAL, resizingMode),
+	fCoordinator(coordinator),
 	fTrack(track)
 {
 }
