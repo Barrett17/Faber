@@ -20,7 +20,6 @@
 #define _EFFECTS_MANAGER_H_
 
 
-#include "AudioEffects.h"
 #include "FaberEffect.h"
 
 
@@ -29,12 +28,9 @@ public:
 			static void						InitEffects();
 
 			static const char*				EffectToString(int32 index);
-			//FaberEffectList&				StandardEffects();
-			//FaberEffectList&				EffectsByFlag(int32 flag);
 
 			static int32					CountEffects();
 			static FaberEffect*				GetEffect(int32 index);
-			static FaberEffect*				GetEffect(const char* name);
 };
 
 #endif	// _EFFECTS_MANAGER_H_

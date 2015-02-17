@@ -18,6 +18,7 @@
 */
 
 
+#include "AudioEffects.h"
 #include "EffectsManager.h"
 
 #include <String.h>
@@ -43,19 +44,6 @@ EffectsManager::EffectToString(int32 index)
 }
 
 
-/*FaberEffectList&
-EffectsManager::StandardEffects()
-{
-	return EffectsByFlag(FABER_BUILTIN_EFFECT);
-}
-
-
-FaberEffectList&
-EffectsManager::EffectsByFlag(int32 flag)
-{
-}*/
-
-
 int32
 EffectsManager::CountEffects()
 {
@@ -67,17 +55,4 @@ FaberEffect*
 EffectsManager::GetEffect(int32 index)
 {
 	return gEffectsList.ItemAt(index);
-}
-
-
-FaberEffect*
-EffectsManager::GetEffect(const char* name)
-{
-	for (int32 i = 0; i < CountEffects(); i++) {
-		FaberEffect* effect = GetEffect(i);
-		BString str(effect->Name());
-		if (str.Compare(name) == 0)
-			return effect;
-	}
-	return NULL;
 }
