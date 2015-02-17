@@ -34,8 +34,9 @@ class TrackMenuUpdater;
 
 class AudioTrackView : public TrackView {
 public:
-							AudioTrackView(const char* name = "AudioTrackView",
-								AudioTrack* track = NULL,
+							AudioTrackView(const char* name,
+								AudioTrack* track,
+								TracksCoordinator* coordinator,
 								uint32 resizingMode = B_FOLLOW_LEFT_RIGHT |
 									B_FRAME_EVENTS);
 

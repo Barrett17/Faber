@@ -55,12 +55,12 @@ private:
 
 
 AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
-	uint32 resizingMode)
+	TracksCoordinator* coordinator, uint32 resizingMode)
 	:
-	TrackView(name, track, resizingMode),
+	TrackView(name, track, coordinator, resizingMode),
 	fAudioTrack(track)
 {
-	fWaveRender = new WaveRender(fAudioTrack);
+	fWaveRender = new WaveRender(fAudioTrack, coordinator);
 
 	BBox* box = new BBox("box");
 
