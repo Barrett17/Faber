@@ -60,7 +60,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	TrackView(name, track, coordinator, resizingMode),
 	fAudioTrack(track)
 {
-	fWaveRender = new WaveRender(fAudioTrack, coordinator);
+	fWaveRender = new WaveRender(this, coordinator);
 
 	BBox* box = new BBox("box");
 
@@ -241,20 +241,6 @@ AudioTrackView::CommandForTrack(BMessage* command)
 		break;
 
 	}
-}
-
-
-void
-AudioTrackView::UpdateRequested()
-{
-	UpdateRequested(fWaveRender->Bounds());
-}
-
-
-void
-AudioTrackView::UpdateRequested(BRect rect)
-{
-	fWaveRender->Invalidate(rect);
 }
 
 
