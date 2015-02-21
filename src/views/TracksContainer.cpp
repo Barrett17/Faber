@@ -38,6 +38,7 @@
 TracksContainer::TracksContainer()
 	:
 	BGroupView(B_VERTICAL, 0),
+	fTracksCoordinator(this),
 	fTrackViews(false)
 {
 	CommandServer::AddCommandListener(this);
@@ -221,11 +222,11 @@ TracksContainer::HandleCommand(BMessage* message)
 		break;
 
 		case B_SELECT_ALL:
-			SelectAll();
+			fTracksCoordinator.SelectAll();
 		break;
 		
 		case FABER_UNSELECT_ALL:
-			UnselectAll();
+			fTracksCoordinator.Unselect();
 		break;
 
 		case B_COPY:
@@ -249,19 +250,19 @@ TracksContainer::HandleCommand(BMessage* message)
 		break;
 
 		case FABER_ZOOM_IN:
-			ZoomIn();
+			fTracksCoordinator.ZoomIn();
 		break;
 	
 		case FABER_ZOOM_OUT:
-			ZoomOut();
+			fTracksCoordinator.ZoomOut();
 		break;
 	
 		case FABER_ZOOM_FULL:
-			ZoomFull();
+			fTracksCoordinator.ZoomFull();
 		break;
 
 		case FABER_ZOOM_SELECTION:
-			ZoomSelection();
+			fTracksCoordinator.ZoomSelection();
 		break;
 	}
 }
@@ -297,7 +298,7 @@ TracksContainer::AddTrack(Track* track, int32 index)
 		ProjectManager::RegisterTrack(track);
 
 		AudioTrackView* trackView =
-			new AudioTrackView("AudioTrack", audioTrack);
+			new AudioTrackView("AudioTrack", audioTrack, &fTracksCoordinator);
 
 		if (index == -1)
 			index = CountTracks();
@@ -448,22 +449,6 @@ TracksContainer::ReorderTracks(int order)
 
 
 void
-TracksContainer::UpdateRequested()
-{
-	for (int i = 0; i < CountTracks(); i++)
-		TrackAt(i)->UpdateRequested();
-}
-
-
-void
-TracksContainer::UpdateRequested(BRect rect)
-{
-	for (int i = 0; i < CountTracks(); i++)
-		TrackAt(i)->UpdateRequested(rect);
-}
-
-
-void
 TracksContainer::Copy()
 {
 
@@ -499,56 +484,8 @@ TracksContainer::Clear()
 
 
 void
-TracksContainer::SelectAll()
-{
-	GetCoords().SelectAll();
-	UpdateRequested();
-}
-
-
-void
-TracksContainer::UnselectAll()
-{
-	GetCoords().Unselect();
-	UpdateRequested();
-}
-
-
-void
 TracksContainer::UpdateTracksScroll(float newValue)
 {
-}
-
-
-void
-TracksContainer::ZoomIn()
-{
-	GetCoords().ZoomIn();
-	UpdateRequested();
-}
-
-
-void
-TracksContainer::ZoomOut()
-{
-	GetCoords().ZoomOut();
-	UpdateRequested();
-}
-
-
-void
-TracksContainer::ZoomFull()
-{
-	GetCoords().ZoomFull();
-	UpdateRequested();
-}
-
-
-void
-TracksContainer::ZoomSelection()
-{
-	GetCoords().ZoomSelection();
-	UpdateRequested();
 }
 
 

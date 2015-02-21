@@ -22,8 +22,10 @@
 
 #include <GroupView.h>
 
-#include "CommandListener.h"
 #include "AudioTrackView.h"
+#include "CommandListener.h"
+#include "TracksCoordinator.h"
+#include "TrackView.h"
 
 
 class TracksContainer : public BGroupView, public CommandListener {
@@ -46,12 +48,10 @@ public:
 			status_t			AddTrack(Track* track, int32 index = -1);
 
 			status_t			RemoveTrack(int32 index);
-			status_t			RemoveTrack(TrackView* track, bool deep = true);
+			status_t			RemoveTrack(TrackView* track,
+									bool deep = true);
 
 			status_t			MoveTrack(TrackView* track, int32 index);
-
-			void				SelectAll();
-			void				UnselectAll();
 
 			void				MoveUp(int32 id);
 			void				MoveDown(int32 id);
@@ -70,21 +70,16 @@ public:
 			void				Paste();
 			void				Clear();
 		
-			void				ZoomIn();
-			void				ZoomOut();
-			void				ZoomFull();
-			void				ZoomSelection();
-		
 			// NOTE this will not update the scroll bar
 			// don't use it, use the following method instead.
 			void				UpdateTracksScroll(float newValue);
-		
-			void				UpdateRequested();
-			void				UpdateRequested(BRect rect);
 
 private:
+
 			TrackView*			_FindTrack(BMessage* message);
 			AudioTrackView*		_FindAudioTrack(BMessage* message);
+
+			TracksCoordinator	fTracksCoordinator;
 
 			BGroupView*			fView;
 			BGroupLayout*		fLayout;
