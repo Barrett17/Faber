@@ -21,34 +21,25 @@
 
 #include <stdio.h>
 
-TracksCoordinator* TracksCoordinator::fInstance = NULL;
+#include "TracksContainer.h"
+#include "WaveRender.h"
 
 
-TracksCoordinator*
-TracksCoordinator::Get()
-{
-	if (fInstance == NULL)
-		fInstance = new TracksCoordinator();
-
-	return fInstance;	
-}
-
-
-TracksCoordinator::TracksCoordinator()
+TracksCoordinator::TracksCoordinator(TracksContainer* owner)
 	:
-	pointer(0),
-	playPointer(0),
-	start(0),
-	end(0),
-	selectionStart(-1),
-	selectionEnd(-1),
-	duration(0),
-	zoomFactor(1),
-	primaryButton(false),
-	secondaryButton(false),
-	scrollButton(false),
-	isSelected(false),
-	multipleSelection(false)
+	fOwner(owner),
+	fPointer(0),
+	fPlayPointer(0),
+	fStart(0),
+	fEnd(0),
+	fSelectionStart(-1),
+	fSelectionEnd(-1),
+	fDuration(0),
+	fZoomFactor(1),
+	fPrimaryButton(false),
+	fSecondaryButton(false),
+	fIsSelected(false),
+	fMultipleSelection(false)
 {
 }
 
@@ -59,58 +50,52 @@ TracksCoordinator::~TracksCoordinator()
 
 
 void
-TracksCoordinator::ScrollBy(int64 value)
+TracksCoordinator::Select(int64 fStart, int64 fEnd)
 {
-}
-
-
-void
-TracksCoordinator::Select(int64 start, int64 end)
-{
-	selectionStart = start;
-	selectionEnd = end;
-	isSelected = true;
+	fSelectionStart = fStart;
+	fSelectionEnd = fEnd;
+	fIsSelected = true;
 }
 
 
 bool
 TracksCoordinator::IsSelected()
 {
-	return isSelected;
+	return fIsSelected;
 }
 
 
 void
-TracksCoordinator::CurrentSelection(int64* start, int64* end)
+TracksCoordinator::CurrentSelection(int64* fStart, int64* fEnd)
 {
-	*start = selectionStart;
-	*end = selectionEnd;
+	*fStart = fSelectionStart;
+	*fEnd = fSelectionEnd;
 }
 
 
 void
 TracksCoordinator::SelectAll()
 {
-	Select(start, end);
+	Select(fStart, fEnd);
 }
 
 
 void
 TracksCoordinator::Unselect()
 {
-	selectionStart = -1;
-	selectionEnd = -1;
-	isSelected = false;
+	fSelectionStart = -1;
+	fSelectionEnd = -1;
+	fIsSelected = false;
 }
 
 
 void
 TracksCoordinator::ZoomIn()
 {
-	zoomFactor /= 2;
+	fZoomFactor /= 2;
 
-	if (zoomFactor < 1) {
-		zoomFactor = 1;
+	if (fZoomFactor < 1) {
+		fZoomFactor = 1;
 		return;
 	}
 }
@@ -119,10 +104,10 @@ TracksCoordinator::ZoomIn()
 void
 TracksCoordinator::ZoomOut()
 {
-	zoomFactor *= 2;
+	fZoomFactor *= 2;
 
-	if (zoomFactor > 40) {
-		zoomFactor = 40;
+	if (fZoomFactor > 40) {
+		fZoomFactor = 40;
 		return;
 	}
 }
@@ -131,9 +116,9 @@ TracksCoordinator::ZoomOut()
 void
 TracksCoordinator::ZoomFull()
 {
-	/*pointer = 0;
-	end = fTrack->CountFrames()/fTrack->CountChannels();
-	zoomFactor = 20;*/
+	/*fPointer = 0;
+	fEnd = fTrack->CountFrames()/fTrack->CountChannels();
+	fZoomFactor = 20;*/
 }
 
 
@@ -143,23 +128,104 @@ TracksCoordinator::ZoomSelection()
 	if (!IsSelected())
 		return;
 
-	printf("%ld %ld\n", selectionStart, selectionEnd); 
-	pointer = selectionStart;
-	end = selectionEnd;
+	printf("%ld %ld\n", fSelectionStart, fSelectionEnd); 
+	fPointer = fSelectionStart;
+	fEnd = fSelectionEnd;
 
-	zoomFactor = 20;
+	fZoomFactor = 20;
 }
 
 
 int64
-TracksCoordinator::Pointer()
+TracksCoordinator::Pointer() const
 {
-	return pointer;
+	return fPointer;
 }
 
 
 int64
-TracksCoordinator::_DisplaySize()
+TracksCoordinator::ZoomFactor() const
 {
-	return end-pointer;
+	return fZoomFactor;
+}
+
+
+int64
+TracksCoordinator::ScreenToFrame(int64 value)
+{
+	return value*128;
+}
+
+
+int64
+TracksCoordinator::FrameToScreen(int64 value)
+{
+	return value/128;
+}
+
+
+void
+TracksCoordinator::NotifyMouseDown(BPoint point, BMessage* message,
+	WaveRender* who)
+{
+	who->MakeFocus();
+
+	uint32 button = 0;
+	uint32 click = 0;
+
+	message->FindInt32("buttons", (int32*)&button);
+	message->FindInt32("clicks", (int32*)&click);
+
+	if (button == B_PRIMARY_MOUSE_BUTTON) {
+		fPointer = fStart+ScreenToFrame(point.x);
+
+		if (fIsSelected) {
+			fIsSelected = false;
+			fSelectionStart = -1;
+			fSelectionEnd = -1;
+			fPrimaryButton = false;
+		} else {
+			fPrimaryButton = true;
+		}
+
+		
+
+	} else if (button == B_SECONDARY_MOUSE_BUTTON) {
+
+	}
+	who->Invalidate();
+}
+
+
+void
+TracksCoordinator::NotifyMouseUp(BPoint point, WaveRender* who)
+{
+	if (fPrimaryButton)
+		fPrimaryButton = false;
+}
+
+
+void
+TracksCoordinator::NotifyMouseMoved(BPoint point, uint32 data,
+	const BMessage* message, WaveRender* who)
+{
+	if (fPrimaryButton) {
+		fIsSelected = true;
+		int64 frame = fStart+ScreenToFrame(point.x);
+
+		if (frame < fPointer)
+			Select(frame, fPointer);
+		else if (frame > fPointer)
+			Select(fPointer, frame);
+
+		who->Invalidate();
+	}
+}
+
+
+void
+TracksCoordinator::NotifyMakeFocus(bool focused, WaveRender* who)
+{
+	if (focused == false)
+		Unselect();
 }

@@ -23,36 +23,36 @@
 #include <View.h>
 
 #include "AudioTrack.h"
+#include "TracksCoordinator.h"
+
+
+class AudioTrackView;
 
 
 class WaveRender : public BView {
 public:
-							WaveRender(AudioTrack* track);	
-			 				~WaveRender();
+								WaveRender(AudioTrackView* owner,
+									TracksCoordinator* coordinator);	
 
-	virtual void			Draw(BRect rect);
-	virtual void			MouseDown(BPoint point);
-	virtual void			MouseUp(BPoint point);
+	virtual void				Draw(BRect rect);
+	virtual void				MouseDown(BPoint point);
+	virtual void				MouseUp(BPoint point);
 
-	virtual void			MouseMoved(BPoint point, uint32 ,
-								const BMessage* message);
+	virtual void				MouseMoved(BPoint point, uint32 ,
+									const BMessage* message);
 
-	virtual void			FrameResized(float width, float height);
+	virtual	void				MakeFocus(bool focused = true);
 
-	virtual	void			MakeFocus(bool focused = true);
-
+			AudioTrackView*		GetOwner() const;
 private:
-			void			_RenderChannel(float* buffer, size_t size, float center);
-			void			_RenderTrack(BRect rect);
-			void			_RenderPointers(BRect rect);
+			void				_RenderChannel(float* buffer, size_t size,
+									float center);
+			void				_RenderTrack(BRect rect);
+			void				_RenderPointers(BRect rect);
 
-			int64			_DisplaySize();
-			int64			_ScreenToFrame(int64 value);
-			int64			_FrameToScreen(int64 value);
-
-			AudioTrack*		fTrack;
-
-			friend class	AudioTrackView;
+			AudioTrackView*		fOwner;
+			AudioTrack*			fTrack;
+			TracksCoordinator*	fCoordinator;
 };
 
 #endif

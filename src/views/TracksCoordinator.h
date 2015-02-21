@@ -17,27 +17,29 @@
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRACKS_COMMON
-#define TRACKS_COMMON
+#ifndef TRACKS_COORDINATOR
+#define TRACKS_COORDINATOR
 
+#include <Message.h>
+#include <Rect.h>
 #include <SupportDefs.h>
+
+
+class TracksContainer;
+class TrackView;
+class WaveRender;
 
 
 class TracksCoordinator
 {
 public:
-										TracksCoordinator();
+										TracksCoordinator(TracksContainer* owner);
 	virtual								~TracksCoordinator();
 
-			static TracksCoordinator*	Get();
+			int64						Pointer() const;
+			int64						ZoomFactor() const;
 
-protected:
-			friend class				TracksContainer;
-			friend class				WaveRender;
-
-			void						ScrollBy(int64 value);
-
-			int64						Pointer();
+			TrackView*					CurrentFocus() const;
 
 			bool						IsSelected();
 			void						CurrentSelection(int64* start, int64* end);
@@ -50,37 +52,40 @@ protected:
 			void						ZoomFull();
 			void						ZoomSelection();
 
-			int64						pointer;
-			int64						playPointer;
+			int64						ScreenToFrame(int64 value);
+			int64						FrameToScreen(int64 value);
 
-			int64						start;
-			int64						end;
+			// Tracks callbacks
+			void						NotifyMouseDown(BPoint point,
+											BMessage* msg, WaveRender* who);
+			void						NotifyMouseUp(BPoint point, WaveRender* who);
 
-			int64						selectionStart;
-			int64						selectionEnd;
+			void						NotifyMouseMoved(BPoint point, uint32 data,
+											const BMessage* message, WaveRender* who);
 
-			int64						duration;
-
-			int32						zoomFactor;
-
-			bool						primaryButton;
-			bool						secondaryButton;
-			bool						scrollButton;
-
-			bool						isSelected;
-			bool						multipleSelection;
-
+			void						NotifyMakeFocus(bool focused,
+											WaveRender* who);
 private:
-			int64						_DisplaySize();
+			TracksContainer*			fOwner;
 
-			static TracksCoordinator*	fInstance;
+			int64						fPointer;
+			int64						fPlayPointer;
+
+			int64						fStart;
+			int64						fEnd;
+
+			int64						fSelectionStart;
+			int64						fSelectionEnd;
+
+			int64						fDuration;
+
+			int32						fZoomFactor;
+
+			bool						fPrimaryButton;
+			bool						fSecondaryButton;
+
+			bool						fIsSelected;
+			bool						fMultipleSelection;
 };
-
-
-static TracksCoordinator& GetCoords()
-{
-	return *TracksCoordinator::Get();
-}
-
 
 #endif
