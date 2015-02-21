@@ -85,12 +85,7 @@ public:
 	virtual bool				HasUndo() const;
 	virtual bool				HasRedo() const;
 
-			// Update hooks for derived classes.
-			// The following methods redraw the data.
-	virtual void				UpdateRequested() = 0;
-	virtual void				UpdateRequested(BRect bounds) = 0;
-
-			// This is used to pass commands strictly related to this track.
+	// This is used to pass commands strictly related to this track.
 	virtual void				CommandForTrack(BMessage* msg) = 0;
 
 protected:
