@@ -184,14 +184,8 @@ TracksCoordinator::NotifyMouseDown(BPoint point, BMessage* message,
 			fSelectionStart = -1;
 			fSelectionEnd = -1;
 			fPrimaryButton = false;
-		} else {
+		} else
 			fPrimaryButton = true;
-		}
-
-		
-
-	} else if (button == B_SECONDARY_MOUSE_BUTTON) {
-
 	}
 	who->Invalidate();
 }

@@ -53,9 +53,6 @@ public:
 
 			status_t			MoveTrack(TrackView* track, int32 index);
 
-			void				MoveUp(int32 id);
-			void				MoveDown(int32 id);
-
 			TrackView*			CurrentFocus();
 			TrackViewList&		SelectedTracks();
 		
