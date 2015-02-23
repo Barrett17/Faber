@@ -31,7 +31,7 @@
 #include "MediaGate.h"
 
 
-class AudioGate : public MediaGate, public CommandListener {
+class AudioGate : public MediaGate {
 public:
 									AudioGate();
 			virtual					~AudioGate();
@@ -50,10 +50,6 @@ public:
 										const media_format* format = NULL);
 
 			media_node				Node();
-
-			// CommandListener
-	virtual void					HandleCommand(BMessage* msg);
-
 protected:
 			friend class			AudioEngine;
 

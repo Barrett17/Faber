@@ -44,13 +44,6 @@ AudioGate::~AudioGate()
 }
 
 
-void
-AudioGate::HandleCommand(BMessage* message)
-{
-	//message->PrintToStream();
-}
-
-
 status_t
 AudioGate::Start()
 {
