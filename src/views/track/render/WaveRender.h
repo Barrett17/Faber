@@ -20,39 +20,20 @@
 #ifndef _WAVE_RENDER
 #define _WAVE_RENDER
 
-#include <View.h>
-
-#include "AudioTrack.h"
-#include "TracksCoordinator.h"
+#include "Render.h"
 
 
-class AudioTrackView;
-
-
-class WaveRender : public BView {
+class WaveRender : public Render {
 public:
 								WaveRender(AudioTrackView* owner,
 									TracksCoordinator* coordinator);	
 
 	virtual void				Draw(BRect rect);
-	virtual void				MouseDown(BPoint point);
-	virtual void				MouseUp(BPoint point);
-
-	virtual void				MouseMoved(BPoint point, uint32 ,
-									const BMessage* message);
-
-	virtual	void				MakeFocus(bool focused = true);
-
-			AudioTrackView*		GetOwner() const;
 private:
 			void				_RenderChannel(float* buffer, size_t size,
 									float center);
 			void				_RenderTrack(BRect rect);
 			void				_RenderPointers(BRect rect);
-
-			AudioTrackView*		fOwner;
-			AudioTrack*			fTrack;
-			TracksCoordinator*	fCoordinator;
 };
 
 #endif

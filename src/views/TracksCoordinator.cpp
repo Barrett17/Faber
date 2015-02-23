@@ -22,7 +22,7 @@
 #include <stdio.h>
 
 #include "TracksContainer.h"
-#include "WaveRender.h"
+#include "Render.h"
 
 
 TracksCoordinator::TracksCoordinator(TracksContainer* owner)
@@ -166,7 +166,7 @@ TracksCoordinator::FrameToScreen(int64 value)
 
 void
 TracksCoordinator::NotifyMouseDown(BPoint point, BMessage* message,
-	WaveRender* who)
+	Render* who)
 {
 	who->MakeFocus();
 
@@ -198,7 +198,7 @@ TracksCoordinator::NotifyMouseDown(BPoint point, BMessage* message,
 
 
 void
-TracksCoordinator::NotifyMouseUp(BPoint point, WaveRender* who)
+TracksCoordinator::NotifyMouseUp(BPoint point, Render* who)
 {
 	if (fPrimaryButton)
 		fPrimaryButton = false;
@@ -207,7 +207,7 @@ TracksCoordinator::NotifyMouseUp(BPoint point, WaveRender* who)
 
 void
 TracksCoordinator::NotifyMouseMoved(BPoint point, uint32 data,
-	const BMessage* message, WaveRender* who)
+	const BMessage* message, Render* who)
 {
 	if (fPrimaryButton) {
 		fIsSelected = true;
@@ -224,7 +224,7 @@ TracksCoordinator::NotifyMouseMoved(BPoint point, uint32 data,
 
 
 void
-TracksCoordinator::NotifyMakeFocus(bool focused, WaveRender* who)
+TracksCoordinator::NotifyMakeFocus(bool focused, Render* who)
 {
 	if (focused == false)
 		Unselect();

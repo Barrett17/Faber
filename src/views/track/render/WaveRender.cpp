@@ -21,28 +21,18 @@
 
 #include <Window.h>
 
+#include <stdio.h>
+
 #include "FaberDefs.h"
 #include "StorageUtils.h"
 #include "TracksCoordinator.h"
 
-#include <stdio.h>
-
 
 WaveRender::WaveRender(AudioTrackView* owner, TracksCoordinator* coordinator)
 	: 
-	BView("", B_WILL_DRAW),
-	fOwner(owner),
-	fTrack(owner->GetTrack()),
-	fCoordinator(coordinator)
+	Render(owner, coordinator)
 {
 	SetViewColor(60,60,60);
-}
-
-
-AudioTrackView*
-WaveRender::GetOwner() const
-{
-	return fOwner;
 }
 
 
@@ -144,31 +134,3 @@ WaveRender::_RenderPointers(BRect rect)
 	}
 }
 
-
-void
-WaveRender::MouseDown(BPoint point)
-{
-	fCoordinator->NotifyMouseDown(point, Window()->CurrentMessage(), this);
-}
-
-
-void
-WaveRender::MouseUp(BPoint point)
-{
-	fCoordinator->NotifyMouseUp(point, this);
-}
-
-
-void
-WaveRender::MouseMoved(BPoint point, uint32 data, const BMessage* message)
-{
-	fCoordinator->NotifyMouseMoved(point, data, message, this);
-}
-
-
-void
-WaveRender::MakeFocus(bool focused)
-{
-	fCoordinator->NotifyMakeFocus(focused, this);
-	BView::MakeFocus(focused);
-}

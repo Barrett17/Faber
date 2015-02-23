@@ -74,6 +74,7 @@ Application Faber :
 	AudioTrackView.cpp
 	
 	# Render
+	Render.cpp
 	WaveRender.cpp
 
 	# Various windows and related code

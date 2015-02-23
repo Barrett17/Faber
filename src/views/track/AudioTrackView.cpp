@@ -29,6 +29,7 @@
 #include "InputRequest.h"
 #include "MenuBuilder.h"
 #include "TracksContainer.h"
+#include "WaveRender.h"
 
 #define HEIGHT_VAL_REF 80
 
@@ -60,7 +61,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 	TrackView(name, track, coordinator, resizingMode),
 	fAudioTrack(track)
 {
-	fWaveRender = new WaveRender(this, coordinator);
+	fRender = new WaveRender(this, coordinator);
 
 	BBox* box = new BBox("box");
 
@@ -140,7 +141,7 @@ AudioTrackView::AudioTrackView(const char* name, AudioTrack* track,
 
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 0)
 		.Add(box)
-		.Add(fWaveRender)
+		.Add(fRender)
 	.End();
 }
 

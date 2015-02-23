@@ -27,7 +27,7 @@
 
 #include "AudioTrack.h"
 #include "TrackView.h"
-#include "WaveRender.h"
+#include "Render.h"
 
 
 class TrackMenuUpdater;
@@ -69,7 +69,7 @@ protected:
 			friend class	TrackMenuUpdater;
 private:
 			AudioTrack*		fAudioTrack;
-			WaveRender*		fWaveRender;
+			Render*			fRender;
 
 			BMenuBar*		fToolButton;
 			BMenu*			fTrackMenu;

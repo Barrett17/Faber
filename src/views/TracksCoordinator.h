@@ -27,7 +27,7 @@
 
 class TracksContainer;
 class TrackView;
-class WaveRender;
+class Render;
 
 
 class TracksCoordinator
@@ -57,14 +57,13 @@ public:
 
 			// Tracks callbacks
 			void						NotifyMouseDown(BPoint point,
-											BMessage* msg, WaveRender* who);
-			void						NotifyMouseUp(BPoint point, WaveRender* who);
+											BMessage* msg, Render* who);
+			void						NotifyMouseUp(BPoint point, Render* who);
 
 			void						NotifyMouseMoved(BPoint point, uint32 data,
-											const BMessage* message, WaveRender* who);
+											const BMessage* message, Render* who);
 
-			void						NotifyMakeFocus(bool focused,
-											WaveRender* who);
+			void						NotifyMakeFocus(bool focused, Render* who);
 private:
 			TracksContainer*			fOwner;
 
