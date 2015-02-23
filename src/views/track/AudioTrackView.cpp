@@ -185,6 +185,7 @@ AudioTrackView::CommandForTrack(BMessage* command)
 
 		case FABER_TRACK_GET_INFO:
 		{
+			// TODO: improve track informations
 			BString alertText = "Track Informations:\n\n";
 			alertText << "Frames "
 			<< fAudioTrack->CountFrames() << "\n"

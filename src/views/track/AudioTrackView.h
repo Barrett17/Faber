@@ -64,9 +64,9 @@ public:
 			void			CommandForTrack(BMessage* command);
 
 protected:
-			void			AddDefaultAttributes(BMessage* message);
+			friend class TrackMenuUpdater;
 
-			friend class	TrackMenuUpdater;
+			void			AddDefaultAttributes(BMessage* message);
 private:
 			AudioTrack*		fAudioTrack;
 			Render*			fRender;
