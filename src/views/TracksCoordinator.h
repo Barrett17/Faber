@@ -21,6 +21,7 @@
 #define TRACKS_COORDINATOR
 
 #include <Message.h>
+#include <ObjectList.h>
 #include <Rect.h>
 #include <SupportDefs.h>
 
@@ -34,18 +35,15 @@ class TracksCoordinator
 {
 public:
 										TracksCoordinator(TracksContainer* owner);
-	virtual								~TracksCoordinator();
 
 			int64						Pointer() const;
 			int64						ZoomFactor() const;
 
-			TrackView*					CurrentFocus() const;
-
-			bool						IsSelected();
+			bool						SelectionActive() const;
 			void						CurrentSelection(int64* start, int64* end);
-			void						Select(int64 start, int64 end);
+
 			void						SelectAll();
-			void						Unselect();
+			void						UnselectAll();
 
 			void						ZoomIn();
 			void						ZoomOut();
@@ -55,16 +53,28 @@ public:
 			int64						ScreenToFrame(int64 value);
 			int64						FrameToScreen(int64 value);
 
+			void						InvalidateSelection();
+
 			// Tracks callbacks
+			void						NotifySelect(int64 start, int64 end,
+											Render* who);
+
+			void						NotifySelectAll(Render* who);
+			void						NotifyUnselect(Render* who);
+
 			void						NotifyMouseDown(BPoint point,
 											BMessage* msg, Render* who);
-			void						NotifyMouseUp(BPoint point, Render* who);
+			void						NotifyMouseUp(BPoint point,
+											Render* who);
 
 			void						NotifyMouseMoved(BPoint point, uint32 data,
 											const BMessage* message, Render* who);
-
-			void						NotifyMakeFocus(bool focused, Render* who);
 private:
+			void						_UpdateSelection(int64 start, int64 end);
+			void 						_AddToSelection(Render* who);
+			void 						_RemoveFromSelection(Render* who);
+			void						_CleanupSelection();
+
 			TracksContainer*			fOwner;
 
 			int64						fPointer;
@@ -83,8 +93,9 @@ private:
 			bool						fPrimaryButton;
 			bool						fSecondaryButton;
 
-			bool						fIsSelected;
-			bool						fMultipleSelection;
+			BObjectList<Render>			fSelectionQueue;
+			Render*						fCurrentRender;
+			
 };
 
 #endif

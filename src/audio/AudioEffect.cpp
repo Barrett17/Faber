@@ -19,6 +19,8 @@
 
 #include "AudioEffect.h"
 
+#include <stdio.h>
+
 #include "StorageUtils.h"
 
 
@@ -49,11 +51,13 @@ AudioEffect::FilterTrack(Track* track, int64 start, int64 end)
 	TrackIndex* index = audioTrack->GetIndex();
 
 	int64 frameCount = 44100;
-	float buffer[StorageUtils::FramesToSize(frameCount)];
+	float buffer[frameCount];
 
 	for (uint32 i = 0; i < index->CountChannels(); i++) {
 		MediaBlockMap* channel = index->ChannelAt(i);
 		int64 read = 0;
+
+		printf("item %d\n", i);
 
 		for (int64 j = start; j < end; j += read) {
 			read = channel->Reader()->ReadFramesAt(buffer, j, frameCount);
@@ -66,6 +70,7 @@ AudioEffect::FilterTrack(Track* track, int64 start, int64 end)
 
 			channel->Writer()->WriteFramesAt(buffer, j, read);
 		}
+		channel->Writer()->Flush();
 	}
 
 	return B_OK;

@@ -54,7 +54,7 @@ public:
 			status_t			MoveTrack(TrackView* track, int32 index);
 
 			TrackView*			CurrentFocus();
-			TrackViewList&		SelectedTracks();
+			TrackViewList*		SelectedTracks();
 		
 			bool 				HasChanged();
 		

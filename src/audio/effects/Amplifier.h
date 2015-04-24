@@ -42,7 +42,7 @@ public:
 	BView*		SettingsPanel();
 
 protected:
-	void		FilterBuffer(float* buffer, size_t size);
+	void		FilterBuffer(float* buffer, int64 frames);
 
 	status_t	ArchiveSettings(BMessage* msg);
 	status_t	UpdateSettings(BMessage* msg);

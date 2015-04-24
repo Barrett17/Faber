@@ -257,30 +257,40 @@ AudioTrackView::UpdateName(const char* name)
 bool
 AudioTrackView::IsSelected() const
 {
+	return fRender->IsSelected();
 }
 
 
 void
 AudioTrackView::SelectAll()
 {
+	return fCoordinator->NotifySelectAll(fRender);
 }
 
 
 void
 AudioTrackView::Unselect()
 {
+	return fCoordinator->NotifyUnselect(fRender);
 }
 
 
 void
 AudioTrackView::CurrentSelection(int64* start, int64* end) const
 {
+	if (IsSelected())
+		fCoordinator->CurrentSelection(start, end);
+	else {
+		*start = -1;
+		*end = -1;
+	}
 }
 
 
 void
 AudioTrackView::Select(int64 start, int64 end)
 {
+	fCoordinator->NotifySelect(start, end, fRender);
 }
 
 
@@ -308,6 +318,7 @@ AudioTrackView::AddChannel(MediaBlockMap* channel)
 void
 AudioTrackView::RemoveChannel(MediaBlockMap* channel)
 {
+	// TODO implement this
 	//fAudioTrack->GetIndex()->RemoveChannel(channel);
 }
 

@@ -31,8 +31,8 @@ public:
 								int64 start, int64 end);
 
 protected:
-	virtual void			FilterBuffer(float* buffer, size_t size) = 0;
-
+	virtual void			FilterBuffer(float* buffer, int64 frame) {};
+	virtual void		FilterBuffer(float* buffer, size_t size) {}; // deprecated
 };
 
 #endif

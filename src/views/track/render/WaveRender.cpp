@@ -83,7 +83,7 @@ WaveRender::_RenderChannel(float* buffer, size_t size, float center)
 
 		int64 point, start, end;
 		fCoordinator->CurrentSelection(&start, &end);
-		if (fCoordinator->IsSelected()
+		if (IsSelected()
 			&& i >= fCoordinator->FrameToScreen(start)
 				&& i <= fCoordinator->FrameToScreen(end)) {
 			SetHighColor(255,255,255);
@@ -111,15 +111,13 @@ WaveRender::_RenderChannel(float* buffer, size_t size, float center)
 void
 WaveRender::_RenderPointers(BRect rect)
 {
-	int64 pointer = fCoordinator->Pointer()/128;
+	int64 pointer = fCoordinator->FrameToScreen(fCoordinator->Pointer());
 
-	if (IsFocus()) {
+	if (IsSelected()) {
 		SetHighColor(255,255,255);
 		StrokeLine(BPoint(pointer, rect.bottom),
 			BPoint(pointer, 0));
-	}
 
-	if (fCoordinator->IsSelected()) {
 		int64 point, start, end;
 		fCoordinator->CurrentSelection(&start, &end);
 
@@ -131,6 +129,10 @@ WaveRender::_RenderPointers(BRect rect)
 		SetHighColor(255,255,255);
 		StrokeLine(BPoint(point, rect.bottom),
 			BPoint(point, 0));
+	} else if (IsFocus()) {
+		SetHighColor(255,255,255);
+		StrokeLine(BPoint(pointer, rect.bottom),
+			BPoint(pointer, 0));
 	}
 }
 

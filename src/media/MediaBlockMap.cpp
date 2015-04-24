@@ -233,6 +233,7 @@ MediaBlockMapWriter::WriteFrames(void* buffer, int64 frameCount)
  			if (fMap->CountBlocks()-1 > fCurrentIndex) {
  				block = fMap->BlockAt(fCurrentIndex+1);
  				fCurrentIndex += 1;
+ 				block->SeekToFrame(0);
  			} else {
 				BEntry* destEntry = StorageUtils::BlockFileRequested();
 				BFile* destFile = new BFile(destEntry, B_READ_WRITE | B_CREATE_FILE);
@@ -315,6 +316,7 @@ MediaBlockMapReader::ReadFrames(void* buffer, int64 frameCount)
 		if (fMap->CountBlocks()-1 > fCurrentIndex) {
  			block = fMap->BlockAt(fCurrentIndex+1);
  			fCurrentIndex += 1;
+ 			block->SeekToFrame(0);
 		} else {
 			return -1;
 		}

@@ -24,7 +24,6 @@
 #include <Roster.h>
 
 #include "CommandBuilder.h"
-#include "EffectWindow.h"
 #include "FaberDefs.h"
 #include "ParameterWindow.h"
 #include "WindowsManager.h"
@@ -167,26 +166,6 @@ CommandServer::Filter(BMessage* message, BHandler** target)
 			if (ProjectManager::HasRedo())
 				ProjectManager::Redo();
 
-			break;
-		}
-
-		case FABER_EFFECT_CALL:
-		{
-			FaberEffect* effect;
-			if (message->FindPointer("faber:effect_pointer",
-				(void**)&effect) != B_OK) {
-				WindowsManager::SimpleError("can't find effect");
-				break;
-			}
-
-			EffectWindow* win = new EffectWindow(effect);
-			win->Show();
-			break;
-		}
-
-		case FABER_EFFECT_EXECUTE:
-		{
-			
 			break;
 		}
 

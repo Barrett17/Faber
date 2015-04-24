@@ -85,13 +85,13 @@ AmplifierEffect::UpdateSettings(BMessage* msg)
 
 
 void
-AmplifierEffect::FilterBuffer(float* buffer, size_t size)
+AmplifierEffect::FilterBuffer(float* buffer, int64 frames)
 {
 	float amp = fLevel/100.0;
 	float temp = 0;
 
-	for (size_t i = 0; i < size; i++) {
-		temp = *buffer * amp;
+	for (int64 i = 0; i < frames; i++) {
+		temp = buffer[i] * amp;
 
 		if (temp>1.0)
 			temp = 1.0;
@@ -99,6 +99,6 @@ AmplifierEffect::FilterBuffer(float* buffer, size_t size)
 		if (temp<-1.0)
 			temp = -1.0;
 
-		*buffer++ = temp;
+		buffer[i] = temp;
 	}
 }

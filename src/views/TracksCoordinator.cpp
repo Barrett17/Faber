@@ -37,31 +37,15 @@ TracksCoordinator::TracksCoordinator(TracksContainer* owner)
 	fDuration(0),
 	fZoomFactor(1),
 	fPrimaryButton(false),
-	fSecondaryButton(false),
-	fIsSelected(false),
-	fMultipleSelection(false)
+	fSecondaryButton(false)
 {
-}
-
-
-TracksCoordinator::~TracksCoordinator()
-{
-}
-
-
-void
-TracksCoordinator::Select(int64 fStart, int64 fEnd)
-{
-	fSelectionStart = fStart;
-	fSelectionEnd = fEnd;
-	fIsSelected = true;
 }
 
 
 bool
-TracksCoordinator::IsSelected()
+TracksCoordinator::SelectionActive() const
 {
-	return fIsSelected;
+	return fSelectionQueue.CountItems() != 0;
 }
 
 
@@ -76,16 +60,91 @@ TracksCoordinator::CurrentSelection(int64* fStart, int64* fEnd)
 void
 TracksCoordinator::SelectAll()
 {
-	Select(fStart, fEnd);
+	fSelectionStart = fStart;
+	fSelectionEnd = fEnd;
 }
 
 
 void
-TracksCoordinator::Unselect()
+TracksCoordinator::UnselectAll()
 {
 	fSelectionStart = -1;
 	fSelectionEnd = -1;
-	fIsSelected = false;
+	_CleanupSelection();
+}
+
+
+void
+TracksCoordinator::NotifySelect(int64 fStart, int64 fEnd, Render* who)
+{
+	_CleanupSelection();
+	_UpdateSelection(fStart, fEnd);
+	_AddToSelection(who);
+}
+
+
+void
+TracksCoordinator::NotifySelectAll(Render* who)
+{
+}
+
+
+void
+TracksCoordinator::NotifyUnselect(Render* who)
+{
+}
+
+
+void
+TracksCoordinator::NotifyMouseDown(BPoint point, BMessage* message,
+	Render* who)
+{
+	uint32 button = 0;
+	uint32 click = 0;
+
+	message->FindInt32("buttons", (int32*)&button);
+	message->FindInt32("clicks", (int32*)&click);
+
+	if (button == B_PRIMARY_MOUSE_BUTTON) {
+		fPointer = fStart+ScreenToFrame(point.x);
+		if (SelectionActive())
+			_CleanupSelection();
+		else
+			fPrimaryButton = true;
+
+		who->MakeFocus();
+		if (fCurrentRender != NULL)
+			fCurrentRender->Invalidate();
+		who->Invalidate();
+		fCurrentRender = who;
+	}
+}
+
+
+void
+TracksCoordinator::NotifyMouseUp(BPoint point, Render* who)
+{
+	if (fPrimaryButton)
+		fPrimaryButton = false;
+}
+
+
+void
+TracksCoordinator::NotifyMouseMoved(BPoint point, uint32 data,
+	const BMessage* message, Render* who)
+{
+	if (fPrimaryButton) {
+		if (!who->IsSelected())
+			_AddToSelection(who);
+
+		int64 frame = fStart+ScreenToFrame(point.x);
+		if (frame < fPointer)
+			_UpdateSelection(frame, fPointer);
+		else if (frame > fPointer)
+			_UpdateSelection(fPointer, frame);
+
+		InvalidateSelection();
+	}
 }
 
 
@@ -116,19 +175,15 @@ TracksCoordinator::ZoomOut()
 void
 TracksCoordinator::ZoomFull()
 {
-	/*fPointer = 0;
-	fEnd = fTrack->CountFrames()/fTrack->CountChannels();
-	fZoomFactor = 20;*/
 }
 
 
 void
 TracksCoordinator::ZoomSelection()
 {
-	if (!IsSelected())
+	if (!SelectionActive())
 		return;
 
-	printf("%ld %ld\n", fSelectionStart, fSelectionEnd); 
 	fPointer = fSelectionStart;
 	fEnd = fSelectionEnd;
 
@@ -165,61 +220,42 @@ TracksCoordinator::FrameToScreen(int64 value)
 
 
 void
-TracksCoordinator::NotifyMouseDown(BPoint point, BMessage* message,
-	Render* who)
+TracksCoordinator::_UpdateSelection(int64 fStart, int64 fEnd)
 {
-	who->MakeFocus();
-
-	uint32 button = 0;
-	uint32 click = 0;
-
-	message->FindInt32("buttons", (int32*)&button);
-	message->FindInt32("clicks", (int32*)&click);
-
-	if (button == B_PRIMARY_MOUSE_BUTTON) {
-		fPointer = fStart+ScreenToFrame(point.x);
-
-		if (fIsSelected) {
-			fIsSelected = false;
-			fSelectionStart = -1;
-			fSelectionEnd = -1;
-			fPrimaryButton = false;
-		} else
-			fPrimaryButton = true;
-	}
-	who->Invalidate();
+	fSelectionStart = fStart;
+	fSelectionEnd = fEnd;
 }
 
 
 void
-TracksCoordinator::NotifyMouseUp(BPoint point, Render* who)
+TracksCoordinator::_AddToSelection(Render* who)
 {
-	if (fPrimaryButton)
-		fPrimaryButton = false;
+	fSelectionQueue.AddItem(who);
+	who->SetSelected(true);
 }
 
 
 void
-TracksCoordinator::NotifyMouseMoved(BPoint point, uint32 data,
-	const BMessage* message, Render* who)
+TracksCoordinator::_RemoveFromSelection(Render* who)
 {
-	if (fPrimaryButton) {
-		fIsSelected = true;
-		int64 frame = fStart+ScreenToFrame(point.x);
-
-		if (frame < fPointer)
-			Select(frame, fPointer);
-		else if (frame > fPointer)
-			Select(fPointer, frame);
-
-		who->Invalidate();
-	}
+	fSelectionQueue.RemoveItem(who);
+	who->SetSelected(false);
 }
 
 
 void
-TracksCoordinator::NotifyMakeFocus(bool focused, Render* who)
+TracksCoordinator::InvalidateSelection()
 {
-	if (focused == false)
-		Unselect();
+	for (int32 i = 0; i < fSelectionQueue.CountItems(); i++)
+		fSelectionQueue.ItemAt(i)->Invalidate();
+}
+
+
+void
+TracksCoordinator::_CleanupSelection()
+{
+	_UpdateSelection(-1, -1);
+	InvalidateSelection();
+	for (int32 i = 0; i < fSelectionQueue.CountItems(); i++)
+		_RemoveFromSelection(fSelectionQueue.ItemAt(i));
 }

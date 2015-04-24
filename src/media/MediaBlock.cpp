@@ -190,8 +190,8 @@ MediaBlock::Flush()
 	WriteAt(MEDIA_BLOCK_PREVIEW_START, (void*) buf, previewSize);
 	SetFlushed(true);
 
-	if (fPreviewCache == NULL)
-		free(fPreviewCache);
+	if (fPreviewCache != NULL)
+		delete[] fPreviewCache;
 
 	fPreviewCache = buf;
 	fPreviewSize = previewSize;

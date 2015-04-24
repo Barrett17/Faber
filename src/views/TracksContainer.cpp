@@ -26,6 +26,7 @@
 
 #include "CommandBuilder.h"
 #include "CommandServer.h"
+#include "EffectWindow.h"
 #include "FaberDefs.h"
 #include "FaberScrollBar.h"
 #include "InputRequest.h"
@@ -226,7 +227,7 @@ TracksContainer::HandleCommand(BMessage* message)
 		break;
 		
 		case FABER_UNSELECT_ALL:
-			fTracksCoordinator.Unselect();
+			fTracksCoordinator.UnselectAll();
 		break;
 
 		case B_COPY:
@@ -264,6 +265,48 @@ TracksContainer::HandleCommand(BMessage* message)
 		case FABER_ZOOM_SELECTION:
 			fTracksCoordinator.ZoomSelection();
 		break;
+
+		case FABER_EFFECT_CALL:
+		{
+			FaberEffect* effect;
+			if (message->FindPointer("faber:effect_pointer",
+				(void**)&effect) != B_OK) {
+				WindowsManager::SimpleError("Error loading effect.");
+				break;
+			}
+
+			EffectWindow* win = new EffectWindow(effect);
+			win->Show();
+			break;
+		}
+
+		case FABER_EFFECT_EXECUTE:
+		{
+			FaberEffect* effect;
+			if (message->FindPointer("faber:effect_pointer",
+				(void**)&effect) != B_OK) {
+				WindowsManager::SimpleError("Error applying effect.");
+				break;
+			}
+
+			int64 start = -1;
+			int64 end = -1;
+			fTracksCoordinator.CurrentSelection(&start, &end);
+			TrackViewList* tracks = SelectedTracks();
+			for (int32 i = 0; i < tracks->CountItems(); i++) {
+				Track* item = tracks->ItemAt(i)->GetTrack();
+				if (item == NULL)
+					return;
+
+				if (effect->FilterTrack(item,
+					start, end) != B_OK)
+					printf("Error with FilterTrack\n");
+			}
+
+			fTracksCoordinator.InvalidateSelection();
+			delete tracks;
+			break;
+		}
 	}
 }
 
@@ -404,7 +447,7 @@ TracksContainer::CurrentFocus()
 }
 
 
-TrackViewList&
+TrackViewList*
 TracksContainer::SelectedTracks()
 {
 	TrackViewList* tracks = new TrackViewList(false);
@@ -415,7 +458,7 @@ TracksContainer::SelectedTracks()
 			tracks->AddItem(track);
 	}
 
-	return *tracks;
+	return tracks;
 }
 
 
