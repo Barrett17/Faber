@@ -30,7 +30,6 @@ AudioGate::AudioGate()
 	//CommandServer::AddCommandListener(this);
 
 	fAudioEngine = new AudioEngine(this);
-
 	BMediaRoster::Roster()->RegisterNode(fAudioEngine);
 
 	//fInputs = new MediaEndPointMap();
@@ -39,8 +38,10 @@ AudioGate::AudioGate()
 
 AudioGate::~AudioGate()
 {
-	BMediaRoster::Roster()->UnregisterNode(fAudioEngine);
-	BMediaRoster::Roster()->ReleaseNode(fAudioEngine->Node());
+	if (fAudioEngine != NULL) {
+		BMediaRoster::Roster()->UnregisterNode(fAudioEngine);
+		BMediaRoster::Roster()->ReleaseNode(fAudioEngine->Node());
+	}
 }
 
 
