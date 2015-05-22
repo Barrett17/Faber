@@ -27,19 +27,22 @@
 class StorageUtils {
 public:
 		// Get a new BlockFile for the current project
-		static BEntry*			BlockFileRequested();
+		static status_t			BlockEntryRequested(entry_ref* entry);
 
+		// Get the current project file, there's only one project
+		// per window.
 		static BFile*			GetProjectFile(BPath path, bool create);
 
-		// Get a temporary dir for a new project
-		static BPath			TemporaryProjectDirRequested();
+		// Get a temporary dir to use by the program, for example
+		// the project temporary dir.
+		static BPath			TemporaryDirRequested();
 
 		// Move the current project dir to a new path, used only to move
 		// the temporary files for a new project.
-		static status_t			MoveToPath(BPath old, BPath newPath);
+		// static status_t			MoveToPath(BPath old, BPath newPath);
 
 		// Copy the project files to a new location, used by save as.
-		static status_t			CopyToPath(BPath old, BPath newPath);
+		// static status_t			CopyToPath(BPath old, BPath newPath);
 
 		static status_t			DeleteDirectory(BPath path);
 
@@ -49,7 +52,8 @@ public:
 
 private:
 		// TODO randomize
-		static int32			fLastCode;
+		static int32			fLastBlockID;
+		static int32			fLastProjectID;
 
 };
 

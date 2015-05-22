@@ -27,27 +27,33 @@
 #include "ProjectManager.h"
 
 
-int32 StorageUtils::fLastCode = 00;
+int32 StorageUtils::fLastBlockID = 0;
+int32 StorageUtils::fLastProjectID = 0;
 
 #define DEFAULT_BLOCK_FILENAME "block"
+#define DEFAULT_PROJECT_FILENAME "faber_proj"
+#define DEFAULT_TEMPORARY_DIR_NAME "faber_temp"
 
 
-BEntry*
-StorageUtils::BlockFileRequested()
+status_t
+StorageUtils::BlockEntryRequested(entry_ref* ref)
 {
+	fLastBlockID += 1;
+
 	BPath path = ProjectManager::GetProjectPath();
 
-	BString str;
-
-	str << DEFAULT_BLOCK_FILENAME;
-
-	fLastCode += 1;
-
-	str << fLastCode;
-
-	path.Append(str.String());
-
-	return new BEntry(path.Path());
+	while (true) {
+		BPath temp(path.Path());
+		BString name;
+		name << DEFAULT_BLOCK_FILENAME << fLastBlockID;
+		temp.Append(name.String());
+		BEntry dir(temp.Path());
+		if (dir.Exists()) {
+			fLastBlockID++;
+			continue;
+		} else
+			return get_ref_for_path(path.Path(), ref);
+	}
 }
 
 
@@ -59,43 +65,48 @@ StorageUtils::GetProjectFile(BPath path, bool create)
 
 
 BPath
-StorageUtils::TemporaryProjectDirRequested()
+StorageUtils::TemporaryDirRequested()
 {
 	BPath path;
-
 	find_directory(B_SYSTEM_TEMP_DIRECTORY, &path);
-
-	path.Append("project");
-
-	create_directory(path.Path(), 0777);
-
-	return path;
-}
-
-
-status_t
-StorageUtils::MoveToPath(BPath old, BPath newPath)
-{
-	return B_ERROR;
-}
-
-
-status_t
-StorageUtils::CopyToPath(BPath old, BPath newPath)
-{
-	return B_ERROR;
+	while (true) {
+		BPath temp(path.Path());
+		BString name(DEFAULT_TEMPORARY_DIR_NAME);
+		name << fLastProjectID;
+		temp.Append(name);
+		BEntry dir(temp.Path());
+		if (dir.Exists()) {
+			fLastProjectID++;
+			continue;
+		} else {
+			create_directory(temp.Path(), 0777);
+			fLastProjectID++;
+			return temp;
+		}
+	}
 }
 
 
 status_t
 StorageUtils::DeleteDirectory(BPath path)
 {
-	return B_ERROR;
+	BDirectory dir(path.Path());
+	status_t err = dir.InitCheck();
+	if (err == B_OK) {
+		BEntry entry;
+		while (dir.GetNextEntry(&entry) == B_OK)
+			entry.Remove();
+
+		err = dir.GetEntry(&entry);
+		if (err == B_OK)
+			return entry.Remove();
+	}
+	return err;
 }
 
 
-// NOTE ATM we support only float also double
-// and int are planned.
+// NOTE ATM we support only float also other formats
+// are planned in future, but there's need of more templatized code.
 int64
 StorageUtils::SizeToFrames(size_t size)
 {

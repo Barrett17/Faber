@@ -35,6 +35,7 @@
 class ProjectManager {
 public:
 			static void					Init();
+			static void					Quit();
 
 			static status_t				SaveProject();
 			static status_t				LoadProject(entry_ref ref);

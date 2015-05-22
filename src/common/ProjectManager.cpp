@@ -30,19 +30,24 @@
 #include "TrackIO.h"
 
 BString	ProjectManager::fName;
-
 bool ProjectManager::fWasSaved = false;
-
-BPath ProjectManager::fProjectPath
-	= StorageUtils::TemporaryProjectDirRequested();
-
-BFile* ProjectManager::fProjectFile
-	= StorageUtils::GetProjectFile(fProjectPath, true);
+BPath ProjectManager::fProjectPath;
+BFile* ProjectManager::fProjectFile;
 
 
 void
 ProjectManager::Init()
 {
+	fProjectPath = StorageUtils::TemporaryDirRequested();
+	fProjectFile = StorageUtils::GetProjectFile(fProjectPath, true);
+}
+
+
+void
+ProjectManager::Quit()
+{
+	// Delete the temporary dir of this project
+	StorageUtils::DeleteDirectory(fProjectPath);
 }
 
 
