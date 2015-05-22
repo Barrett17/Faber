@@ -302,7 +302,6 @@ TracksContainer::HandleCommand(BMessage* message)
 					start, end) != B_OK)
 					printf("Error with FilterTrack\n");
 			}
-
 			fTracksCoordinator.InvalidateSelection();
 			delete tracks;
 			break;

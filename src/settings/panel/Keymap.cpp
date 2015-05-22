@@ -160,7 +160,8 @@ KeyItem::DrawItem(BView* view, BRect rect, bool all)
 	BFont font;
 	view->GetFont(&font);
 
-	if (fId == -1) {				// Draw the Outline
+	// Draw the Outline
+	if (fId == -1) {			
 		if (IsSelected())
 			view->SetLowColor(150,190,230);
 		else
@@ -192,17 +193,6 @@ KeyItem::DrawItem(BView* view, BRect rect, bool all)
 		key = _KeyLabel(fKey);
 		DrawKey(view, BRect(x-2, rect.top+1, x+font.StringWidth(key)+2, rect.bottom-1), key);
 	}
-
-	x = rect.right - 32;
-
-	/*DrawMods(view, BRect( x - font.Size() - 6, rect.top+1, x -4, rect.bottom-1), fModAlt);
-
-	if (fKeyAlt >' ' && fKeyAlt < 'a') {
-		view->DrawChar( fKeyAlt, BPoint( x, rect.top +font.Size() ));
-	} else if (fKeyAlt) {
-		key = _KeyLabel(fKeyAlt);
-		DrawKey(view, BRect(x-2, rect.top+1, x+font.StringWidth(key)+2, rect.bottom-1), key);
-	}*/
 }
 
 
