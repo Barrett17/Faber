@@ -63,7 +63,7 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 			*format.u.raw_audio.channel_count;
 
 	float buffer[size];
-
+	memset(&buffer, 0, size);
 	while (track->ReadFrames(buffer, &frames) == B_OK) {
 		_BuildBlocks((float*)buffer, frames, index,
 			format.u.raw_audio.channel_count);
@@ -73,8 +73,8 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 
 	mediaFile->ReleaseTrack(track);
 
-	// This is done to optimize writes, it currently only write
-	// the preview, in future the whole data will have a caching mechanism.
+	// This is done to optimize writes, the data is cached in a buffer
+	// and then written to the BPositionIO.
 	for (uint32 j = 0; j < index->CountChannels(); j++)
 		index->ChannelAt(j)->Writer()->Flush();
 
