@@ -39,20 +39,19 @@ status_t
 StorageUtils::BlockEntryRequested(entry_ref* ref)
 {
 	fLastBlockID += 1;
-
 	BPath path = ProjectManager::GetProjectPath();
-
+	// Ensure that we will not owerwrite some other block
 	while (true) {
 		BPath temp(path.Path());
 		BString name;
 		name << DEFAULT_BLOCK_FILENAME << fLastBlockID;
 		temp.Append(name.String());
-		BEntry dir(temp.Path());
-		if (dir.Exists()) {
+		BEntry block(temp.Path());
+		if (block.Exists()) {
 			fLastBlockID++;
 			continue;
 		} else
-			return get_ref_for_path(path.Path(), ref);
+			return get_ref_for_path(temp.Path(), ref);
 	}
 }
 

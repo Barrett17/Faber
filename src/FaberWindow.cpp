@@ -77,8 +77,6 @@ FaberWindow::QuitRequested()
 			return false;
 	}
 
-	ProjectManager::Quit();
-
 	be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }

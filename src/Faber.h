@@ -29,6 +29,7 @@
 class FaberApp : public BApplication {
 public:
 							FaberApp();
+	virtual bool 			QuitRequested();
 	virtual void			MessageReceived(BMessage* message);
 	virtual void			RefsReceived(BMessage* message);
 

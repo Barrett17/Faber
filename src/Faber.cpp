@@ -57,6 +57,14 @@ FaberApp::FaberApp()
 }
 
 
+bool
+FaberApp::QuitRequested()
+{
+	ProjectManager::Quit();
+	return true;
+}
+
+
 void
 FaberApp::MessageReceived(BMessage* message)
 {
