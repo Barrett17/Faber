@@ -379,9 +379,8 @@ TracksContainer::RemoveTrack(TrackView* track, bool deep)
 	if (deep) {
 		ProjectManager::UnregisterTrack(track->GetTrack());
 		delete track;
+		WindowsManager::PostMessage(MessageBuilder(FABER_UPDATE_MENU));
 	}
-	WindowsManager::PostMessage(MessageBuilder(FABER_UPDATE_MENU));
-
 	return B_OK;
 }
 
@@ -392,11 +391,7 @@ TracksContainer::MoveTrack(TrackView* track, int32 index)
 	if (RemoveTrack(track, false) != B_OK)
 		return B_ERROR;
 
-	// TODO investigate crash if the view is not recreated.
-	Track* rawTrack = track->GetTrack();
-	delete track;
-
-	return AddTrack(rawTrack, index);
+	return AddTrack(track, index);
 }
 
 
