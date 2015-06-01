@@ -187,10 +187,12 @@ AudioTrackView::CommandForTrack(BMessage* command)
 		{
 			// TODO: improve track informations
 			BString alertText = "Track Informations:\n\n";
-			alertText << "Frames "
-			<< fAudioTrack->CountFrames() << "\n"
-			<< "Channels " << fAudioTrack->CountChannels() << "\n"
-			<< "Size " << "\n";
+
+			alertText << "ID: " << fAudioTrack->ID() << "\n"
+			<< "Name: " << fAudioTrack->Name() << "\n"
+			<< "Frames: " << fAudioTrack->CountFrames() << "\n"
+			<< "Channels: " << fAudioTrack->CountChannels() << "\n"
+			<< "Duration: " << fAudioTrack->Duration() << "\n";
 
 			WindowsManager::SimpleAlert(alertText.String());
 		}
