@@ -165,7 +165,7 @@ TracksContainer::HandleCommand(BMessage* message)
 			TrackView* track = _FindTrack(message);
 
 			if (track != NULL)
-				RemoveTrack(track);
+				RemoveTrack(track, true);
 		}
 		break;
 
@@ -223,7 +223,7 @@ TracksContainer::HandleCommand(BMessage* message)
 		break;
 
 		case B_SELECT_ALL:
-			fTracksCoordinator.SelectAll();
+			fTracksCoordinator.SelectAllTracks();
 		break;
 		
 		case FABER_UNSELECT_ALL:
@@ -292,6 +292,8 @@ TracksContainer::HandleCommand(BMessage* message)
 			int64 start = -1;
 			int64 end = -1;
 			fTracksCoordinator.CurrentSelection(&start, &end);
+			printf("Executing effect %" B_PRId64 " %" B_PRId64 "\n",
+				start, end);
 			TrackViewList* tracks = SelectedTracks();
 			for (int32 i = 0; i < tracks->CountItems(); i++) {
 				Track* item = tracks->ItemAt(i)->GetTrack();
@@ -326,6 +328,10 @@ TracksContainer::AddTrack(TrackView* track, int32 index)
 		index = CountTracks();
 
 	fLayout->AddView(index, track);
+
+	// Notify the coordinator that a new track has
+	// been added.
+	fTracksCoordinator.TrackAdded(track);
 
 	return fTrackViews.AddItem(track, index);
 }
@@ -374,13 +380,20 @@ TracksContainer::RemoveTrack(TrackView* track, bool deep)
 	}
 
 	fTrackViews.RemoveItem(track);
-	fLayout->RemoveView(track);
 
 	if (deep) {
+		// Notify the coordinator that a new track has
+		// been removed.
+		fTracksCoordinator.TrackRemoved(track);
 		ProjectManager::UnregisterTrack(track->GetTrack());
-		delete track;
 		WindowsManager::PostMessage(MessageBuilder(FABER_UPDATE_MENU));
 	}
+
+	fLayout->RemoveView(track);
+
+	if (deep)
+		delete track;
+
 	return B_OK;
 }
 
