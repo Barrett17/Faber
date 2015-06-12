@@ -36,13 +36,17 @@ class TracksCoordinator
 public:
 										TracksCoordinator(TracksContainer* owner);
 
+			int64						Duration() const;
+			void						TrackAdded(TrackView* track);
+			void						TrackRemoved(TrackView* track);
+
 			int64						Pointer() const;
 			int64						ZoomFactor() const;
 
 			bool						SelectionActive() const;
 			void						CurrentSelection(int64* start, int64* end);
 
-			void						SelectAll();
+			void						SelectAllTracks();
 			void						UnselectAll();
 
 			void						ZoomIn();
@@ -50,10 +54,11 @@ public:
 			void						ZoomFull();
 			void						ZoomSelection();
 
-			int64						ScreenToFrame(int64 value);
-			int64						FrameToScreen(int64 value);
+			int64						ScreenToFrame(float value);
+			float						FrameToScreen(int64 value);
 
 			void						InvalidateSelection();
+			void						InvalidateTracks();
 
 			// Tracks callbacks
 			void						NotifySelect(int64 start, int64 end,
