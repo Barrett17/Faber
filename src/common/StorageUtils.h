@@ -48,7 +48,6 @@ public:
 
 		// Disk storage / media conversion
 		static size_t			FramesToSize(int64 frames);
-		static int64			SizeToFrames(size_t size);
 
 private:
 		// TODO randomize

@@ -24,6 +24,8 @@
 #include <FindDirectory.h>
 #include <String.h>
 
+#include <stdio.h>
+
 #include "ProjectManager.h"
 
 
@@ -48,6 +50,7 @@ StorageUtils::BlockEntryRequested(entry_ref* ref)
 		temp.Append(name.String());
 		BEntry block(temp.Path());
 		if (block.Exists()) {
+			printf("exists\n");
 			fLastBlockID++;
 			continue;
 		} else
@@ -104,15 +107,7 @@ StorageUtils::DeleteDirectory(BPath path)
 }
 
 
-// NOTE ATM we support only float also other formats
-// are planned in future, but there's need of more templatized code.
-int64
-StorageUtils::SizeToFrames(size_t size)
-{
-	return (int64)size/sizeof(float);
-}
-
-
+// TODO Deprecated, remove it as planned
 size_t
 StorageUtils::FramesToSize(int64 frames)
 {
