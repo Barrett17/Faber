@@ -88,6 +88,8 @@ public:
 	// This is used to pass commands strictly related to this track.
 	virtual void				CommandForTrack(BMessage* msg) = 0;
 
+	virtual void				InvalidateRender() = 0;
+
 protected:
 			TracksCoordinator*	fCoordinator;
 			Track*				fTrack;

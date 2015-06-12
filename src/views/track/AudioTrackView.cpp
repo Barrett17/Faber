@@ -215,11 +215,9 @@ AudioTrackView::CommandForTrack(BMessage* command)
 				AudioTrack* audioTrack = new AudioTrack();
 				audioTrack->SetName(Name());
 				audioTrack->GetIndex()->AddChannel(chan);
-				
 				container->AddTrack(audioTrack,
 					container->IndexOf(this)+1);
 			}
-
 		}
 		break;
 
@@ -245,6 +243,13 @@ AudioTrackView::CommandForTrack(BMessage* command)
 		break;
 
 	}
+}
+
+
+void
+AudioTrackView::InvalidateRender()
+{
+	fRender->Invalidate();
 }
 
 

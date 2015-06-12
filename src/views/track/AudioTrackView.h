@@ -63,6 +63,8 @@ public:
 
 			void			CommandForTrack(BMessage* command);
 
+			void			InvalidateRender();
+
 			// Used by TrackMenuUpdater
 			void			AddDefaultAttributes(BMessage* message);
 private:
