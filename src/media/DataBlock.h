@@ -26,8 +26,7 @@ class TrackIndex;
 
 
 enum FaberDataBlockKinds {
-	FABER_RAW_DATA = 1001,
-	FABER_AUDIO_DATA,
+	FABER_AUDIO_DATA = 1001,
 	FABER_MIDI_DATA
 };
 
@@ -36,12 +35,13 @@ enum FaberDataBlockKinds {
 // can use them, through MediaBlock.
 class DataBlock {
 public:
-								DataBlock(BPositionIO* data,
-									FaberDataBlockKinds kind);	
+								DataBlock(FaberDataBlockKinds kind);	
 
-	virtual	uint32				Kind() const;
+			uint32				Kind() const;
 
 protected:
+			void				OpenIOContext(BPositionIO* data);
+			void				CloseIOContext();
 	// BDataIO
 	virtual	ssize_t				Read(void* buffer, size_t size);
 	virtual	ssize_t				Write(const void* buffer, size_t size);

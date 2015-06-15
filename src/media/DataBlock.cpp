@@ -21,9 +21,9 @@
 #include "DataBlock.h"
 
 
-DataBlock::DataBlock(BPositionIO* data, FaberDataBlockKinds kind)
+DataBlock::DataBlock(FaberDataBlockKinds kind)
 	:
-	fData(data),
+	fData(NULL),
 	fKind(kind)
 {
 
@@ -34,6 +34,20 @@ uint32
 DataBlock::Kind() const
 {
 	return fKind;
+}
+
+
+void
+DataBlock::OpenIOContext(BPositionIO* data)
+{
+	fData = data;
+}
+
+
+void
+DataBlock::CloseIOContext()
+{
+	fData = NULL;
 }
 
 
