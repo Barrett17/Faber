@@ -77,11 +77,6 @@ TracksCoordinator::SelectionActive() const
 void
 TracksCoordinator::CurrentSelection(int64* start, int64* end)
 {
-	// TODO priorità
-	// memorizzare lunghezza massima in base alle tracce
-	// fEnd rappresenta il limite disegnabile
-	// fTrackEnd rappresenta il limite della pista (la traccia più grande)
-	// questi valori devono essere interpretati differentemente nel codice
 	*start = fSelectionStart;
 	*end = fSelectionEnd;
 }
@@ -162,8 +157,8 @@ TracksCoordinator::NotifyMouseUp(BPoint point, Render* who)
 	if (fPrimaryButton)
 		fPrimaryButton = false;
 
-	printf("the selection is %"B_PRId64 " %" B_PRId64 "\n",
-		fSelectionStart, fSelectionEnd);
+	//printf("the selection is %"B_PRId64 " %" B_PRId64 "\n",
+	//	fSelectionStart, fSelectionEnd);
 }
 
 
@@ -175,15 +170,12 @@ TracksCoordinator::NotifyMouseMoved(BPoint point, uint32 data,
 		if (!who->IsSelected())
 			_AddToSelection(who);
 
-		printf("%" B_PRId64 "\n", fPointer);
 		int64 frame = fStart+ScreenToFrame(point.x);
-		if (frame < fPointer) {
-			printf("minore\n");
+		if (frame < fPointer)
 			_UpdateSelection(frame, fPointer);
-		} else
+		else
 			_UpdateSelection(fPointer, frame);
 
-		printf("%" B_PRId64 "\n", frame);
 		InvalidateSelection();
 	}
 }
@@ -287,7 +279,8 @@ TracksCoordinator::_UpdateSelection(int64 start, int64 end)
 {
 	fSelectionStart = start;
 	fSelectionEnd = end;
-	printf("Current selection is %" B_PRId64 " %" B_PRId64 "\n", start, end);
+	//printf("Current selection is %" B_PRId64 "
+	//	%" B_PRId64 "\n",start, end);
 }
 
 
