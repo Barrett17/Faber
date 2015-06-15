@@ -34,21 +34,22 @@ public:
 			int64					CurrentFrame() const;
 			MediaBlock*				CurrentBlock() const;
 
+			MediaBlock*				NextBlock();
+
 protected:
 			friend class			MediaBlockMap;
 
 									MediaBlockMapVisitor(
-										MediaBlockMap* blockMap,
-										off_t position)
+										MediaBlockMap* blockMap)
 										:
 										fMap(blockMap),
-										fCurrentFrame(0),
+										fCurrentBlockStart(0),
 										fCurrentIndex(0)
 										{}
 
 			MediaBlockMap*			fMap;
 
-			int64					fCurrentFrame;
+			int64					fCurrentBlockStart;
 			int32					fCurrentIndex;
 };
 
@@ -58,10 +59,13 @@ public:
 			int64					WriteFrames(void* buffer,
 										int64 frameCount);
 
-			// Seek to start before to read.
 			int64					WriteFramesAt(void* buffer,
 										int64 start,
 										int64 frameCount);
+
+			// Will request a new block and add it
+			// to the end.
+			MediaBlock*				RequestBlock();
 
 			// This is used to get sure the audio data
 			// and preview will get written.and calculated
@@ -73,11 +77,8 @@ protected:
 									MediaBlockMapWriter(
 										MediaBlockMap* blockMap)
 										:
-										MediaBlockMapVisitor(blockMap,
-											MEDIA_BLOCK_RAW_DATA_START)
+										MediaBlockMapVisitor(blockMap)
 										{}
-private:
-			float					fFramesAverage;
 };
 
 
@@ -85,14 +86,12 @@ class MediaBlockMapReader : public MediaBlockMapVisitor {
 public:
 			int64					ReadFrames(void* buffer, int64 frameCount);
 
-			// Seek to start before to read.
 			int64					ReadFramesAt(void* buffer,
 										int64 start, int64 frameCount);
 
-			//int64					ReadPreview(void** buf,
-			//							int64 start, int64 frameCount);
-
-			size_t					ReadPreview(float** ret);
+			int64					ReadPreview(void** buf,
+										int64 frameCount = -1,
+										int64 start = 0);
 
 protected:
 			friend class			MediaBlockMap;
@@ -100,8 +99,7 @@ protected:
 									MediaBlockMapReader(
 										MediaBlockMap* blockMap)
 										:
-										MediaBlockMapVisitor(blockMap,
-											MEDIA_BLOCK_RAW_DATA_START)
+										MediaBlockMapVisitor(blockMap)
 										{}
 };
 
@@ -117,12 +115,20 @@ public:
 
 			static BArchivable*		Instantiate(BMessage* archive);
 
+			// Make the Map ready to store at least n frames
+			status_t				EnsureCapacity(int64 frames);
+
+			// Resize the Map to frames removing the exceding data
+			// depending on the fromEnd value.
+			status_t				ResizeCapacity(int64 frames,
+										bool fromEnd = true);
+
 			int64					CountFrames() const;
+			int64					BlockPlacement(int32 index) const;
+			int32					BlockForFrame(int64 frame,
+										int64* startFrame) const;
 
-			off_t					Size() const;
-
-			size_t					ReservedSize() const;
-			size_t					PreviewSize() const;
+			int64					PreviewFrames() const;
 
 			int32					CountBlocks() const;
 			MediaBlock*				BlockAt(int32 index) const;

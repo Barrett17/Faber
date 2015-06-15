@@ -21,92 +21,87 @@
 
 
 #include <Archivable.h>
+#include <Entry.h>
 #include <File.h>
 #include <ObjectList.h>
 
 #include "DataBlock.h"
 
+typedef struct {
+	//uint32 media_block_map_id;
+	int64 frame_count;
+	int64 preview_frames;
+} media_block_meta_data;
 
-/*
-	Audio Block Structure :
 
-		1 KiB - Reserved for general informations (size, blockstart,
-			reference counter, etc)
-
-		4096 bytes - display preview (1048576/256)
-
-		1 MiB - Audio data (B_AUDIO_FLOAT)
-*/
-
-#define MEDIA_BLOCK_PREVIEW_DETAIL 128
-#define MEDIA_BLOCK_RAW_SIZE 1048576
-#define MEDIA_BLOCK_RESERVED_SIZE 1024
-#define MEDIA_BLOCK_PREVIEW_SIZE (MEDIA_BLOCK_RAW_SIZE/MEDIA_BLOCK_PREVIEW_DETAIL)*2
-
+#define MEDIA_BLOCK_RESERVED_SIZE sizeof(media_block_meta_data)
+#define MEDIA_BLOCK_PREVIEW_DETAIL 256
+#define MEDIA_BLOCK_MAX_FRAMES 204800
+#define MEDIA_BLOCK_MAX_SIZE MEDIA_BLOCK_MAX_FRAMES*sizeof(float)
+#define MEDIA_BLOCK_PREVIEW_MAX_FRAMES (MEDIA_BLOCK_MAX_FRAMES/MEDIA_BLOCK_PREVIEW_DETAIL)*2
+#define MEDIA_BLOCK_PREVIEW_MAX_SIZE MEDIA_BLOCK_PREVIEW_MAX_FRAMES*sizeof(float)
 #define MEDIA_BLOCK_PREVIEW_START MEDIA_BLOCK_RESERVED_SIZE
-#define MEDIA_BLOCK_RAW_DATA_START MEDIA_BLOCK_PREVIEW_START + MEDIA_BLOCK_PREVIEW_SIZE
-
-#define MEDIA_BLOCK_DEFAULT_SIZE MEDIA_BLOCK_RESERVED_SIZE + MEDIA_BLOCK_PREVIEW_SIZE + MEDIA_BLOCK_RAW_SIZE
+#define MEDIA_BLOCK_RAW_DATA_START MEDIA_BLOCK_PREVIEW_START + MEDIA_BLOCK_PREVIEW_MAX_SIZE
 
 
 class MediaBlock : public DataBlock {
 public:
-									MediaBlock(BFile* file,
-										BEntry* entry);	
+									MediaBlock(entry_ref& ref);	
 	virtual 						~MediaBlock();
+protected:
+			int64					WriteFrames(void* buf, int64 count);
+			int64					ReadFrames(void* buf, int64 count);
 
+			void*					Data() const;
+			int64					Offset() const;
+			void					SetOffset(int64 offset);
+			void					SetFramesUsed(int64 frames);			
 			int64					CountFrames() const;
-			int64					CurrentFrame() const;
+
+			bool					IsFull() const;
 			int64					AvailableFrames() const;
 
-			MediaBlock*				CopyTo(BFile* file);
+			void*					Preview() const;
+			int64					PreviewFrames() const;
 
-			//status_t				AcquireOwnership(MediaBlockMap* map);
-			//status_t				ReleaseOwnership(MediaBlockMap* map);
-
-			const BEntry&			GetEntry() const;
-
-			// Return the whole block size.
-			off_t					Size() const;
-
-			// Return the various fields size.
-			size_t					ReservedSize() const;
-			size_t					PreviewSize() const;
-			size_t					MediaDataSize() const;
-
-protected:
-			size_t					ReadPreview(float** preview);
-			//float*				ReadPreview(int64 start, int64 frameCount);
-
-			int64					SeekToFrame(int64 frame);
-			int64					ReadFrames(void* buffer, int64 frameCount);
-			int64					WriteFrames(void* buffer, int64 frameCount);
-
-			bool					WasFlushed() const;
-			void					SetFlushed(bool flushed);
+			// Enable the block to be written
+			void					Open(uint32 openMode);
+			void					Close();
+			// Load all from the file
+			void					Load();
+			// Update file content with changes and calculate preview
 			void					Flush();
 
-			friend class			MediaBlockMapVisitor;
-			friend class			MediaBlockMapWriter;
-			friend class			MediaBlockMapReader;
+			void					SetFlushed(bool flushed);
+			bool					WasFlushed() const;
 
-			// status_t				ReadLock();
-			// status_t				ReadUnock();
-			// status_t				WriteLock();
-			// status_t				WriteUnlock();
+			status_t				CopyTo(MediaBlock* block);
+			entry_ref				GetEntry() const;
+
+	friend class MediaBlockMap;
+	friend class MediaBlockMapVisitor;
+	friend class MediaBlockMapWriter;
+	friend class MediaBlockMapReader;
 
 private:
-			//BObjectList<MediaBlockMap*> fOwners;
+			void					_LoadMetaData();
+			void					_LoadData();
+			void					_LoadPreview();
 
-			BFile*					fData;
-			BEntry*					fEntry;
+			void					_FlushMetaData();
+			void					_FlushData();
+			void					_FlushPreview();
+
+			entry_ref				fEntry;
+			BFile*					fFile;
 
 			bool					fFlushed;
 
-			float*					fPreviewCache;
-			size_t					fPreviewSize;
+			void*					fBuffer;
+			void*					fPreviewCache;
 
-			size_t					fCurrentRawSize;
+			int64					fOffset;
+			media_block_meta_data	fMetaData;
 };
 
 #endif
