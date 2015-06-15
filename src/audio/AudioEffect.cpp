@@ -65,9 +65,7 @@ AudioEffect::FilterTrack(Track* track, int64 start, int64 end)
 				// TODO: Error
 				break;
 			}
-
-			FilterBuffer(buffer, StorageUtils::FramesToSize(read));
-
+			FilterBuffer(buffer, read);
 			channel->Writer()->WriteFramesAt(buffer, j, read);
 		}
 		channel->Writer()->Flush();
