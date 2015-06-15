@@ -42,7 +42,7 @@ TrackIndex::TrackIndex(BMessage* from)
 	fChannels = new BObjectList<MediaBlockMap>(true);
 
 	BMessage msg;
-	for (int i = 0; from->FindMessage(SAVE_TRACK_CHANNEL_NAME, i, &msg)
+	for (int32 i = 0; from->FindMessage(SAVE_TRACK_CHANNEL_NAME, i, &msg)
 		== B_OK; i++) {
 
 		MediaBlockMap* channel =
@@ -64,7 +64,7 @@ TrackIndex::Archive(BMessage* into, bool deep) const
 {
 	BArchivable::Archive(into, deep);
 
-	for (int i = 0; i < fChannels->CountItems(); i++) {
+	for (int32 i = 0; i < fChannels->CountItems(); i++) {
 		MediaBlockMap* channel = fChannels->ItemAt(i);
 
 		BMessage* msg = MessageBuilder(SAVE_TRACK_CHANNEL, channel);
@@ -132,7 +132,7 @@ TrackIndex::CountFrames() const
 {
 	int64 frames = 0;
 
-	for (int i = 0; i < CountChannels(); i++) {
+	for (int32 i = 0; i < CountChannels(); i++) {
 		MediaBlockMap* channel = fChannels->ItemAt(i);
 		if (channel->CountFrames() > frames)
 			frames = channel->CountFrames();
