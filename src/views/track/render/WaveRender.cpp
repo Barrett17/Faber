@@ -59,51 +59,64 @@ WaveRender::_RenderTrack(BRect rect)
 		float* preview = NULL;
 		MediaBlockMap* channelMap = index->ChannelAt(i);
 		MediaBlockMapReader* reader = channelMap->Reader();
-		size_t size = reader->ReadPreview(&preview);
+		int64 frames = reader->ReadPreview((void**)&preview);
 		if (preview == NULL) {
 			printf("WaveRender::_RenderTrack: Error preview is null\n");
 			return;
 		}
-		_RenderChannel(preview, size, center);
+		_RenderChannel(preview, frames, center);
 		center += center*2;
-		delete preview;
+		delete[] preview;
 	}
 }
 
 
 void
-WaveRender::_RenderChannel(float* buffer, size_t size, float center)
+WaveRender::_RenderChannel(float* buffer, int64 frames, float center)
 {
 	int64 end = (int64)Bounds().right;
 	int64 count = 0;
+	int64 startFrame, endFrame;
+	fCoordinator->CurrentSelection(&startFrame, &endFrame);
+
+	//printf("WaveRender: start %" B_PRId64 " end %" B_PRId64 "\n",
+	//	startFrame, endFrame);
+
+	if (endFrame == 0)
+		return;
 
 	for (int64 i = 0; i < end; i++) {
-		if (count >= size)
-			return;
+		if (count < frames) {
 
-		int64 point, start, end;
-		fCoordinator->CurrentSelection(&start, &end);
-		if (IsSelected()
-			&& i >= fCoordinator->FrameToScreen(start)
-				&& i <= fCoordinator->FrameToScreen(end)) {
-			SetHighColor(255,255,255);
-			SetLowColor(200,200,200);
+			if (IsSelected()
+				&& i >= fCoordinator->FrameToScreen(startFrame)
+					&& i <= fCoordinator->FrameToScreen(endFrame)) {
+				SetHighColor(255,255,255);
+				SetLowColor(200,200,200);
+			} else {
+				SetHighColor(155,157,162);
+			}
+
+			float max = buffer[count];
+			float min = buffer[count+1];
+
+			max = center+max*150.0f;
+			min = center+min*150.0f;
+
+			BPoint pointMax(i, max);
+			BPoint pointMin(i, min);
+
+			StrokeLine(pointMin, pointMax);
+
+			// TODO We shouldn't skip frames, instead
+			// we should downsample the preview.
+			count+=2*fCoordinator->ZoomFactor();
 		} else {
-			SetHighColor(155,157,162);
+			SetHighColor(140,123,45);
+			BPoint pointMax(i, center);
+			BPoint pointMin(i, center);
+			StrokeLine(pointMin, pointMax);	
 		}
-
-		float max = buffer[count];
-		float min = buffer[count+1];
-
-		max = center+max*150.0f;
-		min = center+min*150.0f;
-
-		BPoint pointMax(i, max);
-		BPoint pointMin(i, min);
-
-		StrokeLine(pointMin, pointMax);
-
-		count+=2*fCoordinator->ZoomFactor();
 	}
 }
 
