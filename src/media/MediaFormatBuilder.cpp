@@ -20,15 +20,15 @@
 
 #include "MediaFormatBuilder.h"
 
-#define FABER_BUFFER_SIZE 4096
+#include "MediaBlock.h"
 
 
 void
 MediaFormatBuilder::BuildAudioBlockRawFormat(media_format* format)
 {
-	format->u.raw_audio.buffer_size = FABER_BUFFER_SIZE;
+	format->u.raw_audio.buffer_size = MEDIA_BLOCK_MAX_SIZE;
 	format->u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
 	format->type = B_MEDIA_RAW_AUDIO;
 	//*format.u.raw_audio.framerate = SettingsManager::GetProjectFramerate();
-	format->u.raw_audio.frame_rate = 192000;
+	format->u.raw_audio.frame_rate = 44100;
 }
