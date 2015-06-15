@@ -57,16 +57,17 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 
 	int64 frames = 0;
 
-	size_t size = (format.u.raw_audio.buffer_size 
+	int64 bufferFrames =(format.u.raw_audio.buffer_size
 		/ (format.u.raw_audio.format 
 		& media_raw_audio_format::B_AUDIO_SIZE_MASK))
 			*format.u.raw_audio.channel_count;
 
-	float buffer[size];
-	memset(&buffer, 0, size);
+	float buffer[bufferFrames];
+	memset(&buffer, 0, bufferFrames*sizeof(float));
 	while (track->ReadFrames(buffer, &frames) == B_OK) {
 		_BuildBlocks((float*)buffer, frames, index,
 			format.u.raw_audio.channel_count);
+		memset(&buffer, 0, bufferFrames*sizeof(float));
 	}
 
 	WindowsManager::ProgressUpdate(50.0f, "Flushing data and preview");
