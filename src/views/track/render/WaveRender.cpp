@@ -33,6 +33,7 @@ WaveRender::WaveRender(AudioTrackView* owner, TracksCoordinator* coordinator)
 	Render(owner, coordinator)
 {
 	SetViewColor(60,60,60);
+	fPreviewCache = new float[MEDIA_BLOCK_PREVIEW_MAX_FRAMES];
 }
 
 
@@ -47,24 +48,32 @@ WaveRender::Draw(BRect rect)
 void
 WaveRender::_RenderTrack(BRect rect)
 {
-	SetDrawingMode(B_OP_ALPHA);
 	SetHighColor(155,157,162);
 
 	TrackIndex* index = fTrack->GetIndex();
 	int32 channels = index->CountChannels();
 
 	float center = Bounds().Height()/(channels*2);
+	memset(fPreviewCache, 0, MEDIA_BLOCK_PREVIEW_MAX_SIZE);
 
 	for (int32 i = 0; i < channels; i++) {
-		float* preview = NULL;
 		MediaBlockMap* channelMap = index->ChannelAt(i);
-		MediaBlockMapReader* reader = channelMap->Reader();
-		int64 frames = reader->ReadPreview((void**)&preview);
-		if (preview == NULL) {
-			printf("WaveRender::_RenderTrack: Error preview is null\n");
-			return;
+// TODO read preview block per block
+#if 0
+		int64 start = 0;
+		for (int32 j = 0; j < channelMap->CountBlocks(); j++) {
+			MediaBlock* block = channelMap->BlockAt(j);
+			int64 frames = block->PreviewFrames();
+			printf("block %d %" B_PRId64 "\n", j, start);
+			block->ReadPreview(fPreviewCache, frames);
+			_RenderChannel(fPreviewCache, start, frames, center);
+			start += frames;
 		}
-		_RenderChannel(preview, frames, center);
+#endif
+		int64 frames = channelMap->PreviewFrames(); 
+		float* preview;
+		channelMap->Reader()->ReadPreview((void**)&preview);
+		_RenderChannel(preview, 0, frames, center);
 		center += center*2;
 		delete[] preview;
 	}
@@ -72,30 +81,26 @@ WaveRender::_RenderTrack(BRect rect)
 
 
 void
-WaveRender::_RenderChannel(float* buffer, int64 frames, float center)
+WaveRender::_RenderChannel(float* buffer, int64 start, int64 frames, float center)
 {
 	int64 end = (int64)Bounds().right;
-	int64 count = 0;
+	int64 count = start;
 	int64 startFrame, endFrame;
 	fCoordinator->CurrentSelection(&startFrame, &endFrame);
 
 	//printf("WaveRender: start %" B_PRId64 " end %" B_PRId64 "\n",
-	//	startFrame, endFrame);
+	//	start, start+frames);
 
-	if (endFrame == 0)
-		return;
-
-	for (int64 i = 0; i < end; i++) {
-		if (count < frames) {
+	for (int64 i = start; i < frames+start; i++) {
+		if (count < frames+start) {
 
 			if (IsSelected()
 				&& i >= fCoordinator->FrameToScreen(startFrame)
 					&& i <= fCoordinator->FrameToScreen(endFrame)) {
 				SetHighColor(255,255,255);
 				SetLowColor(200,200,200);
-			} else {
+			} else
 				SetHighColor(155,157,162);
-			}
 
 			float max = buffer[count];
 			float min = buffer[count+1];

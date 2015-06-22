@@ -22,6 +22,8 @@
 
 #include "Render.h"
 
+#include "MediaBlock.h"
+
 
 class WaveRender : public Render {
 public:
@@ -30,10 +32,13 @@ public:
 
 	virtual void				Draw(BRect rect);
 private:
-			void				_RenderChannel(float* buffer, int64 frames,
-									float center);
+			void				_RenderChannel(float* buffer, int64 start,
+									int64 frames, float center);
+
 			void				_RenderTrack(BRect rect);
 			void				_RenderPointers(BRect rect);
+
+			float*				fPreviewCache;
 };
 
 #endif

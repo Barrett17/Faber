@@ -26,9 +26,12 @@
 void
 MediaFormatBuilder::BuildAudioBlockRawFormat(media_format* format)
 {
-	format->u.raw_audio.buffer_size = MEDIA_BLOCK_MAX_SIZE;
 	format->u.raw_audio.format = media_raw_audio_format::B_AUDIO_FLOAT;
 	format->type = B_MEDIA_RAW_AUDIO;
 	//*format.u.raw_audio.framerate = SettingsManager::GetProjectFramerate();
 	format->u.raw_audio.frame_rate = 44100;
+
+	format->u.raw_audio.buffer_size = (MEDIA_BLOCK_MAX_FRAMES
+		* (format->u.raw_audio.format 
+			& media_raw_audio_format::B_AUDIO_SIZE_MASK));
 }

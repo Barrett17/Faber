@@ -42,13 +42,13 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 	// change in future, or at least the user should be able to select which track
 	// to import (eventually all and as separated track).
 	BMediaTrack* track = mediaFile->TrackAt(0);
-
 	if (track->DecodedFormat(&format) != B_OK) {
 		// Critical error show a popup
 		return NULL;
 	}
 
-	for (uint32 i = 0; i < format.u.raw_audio.channel_count; i++) {
+	uint32 channels = format.u.raw_audio.channel_count;
+	for (uint32 i = 0; i < channels; i++) {
 		MediaBlockMap* channel = new MediaBlockMap();
 		index->AddChannel(channel);
 	}
@@ -57,17 +57,17 @@ TrackIO::ImportAudio(BMediaFile* mediaFile, const char* name)
 
 	int64 frames = 0;
 
-	int64 bufferFrames =(format.u.raw_audio.buffer_size
+	int64 bufferFrames = (format.u.raw_audio.buffer_size
 		/ (format.u.raw_audio.format 
-		& media_raw_audio_format::B_AUDIO_SIZE_MASK))
-			*format.u.raw_audio.channel_count;
+		& media_raw_audio_format::B_AUDIO_SIZE_MASK));
 
 	float buffer[bufferFrames];
-	memset(&buffer, 0, bufferFrames*sizeof(float));
+
+	memset(&buffer, 0, format.u.raw_audio.buffer_size);
 	while (track->ReadFrames(buffer, &frames) == B_OK) {
-		_BuildBlocks((float*)buffer, frames, index,
-			format.u.raw_audio.channel_count);
-		memset(&buffer, 0, bufferFrames*sizeof(float));
+		_BuildBlocks((float*)buffer, frames*channels, index,
+			channels);
+		memset(&buffer, 0, format.u.raw_audio.buffer_size);
 	}
 
 	WindowsManager::ProgressUpdate(50.0f, "Flushing data and preview");
@@ -87,22 +87,28 @@ status_t
 TrackIO::_BuildBlocks(float* buffer, int64 frames, TrackIndex* index,
 	uint32 channels)
 {
-	float temp[channels][frames/channels];
+	float* temp[channels];
+	for (int32 j = 0; j < channels; j++)
+		temp[j] = new float[frames/channels];
 
 	int64 count = 0;
-
 	for (int64 i = 0; i < frames;) {
 		for (uint32 j = 0; j < channels; j++) {
-			temp[j][count] = buffer[i];
+			float* buf = temp[j];
+			buf[count] = buffer[i];
 			i++;
 		}
 		count++;
 	}
 
 	for (uint32 j = 0; j < channels; j++) {
-		index->ChannelAt(j)->Writer()->WriteFrames(
-			(void*)&temp[j][0], frames/channels);
+		float* buf = temp[j];
+		int64 ret = index->ChannelAt(j)->Writer()->WriteFrames(
+			(void*)buf, frames/channels);
 	}
+
+	for (int32 j = 0; j < channels; j++)
+		delete temp[j];
 
 	return B_OK;
 }

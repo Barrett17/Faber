@@ -102,8 +102,8 @@ TracksCoordinator::UnselectAll()
 void
 TracksCoordinator::NotifySelect(int64 start, int64 end, Render* who)
 {
-	printf("Select all %" B_PRId64 " %" B_PRId64 "\n",
-	start, end);
+	//printf("Select all %" B_PRId64 " %" B_PRId64 "\n",
+	//start, end);
 	_CleanupSelection();
 	_UpdateSelection(start, end);
 	_AddToSelection(who);

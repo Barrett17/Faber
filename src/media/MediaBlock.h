@@ -21,22 +21,25 @@
 
 
 #include <Archivable.h>
+#include <DataIO.h>
 #include <Entry.h>
 #include <File.h>
+#include <MediaFile.h>
+#include <MediaTrack.h>
 #include <ObjectList.h>
 
 #include "DataBlock.h"
 
 typedef struct {
-	//uint32 media_block_map_id;
 	int64 frame_count;
 	int64 preview_frames;
+	//uint32 media_block_map_id;
 } media_block_meta_data;
 
 
 #define MEDIA_BLOCK_RESERVED_SIZE sizeof(media_block_meta_data)
-#define MEDIA_BLOCK_PREVIEW_DETAIL 256
-#define MEDIA_BLOCK_MAX_FRAMES 204800
+#define MEDIA_BLOCK_PREVIEW_DETAIL 512
+#define MEDIA_BLOCK_MAX_FRAMES 1024000/2
 #define MEDIA_BLOCK_MAX_SIZE MEDIA_BLOCK_MAX_FRAMES*sizeof(float)
 #define MEDIA_BLOCK_PREVIEW_MAX_FRAMES (MEDIA_BLOCK_MAX_FRAMES/MEDIA_BLOCK_PREVIEW_DETAIL)*2
 #define MEDIA_BLOCK_PREVIEW_MAX_SIZE MEDIA_BLOCK_PREVIEW_MAX_FRAMES*sizeof(float)
@@ -48,21 +51,18 @@ class MediaBlock : public DataBlock {
 public:
 									MediaBlock(entry_ref& ref);	
 	virtual 						~MediaBlock();
-protected:
-			int64					WriteFrames(void* buf, int64 count);
-			int64					ReadFrames(void* buf, int64 count);
 
-			void*					Data() const;
-			int64					Offset() const;
-			void					SetOffset(int64 offset);
-			void					SetFramesUsed(int64 frames);			
+			int64					ReadPreview(void* buf, int64 frames, int64 start = 0);
+			int64					PreviewFrames() const;
+protected:
+			int64					WriteFrames(void* buf, int64 frames);
+			int64					ReadFrames(void* buf, int64 frames);
 			int64					CountFrames() const;
+			int64					CurrentFrame() const;
+			status_t				SeekToFrame(int64 frame);
 
 			bool					IsFull() const;
 			int64					AvailableFrames() const;
-
-			void*					Preview() const;
-			int64					PreviewFrames() const;
 
 			// Enable the block to be written
 			void					Open(uint32 openMode);
@@ -97,10 +97,14 @@ private:
 
 			bool					fFlushed;
 
-			void*					fBuffer;
-			void*					fPreviewCache;
+			BMemoryIO*				fDataIO;
+			BMemoryIO*				fPreviewIO;
 
-			int64					fOffset;
+			void*					fData;
+			void*					fPreview;
+
+			int64					fFrameCount;
+
 			media_block_meta_data	fMetaData;
 };
 

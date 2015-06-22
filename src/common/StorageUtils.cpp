@@ -107,9 +107,15 @@ StorageUtils::DeleteDirectory(BPath path)
 }
 
 
-// TODO Deprecated, remove it as planned
 size_t
 StorageUtils::FramesToSize(int64 frames)
 {
 	return (size_t)frames*sizeof(float);
+}
+
+
+int64
+StorageUtils::SizeToFrames(size_t size)
+{
+	return (int64)size/sizeof(float);
 }
