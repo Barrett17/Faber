@@ -59,12 +59,13 @@ int64
 MediaBlock::WriteFrames(void* buf, int64 frames)
 {
 	if (frames+fMetaData.frame_count > MEDIA_BLOCK_MAX_FRAMES) {
-		printf("ERRROR mediablock overflow!!!");
+		printf("ERROR mediablock overflow!!!");
 		return -1;
 	}
 
 	size_t size = fDataIO->Write(buf, StorageUtils::FramesToSize(frames));
-	printf("%s err\n", strerror(size));
+
+	// TODO do the right calculus here.
 	fMetaData.frame_count += frames;
 	return StorageUtils::SizeToFrames(size);
 }
@@ -74,7 +75,7 @@ int64
 MediaBlock::ReadFrames(void* buf, int64 frames)
 {
 	if (frames+fMetaData.frame_count > MEDIA_BLOCK_MAX_FRAMES) {
-		printf("ERRROR mediablock overflow!!!");
+		printf("ERROR mediablock overflow!!!");
 		return -1;
 	}
 
@@ -141,10 +142,14 @@ MediaBlock::GetEntry() const
 int64
 MediaBlock::ReadPreview(void* buf, int64 frames, int64 start)
 {
-	size_t ret = fPreviewIO->Read(buf+start,
+	if (start > 0)
+		fPreviewIO->Seek(StorageUtils::FramesToSize(start), SEEK_SET);
+
+	size_t ret = fPreviewIO->Read(buf,
 		StorageUtils::FramesToSize(frames));
+
 	fPreviewIO->Seek(0, SEEK_SET);
-	return ret;
+	return StorageUtils::SizeToFrames(ret);
 }
 
 
@@ -247,7 +252,7 @@ MediaBlock::_FlushPreview()
 	float detail = MEDIA_BLOCK_PREVIEW_DETAIL;
 	int64 previewFrames = (fMetaData.frame_count/MEDIA_BLOCK_PREVIEW_DETAIL)*2;
 	float* buf = (float*) fPreview;
-	memset(buf, 0, MEDIA_BLOCK_PREVIEW_MAX_FRAMES);
+	memset(buf, 0, MEDIA_BLOCK_PREVIEW_MAX_SIZE);
 	float* dataBuf = (float*)fData;
 
 	for (int64 i = 0; i < fMetaData.frame_count; i++) {

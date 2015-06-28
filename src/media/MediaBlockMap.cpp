@@ -389,11 +389,10 @@ MediaBlockMapReader::ReadPreview(void** buf, int64 frameCount, int64 start)
 	int32 i = 0;
 
 	int64 offset = 0;
-	for (int32 i =0; i < fMap->CountBlocks(); i++) {
+	for (int32 i = 0; i < fMap->CountBlocks(); i++) {
 		MediaBlock* nextBlock = fMap->BlockAt(i);
 		int64 blockFrames = nextBlock->PreviewFrames();
-		nextBlock->ReadPreview(preview+offset, blockFrames);
-		offset += blockFrames;
+		offset += nextBlock->ReadPreview(preview+offset, blockFrames);
 	}
 
 	*buf = preview;
