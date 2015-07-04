@@ -40,7 +40,6 @@ EffectWindow::EffectWindow(FaberEffect* effect)
 	SetTitle(fEffect->Name());
 
 	BView* panel = fEffect->SettingsPanel();
-
 	BBox* box = new BBox(fEffect->Name(), B_WILL_DRAW, B_PLAIN_BORDER, panel);
 
 	if (panel != NULL) {
@@ -65,6 +64,7 @@ EffectWindow::MessageReceived(BMessage *message)
 		case CONTROL_CHANGED:
 		{
 			printf("Control changed:\n");
+			fEffect->SettingsChanged();
 		}
 		break;
 
