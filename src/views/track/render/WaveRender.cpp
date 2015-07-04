@@ -53,7 +53,7 @@ WaveRender::_RenderTrack(BRect rect)
 	TrackIndex* index = fTrack->GetIndex();
 	int32 channels = index->CountChannels();
 
-	float center = Bounds().Height()/(channels*2);
+	float center = Bounds().Height()/((float)channels*2.0f);
 	memset(fPreviewCache, 0, MEDIA_BLOCK_PREVIEW_MAX_SIZE);
 
 	for (int32 i = 0; i < channels; i++) {
@@ -116,8 +116,8 @@ WaveRender::_RenderChannel(float* buffer, int64 start,
 			max = center+max*150.0f;
 			min = center+min*150.0f;
 
-			BPoint pointMax(i, max);
-			BPoint pointMin(i, min);
+			BPoint pointMax((float)i, max);
+			BPoint pointMin((float)i, min);
 
 			StrokeLine(pointMin, pointMax);
 
@@ -126,8 +126,8 @@ WaveRender::_RenderChannel(float* buffer, int64 start,
 			*count+=2*fCoordinator->ZoomFactor();
 		} else {
 			SetHighColor(140,123,45);
-			BPoint pointMax(i, center);
-			BPoint pointMin(i, center);
+			BPoint pointMax((float)i, center);
+			BPoint pointMin((float)i, center);
 			StrokeLine(pointMin, pointMax);	
 		}
 	}
@@ -137,14 +137,15 @@ WaveRender::_RenderChannel(float* buffer, int64 start,
 void
 WaveRender::_RenderPointers(BRect rect)
 {
-	int64 pointer = fCoordinator->FrameToScreen(fCoordinator->Pointer());
+	float pointer = fCoordinator->FrameToScreen(fCoordinator->Pointer());
 
 	if (IsSelected()) {
 		SetHighColor(255,255,255);
 		StrokeLine(BPoint(pointer, rect.bottom),
 			BPoint(pointer, 0));
 
-		int64 point, start, end;
+		int64 start, end;
+		float point;
 		fCoordinator->CurrentSelection(&start, &end);
 
 		if(start < fCoordinator->Pointer())
@@ -154,11 +155,11 @@ WaveRender::_RenderPointers(BRect rect)
 
 		SetHighColor(255,255,255);
 		StrokeLine(BPoint(point, rect.bottom),
-			BPoint(point, 0));
+			BPoint(point, 0.0f));
 	} else if (IsFocus()) {
 		SetHighColor(255,255,255);
 		StrokeLine(BPoint(pointer, rect.bottom),
-			BPoint(pointer, 0));
+			BPoint(pointer, 0.0f));
 	}
 }
 
