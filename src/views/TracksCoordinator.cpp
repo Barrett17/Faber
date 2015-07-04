@@ -190,6 +190,7 @@ TracksCoordinator::ZoomIn()
 		return;
 	}
 	InvalidateTracks();
+	fOwner->GetTimeBar()->Invalidate();
 }
 
 
@@ -203,6 +204,7 @@ TracksCoordinator::ZoomOut()
 		return;
 	}
 	InvalidateTracks();
+	fOwner->GetTimeBar()->Invalidate();
 }
 
 
@@ -211,6 +213,7 @@ TracksCoordinator::ZoomFull()
 {
 	fStart = 0;
 	InvalidateTracks();
+	fOwner->GetTimeBar()->Invalidate();
 }
 
 
@@ -225,6 +228,7 @@ TracksCoordinator::ZoomSelection()
 
 	fZoomFactor = 20;
 	InvalidateTracks();
+	fOwner->GetTimeBar()->Invalidate();
 }
 
 

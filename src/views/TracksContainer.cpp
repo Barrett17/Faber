@@ -31,7 +31,6 @@
 #include "FaberScrollBar.h"
 #include "InputRequest.h"
 #include "ProjectManager.h"
-#include "TimeBar.h"
 #include "TracksCoordinator.h"
 #include "WidgetFrame.h"
 
@@ -40,6 +39,7 @@ TracksContainer::TracksContainer()
 	:
 	BGroupView(B_VERTICAL, 0),
 	fTracksCoordinator(this),
+	fTimeBar(NULL),
 	fTrackViews(false)
 {
 	CommandServer::AddCommandListener(this);
@@ -77,10 +77,12 @@ TracksContainer::TracksContainer()
 	WidgetFrame* timeBarLabel = new WidgetFrame(new BStringView("", " Timecode"));
 	timeBarLabel->SetExplicitSize(BSize(150, 10));
 
+	fTimeBar = new TimeBar(&fTracksCoordinator);
+
 	BGroupLayoutBuilder(this)
 		.AddGroup(B_HORIZONTAL, 0.5f)
 			.Add(timeBarLabel)
-			.Add(new TimeBar())
+			.Add(fTimeBar)
 		.End()
 		.Add(verticalScrollView)
 		.AddGroup(B_HORIZONTAL, 0)
@@ -306,7 +308,7 @@ TracksContainer::HandleCommand(BMessage* message)
 					return;
 
 				printf("Filtering track %d, frames %" B_PRId64
-					"\n", i, ((AudioTrack*)item)->CountFrames());
+					"\n", (int)i, ((AudioTrack*)item)->CountFrames());
 
 				if (effect->FilterTrack(item,
 					start, end) != B_OK)
@@ -544,6 +546,13 @@ TracksContainer::Clear()
 void
 TracksContainer::UpdateTracksScroll(float newValue)
 {
+}
+
+
+TimeBar*
+TracksContainer::GetTimeBar() const
+{
+	return fTimeBar;
 }
 
 

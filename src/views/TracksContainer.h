@@ -24,6 +24,7 @@
 
 #include "AudioTrackView.h"
 #include "CommandListener.h"
+#include "TimeBar.h"
 #include "TracksCoordinator.h"
 #include "TrackView.h"
 
@@ -71,12 +72,15 @@ public:
 			// don't use it, use the following method instead.
 			void				UpdateTracksScroll(float newValue);
 
+			TimeBar*			GetTimeBar() const;
+
 private:
 
 			TrackView*			_FindTrack(BMessage* message);
 			AudioTrackView*		_FindAudioTrack(BMessage* message);
 
 			TracksCoordinator	fTracksCoordinator;
+			TimeBar*			fTimeBar;
 
 			BGroupView*			fView;
 			BGroupLayout*		fLayout;

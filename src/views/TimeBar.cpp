@@ -25,9 +25,10 @@
 #define BIG_PIN 7.0f
 
 
-TimeBar::TimeBar()
+TimeBar::TimeBar(TracksCoordinator* coordinator)
 	:
-	BView("TimeBar", B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE)
+	BView("TimeBar", B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE),
+	fCoordinator(coordinator)
 {
 	rgb_color backgroundColor = {120,120,120};
 
@@ -103,7 +104,7 @@ TimeBar::Draw(BRect rect)
 			countdown = 5;
 		}
 
-		samples += 128*2;
+		samples += 512*fCoordinator->ZoomFactor();
 	}
 
 	//printf("%f\n", index);

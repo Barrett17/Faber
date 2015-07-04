@@ -16,19 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with Faber.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _TIME_BAR
-#define _TIME_BAR
+#ifndef _FABER_TIME_BAR
+#define _FABER_TIME_BAR
 
 #include <View.h>
+
+#include "TracksCoordinator.h"
 
 
 class TimeBar : public BView {
 public:
-						TimeBar();
-	virtual 			~TimeBar();
+								TimeBar(TracksCoordinator* coordinator);
+	virtual 					~TimeBar();
 
-	virtual void		MessageReceived(BMessage* message);
-	virtual void		Draw(BRect rect);
+	virtual void				MessageReceived(BMessage* message);
+	virtual void				Draw(BRect rect);
+private:
+			TracksCoordinator* fCoordinator;
 };
 
 #endif

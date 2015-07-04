@@ -172,7 +172,7 @@ AboutView::AboutView(const char* appName, const char* signature)
 	BFont font;
 	fNameView->GetFont(&font);
 	font.SetFace(B_BOLD_FACE);
-	font.SetSize(font.Size() * 2.0);
+	font.SetSize(font.Size() * 2.0f);
 	fNameView->SetFont(&font, B_FONT_FAMILY_AND_STYLE | B_FONT_SIZE
 		| B_FONT_FLAGS);
 
@@ -433,11 +433,11 @@ BAboutWindow::AboutPosition(float width, float height)
 		screenFrame = screen.Frame();
 
 	// Horizontally, we're smack in the middle
-	result.x = screenFrame.left + (screenFrame.Width() / 2.0) - (width / 2.0);
+	result.x = screenFrame.left + (screenFrame.Width() / 2.0f) - (width / 2.0f);
 
 	// This is probably sooo wrong, but it looks right on 1024 x 768
-	result.y = screenFrame.top + (screenFrame.Height() / 4.0)
-		- ceil(height / 3.0);
+	result.y = screenFrame.top + (screenFrame.Height() / 4.0f)
+		- ceil(height / 3.0f);
 
 	return result;
 }
