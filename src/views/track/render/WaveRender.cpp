@@ -58,52 +58,60 @@ WaveRender::_RenderTrack(BRect rect)
 
 	for (int32 i = 0; i < channels; i++) {
 		MediaBlockMap* channelMap = index->ChannelAt(i);
-// TODO read preview block per block
-#if 0
+
+#ifdef WAVERENDER_READBLOCK
+		// TODO read preview block per block
+		int64 offset = 0;
 		int64 start = 0;
+		int64 count = 0;
 		for (int32 j = 0; j < channelMap->CountBlocks(); j++) {
 			MediaBlock* block = channelMap->BlockAt(j);
 			int64 frames = block->PreviewFrames();
-			printf("block %d %" B_PRId64 "\n", j, start);
-			block->ReadPreview(fPreviewCache, frames);
-			_RenderChannel(fPreviewCache, start, frames, center);
-			start += frames;
+			printf("block %d %" B_PRId64 "\n", j, offset);
+			offset += block->ReadPreview(fPreviewCache, frames);
+			_RenderChannel(fPreviewCache, start, start+frames, &count, center);
+			start = offset;
 		}
-#endif
+		center += center*2;
+#else
+
 		int64 frames = channelMap->PreviewFrames(); 
 		float* preview;
 		channelMap->Reader()->ReadPreview((void**)&preview);
-		_RenderChannel(preview, 0, frames, center);
+		int64 count = 0;
+		_RenderChannel(preview, 0, frames, &count, center);
 		center += center*2;
 		delete[] preview;
+#endif
 	}
 }
 
 
 void
-WaveRender::_RenderChannel(float* buffer, int64 start, int64 frames, float center)
+WaveRender::_RenderChannel(float* buffer, int64 start,
+	int64 end, int64* count, float center)
 {
-	int64 end = (int64)Bounds().right;
-	int64 count = start;
-	int64 startFrame, endFrame;
-	fCoordinator->CurrentSelection(&startFrame, &endFrame);
+	int64 screenEnd = (int64)Bounds().right;
 
 	//printf("WaveRender: start %" B_PRId64 " end %" B_PRId64 "\n",
 	//	start, start+frames);
 
-	for (int64 i = start; i < frames+start; i++) {
-		if (count < frames+start) {
+	int64 startFrame, endFrame;
+	fCoordinator->CurrentSelection(&startFrame, &endFrame);
 
-			if (IsSelected()
-				&& i >= fCoordinator->FrameToScreen(startFrame)
+	for (int64 i = *count+(int64)Bounds().left; i < screenEnd; i++) {
+		if (*count < end) {
+			if (IsSelected() && i >= fCoordinator->FrameToScreen(startFrame)
 					&& i <= fCoordinator->FrameToScreen(endFrame)) {
 				SetHighColor(255,255,255);
 				SetLowColor(200,200,200);
+				//printf("Selection %" B_PRId64 " %" B_PRId64 "\n",
+				//	startFrame, endFrame);	
 			} else
 				SetHighColor(155,157,162);
 
-			float max = buffer[count];
-			float min = buffer[count+1];
+			float max = buffer[*count];
+			float min = buffer[*count+1];
 
 			max = center+max*150.0f;
 			min = center+min*150.0f;
@@ -115,7 +123,7 @@ WaveRender::_RenderChannel(float* buffer, int64 start, int64 frames, float cente
 
 			// TODO We shouldn't skip frames, instead
 			// we should downsample the preview.
-			count+=2*fCoordinator->ZoomFactor();
+			*count+=2*fCoordinator->ZoomFactor();
 		} else {
 			SetHighColor(140,123,45);
 			BPoint pointMax(i, center);

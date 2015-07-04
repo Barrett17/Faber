@@ -33,7 +33,8 @@ public:
 	virtual void				Draw(BRect rect);
 private:
 			void				_RenderChannel(float* buffer, int64 start,
-									int64 frames, float center);
+									int64 frames, int64* count,
+									float center);
 
 			void				_RenderTrack(BRect rect);
 			void				_RenderPointers(BRect rect);
