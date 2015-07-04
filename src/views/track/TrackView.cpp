@@ -92,20 +92,6 @@ TrackView::MuteTrack(bool mute)
 
 
 bool
-TrackView::IsPlaying() const
-{
-	return fTrack->IsPlaying();
-}
-
-
-void
-TrackView::SetPlaying(bool playing)
-{
-	fTrack->SetPlaying(playing);
-}
-
-
-bool
 TrackView::IsRecording() const
 {
 	return fTrack->IsRecording();

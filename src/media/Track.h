@@ -51,10 +51,7 @@ public:
 	virtual void					SetBalance(float balance);
 	virtual float					Balance() const;
 
-	virtual bool					IsPlaying() const;
-	virtual void					SetPlaying(bool playing);
-
-	virtual void					SetRecording(bool solo);
+	virtual void					SetRecording(bool recording);
 	virtual bool					IsRecording() const;
 
 	virtual void	 				MuteTrack(bool mute);
@@ -82,7 +79,6 @@ private:
 			bool					fMuted;
 			bool					fSolo;
 			bool					fRecording;
-			bool					fPlaying;
 
 			bool					fHasChanged;
 			bool					fHasUndo;

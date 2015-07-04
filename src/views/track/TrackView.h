@@ -69,10 +69,7 @@ public:
 			void				SetBalance(float balance);
 			float				Balance() const;
 
-			bool				IsPlaying() const;
-			void				SetPlaying(bool playing);
-
-			void				SetRecording(bool solo);
+			void				SetRecording(bool recording);
 			bool				IsRecording() const;
 
 			void	 			MuteTrack(bool mute);

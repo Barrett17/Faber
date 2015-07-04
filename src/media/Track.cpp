@@ -25,7 +25,6 @@ Track::Track()
 	:
 	fMuted(false),
 	fSolo(false),
-	fPlaying(false),
 	fRecording(false),
 	fVolume(5),
 	fBalance(5)
@@ -109,20 +108,6 @@ void
 Track::MuteTrack(bool mute)
 {
 	fMuted = mute;
-}
-
-
-bool
-Track::IsPlaying() const
-{
-	return fPlaying;
-}
-
-
-void
-Track::SetPlaying(bool playing)
-{
-	fPlaying = playing;
 }
 
 
