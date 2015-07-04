@@ -28,15 +28,19 @@
 
 
 // Effects kind flags
-const uint32 FABER_AUDIO_EFFECT		= 0x80000000UL;
-const uint32 FABER_BUILTIN_EFFECT	= 0x40000000UL;
-const uint32 FABER_CONSUMER			= 0x20000000UL;
-const uint32 FABER_FILTER			= 0x10000000UL;
-const uint32 FABER_GUI_EFFECT		= 0x08000000UL;
-const uint32 FABER_PARAMWEB_EFFECT	= 0x00100000UL;
-const uint32 FABER_MULTIPASS_EFFECT = 0x04000000UL;
-const uint32 FABER_PRODUCER			= 0x02000000UL;	
-const uint32 FABER_REALTIME_EFFECT	= 0x01000000UL;
+const uint32 FABER_AUDIO_EFFECT			= 0x80000000UL;
+const uint32 FABER_BUILTIN_EFFECT		= 0x40000000UL;
+const uint32 FABER_GUI_EFFECT			= 0x08000000UL;
+const uint32 FABER_PARAMWEB_EFFECT		= 0x00100000UL;
+const uint32 FABER_MULTIPASS_EFFECT 	= 0x04000000UL;
+
+const uint32 FABER_CONSUMER				= 0x20000000UL;
+const uint32 FABER_FILTER				= 0x10000000UL;
+const uint32 FABER_PRODUCER				= 0x02000000UL;	
+
+const uint32 FABER_REALTIME_EFFECT		= 0x01000000UL;
+const uint32 FABER_DESTRUCTIVE			= 0x00010000UL;
+const uint32 FABER_NON_DESTRUCTIVE		= 0x00020000UL;
 
 #define CONTROL_CHANGED	'chgd'
 
@@ -44,7 +48,6 @@ const uint32 FABER_REALTIME_EFFECT	= 0x01000000UL;
 class FaberEffect {
 public:
 							FaberEffect(const char* name, uint32 flags);
-	virtual 				~FaberEffect();
 
 	const char*				Name() const;
 
@@ -71,6 +74,8 @@ public:
 
 	// Update effect's settings stored in message.
 	virtual status_t		UpdateSettings(BMessage* message) = 0;
+
+	virtual	status_t		SettingsChanged() = 0;
 
 private:
 			uint32			fFlags;

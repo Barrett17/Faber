@@ -24,6 +24,7 @@
 
 // effects headers
 #include "Amplifier.h"
+#include "BaseEffects.h"
 #include "BassBoost.h"
 #include "Compressor.h"
 #include "Delay.h"
@@ -34,11 +35,15 @@ struct StandardAudioEffect {
 };
 
 static StandardAudioEffect gStandardAudioEffects[] = {
-
 	{ new AmplifierEffect() },
 	{ new BassBoostEffect() },
 	{ new CompressorEffect() },
 	{ new DelayEffect() },
+	{ new SwapEffect() },
+	{ new InvertEffect() },
+	{ new SilenceEffect() },
+	{ new FadeInEffect() },
+	{ new FadeOutEffect() },
 	{ NULL }
 };
 

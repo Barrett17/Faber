@@ -25,21 +25,28 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 
-#include "SimpleEffects.h"
+#include "BaseEffects.h"
+
+#include "FaberDefs.h"
 
 
-SwapFilter::SwapFilter()
+SwapEffect::SwapEffect()
 	:
-	FaberEffect(NULL, false)
+	AudioEffect(B_TRANSLATE("Swap"),
+		FABER_REALTIME_EFFECT | FABER_FILTER)
 {
 }
 
 
 void
-SwapFilter::FilterBuffer(float *buffer, size_t size)
+SwapEffect::FilterBuffer(float* buffer, int64 frames)
 {
-	for (size_t i=0; i<size; i+=2) {
+	for (int64 i = 0; i < frames; i+=2) {
 		float tmp = buffer[i+0];
 		buffer[i+0] = buffer[i+1];
 		buffer[i+1] = tmp;
@@ -47,88 +54,75 @@ SwapFilter::FilterBuffer(float *buffer, size_t size)
 }
 
 
-InvertFilter::InvertFilter()
+InvertEffect::InvertEffect()
 	:
-	FaberEffect(NULL, false)
+	AudioEffect(B_TRANSLATE("Invert"),
+		FABER_REALTIME_EFFECT | FABER_FILTER)
 {
 }
 
 
 void
-InvertFilter::FilterBuffer(float *buffer, size_t size)
+InvertEffect::FilterBuffer(float* buffer, int64 frames)
 {
-	for (size_t i=0; i<size; i++) {
+	for (int64 i = 0; i < frames; i++) {
 		buffer++;
 		*buffer = -*buffer;
 	}
 }
 
 
-SilenceFilter::SilenceFilter()
+SilenceEffect::SilenceEffect()
 	:
-	FaberEffect(NULL, false)
+	AudioEffect(B_TRANSLATE("Silence"),
+		FABER_REALTIME_EFFECT | FABER_FILTER)
 {
 }
 
 
 void
-SilenceFilter::FilterBuffer(float *buffer, size_t size)
+SilenceEffect::FilterBuffer(float* buffer, int64 frames)
 {
-	for (size_t i=0; i<size; i++) {
+	for (int64 i = 0; i < frames; i++)
 		*buffer++ = 0.0f;
-	}
 }
 
 
-FadeInFilter::FadeInFilter()
+FadeInEffect::FadeInEffect()
 	:
-	FaberEffect(NULL, false)
+	AudioEffect(B_TRANSLATE("Fade-In"),
+		FABER_REALTIME_EFFECT | FABER_FILTER)
 {
+	count = 0;
 }
 
 
 void
-FadeInFilter::FilterBuffer(float *buffer, size_t size)
+FadeInEffect::FilterBuffer(float* buffer, int64 frames)
 {
-	for (size_t i=0; i<size; i++) {
+	for (int64 i = 0; i < frames; i++) {
 		buffer++;
-		*buffer = (*buffer)*count / m_total;
+		*buffer = (*buffer)*(float)count / (float)frames/*/ m_total*/;
 		count++;
 	}
 }
 
 
-bool
-FadeInFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
-{
-	FaberEffect::InitFilter(f, c, pass, size);
-	count = 0;
-	return true;
-}
-
-
-FadeOutFilter::FadeOutFilter()
+FadeOutEffect::FadeOutEffect()
 	:
-	FaberEffect(NULL, false)
+	AudioEffect(B_TRANSLATE("FadeOut"),
+		FABER_REALTIME_EFFECT | FABER_FILTER)
 {
 }
 
 
 void
-FadeOutFilter::FilterBuffer(float *buffer, size_t size)
+FadeOutEffect::FilterBuffer(float* buffer, int64 frames)
 {
-	for (size_t i=0; i<size; i++) {
+	count = frames;
+	for (int64 i = 0; i < frames; i++) {
 		buffer++;
-		*buffer = (*buffer)*count / m_total;
+		*buffer = (*buffer)*(float)count / (float)frames/*/ m_total*/;
 		count--;
 	}
-}
-
-
-bool
-FadeOutFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
-{
-	FaberEffect::InitFilter(f, c, pass, size);
-	count = size;
-	return true;
 }

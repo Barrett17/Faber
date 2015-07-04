@@ -31,12 +31,6 @@ FaberEffect::FaberEffect(const char* name, uint32 flags)
 }
 
 
-FaberEffect::~FaberEffect()
-{
-}
-
-
-
 const char*
 FaberEffect::Name() const
 {

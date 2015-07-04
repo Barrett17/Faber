@@ -25,6 +25,10 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 
 #ifndef DELAY_EFFECT_H
 #define DELAY_EFFECT_H
@@ -42,10 +46,11 @@ public:
 
 	BView*					SettingsPanel();
 
-	void					FilterBuffer(float* buffer, size_t size);
+	void					FilterBuffer(float* buffer, int64 frame);
 
 	status_t				ArchiveSettings(BMessage* message);
 	status_t				UpdateSettings(BMessage* message);
+	status_t				SettingsChanged();
 
 private:
 	float*					delay_buffer;

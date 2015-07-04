@@ -25,14 +25,18 @@
 class AudioEffect : public FaberEffect {
 public:
 							AudioEffect(const char* name, uint32 flags);
-	virtual 				~AudioEffect();
+
+			BView*			SettingsPanel() { return NULL; }
+
+			status_t		ArchiveSettings(BMessage* msg);
+			status_t		UpdateSettings(BMessage* msg);
+			status_t		SettingsChanged();
 
 	virtual status_t		FilterTrack(Track* track,
 								int64 start, int64 end);
 
 protected:
-	virtual void			FilterBuffer(float* buffer, int64 frame) {};
-	virtual void		FilterBuffer(float* buffer, size_t size) {}; // deprecated
+	virtual void			FilterBuffer(float* buffer, int64 frame) = 0;
 };
 
 #endif

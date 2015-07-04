@@ -136,7 +136,7 @@ Application Faber :
 	MediaEndPoint.cpp
 
 	# Effects
-	#SimpleEffects.cpp
+	BaseEffects.cpp
 	Amplifier.cpp
 	BassBoost.cpp
 	#Limiter.cpp

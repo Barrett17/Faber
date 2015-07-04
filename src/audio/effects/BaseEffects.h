@@ -25,48 +25,54 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 
-#ifndef _SIMPLE_FILTERS_H_
-#define _SIMPLE_FILTERS_H_
+#ifndef _BASE_EFFECTS_H_
+#define _BASE_EFFECTS_H_
 
-#include "FaberEffect.h"
+#include "AudioEffect.h"
 
-//===================== Realtime Filter classes without GUI
 
-class SwapFilter : public RealtimeFilter {
-  public:
-	SwapFilter();
-	virtual void FilterBuffer(float *, size_t);
+class SwapEffect : public AudioEffect {
+public:
+					SwapEffect();
+	virtual void	FilterBuffer(float* buf, int64 frames);
 };
 
-class InvertFilter : public RealtimeFilter {
-  public:
-	InvertFilter();
-	virtual void FilterBuffer(float *, size_t);
+
+class InvertEffect : public AudioEffect {
+public:
+					InvertEffect();
+	virtual void	FilterBuffer(float* buf, int64 frames);
 };
 
-class SilenceFilter : public RealtimeFilter {
-  public:
-	SilenceFilter();
-	virtual void FilterBuffer(float *, size_t);
+
+class SilenceEffect : public AudioEffect {
+public:
+					SilenceEffect();
+	virtual void	FilterBuffer(float* buf, int64 frames);
 };
 
-class FadeInFilter : public RealtimeFilter {
-  public:
-	FadeInFilter();
-	virtual void FilterBuffer(float *, size_t);
-	virtual bool InitFilter(float f, int32 channels = 2, int32 pass = 0, int32 size = 0);
+
+class FadeInEffect : public AudioEffect {
+public:
+					FadeInEffect();
+	virtual void	FilterBuffer(float* buf, int64 frames);
+
+private:
+			int64	count;
+};
+
+class FadeOutEffect : public AudioEffect {
+public:
+					FadeOutEffect();
+	virtual void	FilterBuffer(float* buf, int64 frames);
+
   private:
-	int32 count;
+			int64	count;
 };
 
-class FadeOutFilter : public RealtimeFilter {
-  public:
-	FadeOutFilter();
-	virtual void FilterBuffer(float *, size_t);
-	virtual bool InitFilter(float f, int32 channels = 2, int32 pass = 0, int32 size = 0);
-  private:
-	int32 count;
-};
-
-#endif	// _SIMPLEFILTERS_H_
+#endif

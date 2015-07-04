@@ -25,6 +25,10 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 
 #ifndef COMPRESSOR_EFFECT_H
 #define COMPRESSOR_EFFECT_H
@@ -45,11 +49,12 @@ public:
 		int32 pass = 0, int32 size = 0);
 
 	virtual void				DeAllocate();
-	virtual void 				FilterBuffer(float *, size_t);
+	virtual void 				FilterBuffer(float *, int64 frames);
 
 	virtual BView*				SettingsPanel();
 			status_t			ArchiveSettings(BMessage* message);
 			status_t			UpdateSettings(BMessage* message);
+			status_t			SettingsChanged();
    
 private:
 	float *delay_buffer;

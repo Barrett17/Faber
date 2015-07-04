@@ -26,7 +26,7 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*
- * Copyright 2013-2014 Dario Casalinuovo
+ * Copyright 2013-2015 Dario Casalinuovo
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 
@@ -36,14 +36,13 @@
 #include <LayoutBuilder.h>
 
 #include "FaberDefs.h"
-#include "SpinSlider.h"
 
 
 AmplifierEffect::AmplifierEffect()
 	:
 	AudioEffect(B_TRANSLATE("Amplifier"), FABER_REALTIME_EFFECT
 		| FABER_FILTER | FABER_GUI_EFFECT),
-	fLevel(10)
+	fLevel(50)
 {
 
 }
@@ -57,13 +56,13 @@ AmplifierEffect::SettingsPanel()
 	BView* view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	SpinSlider* slider = new SpinSlider("level", B_TRANSLATE("Level (%)"),
+	fGain = new SpinSlider("level", B_TRANSLATE("Level (%)"),
 		new BMessage(CONTROL_CHANGED), 1, 300);
 
-	slider->SetValue(fLevel);
+	fGain->SetValue((int32)fLevel);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL, 0.5)
-		.Add(slider)
+		.Add(fGain)
 	.End();
 
 	return view;
@@ -84,20 +83,28 @@ AmplifierEffect::UpdateSettings(BMessage* msg)
 }
 
 
+status_t
+AmplifierEffect::SettingsChanged()
+{
+	fLevel = (float)fGain->Value();
+	return B_OK;
+}
+
+
 void
 AmplifierEffect::FilterBuffer(float* buffer, int64 frames)
 {
-	float amp = fLevel/100.0;
+	float amp = fLevel/100.0f;
 	float temp = 0;
 
 	for (int64 i = 0; i < frames; i++) {
 		temp = buffer[i] * amp;
 
-		if (temp>1.0)
-			temp = 1.0;
+		if (temp > 1.0f)
+			temp = 1.0f;
 
-		if (temp<-1.0)
-			temp = -1.0;
+		if (temp < -1.0f)
+			temp = -1.0f;
 
 		buffer[i] = temp;
 	}

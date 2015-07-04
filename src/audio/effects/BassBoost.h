@@ -25,6 +25,10 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 
 #ifndef BASS_BOOST_EFFECT_H
 #define BASS_BOOST_EFFECT_H
@@ -41,15 +45,13 @@ public:
 
 	BView*			SettingsPanel();
 
-	void			FilterBuffer(float* buffer, size_t size);
+	void			FilterBuffer(float* buffer, int64 frames);
 
 	status_t		ArchiveSettings(BMessage* message);
 	status_t		UpdateSettings(BMessage* message);
+	status_t		SettingsChanged();
 
 private:
-	bool			_InitFilter(float f, int32 channels = 2,
-						int32 pass = 0, int32 size = 0);
-
 	float *delay_buffer;
 	int32 buffer_size, pBuffer;
 	SpinSlider *freq, *boost;

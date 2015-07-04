@@ -25,6 +25,10 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 #include "Compressor.h"
 
 #include <LayoutBuilder.h>
@@ -103,6 +107,7 @@ CompressorEffect::ArchiveSettings(BMessage* message)
 
 	for (int32 i=0; i<buffer_size; i++)
 		delay_buffer[i] = 0;*/
+	return B_OK;
 }
 
 
@@ -114,12 +119,19 @@ CompressorEffect::UpdateSettings(BMessage* msg)
 }
 
 
+status_t
+CompressorEffect::SettingsChanged()
+{
+	return B_OK;
+}
+
+
 bool
 CompressorEffect::InitFilter(float f, int32 c, int32 pass, int32 size)
 {
 	/*RealtimeFilter::InitFilter(f, c, pass, size);
 
-	buffer_size = (int32)(m_frequency +.5) * m_channels;
+	buffer_size = (int32)(m_frequency +.5);
 
 	delay_buffer = new float[ buffer_size ];
 	for (int32 i=0; i<buffer_size; i++)	
@@ -143,7 +155,7 @@ CompressorEffect::DeAllocate()
 
 
 void
-CompressorEffect::FilterBuffer(float *buffer, size_t size)
+CompressorEffect::FilterBuffer(float* buffer, int64 frames)
 {
 	/*mDecayMult = exp(log(0.1)/(Prefs.filter_compressor_decay*m_frequency));
 	mThreshold = pow(10.0, Prefs.filter_compressor_treshold/10);
@@ -153,48 +165,6 @@ CompressorEffect::FilterBuffer(float *buffer, size_t size)
 
 	float mult, levelL, levelR;
  
-	if (m_channels == 2){
-// Stereo
-		for (size_t i=0; i<size; i+=2){
-			if (Prefs.filter_compressor_rms) {
-				// Calculate current level from root-mean-squared of
-				// circular buffer ("RMS")
-				mRMSSumL -= delay_buffer[pBuffer];
-				delay_buffer[pBuffer] = buffer[i] * buffer[i];
-				mRMSSumL += delay_buffer[pBuffer];
-				levelL = sqrt(mRMSSumL/buffer_size);
-				pBuffer = (pBuffer+1)%buffer_size;
-
-				mRMSSumR -= delay_buffer[pBuffer];
-				delay_buffer[pBuffer] = buffer[i+1] * buffer[i+1];
-				mRMSSumR += delay_buffer[pBuffer];
-				levelR = sqrt(mRMSSumR/buffer_size);
-				pBuffer = (pBuffer+1)%buffer_size;
-			}else{
-				// Calculate current level from value at other end of
-				// circular buffer ("Peak")
-				levelL = delay_buffer[pBuffer];
-				delay_buffer[pBuffer] = buffer[i]>0? buffer[i]: -buffer[i];
-				pBuffer = (pBuffer+1)%buffer_size;
-
-				levelR = delay_buffer[pBuffer];
-				delay_buffer[pBuffer] = buffer[i+1]>0? buffer[i+1]: -buffer[i+1];
-				pBuffer = (pBuffer+1)%buffer_size;
-			}
-   
-			if (levelL > mThreshold)	mult = mGain * pow(mThreshold/levelL, mInvRatio);
-			else						mult = 1.0;
-			mMultL = mult*mDecayMult + mMultL*(1.0-mDecayMult);
-
-			if (levelR > mThreshold)	mult = mGain * pow(mThreshold/levelR, mInvRatio);
-			else						mult = 1.0;
-			mMultR = mult*mDecayMult + mMultR*(1.0-mDecayMult);
-
-			buffer[i] *= mMultL;
-			buffer[i+1] *= mMultR;
-		}
-	}else if (m_channels ==1 ){
-// Mono	
 		for (size_t i=0; i<size; i++){
 			if (Prefs.filter_compressor_rms) {
 				// Calculate current level from root-mean-squared of
@@ -217,6 +187,5 @@ CompressorEffect::FilterBuffer(float *buffer, size_t size)
 			mMultL = mult*mDecayMult + mMultL*(1.0-mDecayMult);
 
 			buffer[i] *= mMultL;
-		}
-	}*/
+		}*/
 }

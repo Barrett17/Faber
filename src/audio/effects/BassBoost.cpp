@@ -25,6 +25,10 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
 
 #include "BassBoost.h"
 
@@ -39,7 +43,8 @@ BassBoostEffect::BassBoostEffect(uint32 flags)
 	:
 	AudioEffect(B_TRANSLATE("Bass Boost"), flags)
 {
-
+	xn1 = 0, xn2 = 0, yn1 = 0, yn2 = 0;
+	xn3 = 0, xn4 = 0, yn3 = 0, yn4 = 0;
 }
 
 
@@ -84,6 +89,13 @@ BassBoostEffect::UpdateSettings(BMessage* message)
 }
 
 
+status_t
+BassBoostEffect::SettingsChanged()
+{
+	return B_OK;
+}
+
+
 /*
 status_t
 BassBoostEffect::FlattenSettings(BMessage* message)
@@ -93,21 +105,8 @@ BassBoostEffect::FlattenSettings(BMessage* message)
 }*/
 
 
-// Init & exit
-bool
-BassBoostEffect::_InitFilter(float f, int32 c, int32 pass, int32 size)
-{
-	//RealtimeFilter::InitFilter(f, c);
-
-	xn1 = 0, xn2 = 0, yn1 = 0, yn2 = 0;
-	xn3 = 0, xn4 = 0, yn3 = 0, yn4 = 0;
-
-	return true;
-}
-
-
 void
-BassBoostEffect::FilterBuffer(float *buffer, size_t size)
+BassBoostEffect::FilterBuffer(float *buffer, int64 frames)
 {
 	// Compute coefficents of the biquand IIR filter
 	/*float omega = 2 * 3.141592653589 * Prefs.filter_bassboost_frequency / m_frequency;
@@ -133,43 +132,6 @@ BassBoostEffect::FilterBuffer(float *buffer, size_t size)
 	// initialise the filter
 	float out, in = 0;
 
-	if (m_channels == 2){
-	// Stereo left
-		for (size_t i=0; i<size; i+=2){
-			in = buffer[i];
-			out = (b0 * in + b1 * xn1 + b2 * xn2 - a1 * yn1 - a2 * yn2) / a0;
-			xn2 = xn1;
-			xn1 = in;
-			yn2 = yn1;
-			yn1 = out;
-
-//			out += in;
-			if (out < -1.0)
-				out = -1.0;
-			else if (out > 1.0)
-				out = 1.0;        //Prevents clipping
-
-			buffer[i] = out;
-		}
-		// right
-		for (size_t i=1; i<size; i+=2){
-			in = buffer[i];
-			out = (b0 * in + b1 * xn3 + b2 * xn4 - a1 * yn3 - a2 * yn4) / a0;
-			xn4 = xn3;
-			xn3 = in;
-			yn4 = yn3;
-			yn3 = out;
-
-			//out += in;
-			if (out < -1.0)
-				out = -1.0;
-			else if (out > 1.0)
-				out = 1.0;        //Prevents clipping
-
-			buffer[i] = out;
-		}
-	}else if (m_channels ==1 ){
-
 		// Mono	
 		for (size_t i=0; i<size; i++){
 			in = buffer[i];
@@ -185,6 +147,5 @@ BassBoostEffect::FilterBuffer(float *buffer, size_t size)
 				out = 1.0;        //Prevents clipping
 
 			buffer[i] = out;
-		}
-	}*/
+		}*/
 }

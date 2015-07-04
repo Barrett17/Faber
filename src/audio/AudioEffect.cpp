@@ -31,8 +31,24 @@ AudioEffect::AudioEffect(const char* name, uint32 flags)
 }
 
 
-AudioEffect::~AudioEffect()
+status_t
+AudioEffect::ArchiveSettings(BMessage* msg)
 {
+	return B_ERROR;
+}
+
+
+status_t
+AudioEffect::UpdateSettings(BMessage* msg)
+{
+	return B_ERROR;
+}
+
+
+status_t
+AudioEffect::SettingsChanged()
+{
+	return B_ERROR;
 }
 
 
@@ -49,9 +65,12 @@ AudioEffect::FilterTrack(Track* track, int64 start, int64 end)
 		return B_ERROR;
 
 	TrackIndex* index = audioTrack->GetIndex();
+	if (index == NULL)
+		return B_ERROR;
 
-	int64 frameCount = 44100;
-	float buffer[frameCount];
+	int64 frameCount = end-start;
+	float* buffer = new float[frameCount];
+	memset(buffer, 0, StorageUtils::FramesToSize(frameCount));
 
 	for (uint32 i = 0; i < index->CountChannels(); i++) {
 		MediaBlockMap* channel = index->ChannelAt(i);
@@ -60,16 +79,19 @@ AudioEffect::FilterTrack(Track* track, int64 start, int64 end)
 		printf("item %d\n", i);
 
 		for (int64 j = start; j < end; j += read) {
-			read = channel->Reader()->ReadFramesAt(buffer, j, frameCount);
+			channel->Reader()->SeekToFrame(start);
+			read = channel->Reader()->ReadFrames(buffer, frameCount);
 			if (read < 1) {
 				// TODO: Error
 				break;
 			}
 			FilterBuffer(buffer, read);
-			channel->Writer()->WriteFramesAt(buffer, j, read);
+			channel->Writer()->SeekToFrame(start);
+			channel->Writer()->WriteFrames(buffer, read);
 		}
 		channel->Writer()->Flush();
 	}
+	delete[] buffer;
 
 	return B_OK;
 }

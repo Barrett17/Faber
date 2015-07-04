@@ -25,6 +25,11 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+/*
+ * Copyright 2013-2015 Dario Casalinuovo
+ * All rights reserved. Distributed under the terms of the MIT License.
+ */
+
 #include <View.h>
 #include <LayoutBuilder.h>
 
@@ -82,12 +87,7 @@ DelayEffect::SettingsPanel()
 status_t
 DelayEffect::ArchiveSettings(BMessage* msg)
 {
-/*
-	Prefs.filter_delay_delay = delay->Value()/1000.0;
-	Prefs.filter_delay_gain = gain->Value()/100.0;
-
-	for (int32 i=0; i<buffer_size; i++)
-		delay_buffer[i] = 0;*/
+	return B_ERROR;
 }
 
 
@@ -98,28 +98,26 @@ DelayEffect::UpdateSettings(BMessage* message)
 }
 
 
+status_t
+DelayEffect::SettingsChanged()
+{
+/*
+	Prefs.filter_delay_delay = delay->Value()/1000.0;
+	Prefs.filter_delay_gain = gain->Value()/100.0;
+
+	for (int32 i=0; i<buffer_size; i++)
+		delay_buffer[i] = 0;*/
+
+	return B_ERROR;
+}
+
+
 void
-DelayEffect::FilterBuffer(float *buffer, size_t size)
+DelayEffect::FilterBuffer(float *buffer, int64 frame)
 {
 	/*float left = 0, right = 0;
-	int32 delay = (int32)(m_frequency*Prefs.filter_delay_delay*m_channels);
+	int32 delay = (int32)(m_frequency*Prefs.filter_delay_delay);
 
-	if (m_channels == 2){
-// Stereo
-		for (size_t i=0; i<size; i+=2){
-
-			left = MIN(buffer[i+0] + delay_buffer[ (pBuffer-delay) % buffer_size ] * Prefs.filter_delay_gain, 1);
-			right = MIN(buffer[i+1] + delay_buffer[ (pBuffer-delay+1) % buffer_size ] * Prefs.filter_delay_gain, 1);
-
-			delay_buffer[ pBuffer % buffer_size   ] = buffer[i+0];
-			delay_buffer[ (pBuffer+1) % buffer_size] = buffer[i+1];
-			buffer[i+0] = left;
-			buffer[i+1] = right;
-
-			pBuffer += 2;
-		}
-	}else if (m_channels ==1 ){
-// Mono	
 		for (size_t i=0; i<size; i++){
 
 			left = MIN(buffer[i] + delay_buffer[ (pBuffer-delay) % buffer_size ] * Prefs.filter_delay_gain, 1);

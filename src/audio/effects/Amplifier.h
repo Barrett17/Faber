@@ -26,13 +26,14 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*
- * Copyright 2013-2014 Dario Casalinuovo
+ * Copyright 2013-2015 Dario Casalinuovo
  * All rights reserved. Distributed under the terms of the MIT License.
  */
 #ifndef AMP_FILTER_H
 #define AMP_FILTER_H
 
 #include "AudioEffect.h"
+#include "SpinSlider.h"
 
 
 class AmplifierEffect : public AudioEffect {
@@ -46,8 +47,10 @@ protected:
 
 	status_t	ArchiveSettings(BMessage* msg);
 	status_t	UpdateSettings(BMessage* msg);
+	status_t	SettingsChanged();
 
 private:
+	SpinSlider* fGain;
 	float		fLevel;
 
 };

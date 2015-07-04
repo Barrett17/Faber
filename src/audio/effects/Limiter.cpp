@@ -39,17 +39,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-/*******************************************************
-*   
-*******************************************************/
-LimiterFilter::LimiterFilter(bool b) : RealtimeFilter(B_TRANSLATE("LIMITFILTER"), b)
-{
 
+LimiterFilter::LimiterFilter(bool b)
+	:
+	RealtimeFilter(B_TRANSLATE("LIMITFILTER"), b)
+{
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 BView *LimiterFilter::ConfigView()
 {
 	BRect r(0,0,200,100);
@@ -73,15 +70,14 @@ BView *LimiterFilter::ConfigView()
 	return view;
 }
 
+
 void LimiterFilter::UpdateValues()
 {
 	Prefs.filter_limiter_value = value->Value();
 	Prefs.filter_limiter_mix = mix->Value();
 }
 
-/*******************************************************
-*   Init & exit
-*******************************************************/
+
 bool LimiterFilter::InitFilter(float f, int32 c, int32 pass, int32 total_samples)
 {
 	RealtimeFilter::InitFilter(f, c);
@@ -99,14 +95,13 @@ bool LimiterFilter::InitFilter(float f, int32 c, int32 pass, int32 total_samples
 	return true;
 }
 
+
 void LimiterFilter::DeAllocate()
 {
 //	delete[] delay_buffer;
 }
 
-/*******************************************************
-*   
-*******************************************************/
+
 void LimiterFilter::FilterBuffer(float *buffer, size_t size)
 {
 	float tmp, lim;
