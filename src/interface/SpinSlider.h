@@ -25,9 +25,9 @@ public:
 
 	// BSlider mimics
 	virtual void				SetLabel(const char* label);
-	virtual float				Value() const;
-	virtual void				SetValue(float value);
-			VolumeSlider*			Slider() { return fSlider; }
+	virtual int32				Value() const;
+	virtual void				SetValue(int32 value);
+			VolumeSlider*		Slider() { return fSlider; }
 
 private:
 			void				_Init(int32 minValue, int32 maxValue);

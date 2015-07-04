@@ -89,7 +89,7 @@ void SpinSlider::AttachedToWindow(void)
 	fSpinControl->SetTarget(this);
 	fSlider->SetTarget(this);
 
-	//Invalidate();
+	Invalidate();
 }
 
 
@@ -100,7 +100,7 @@ SpinSlider::SetLabel(const char* label)
 }
 
 
-float
+int32
 SpinSlider::Value() const
 {
 	return fSlider->Value();
@@ -108,7 +108,7 @@ SpinSlider::Value() const
 
 
 void
-SpinSlider::SetValue(float value)
+SpinSlider::SetValue(int32 value)
 {
 	if (fSpinControl && (fSpinControl->Value() != value))
 		fSpinControl->SetValue(value);
