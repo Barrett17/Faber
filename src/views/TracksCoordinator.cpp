@@ -33,10 +33,9 @@ TracksCoordinator::TracksCoordinator(TracksContainer* owner)
 	fPointer(0),
 	fPlayPointer(0),
 	fStart(0),
-	fEnd(0),
+	fDuration(0),
 	fSelectionStart(-1),
 	fSelectionEnd(-1),
-	fDuration(0),
 	fZoomFactor(1),
 	fPrimaryButton(false),
 	fSecondaryButton(false)
@@ -86,7 +85,7 @@ void
 TracksCoordinator::SelectAllTracks()
 {
 	fSelectionStart = fStart;
-	fSelectionEnd = fEnd;
+	fSelectionEnd = fDuration;
 }
 
 
@@ -114,7 +113,7 @@ TracksCoordinator::NotifySelect(int64 start, int64 end, Render* who)
 void
 TracksCoordinator::NotifySelectAll(Render* who)
 {
-	NotifySelect(fStart, fEnd, who);
+	NotifySelect(fStart, fDuration, who);
 }
 
 
@@ -211,7 +210,6 @@ void
 TracksCoordinator::ZoomFull()
 {
 	fStart = 0;
-	fEnd = fDuration;
 	InvalidateTracks();
 }
 
@@ -222,8 +220,8 @@ TracksCoordinator::ZoomSelection()
 	if (!SelectionActive())
 		return;
 
-	fPointer = fSelectionStart;
-	fEnd = fSelectionEnd;
+	//fPointer = fSelectionStart;
+	fStart = fSelectionStart;
 
 	fZoomFactor = 20;
 	InvalidateTracks();

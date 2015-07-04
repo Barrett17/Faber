@@ -86,12 +86,10 @@ private:
 			int64						fPlayPointer;
 
 			int64						fStart;
-			int64						fEnd;
+			int64						fDuration;
 
 			int64						fSelectionStart;
 			int64						fSelectionEnd;
-
-			int64						fDuration;
 
 			int32						fZoomFactor;
 
