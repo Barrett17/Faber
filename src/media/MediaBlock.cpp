@@ -52,21 +52,25 @@ MediaBlock::~MediaBlock()
 {
 	delete fDataIO;
 	delete fPreviewIO;
+
+	delete[] fData;
+	delete[] fPreview;
 }
 
 
 int64
 MediaBlock::WriteFrames(void* buf, int64 frames)
 {
-	if (frames+fMetaData.frame_count > MEDIA_BLOCK_MAX_FRAMES) {
+	if (frames+CurrentFrame() > MEDIA_BLOCK_MAX_FRAMES) {
 		printf("ERROR mediablock overflow!!!");
 		return -1;
 	}
 
 	size_t size = fDataIO->Write(buf, StorageUtils::FramesToSize(frames));
 
-	// TODO do the right calculus here.
-	fMetaData.frame_count += frames;
+	if (fMetaData.frame_count <= frames+CurrentFrame())
+		fMetaData.frame_count += frames;
+
 	return StorageUtils::SizeToFrames(size);
 }
 
@@ -74,7 +78,7 @@ MediaBlock::WriteFrames(void* buf, int64 frames)
 int64
 MediaBlock::ReadFrames(void* buf, int64 frames)
 {
-	if (frames+fMetaData.frame_count > MEDIA_BLOCK_MAX_FRAMES) {
+	if (frames+CurrentFrame() > MEDIA_BLOCK_MAX_FRAMES) {
 		printf("ERROR mediablock overflow!!!");
 		return -1;
 	}
@@ -101,27 +105,10 @@ MediaBlock::CurrentFrame() const
 status_t
 MediaBlock::SeekToFrame(int64 frame)
 {
-	if (frame >= fMetaData.frame_count)
+	if (frame != 0 && frame > fMetaData.frame_count)
 		return B_ERROR;
 
 	return fDataIO->Seek(StorageUtils::FramesToSize(frame), SEEK_SET);
-}
-
-
-bool
-MediaBlock::IsFull() const
-{
-	if (AvailableFrames() > 0)
-		return false;
-
-	return true;
-}
-
-
-int64
-MediaBlock::AvailableFrames() const
-{
-	return MEDIA_BLOCK_MAX_FRAMES-CountFrames();	
 }
 
 
@@ -142,8 +129,7 @@ MediaBlock::GetEntry() const
 int64
 MediaBlock::ReadPreview(void* buf, int64 frames, int64 start)
 {
-	if (start > 0)
-		fPreviewIO->Seek(StorageUtils::FramesToSize(start), SEEK_SET);
+	fPreviewIO->Seek(StorageUtils::FramesToSize(start), SEEK_SET);
 
 	size_t ret = fPreviewIO->Read(buf,
 		StorageUtils::FramesToSize(frames));
@@ -253,7 +239,12 @@ MediaBlock::_FlushPreview()
 	int64 previewFrames = (fMetaData.frame_count/MEDIA_BLOCK_PREVIEW_DETAIL)*2;
 	float* buf = (float*) fPreview;
 	memset(buf, 0, MEDIA_BLOCK_PREVIEW_MAX_SIZE);
+
+	SeekToFrame(0);
 	float* dataBuf = (float*)fData;
+
+	if (fMetaData.frame_count > MEDIA_BLOCK_MAX_FRAMES)
+		printf("ehm %" B_PRId64 "\n", fMetaData.frame_count);
 
 	for (int64 i = 0; i < fMetaData.frame_count; i++) {
 		float value = dataBuf[i];

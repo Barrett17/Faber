@@ -61,9 +61,6 @@ protected:
 			int64					CurrentFrame() const;
 			status_t				SeekToFrame(int64 frame);
 
-			bool					IsFull() const;
-			int64					AvailableFrames() const;
-
 			// Enable the block to be written
 			void					Open(uint32 openMode);
 			void					Close();
@@ -82,6 +79,8 @@ protected:
 	friend class MediaBlockMapVisitor;
 	friend class MediaBlockMapWriter;
 	friend class MediaBlockMapReader;
+	friend class FaberEffect;
+	friend class AudioEffect;
 
 private:
 			void					_LoadMetaData();
@@ -102,8 +101,6 @@ private:
 
 			void*					fData;
 			void*					fPreview;
-
-			int64					fFrameCount;
 
 			media_block_meta_data	fMetaData;
 };
