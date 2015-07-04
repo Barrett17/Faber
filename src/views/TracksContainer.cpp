@@ -275,8 +275,13 @@ TracksContainer::HandleCommand(BMessage* message)
 				break;
 			}
 
-			EffectWindow* win = new EffectWindow(effect);
-			win->Show();
+			if (effect->Flags() & FABER_GUI_EFFECT) {
+				EffectWindow* win = new EffectWindow(effect);
+				win->Show();
+			} else {
+				message->what = FABER_EFFECT_EXECUTE;
+				HandleCommand(message);
+			}
 			break;
 		}
 
@@ -299,6 +304,9 @@ TracksContainer::HandleCommand(BMessage* message)
 				Track* item = tracks->ItemAt(i)->GetTrack();
 				if (item == NULL)
 					return;
+
+				printf("Filtering track %d, frames %" B_PRId64
+					"\n", i, ((AudioTrack*)item)->CountFrames());
 
 				if (effect->FilterTrack(item,
 					start, end) != B_OK)
