@@ -74,7 +74,15 @@ TracksCoordinator::SelectionActive() const
 
 
 void
-TracksCoordinator::CurrentSelection(int64* start, int64* end)
+TracksCoordinator::AbsoluteSelection(int64* start, int64* end)
+{
+	*start = fSelectionStart*fZoomFactor;
+	*end = fSelectionEnd*fZoomFactor;
+}
+
+
+void
+TracksCoordinator::RelativeSelection(int64* start, int64* end)
 {
 	*start = fSelectionStart;
 	*end = fSelectionEnd;
