@@ -44,12 +44,7 @@ public:
 			int64						ZoomFactor() const;
 
 			bool						SelectionActive() const;
-
-			// This return the selection taking into account the zoom level
-			void						AbsoluteSelection(int64* start, int64* end);
-
-			// This return the relative value on screen
-			void						RelativeSelection(int64* start, int64* end);
+			void						CurrentSelection(int64* start, int64* end);
 
 			void						SelectAllTracks();
 			void						UnselectAll();

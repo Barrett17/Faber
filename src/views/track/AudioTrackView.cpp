@@ -286,7 +286,7 @@ void
 AudioTrackView::CurrentSelection(int64* start, int64* end) const
 {
 	if (IsSelected())
-		fCoordinator->AbsoluteSelection(start, end);
+		fCoordinator->CurrentSelection(start, end);
 	else {
 		*start = -1;
 		*end = -1;

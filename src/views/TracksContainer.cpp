@@ -298,7 +298,7 @@ TracksContainer::HandleCommand(BMessage* message)
 
 			int64 start = -1;
 			int64 end = -1;
-			fTracksCoordinator.AbsoluteSelection(&start, &end);
+			fTracksCoordinator.CurrentSelection(&start, &end);
 			printf("Executing effect %" B_PRId64 " %" B_PRId64 "\n",
 				start, end);
 			TrackViewList* tracks = SelectedTracks();

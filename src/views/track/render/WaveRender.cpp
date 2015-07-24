@@ -97,7 +97,7 @@ WaveRender::_RenderChannel(float* buffer, int64 start,
 	//	start, start+frames);
 
 	int64 startFrame, endFrame;
-	fCoordinator->RelativeSelection(&startFrame, &endFrame);
+	fCoordinator->CurrentSelection(&startFrame, &endFrame);
 
 	for (int64 i = *count+(int64)Bounds().left; i < screenEnd; i++) {
 		if (*count < end) {
@@ -146,7 +146,7 @@ WaveRender::_RenderPointers(BRect rect)
 
 		int64 start, end;
 		float point;
-		fCoordinator->RelativeSelection(&start, &end);
+		fCoordinator->CurrentSelection(&start, &end);
 
 		if(start < fCoordinator->Pointer())
 			point = fCoordinator->FrameToScreen(start);
